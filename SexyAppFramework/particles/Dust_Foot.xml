@@ -1,0 +1,22 @@
+<Emitter>
+  <Name>DustFoot</Name>
+	<SpawnMinActive>[6 8]</SpawnMinActive>
+	<ParticleAlpha>[.4 .6],20 0</ParticleAlpha>
+	<ParticleScale>[.2 .3] [.6 .8],70</ParticleScale>
+	<EmitterType>Box</EmitterType>
+  <EmitterBoxX>[0 10]</EmitterBoxX>
+  <EmitterBoxY>[0 4]</EmitterBoxY>  
+	<ParticleDuration>20</ParticleDuration>
+	<Image>IMAGE_DUST_PUFFS</Image>
+  <ImageFrames>3</ImageFrames>
+  <ParticleRed>.5</ParticleRed>
+  <ParticleGreen>.4</ParticleGreen>
+  <ParticleBlue>.1</ParticleBlue>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <Y>0 EaseOut [-10 0]</Y>
+	  <X>0 EaseOut [10 20]</X>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-200 200]</ParticleSpinSpeed>
+</Emitter>

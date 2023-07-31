@@ -1,0 +1,17 @@
+<Emitter>
+  <Name>ZombieNewspaper</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <LaunchSpeed>200.0</LaunchSpeed>
+  <SystemDuration>40</SystemDuration>
+  <SystemAlpha>1,60 0,100</SystemAlpha>
+  <ParticleScale>.8 .33</ParticleScale>
+  <ParticleStretch>1 3</ParticleStretch>
+  <Image>IMAGE_REANIM_ZOMBIE_PAPER_PAPER3</Image>
+  <LaunchAngle>[120 180]</LaunchAngle>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>17.0</Y>
+  </Field>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-200 -400] 0,40</ParticleSpinSpeed>
+</Emitter>

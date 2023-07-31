@@ -1,0 +1,48 @@
+<Emitter>
+	<SpawnMinActive>1</SpawnMinActive>
+	<SpawnMaxLaunched>1</SpawnMaxLaunched>
+	<ParticleAlpha>0,80 0</ParticleAlpha>
+	<ParticleScale>.2,0 .4,20 .6,80 .2,100</ParticleScale>
+	<ParticleStretch>1 .3</ParticleStretch>
+	<EmitterType>Circle</EmitterType>
+	<EmitterRadius>0</EmitterRadius>
+	<ParticleDuration>20</ParticleDuration>
+	<SystemDuration>20</SystemDuration>
+	<Image>IMAGE_SNOWPEA_PUFF</Image>
+	<ImageFrames>1</ImageFrames>
+	<ImageCol>3</ImageCol>
+	<Animated>1</Animated>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <X>0 15</X>
+	</Field>	
+	<ParticleSpinAngle>0</ParticleSpinAngle>
+</Emitter>
+<Emitter>
+	<SpawnMinActive>[8 12]</SpawnMinActive>
+	<ParticleAlpha>[.3.8],80 0</ParticleAlpha>
+	<ParticleScale>[.8 1.2],70 0,100</ParticleScale>
+	<EmitterType>Circle</EmitterType>
+	<EmitterRadius>[0 5]</EmitterRadius>
+	<LaunchSpeed>0</LaunchSpeed>
+	<ParticleDuration>20</ParticleDuration>
+	<SystemDuration>20</SystemDuration>
+	<Image>IMAGE_SNOWPEA_PARTICLES</Image>
+	<ImageFrames>3</ImageFrames>
+	<Field>
+	  <FieldType>Friction</FieldType>
+	  <X>0.0,40 .1</X>
+	  <Y>0.0,40 .1</Y>
+	</Field>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>5</Y>
+	</Field>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <Y>0 [-30 20]</Y>
+	  <X>0 [20 40]</X>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-200 200]</ParticleSpinSpeed>
+</Emitter>

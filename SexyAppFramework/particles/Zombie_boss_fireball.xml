@@ -1,0 +1,45 @@
+<Emitter>
+  <Name>BossFireball</Name>
+  <SpawnRate>40</SpawnRate>
+  <SpawnMaxLaunched>40</SpawnMaxLaunched> 
+  <ParticleDuration>30</ParticleDuration>
+  <SystemDuration>250</SystemDuration>
+  <ParticleAlpha>1,80 0</ParticleAlpha>
+  <ParticleScale>.1 [0.8 1.2],50</ParticleScale>
+  <EmitterType>Box</EmitterType>
+  <EmitterBoxX>[-40 40]</EmitterBoxX>
+  <EmitterBoxY>[-10 40]</EmitterBoxY>
+  <Image>IMAGE_ZOMBIE_BOSS_FIREBALL_PARTICLES</Image>
+  <ImageFrames>2</ImageFrames>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-50 50]</ParticleSpinSpeed>
+  <ParticleSpinAngle>[0 10]</ParticleSpinAngle>
+  <Field>
+    <FieldType>Position</FieldType>
+    <X>0 [-70 -100]</X>
+    <Y>0 [-10 30]</Y>
+  </Field>
+</Emitter>
+<Emitter>
+  <Name>BossFireball2</Name>
+  <SpawnRate>40</SpawnRate>
+  <SpawnMaxLaunched>40</SpawnMaxLaunched> 
+  <ParticleDuration>[15 25]</ParticleDuration>
+  <SystemDuration>250</SystemDuration>
+  <ParticleAlpha>1,80 0</ParticleAlpha>
+  <ParticleScale>.1 [0.8 1.2],50</ParticleScale>
+  <EmitterType>Box</EmitterType>
+  <EmitterBoxX>[-40 40]</EmitterBoxX>
+  <EmitterBoxY>[-10 40]</EmitterBoxY>
+  <Image>IMAGE_ZOMBIE_BOSS_FIREBALL_PARTICLES</Image>
+  <ImageCol>2</ImageCol>
+  <ImageFrames>2</ImageFrames>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-30 30]</ParticleSpinSpeed>
+  <ParticleSpinAngle>[0 10]</ParticleSpinAngle>
+  <Field>
+    <FieldType>Position</FieldType>
+    <X>0 [-70 -100]</X>
+    <Y>0 [-10 30]</Y>
+  </Field>
+</Emitter>

@@ -1,0 +1,9 @@
+<Emitter>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SpawnMaxLaunched>1</SpawnMaxLaunched>
+  <ParticleDuration>[500 600]</ParticleDuration>
+  <Image>IMAGE_ZOMBIE_BOSS_ICEBALL_GROUNDPARTICLES</Image>
+  <ImageFrames>4</ImageFrames>
+  <ParticleAlpha>0 1,5 1,95 0</ParticleAlpha>
+  <ParticleScale>.1 [.5 1.5],20</ParticleScale>
+</Emitter>

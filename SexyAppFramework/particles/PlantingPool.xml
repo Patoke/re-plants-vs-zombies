@@ -1,0 +1,25 @@
+<Emitter>
+  <Name>PlantingPool</Name>
+  <SpawnMinActive>16</SpawnMinActive>
+  <SystemAlpha>1,85 0</SystemAlpha>
+  <ParticleScale>[.7 1]</ParticleScale>
+  <EmitterRadius>[0 10]</EmitterRadius>
+  <LaunchSpeed>[200 300]</LaunchSpeed>
+  <ParticleDuration>40</ParticleDuration>
+  <SystemDuration>40</SystemDuration>
+  <Image>IMAGE_WATERPARTICLE</Image>
+  <ImageFrames>6</ImageFrames>
+  <ImageRow>0</ImageRow>
+  <LaunchAngle>[110 250]</LaunchAngle>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-100 100]</ParticleSpinSpeed>
+  <Field>
+    <FieldType>Friction</FieldType>
+    <X>0.03</X>
+    <Y>0.01</Y>
+  </Field>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>8.0</Y>
+  </Field>
+</Emitter>

@@ -1,0 +1,23 @@
+<Emitter>
+  <Name>StarSplatBits</Name>
+	<SpawnMinActive>[6 10]</SpawnMinActive>
+	<ParticleAlpha>1,80 0</ParticleAlpha>
+	<ParticleScale>[.8 1.2]</ParticleScale>
+	<EmitterType>Circle</EmitterType>
+	<EmitterRadius>[0 20]</EmitterRadius>
+	<LaunchSpeed>[150]</LaunchSpeed>
+	<ParticleDuration>30</ParticleDuration>
+	<Image>IMAGE_STAR_PARTICLES</Image>
+	<ImageFrames>3</ImageFrames>
+	<Field>
+	  <FieldType>Friction</FieldType>
+	  <X>0.0,40 .1</X>
+	  <Y>0.0,40 .1</Y>
+	</Field>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>10</Y>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-200 200]</ParticleSpinSpeed>
+</Emitter>

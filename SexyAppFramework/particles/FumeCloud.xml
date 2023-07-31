@@ -1,0 +1,22 @@
+<Emitter>
+  <SpawnMinActive>0 40,40</SpawnMinActive>
+  <SpawnMaxLaunched>40</SpawnMaxLaunched>
+  <ParticleAlpha>.9,80 0</ParticleAlpha>
+  <ParticleScale>[.7 1.1]</ParticleScale>
+  <SystemAlpha>.9,80 0</SystemAlpha>
+  <EmitterOffsetX>21</EmitterOffsetX>
+  <EmitterOffsetY>-2</EmitterOffsetY>
+  <ParticleDuration>[50 60]</ParticleDuration>
+  <SystemDuration>100</SystemDuration>
+  <Image>IMAGE_PUFFSHROOM_PUFF1</Image>
+  <Field>
+    <FieldType>Position</FieldType>
+    <Y>[-5 5] [-20 20]</Y>
+    <X>0 [20 300],60 [25 310]</X>
+  </Field>
+  <Field>
+    <FieldType>Shake</FieldType>
+    <X>1 0</X>
+    <Y>1 0</Y>
+  </Field>
+</Emitter>

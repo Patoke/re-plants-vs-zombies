@@ -1,0 +1,6 @@
+<Image>IMAGE_ICETRAIL</Image>
+<MaxPoints>20</MaxPoints>
+<Loops>1</Loops>
+<MinPointDistance>3</MinPointDistance>
+<WidthOverLength>12 EaseOut 5</WidthOverLength>
+<AlphaOverLength>0,0 .3,20</AlphaOverLength>

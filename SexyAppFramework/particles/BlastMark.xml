@@ -1,0 +1,6 @@
+<Emitter>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SystemDuration>100</SystemDuration>
+  <SystemAlpha>1,80 0</SystemAlpha>
+  <Image>IMAGE_BLASTMARK</Image>
+</Emitter>

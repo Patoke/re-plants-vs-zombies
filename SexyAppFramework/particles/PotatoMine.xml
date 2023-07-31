@@ -1,0 +1,88 @@
+<Emitter>
+  <Name>Mashed</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <ParticleDuration>200</ParticleDuration>
+  <SystemDuration>200</SystemDuration>
+  <ParticleScale>.9</ParticleScale>
+  <EmitterOffsetY>20</EmitterOffsetY>
+  <Image>IMAGE_REANIM_POTATOMINE_MASHED</Image>
+  <ParticleAlpha>1,95 0</ParticleAlpha>
+</Emitter>
+<Emitter>
+  <Name>LowParts</Name>
+  <SpawnMinActive>10</SpawnMinActive>
+  <SpawnMaxLaunched>10</SpawnMaxLaunched>
+  <ParticleAlpha>1,95 0</ParticleAlpha>
+  <EmitterType>Circle</EmitterType>
+  <EmitterRadius>[0 50]</EmitterRadius>
+  <EmitterOffsetY>20</EmitterOffsetY>
+  <ParticleScale>[1 1.3]</ParticleScale>
+  <LaunchSpeed>[200 300]</LaunchSpeed>
+  <ParticleDuration>200</ParticleDuration>
+  <SystemDuration>200</SystemDuration>
+  <Image>IMAGE_POTATOMINE_PARTICLES</Image>
+  <ImageFrames>6</ImageFrames>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>0</Y>
+  </Field>
+  <Field>
+    <FieldType>Friction</FieldType>
+    <X>.2 .1,30</X>
+    <Y>.2 .1,30</Y>
+  </Field>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-100 100] 0,20</ParticleSpinSpeed>
+</Emitter>
+<Emitter>
+  <Name>HighParts</Name>
+  <SpawnMinActive>30</SpawnMinActive>
+  <SpawnMaxLaunched>30</SpawnMaxLaunched>
+  <ParticleAlpha>1,90 0</ParticleAlpha>
+  <EmitterType>Circle</EmitterType>
+  <EmitterRadius>[0 50]</EmitterRadius>
+  <ParticleScale>[1 1.3]</ParticleScale>
+  <LaunchSpeed>[1300 2000]</LaunchSpeed>
+  <LaunchAngle>[110 250]</LaunchAngle>
+  <ParticleDuration>[70 80]</ParticleDuration>
+  <SystemDuration>90</SystemDuration>
+  <Image>IMAGE_POTATOMINE_PARTICLES</Image>
+  <ImageFrames>6</ImageFrames>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>5</Y>
+  </Field>
+  <Field>
+    <FieldType>Friction</FieldType>
+    <X>.2 0,30</X>
+    <Y>.2 0,30</Y>
+  </Field>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-600 600]</ParticleSpinSpeed>
+</Emitter>
+<Emitter>
+  <Name>Word</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SystemDuration>70</SystemDuration>
+  <Image>IMAGE_EXPLOSIONSPUDOW</Image>
+  <EmitterOffsetY>-30</EmitterOffsetY>
+  <ParticleAlpha>1,90 0</ParticleAlpha>
+  <Field>
+    <FieldType>Shake</FieldType>
+    <X>2</X>
+    <Y>2</Y>
+  </Field>
+</Emitter>
+<Emitter>
+  <Name>Flash</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SpawnMaxLaunched>1</SpawnMaxLaunched>
+  <ParticleDuration>40</ParticleDuration>
+  <SystemDuration>40</SystemDuration>
+  <ParticleScale>10 15</ParticleScale>
+  <ParticleAlpha>.5 0</ParticleAlpha>
+  <Image>IMAGE_POTATOMINEFLASH</Image>
+  <ParticleRed>1</ParticleRed>
+  <ParticleGreen>1</ParticleGreen>
+  <ParticleBlue>.5</ParticleBlue>
+</Emitter>

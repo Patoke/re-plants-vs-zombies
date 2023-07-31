@@ -1,0 +1,37 @@
+<Emitter>
+  <Name>IceFlash</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SpawnMaxLaunched>1</SpawnMaxLaunched>
+  <ParticleDuration>30</ParticleDuration>
+  <SystemDuration>30</SystemDuration>
+  <ParticleScale>1600</ParticleScale>
+  <ParticleAlpha>.5 0</ParticleAlpha>
+  <Image>IMAGE_WHITEPIXEL</Image>
+  <ParticleRed>.5</ParticleRed>
+  <ParticleGreen>1</ParticleGreen>
+  <ParticleBlue>1</ParticleBlue>
+  <FullScreen>1</FullScreen>
+</Emitter>
+<Emitter>
+  <Name>IceTrap</Name>
+  <SpawnMinActive>40</SpawnMinActive>
+	<ParticleAlpha>1 [.4 .8],80 0</ParticleAlpha>
+	<ParticleScale>.3,0 [.4 1.5],10 [.4 1.5],70 0,100</ParticleScale>
+	<EmitterType>Circle</EmitterType>
+	<EmitterRadius>[0 200]</EmitterRadius>
+	<LaunchSpeed>[200]</LaunchSpeed>
+	<ParticleDuration>40</ParticleDuration>
+	<SystemDuration>40</SystemDuration>
+	<Image>IMAGE_SNOWFLAKES</Image>
+	<ImageFrames>3</ImageFrames>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>5</Y>
+	</Field>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <X>0</X>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-600 600]</ParticleSpinSpeed>
+</Emitter>

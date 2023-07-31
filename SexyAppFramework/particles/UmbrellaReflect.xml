@@ -1,0 +1,15 @@
+<Emitter>
+  <SpawnMinActive>1</SpawnMinActive>
+  <ParticleDuration>80</ParticleDuration>
+  <SystemAlpha>1,85 0,100</SystemAlpha>
+  <ParticleScale>1.1</ParticleScale>
+  <Image>IMAGE_REANIM_ZOMBIE_CATAPULT_BASKETBALL</Image>
+  <LaunchSpeed>430.0</LaunchSpeed>
+  <LaunchAngle>[190 220]</LaunchAngle>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>10.0</Y>
+  </Field>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-720 720]</ParticleSpinSpeed>
+</Emitter>

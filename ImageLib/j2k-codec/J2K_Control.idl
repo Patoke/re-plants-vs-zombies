@@ -1,0 +1,62 @@
+// J2K_Control.idl : IDL source for J2K-Control.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (J2K_Control.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+#include "olectl.h"
+	
+
+	[
+		object,
+		uuid(BE29213A-CFA5-453D-B243-5F8ABE6A8BB3),
+		dual,
+		helpstring("IJ2K_Codec Interface"),
+		pointer_default(unique)
+	]
+	interface IJ2K_Codec : IDispatch
+	{
+		[id(1), helpstring("open JPEG2000 file")] HRESULT OpenFile(BSTR filename, [optional] BSTR options);
+		[id(2), helpstring("open JPEG2000 file from memory buffer")] HRESULT OpenMemory(unsigned char *src_buffer, int src_size, [optional] BSTR options);
+		[id(3), helpstring("Create log-file and start logging")] HRESULT StartLogging(int level, int append);
+		[id(4), helpstring("Stop logging")] HRESULT StopLogging();
+		[propget, id(5), helpstring("Width of JPEG2000 image")] HRESULT ImageWidth([out, retval] long *pVal);
+		[propget, id(6), helpstring("Height of JPEG2000 image")] HRESULT ImageHeight([out, retval] long *pVal);
+		[propput, id(7), helpstring("Personal Registration Key")] HRESULT Key([in] BSTR newVal);
+		[propget, id(8), helpstring("The number of components in the JPEG2000 image")] HRESULT ImageComponents([out, retval] long *pVal);
+		[propget, id(9), helpstring("Resize image if true")] HRESULT DoScale([out, retval] BOOL *pVal);
+		[propput, id(9), helpstring("Resize image if true")] HRESULT DoScale([in] BOOL newVal);
+	};
+
+[
+	uuid(2A471E92-469E-469E-BC45-A3485F3911AB),
+	version(1.0),
+	helpstring("J2K_Control 1.0 Type Library")
+]
+library J2K_CONTROLLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(DEE0B9C2-D2E6-44FC-A6F6-4C5A3DC2F56D),
+		helpstring("_IJ2K_CodecEvents Interface")
+	]
+	dispinterface _IJ2K_CodecEvents
+	{
+		properties:
+		methods:
+	};
+
+	[
+		uuid(48AFF452-8543-4538-90FE-E541ECF19BA5),
+		helpstring("J2K_Codec Class")
+	]
+	coclass J2K_Codec
+	{
+		[default] interface IJ2K_Codec;
+		[default, source] dispinterface _IJ2K_CodecEvents;
+	};
+};

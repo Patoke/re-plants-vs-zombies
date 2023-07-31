@@ -1,0 +1,15 @@
+<fps>12</fps>
+<track>
+<name>anim_idle</name>
+<t><x>-0.2</x><y>5.5</y><sx>0.800</sx><sy>0.800</sy><i>IMAGE_REANIM_LILYPAD_BODY</i></t>
+<t><f>-1</f></t>
+<t></t>
+<t></t>
+</track>
+<track>
+<name>anim_blink</name>
+<t><f>-1</f></t>
+<t><x>45.2</x><y>50.1</y><sx>0.800</sx><sy>0.800</sy><f>0</f><i>IMAGE_REANIM_LILYPAD_BLINK1</i></t>
+<t><i>IMAGE_REANIM_LILYPAD_BLINK2</i></t>
+<t><i>IMAGE_REANIM_LILYPAD_BLINK1</i></t>
+</track>

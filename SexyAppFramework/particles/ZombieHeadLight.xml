@@ -1,0 +1,22 @@
+<Emitter>
+<SpawnMinActive>1</SpawnMinActive>
+<LaunchSpeed>200.0</LaunchSpeed>
+<SystemDuration>50</SystemDuration>
+<SystemAlpha>1,80 0,100</SystemAlpha>
+<ParticleStretch>-1</ParticleStretch>
+<ParticleScale>-0.8</ParticleScale>
+<Image>IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT3</Image>
+<LaunchAngle>[180 240]</LaunchAngle>
+<Field>
+  <FieldType>Acceleration</FieldType>
+  <Y>17.0</Y>
+</Field>
+<Field>
+  <FieldType>GroundConstraint</FieldType>
+  <Y>90.0</Y>
+</Field>
+<RandomLaunchSpin>0</RandomLaunchSpin>
+<ParticleSpinSpeed>[200 400] 0,40</ParticleSpinSpeed>
+<CollisionReflect>.3</CollisionReflect>
+<CollisionSpin>[3 6]</CollisionSpin>
+</Emitter>

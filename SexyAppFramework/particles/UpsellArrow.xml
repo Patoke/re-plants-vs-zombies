@@ -1,0 +1,19 @@
+<Emitter>
+  <Name>Arrow</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <ParticleDuration>40</ParticleDuration>
+  <ParticleScale>1.2</ParticleScale>
+  <SystemDuration>100</SystemDuration>
+  <ParticleLoops>1</ParticleLoops>
+  <ParticleRed>1</ParticleRed>
+  <ParticleGreen>.9</ParticleGreen>
+  <ParticleBlue>.4</ParticleBlue>
+  <SystemLoops>1</SystemLoops>
+  <Image>IMAGE_DOWNARROW</Image>
+  <Field>
+    <FieldType>Position</FieldType>
+    <Y>0 EaseInOutWeak 10 EaseInOutWeak 0</Y>
+  </Field>
+  <EmitterOffsetX>25</EmitterOffsetX>
+  <EmitterOffsetY>80</EmitterOffsetY>
+</Emitter>

@@ -1,0 +1,25 @@
+Exception: Access Violation (code 0xc0000005) at address 079400F4 in thread 509C
+Module: Exception: Access Violation (code 0xc0000005) at address 079400F4 in thread 509C
+
+Logical Address: CCCCCCCC:CCCCCCCC
+
+0115EB78 079400F4 0000:00000000 面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面面
+Params: 07C75138 0115EDAC CCCCCCCC CCCCCCCC
+
+
+EAX:00CF5E00 EBX:00E31000 ECX:079400F4 EDX:07C75138 ESI:0115EB84 EDI:0115EC40
+EIP:079400F4 ESP:0115EB7C  EBP:0115EB98
+CS:0023 SS:002B DS:002B ES:002B FS:0053 GS:002B
+Flags:00010202
+
+Windows Ver: NT 6.2  Build 9200
+DDraw Ver: 
+DSound Ver: 
+
+Product: PlantsVsZombies
+Version: 
+Time Loaded: 00:00:00
+Fullscreen: No
+Primary ThreadId: 509C
+Times Played: 0
+

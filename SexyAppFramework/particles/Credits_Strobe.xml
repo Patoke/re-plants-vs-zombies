@@ -1,0 +1,13 @@
+<Emitter>
+  <Name>CreditsStrobe</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <SpawnMaxLaunched>1</SpawnMaxLaunched>
+  <ParticleDuration>6</ParticleDuration>
+  <ParticleScale>1600</ParticleScale>
+  <ParticleAlpha>.5</ParticleAlpha>
+  <Image>IMAGE_WHITEPIXEL</Image>
+  <ParticleRed>1</ParticleRed>
+  <ParticleGreen>1</ParticleGreen>
+  <ParticleBlue>1</ParticleBlue>
+  <FullScreen>1</FullScreen>
+</Emitter>

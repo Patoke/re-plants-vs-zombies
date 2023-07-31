@@ -1,0 +1,26 @@
+<Emitter>
+  <Name>pinata</Name>
+  <DieIfOverloaded>1</DieIfOverloaded>
+	<SpawnMinActive>[10 15]</SpawnMinActive>
+  <EmitterType>Circle</EmitterType>
+  <EmitterRadius>[0 70]</EmitterRadius>
+	<ParticleDuration>180</ParticleDuration>
+	<SystemAlpha>1,95 0,100</SystemAlpha>
+	<ParticleScale>.8</ParticleScale>
+	<Image>IMAGE_PINATA</Image>
+  <ImageFrames>5</ImageFrames> 
+	<LaunchSpeed>[200 500]</LaunchSpeed>
+	<LaunchAngle>[130 190]</LaunchAngle>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>17.0</Y>
+	</Field>
+	<Field>
+	  <FieldType>GroundConstraint</FieldType>
+	  <Y>90.0</Y>
+	</Field>
+	<RandomLaunchSpin>0</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-720 720] 0,40</ParticleSpinSpeed>
+	<CollisionReflect>.3 .3,40 0,50</CollisionReflect>
+	<CollisionSpin>[-10 -50] 0,40</CollisionSpin>
+</Emitter>

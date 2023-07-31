@@ -1,0 +1,24 @@
+<Emitter>
+  <SpawnMinActive>20</SpawnMinActive>
+  <ParticleRed>1</ParticleRed>
+  <ParticleGreen>.9</ParticleGreen>
+  <ParticleBlue>0</ParticleBlue>
+  <ParticleScale>[.3 .5]</ParticleScale>
+  <SystemAlpha>1,80 0</SystemAlpha>
+  <EmitterRadius>[40 80]</EmitterRadius>
+  <LaunchSpeed>[50 200]</LaunchSpeed>
+  <ParticleDuration>60</ParticleDuration>
+  <SystemDuration>60</SystemDuration>
+  <Image>IMAGE_STAR40</Image>
+  <Field>
+    <FieldType>Friction</FieldType>
+    <X>0.0,40 0</X>
+    <Y>0.0,40 0</Y>
+  </Field>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>[2 3]</Y>
+  </Field>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-800 800]</ParticleSpinSpeed>
+</Emitter>

@@ -1,0 +1,27 @@
+<Emitter>
+	<SpawnMinActive>[6 8]</SpawnMinActive>
+	<ParticleAlpha>[.3 .8],80 0</ParticleAlpha>
+	<ParticleScale>[.2 .3] [.6 0.8],70 0,100</ParticleScale>
+	<EmitterType>Circle</EmitterType>
+	<EmitterRadius>[0 5]</EmitterRadius>
+	<LaunchSpeed>0</LaunchSpeed>
+	<ParticleDuration>20</ParticleDuration>
+	<SystemDuration>20</SystemDuration>
+	<Image>IMAGE_PUFFSHROOM_PUFF2</Image>
+	<Field>
+	  <FieldType>Friction</FieldType>
+	  <X>0.0,40 .1</X>
+	  <Y>0.0,40 .1</Y>
+	</Field>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>5</Y>
+	</Field>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <Y>0 [-30 20]</Y>
+	  <X>0 [20 40]</X>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-200 200]</ParticleSpinSpeed>
+</Emitter>

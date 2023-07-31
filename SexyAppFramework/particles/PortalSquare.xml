@@ -1,0 +1,19 @@
+<Emitter>
+  <Name>PortalSquare</Name>
+  <SpawnMinActive>20</SpawnMinActive>
+  <ParticleAlpha>0 1 1 0</ParticleAlpha>
+  <ParticleScale>[.1 EaseIn 0.5]</ParticleScale>
+  <ParticleStretch>[.5 1]</ParticleStretch>
+  <EmitterType>Box</EmitterType>
+  <EmitterBoxX>[20 40]</EmitterBoxX>
+  <EmitterBoxY>[10 110]</EmitterBoxY>
+  <ParticleDuration>[100 400]</ParticleDuration>
+	<SystemLoops>1</SystemLoops>
+  <Image>IMAGE_WHITEELLIPSE</Image>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+	<Field>
+	  <FieldType>Position</FieldType>
+	  <X>0 4</X>
+	  <Y>0 [-.5 .5]</Y>
+	</Field>
+</Emitter>

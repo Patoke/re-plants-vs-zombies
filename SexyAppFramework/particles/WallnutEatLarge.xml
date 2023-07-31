@@ -1,0 +1,26 @@
+<Emitter>
+<SpawnRate>50 0</SpawnRate>
+<SpawnMaxLaunched>6</SpawnMaxLaunched>
+<ParticleAlpha>1,80 0</ParticleAlpha>
+<ParticleScale>[.9 1.1]</ParticleScale>
+<SystemAlpha>1,80 0</SystemAlpha>
+<EmitterType>Box</EmitterType>
+<EmitterOffsetX>[-30 10]</EmitterOffsetX>
+<EmitterOffsetY>[-10 30]</EmitterOffsetY>
+<LaunchSpeed>[100 120]</LaunchSpeed>
+<LaunchAngle>[180 210]</LaunchAngle>
+<ParticleDuration>[30 60]</ParticleDuration>
+<SystemDuration>200</SystemDuration>
+<Image>IMAGE_WALLNUTPARTICLESLARGE</Image>
+<ImageFrames>5</ImageFrames>
+<Field>
+  <FieldType>Acceleration</FieldType>
+  <Y>8</Y>
+</Field>
+<Field>
+  <FieldType>Position</FieldType>
+  <X>0 [-40 10]</X>
+</Field>
+<RandomLaunchSpin>1</RandomLaunchSpin>
+<ParticleSpinSpeed>[-600 600]</ParticleSpinSpeed>
+</Emitter>

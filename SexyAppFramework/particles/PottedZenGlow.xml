@@ -1,0 +1,24 @@
+<Emitter>
+  <Name>Sparks</Name>
+  <SpawnRate>30</SpawnRate>
+  <ParticleAlpha>0 1,30 1,70 0</ParticleAlpha>
+  <ParticleScale>[.7 .9]</ParticleScale>
+  <EmitterType>Circle</EmitterType>
+  <EmitterRadius>[40 50]</EmitterRadius>
+  <EmitterOffsetX>0</EmitterOffsetX>
+  <EmitterOffsetY>20</EmitterOffsetY>
+  <LaunchSpeed>[40 70]</LaunchSpeed>
+  <ParticleDuration>[30 60]</ParticleDuration>
+  <SystemLoops>1</SystemLoops>
+  <Image>IMAGE_GLOW_PARTICLE2</Image>
+  <LaunchAngle>[90 270]</LaunchAngle>
+  <Field>
+    <FieldType>Friction</FieldType>
+    <X>0.015</X>
+    <Y>0.015</Y>
+  </Field>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>1.0</Y>
+  </Field>
+</Emitter>

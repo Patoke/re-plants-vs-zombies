@@ -1,0 +1,66 @@
+<Emitter>
+  <Name>BalloonHead</Name>
+	<SpawnMinActive>1</SpawnMinActive>
+	<LaunchSpeed>330.0</LaunchSpeed>
+	<ParticleDuration>180</ParticleDuration>
+	<SystemAlpha>1,95 0,100</SystemAlpha>
+	<ParticleScale>.8</ParticleScale>
+	<Image>IMAGE_ZOMBIEBALLOONHEAD</Image>
+	<LaunchAngle>[150 185]</LaunchAngle>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>17.0</Y>
+	</Field>
+	<Field>
+	  <FieldType>GroundConstraint</FieldType>
+	  <Y>90.0</Y>
+	</Field>
+	<RandomLaunchSpin>0</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-720 720] 0,40</ParticleSpinSpeed>
+	<CollisionReflect>.3 .3,40 0,50</CollisionReflect>
+	<CollisionSpin>[-3 -6] 0,40</CollisionSpin>
+</Emitter>
+<Emitter>
+  <Name>Hat</Name>
+	<SpawnMinActive>1</SpawnMinActive>
+	<LaunchSpeed>500.0</LaunchSpeed>
+	<ParticleDuration>180</ParticleDuration>
+	<SystemAlpha>1,95 0,100</SystemAlpha>
+	<ParticleScale>.8</ParticleScale>
+	<Image>IMAGE_REANIM_ZOMBIE_BALLOON_HAT</Image>
+	<LaunchAngle>[150 170]</LaunchAngle>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>17.0</Y>
+	</Field>
+	<Field>
+	  <FieldType>GroundConstraint</FieldType>
+	  <Y>90.0</Y>
+	</Field>
+	<RandomLaunchSpin>0</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-1720 1720] 0,40</ParticleSpinSpeed>
+	<CollisionReflect>.3 .3,40 0,50</CollisionReflect>
+	<CollisionSpin>[-300 -350] 0,40</CollisionSpin>
+</Emitter>
+<Emitter>
+  <Name>Propeller</Name>
+  <SpawnMinActive>1</SpawnMinActive>
+  <LaunchSpeed>500.0</LaunchSpeed>
+  <ParticleDuration>180</ParticleDuration>
+  <SystemAlpha>1,95 0,100</SystemAlpha>
+  <ParticleScale>.8</ParticleScale>
+  <Image>IMAGE_REANIM_ZOMBIE_BALLOON_PROPELLER</Image>
+  <LaunchAngle>[150 170]</LaunchAngle>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>17.0</Y>
+  </Field>
+  <Field>
+    <FieldType>GroundConstraint</FieldType>
+    <Y>90.0</Y>
+  </Field>
+  <RandomLaunchSpin>0</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-5720 5720] 0,40</ParticleSpinSpeed>
+  <CollisionReflect>.3 .3,40 0,50</CollisionReflect>
+  <CollisionSpin>[-300 -350] 0,40</CollisionSpin>
+</Emitter>

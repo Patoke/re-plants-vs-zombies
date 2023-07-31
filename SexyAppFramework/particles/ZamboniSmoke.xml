@@ -1,0 +1,30 @@
+<Emitter>
+  <SpawnRate>30</SpawnRate>
+  <ParticleAlpha>1 [.4 .8],80 0</ParticleAlpha>
+  <ParticleScale>.3,0 [.5 .8],20 [.8 1.0],60 0,100</ParticleScale>
+  <EmitterType>Circle</EmitterType>
+  <EmitterRadius>[0 4]</EmitterRadius>
+  <LaunchSpeed>[10]</LaunchSpeed>
+  <ParticleDuration>[40 60]</ParticleDuration>
+  <SystemDuration>20</SystemDuration>
+  <Image>IMAGE_ZAMBONISMOKE</Image>
+  <ImageFrames>3</ImageFrames>
+  <SystemLoops>1</SystemLoops>
+  <ParticlesDontFollow>1</ParticlesDontFollow>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>-1</Y>
+  </Field>
+  <Field>
+    <FieldType>Position</FieldType>
+    <Y>0 -20</Y>
+    <X>0 EaseOut 30</X>
+  </Field>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-800 800] 0</ParticleSpinSpeed>
+</Emitter>
+<Emitter>
+  <Name>FadeOut</Name>
+  <CrossFadeDuration>50</CrossFadeDuration>
+  <ParticleAlpha>1 0</ParticleAlpha>
+</Emitter>

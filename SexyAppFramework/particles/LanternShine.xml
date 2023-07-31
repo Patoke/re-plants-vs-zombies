@@ -1,0 +1,26 @@
+<Emitter>
+  <SpawnMinActive>10</SpawnMinActive>
+  <ParticleScale>1 Bounce [.7 1]</ParticleScale>
+  <ParticleAlpha>.5 Bounce [.3 .5]</ParticleAlpha>
+  <ParticleDuration>[60 120]</ParticleDuration>
+  <SystemLoops>1</SystemLoops>
+  <ParticleLoops>1</ParticleLoops>
+  <RandomStartTime>1</RandomStartTime>
+  <Image>IMAGE_LANTERNSHINE</Image>
+	<RandomLaunchSpin>1</RandomLaunchSpin>  
+  <ParticleSpinSpeed>[-20 -40]</ParticleSpinSpeed>
+  <HardwareOnly>1</HardwareOnly>
+</Emitter>
+<Emitter>
+  <SpawnMinActive>10</SpawnMinActive>
+  <ParticleScale>1 Bounce [.7 1]</ParticleScale>
+  <ParticleAlpha>.5 Bounce [.3 .5]</ParticleAlpha>
+  <ParticleDuration>[60 120]</ParticleDuration>
+  <SystemLoops>1</SystemLoops>
+  <ParticleLoops>1</ParticleLoops>
+  <RandomStartTime>1</RandomStartTime>
+  <Image>IMAGE_LANTERNSHINE</Image>
+	<RandomLaunchSpin>1</RandomLaunchSpin>  
+  <ParticleSpinSpeed>[20 40]</ParticleSpinSpeed>
+  <HardwareOnly>1</HardwareOnly>
+</Emitter>

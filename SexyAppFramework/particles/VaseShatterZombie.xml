@@ -1,0 +1,27 @@
+<Emitter>
+  <Name>Vase</Name>
+  <SpawnMinActive>16</SpawnMinActive>
+  <SpawnMaxLaunched>16</SpawnMaxLaunched>
+  <SystemAlpha>1,90 0</SystemAlpha>
+  <EmitterBoxX>[-10 40]</EmitterBoxX>
+  <EmitterBoxY>[0 70]</EmitterBoxY>
+  <EmitterType>Box</EmitterType>
+  <LaunchSpeed>[40 80]</LaunchSpeed>
+  <ParticleScale>[.8 .9]</ParticleScale>
+  <ParticleDuration>100</ParticleDuration>
+  <Image>IMAGE_VASE_CHUNKS</Image>
+  <ImageFrames>9</ImageFrames>
+  <ImageRow>2</ImageRow>
+  <Field>
+    <FieldType>Acceleration</FieldType>
+    <Y>7.0</Y>
+  </Field>
+	<Field>
+	  <FieldType>GroundConstraint</FieldType>
+	  <Y>[65.0 78.0]</Y>
+	</Field>  
+	<CollisionReflect>.4,40 0,50</CollisionReflect>
+	<CollisionSpin>0</CollisionSpin>
+  <RandomLaunchSpin>1</RandomLaunchSpin>
+  <ParticleSpinSpeed>[-1120 1120] 0,50</ParticleSpinSpeed>
+</Emitter>

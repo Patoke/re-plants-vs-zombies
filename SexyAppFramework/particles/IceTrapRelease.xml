@@ -1,0 +1,17 @@
+<Emitter>
+	<SpawnMinActive>[5 10]</SpawnMinActive>
+	<ParticleAlpha>1 [.4 .8],80 0</ParticleAlpha>
+	<ParticleScale>.3,0 [.4 1.5],10 [.4 1.5],70 0,100</ParticleScale>
+	<LaunchSpeed>[100 150]</LaunchSpeed>
+	<ParticleDuration>50</ParticleDuration>
+  <Image>IMAGE_ICETRAP_PARTICLES</Image>
+	<ImageFrames>4</ImageFrames>
+	<EmitterBoxX>[-20 0]</EmitterBoxX>
+	<EmitterBoxY>[-70 -10]</EmitterBoxY>
+	<Field>
+	  <FieldType>Acceleration</FieldType>
+	  <Y>0 15,40</Y>
+	</Field>
+	<RandomLaunchSpin>1</RandomLaunchSpin>
+	<ParticleSpinSpeed>[-600 600]</ParticleSpinSpeed>
+</Emitter>
