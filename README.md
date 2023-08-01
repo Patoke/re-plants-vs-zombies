@@ -1,2 +1,4 @@
-PlantsVsZombies-decompilation
-this is a decompilation of the game plants vs zombies version 0.9.9.1029 this project used to be a project by user kopie https://github.com/rspforhp
+## re-plants-vs-zombies
+This project aims to rebuild the GOTY version of the game Plants Vs Zombies by PopCap via reverse engineering
+
+This project is based off of another project from: [Kopie](https://github.com/rspforhp), all credits to her
