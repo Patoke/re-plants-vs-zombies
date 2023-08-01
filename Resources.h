@@ -279,9 +279,9 @@ namespace Sexy
         IMAGE_REANIM_COIN_GOLD_DOLLAR_ID,
         IMAGE_REANIM_DIAMOND_ID,
         IMAGE_REANIM_COINGLOW_ID,
-        IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_HAND_ID,
-        IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2_ID,
-        IMAGE_REANIM_ZOMBIE_DANCER_INNERARM_HAND_ID,
+        IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_HAND_ID,
+        IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_UPPER2_ID,
+        IMAGE_REANIM_ZOMBIE_BACKUP_INNERARM_HAND_ID,
         IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2_ID,
         IMAGE_REANIM_ZOMBIE_OUTERARM_HAND_ID,
         IMAGE_REANIM_ZOMBIE_BALLOON_OUTERARM_UPPER2_ID,
@@ -637,7 +637,7 @@ namespace Sexy
         IMAGE_REANIM_CREDITS_FOGMACHINE_ID,
         IMAGE_CREDITS_ZOMBIENOTE_ID,
         IMAGE_CREDITS_PLAYBUTTON_ID,
-        RESOURCE_ID_MAX
+        RESOURCE_ID_MAX = 879 // GOTY @Patoke: 0x71DA08, no idea tbh.
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -713,7 +713,7 @@ namespace Sexy
     extern Image*       IMAGE_STORE_SPEECHBUBBLE;                               //0x6A72B0
     extern Image*       IMAGE_ZOMBIE_NOTE4;                                     //0x6A72B4
     extern int          SOUND_READYSETPLANT;                                    //0x6A72B8
-    extern Image*       IMAGE_REANIM_ZOMBIE_DANCER_INNERARM_HAND;               //0x6A72BC
+    extern Image*       IMAGE_REANIM_ZOMBIE_BACKUP_INNERARM_HAND;               //0x6A72BC
     extern int          SOUND_PLASTICHIT2;                                      //0x6A72C0
     extern Image*       IMAGE_WATERINGCAN;                                      //0x6A72C4
     extern Image*       IMAGE_CHALLENGE_WINDOW;                                 //0x6A72C8
@@ -905,7 +905,7 @@ namespace Sexy
     extern Image*       IMAGE_ZOMBIEPOLEVAULTERHEAD;                            //0x6A75B0
     extern Image*       IMAGE_ZEN_NEXTGARDEN;                                   //0x6A75B4
     extern Image*       IMAGE_POOLSPARKLY;                                      //0x6A75B8
-    extern Image*       IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_HAND;              //0x6A75BC
+    extern Image*       IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_HAND;                //0x6A75BC
     extern Image*       IMAGE_FLAGMETERPARTS;                                   //0x6A75C0
     extern Image*       IMAGE_REANIM_ZOMBIE_GARGANTUAR_BODY1_2;                 //0x6A75C4
     extern Font*        FONT_HOUSEOFTERROR20;                                   //0x6A75C8
@@ -1200,7 +1200,7 @@ namespace Sexy
     extern Image*	    IMAGE_VASE_CHUNKS;                                      //0x6A7A48
     extern Image*	    IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_UPPER2;            //0x6A7A4C
     extern int          SOUND_POGO_ZOMBIE;                                      //0x6A7A50
-    extern Image*       IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2;            //0x6A7A54
+    extern Image*       IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_UPPER2;            //0x6A7A54
     extern Image*       IMAGE_SQUIRREL;
     extern int          SOUND_FIREPEA;                                          //0x6A7A58
     extern Image*       IMAGE_ZENSHOPBUTTON_HIGHLIGHT;                          //0x6A7A5C
@@ -1270,7 +1270,10 @@ namespace Sexy
     extern Image*	    IMAGE_BACKGROUND_GREENHOUSE_OVERLAY;                    //0x6A7B5C
     extern int		    SOUND_BUZZER;                                           //0x6A7B60
     extern Image*       IMAGE_REANIM_ZOMBIE_CATAPULT_SIDING_DAMAGE;             //0x6A7B64
-    
+    extern Image*       IMAGE_REANIM_SELECTORSCREEN_WOODSIGN3_PRESS; // GOTY @Patoke: 0x7269EC
+    extern Image*       IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS; // GOTY @Patoke: 0x726F2C
+    extern Image*       IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL; // GOTY @Patoke: 0x726F2C
+
     bool                ExtractResourcesByName(ResourceManager* theResourceManager, const char* theName);
     bool                ExtractDelayLoad_AlmanacResources(ResourceManager* theResourceManager);
     bool                ExtractDelayLoad_AwardScreenResources(ResourceManager* theResourceManager);

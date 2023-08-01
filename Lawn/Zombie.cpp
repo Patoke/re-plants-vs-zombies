@@ -3676,7 +3676,7 @@ void Zombie::SetupReanimForLostArm(unsigned int theDamageFlags)
         }
         case ZombieType::ZOMBIE_DANCER:
             GetTrackPosition("Zombie_outerarm_lower", aPosX, aPosY);
-            aBodyReanim->SetImageOverride("Zombie_Jackson_outerarm_upper", IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2);
+            aBodyReanim->SetImageOverride("Zombie_disco_outerarm_upper", IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_UPPER2); // @Patoke: GOTY assets have different name
             break;
         case ZombieType::ZOMBIE_BACKUP_DANCER:
             GetTrackPosition("Zombie_outerarm_lower", aPosX, aPosY);
@@ -3719,10 +3719,10 @@ void Zombie::SetupReanimForLostArm(unsigned int theDamageFlags)
                 aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_PAPER_LEFTARM_LOWER);
                 break;
             case ZombieType::ZOMBIE_DANCER:
-                aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_HAND);
+                aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_DISCO_OUTERARM_HAND);
                 break;
             case ZombieType::ZOMBIE_BACKUP_DANCER:
-                aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_DANCER_INNERARM_HAND);
+                aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_BACKUP_INNERARM_HAND);
                 break;
             case ZombieType::ZOMBIE_BOBSLED:
                 aParticle->OverrideImage(nullptr, IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_HAND);

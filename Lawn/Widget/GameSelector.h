@@ -37,7 +37,9 @@ private:
         GameSelector_Store = 107,
         GameSelector_Almanac = 108,
         GameSelector_ZenGarden = 109,
-        GameSelector_Survival = 110
+        GameSelector_Survival = 110,
+        GameSelector_Zombatar = 111, // @Patoke: add stuff after 110
+        GameSelector_Acheesements = 113
     };
 
 public:
@@ -53,6 +55,8 @@ public:
     NewLawnButton*              mZenGardenButton;           //+0xB0
     NewLawnButton*              mSurvivalButton;            //+0xB4
     NewLawnButton*              mChangeUserButton;          //+0xB8
+    NewLawnButton*              mZombatarClick;             //+GOTY @Patoke: 0xC0
+    NewLawnButton*              mAchievementsButton;        //+GOTY @Patoke: 0xC4
     Widget*                     mOverlayWidget;             //+0xBC
     bool                        mStartingGame;              //+0xC0
     int                         mStartingGameCounter;       //+0xC4

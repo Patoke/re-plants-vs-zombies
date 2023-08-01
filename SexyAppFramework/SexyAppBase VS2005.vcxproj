@@ -102,30 +102,30 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\DebugVS2005\</OutDir>
-    <IntDir>.\DebugVS2005\</IntDir>
+    <IntDir>.\Intermediates\DebugVS2005\</IntDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDIr)dx8sdk\include;$(IncludePath)</IncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\ReleaseVS2005\</OutDir>
-    <IntDir>.\ReleaseVS2005\</IntDir>
+    <IntDir>.\Intermediates\ReleaseVS2005\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - Zylom|Win32'">
     <OutDir>Debug - Zylom\</OutDir>
-    <IntDir>Debug - Zylom\</IntDir>
+    <IntDir>Intermediates\Debug - Zylom\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - Zylom|Win32'">
     <OutDir>Release - Zylom\</OutDir>
-    <IntDir>Release - Zylom\</IntDir>
+    <IntDir>Intermediates\Release - Zylom\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - Incremental|Win32'">
     <OutDir>Debug - Incremental\</OutDir>
-    <IntDir>Debug - Incremental\</IntDir>
+    <IntDir>Intermediates\Debug - Incremental\</IntDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDIr)dx8sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release noop|Win32'">
     <OutDir>Release noop VS2005\</OutDir>
-    <IntDir>Release noop VS2005\</IntDir>
+    <IntDir>Intermediates\Release noop VS2005\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

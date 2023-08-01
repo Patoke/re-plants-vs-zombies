@@ -37,9 +37,11 @@ GameSelectorOverlay::GameSelectorOverlay(GameSelector* theGameSelector)
 }
 
 //0x448CB0
+// GOTY @Patoke: 0x44B8D0
 GameSelector::GameSelector(LawnApp* theApp)
 {
 	TodHesitationTrace("pregameselector");
+	TodLoadResources("DelayLoad_Zombatar");
 
 	mApp = theApp;
 	mLevel = 1;
@@ -56,6 +58,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT
 	);
+	// @Patoke: GOTY has another X value
 	mAdventureButton->Resize(0, 0, Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON->mWidth, 125);
 	mAdventureButton->mClip = false;
 	mAdventureButton->mBtnNoDraw = true;
@@ -105,7 +108,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mPuzzleButton->mUsePolygonShape = true;
 
 	mSurvivalButton = MakeNewButton(
-		GameSelector::GameSelector_Survival, 
+		GameSelector::GameSelector_Survival,
 		this, 
 		"", 
 		nullptr, 
@@ -122,6 +125,35 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mSurvivalButton->mPolygonShape[2] = SexyVector2(257.0f, 124.0f);
 	mSurvivalButton->mPolygonShape[3] = SexyVector2(7.0f, 57.0f);
 	mSurvivalButton->mUsePolygonShape = true;
+
+	// @Patoke: add these button defs
+	mZombatarClick = MakeNewButton(
+		GameSelector::GameSelector_Zombatar,
+		this,
+		"",
+		nullptr,
+		Sexy::IMAGE_BLANK,
+		Sexy::IMAGE_BLANK,
+		Sexy::IMAGE_BLANK
+	);
+	mZombatarClick->Resize(0, 0, Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN3_PRESS->mWidth, Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN3_PRESS->mHeight);
+	mZombatarClick->mClip = false;
+	mZombatarClick->mBtnNoDraw = true;
+	mZombatarClick->mMouseVisible = false;
+
+	mAchievementsButton = MakeNewButton(
+		GameSelector::GameSelector_Acheesements,
+		this,
+		"",
+		nullptr,
+		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL,
+		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS,
+		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS
+	);
+	mAchievementsButton->Resize(820, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
+	mAchievementsButton->mClip = false;
+	mAchievementsButton->mBtnNoDraw = false;
+	mAchievementsButton->mMouseVisible = false;
 
 	mZenGardenButton = MakeNewButton(
 		GameSelector::GameSelector_ZenGarden, 
@@ -307,11 +339,16 @@ GameSelector::~GameSelector()
 		delete mSurvivalButton;
 	if (mChangeUserButton)
 		delete mChangeUserButton;
+	if (mZombatarClick) // @Patoke: new widgets
+		delete mZombatarClick;
+	if (mAchievementsButton)
+		delete mAchievementsButton;
 
 	delete mToolTip;
 }
 
 //0x449E60
+// GOTY @Patoke: 0x44CDD0
 void GameSelector::SyncButtons()
 {
 	bool aAlmanacAvailable = mApp->CanShowAlmanac() || mUnlockSelectorCheat;
@@ -343,40 +380,41 @@ void GameSelector::SyncButtons()
 	mZenGardenButton->mDisabled = !aZenGardenOpen;
 	mZenGardenButton->mVisible = aZenGardenOpen;
 
+	// @Patoke: all of these are already assigned in the constructor, why assign them here? (this fixes the hover highlight)
 	if (mMinigamesLocked)
 	{
-		mMinigameButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON;
-		mMinigameButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON;
+		//mMinigameButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
+		//mMinigameButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
 		mMinigameButton->SetColor(ButtonWidget::COLOR_BKG, Color(128, 128, 128));
 	}
 	else
 	{
-		mMinigameButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
-		mMinigameButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
+		//mMinigameButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
+		//mMinigameButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
 		mMinigameButton->SetColor(ButtonWidget::COLOR_BKG, Color::White);
 	}
 	if (mPuzzleLocked)
 	{
-		mPuzzleButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON;
-		mPuzzleButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON;
+		//mPuzzleButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
+		//mPuzzleButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
 		mPuzzleButton->SetColor(ButtonWidget::COLOR_BKG, Color(128, 128, 128));
 	}
 	else
 	{
-		mPuzzleButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
-		mPuzzleButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
+		//mPuzzleButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
+		//mPuzzleButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
 		mPuzzleButton->SetColor(ButtonWidget::COLOR_BKG, Color::White);
 	}
 	if (mSurvivalLocked)
 	{
-		mSurvivalButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON;
-		mSurvivalButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON;
+		//mSurvivalButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
+		//mSurvivalButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
 		mSurvivalButton->SetColor(ButtonWidget::COLOR_BKG, Color(128, 128, 128));
 	}
 	else
 	{
-		mSurvivalButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
-		mSurvivalButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
+		//mSurvivalButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
+		//mSurvivalButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
 		mSurvivalButton->SetColor(ButtonWidget::COLOR_BKG, Color::White);
 	}
 
@@ -390,16 +428,16 @@ void GameSelector::SyncButtons()
 	if (mShowStartButton)
 	{
 		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_HIDDEN);
-		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
-		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
-		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
+		//mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
+		//mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
+		//mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
 	}
 	else
 	{
 		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
-		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
-		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
-		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
+		//mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
+		//mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
+		//mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
 	}
 }
 
@@ -412,6 +450,7 @@ void GameSelector::AddTrophySparkle()
 }
 
 //0x44A320
+// GOTY @Patoke: 0x44D270
 void GameSelector::SyncProfile(bool theShowLoading)
 {
 	if (theShowLoading)
@@ -536,10 +575,11 @@ void GameSelector::Draw(Graphics* g)
 	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
 	if (mHasTrophy)
 	{
+		// @Patoke: updated pos to match GOTY
 		if (mApp->EarnedGoldTrophy())
-			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f, aTransformLeft.mTransY + 390.0f, 1, 0);
+			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 1, 0);
 		else
-			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f, aTransformLeft.mTransY + 390.0f, 0, 0);
+			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 0, 0);
 		
 		TodParticleSystem* aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
 		if (aTrophyParticle)
@@ -548,6 +588,7 @@ void GameSelector::Draw(Graphics* g)
 }
 
 //0x44AB50
+// GOTY @Patoke: 0x44D750
 void GameSelector::DrawOverlay(Graphics* g)
 {
 	g->SetLinearBlend(true);
@@ -602,15 +643,16 @@ void GameSelector::DrawOverlay(Graphics* g)
 
 		g->SetColorizeImages(true);
 		g->SetColor(mAdventureButton->mColors[ButtonWidget::COLOR_BKG]);
-		TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransAreaX + 486.0f, aTransAreaY + 125.0f, aStage, 0);  // 绘制大关数
+		// @Patoke: changed positions for GOTY adventure icon
+		TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransAreaX + 486.0f, aTransAreaY + 47.f, aStage, 0);  // 绘制大关数
 		if (aSub < 10)
 		{
-			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 504.0f, aTransSubY + 128.0f, aSub, 0);
+			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 509.f, aTransSubY + 50.f, aSub, 0);
 		}
 		else if (aSub == 10)
 		{
-			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 504.0f, aTransSubY + 128.0f, 1, 0);
-			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 513.0f, aTransSubY + 129.0f, 0, 0);
+			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 509.f, aTransSubY + 50.f, 1, 0);
+			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 518.f, aTransSubY + 51.f, 0, 0);
 		}
 		g->SetColorizeImages(false);
 	}
@@ -647,6 +689,7 @@ void GameSelector::DrawOverlay(Graphics* g)
 }
 
 //0x44B0D0
+// GOTY @Patoke: 0x44DE6D
 void GameSelector::UpdateTooltip()
 {
 	if (!mApp->HasFinishedAdventure() || mApp->GetDialog(Dialogs::DIALOG_MESSAGE))
@@ -682,6 +725,7 @@ void GameSelector::UpdateTooltip()
 }
 
 //0x44B2A0
+// GOTY @Patoke: 0x44E030
 void GameSelector::Update()
 {
 	Widget::Update();
@@ -754,6 +798,8 @@ void GameSelector::Update()
 			mHelpButton->mBtnNoDraw = false;
 			mOptionsButton->mBtnNoDraw = false;
 			mQuitButton->mBtnNoDraw = false;
+			mZombatarClick->mBtnNoDraw = false; // @Patoke: new widgets
+			mAchievementsButton->mBtnNoDraw = false;
 			mAdventureButton->mMouseVisible = true;
 			mMinigameButton->mMouseVisible = true;
 			mPuzzleButton->mMouseVisible = true;
@@ -765,7 +811,9 @@ void GameSelector::Update()
 			mStoreButton->mMouseVisible = true;
 			mAlmanacButton->mMouseVisible = true;
 			mChangeUserButton->mMouseVisible = true;
-			
+			mZombatarClick->mMouseVisible = true; // @Patoke: new widgets
+			mAchievementsButton->mMouseVisible = true;
+
 			if (mApp->mPlayerInfo == nullptr)
 			{
 				mApp->DoCreateUserDialog();
@@ -858,10 +906,14 @@ void GameSelector::Update()
 	TrackButton(mAlmanacButton, "SelectorScreen_BG_Right", 256.0f, 387.0f);
 	TrackButton(mStoreButton, "SelectorScreen_BG_Right", 334.0f, 441.0f);
 	TrackButton(mChangeUserButton, "woodsign2", 24.0f, 10.0f);
+	TrackButton(mZombatarClick, "woodsign3", 0.f, 0.f); // @Patoke: add shart here
+	TrackButton(mAchievementsButton, "SelectorScreen_BG_Left", 20.f, 480.f);
 	aSelectorReanim->SetImageOverride("woodsign2", (mChangeUserButton->mIsOver || mChangeUserButton->mIsDown) ? Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS : nullptr);
+	aSelectorReanim->SetImageOverride("woodsign3", (mZombatarClick->mIsOver || mZombatarClick->mIsDown) ? Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN3_PRESS : nullptr);
 }
 
 //0x44BB20
+// GOTY @Patoke: 0x44EA40
 void GameSelector::TrackButton(DialogButton* theButton, const char* theTrackName, float theOffsetX, float theOffsetY)
 {
 	Reanimation* aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
@@ -890,6 +942,8 @@ void GameSelector::AddedToManager(WidgetManager* theWidgetManager)
 	theWidgetManager->AddWidget(mZenGardenButton);
 	theWidgetManager->AddWidget(mChangeUserButton);
 	theWidgetManager->AddWidget(mOverlayWidget);
+	theWidgetManager->AddWidget(mZombatarClick); // @Patoke: add new widgets
+	theWidgetManager->AddWidget(mAchievementsButton);
 }
 
 //0x44BCA0
@@ -909,6 +963,8 @@ void GameSelector::RemovedFromManager(WidgetManager* theWidgetManager)
 	theWidgetManager->RemoveWidget(mZenGardenButton);
 	theWidgetManager->RemoveWidget(mChangeUserButton);
 	theWidgetManager->RemoveWidget(mOverlayWidget);
+	theWidgetManager->RemoveWidget(mZombatarClick); // @Patoke: remove new widgets
+	theWidgetManager->RemoveWidget(mAchievementsButton);
 }
 
 //0x44BD80
@@ -926,6 +982,8 @@ void GameSelector::OrderInManagerChanged()
 	mWidgetManager->PutInfront(mZenGardenButton, this);
 	mWidgetManager->PutInfront(mSurvivalButton, this);
 	mWidgetManager->PutInfront(mChangeUserButton, this);
+	mWidgetManager->PutInfront(mZombatarClick, this); // @Patoke: z order for new widgets
+	mWidgetManager->PutInfront(mAchievementsButton, this);
 }
 
 //0x44BE60
@@ -1114,6 +1172,8 @@ void GameSelector::ClickedAdventure()
 	mAlmanacButton->SetDisabled(true);
 	mSurvivalButton->SetDisabled(true);
 	mZenGardenButton->SetDisabled(true);
+	mZombatarClick->SetDisabled(true); // @Patoke: added new widgets
+	mAchievementsButton->SetDisabled(true);
 
 	Reanimation* aHandReanim = mApp->AddReanimation(-70.0f, 10.0f, 0, ReanimationType::REANIM_ZOMBIE_HAND);
 	aHandReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
@@ -1125,12 +1185,14 @@ void GameSelector::ClickedAdventure()
 }
 
 //0x44C890
+// GOTY @Patoke: 0x44F590
 bool GameSelector::ShouldDoZenTuturialBeforeAdventure()
 {
 	return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() == 45 && mApp->mPlayerInfo->mNumPottedPlants == 0;
 }
 
 //0x44C8C0
+// GOTY @Patoke: 0x44F5C0
 void GameSelector::ButtonDepress(int theId)
 {
 	if (theId == GameSelector::GameSelector_Minigame && mMinigamesLocked)

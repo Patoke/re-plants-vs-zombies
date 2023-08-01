@@ -672,6 +672,7 @@ void Music::MusicUpdate()
 }
 
 //0x45B750
+// GOTY @Patoke: 0x45EFA0
 void Music::MakeSureMusicIsPlaying(MusicTune theMusicTune)
 {
 	if (mCurMusicTune != theMusicTune)

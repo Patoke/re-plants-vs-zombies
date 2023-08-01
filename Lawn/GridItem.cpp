@@ -222,6 +222,7 @@ void GridItem::DrawStinky(Graphics* g)
 }
 
 //0x44D860
+// GOTY @Patoke: 0x450B39
 void GridItem::DrawCrater(Graphics* g)
 {
     float aXPos = mBoard->GridToPixelX(mGridX, mGridY) - 8.0f;

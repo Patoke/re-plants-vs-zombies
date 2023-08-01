@@ -68,7 +68,7 @@ ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { /
 	{ ReanimationType::REANIM_BLOVER,                               "reanim\\Blover.reanim",                            0 },
 	{ ReanimationType::REANIM_FLOWER_POT,                           "reanim\\Pot.reanim",                               0 },
 	{ ReanimationType::REANIM_CACTUS,                               "reanim\\Cactus.reanim",                            0 },
-	{ ReanimationType::REANIM_DANCER,                               "reanim\\Zombie_Jackson.reanim",                    0 },
+	{ ReanimationType::REANIM_DANCER,                               "reanim\\Zombie_disco.reanim",						0 }, // @Patoke: GOTY has different reanim name
 	{ ReanimationType::REANIM_TANGLEKELP,                           "reanim\\Tanglekelp.reanim",                        0 },
 	{ ReanimationType::REANIM_STARFRUIT,                            "reanim\\Starfruit.reanim",                         0 },
 	{ ReanimationType::REANIM_POLEVAULTER,                          "reanim\\Zombie_polevaulter.reanim",                0 },
@@ -79,7 +79,7 @@ ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { /
 	{ ReanimationType::REANIM_DIGGER_DIRT,                          "reanim\\Digger_rising_dirt.reanim",                0 },
 	{ ReanimationType::REANIM_ZOMBIE_DOLPHINRIDER,                  "reanim\\Zombie_dolphinrider.reanim",               0 },
 	{ ReanimationType::REANIM_POGO,                                 "reanim\\Zombie_pogo.reanim",                       0 },
-	{ ReanimationType::REANIM_BACKUP_DANCER,                        "reanim\\Zombie_dancer.reanim",                     0 },
+	{ ReanimationType::REANIM_BACKUP_DANCER,                        "reanim\\Zombie_backup.reanim",                     0 }, // @Patoke: GOTY has different reanim name
 	{ ReanimationType::REANIM_BOBSLED,                              "reanim\\Zombie_bobsled.reanim",                    0 },
 	{ ReanimationType::REANIM_JACKINTHEBOX,                         "reanim\\Zombie_jackbox.reanim",                    0 },
 	{ ReanimationType::REANIM_SNORKEL,                              "reanim\\Zombie_snorkle.reanim",                    0 },
