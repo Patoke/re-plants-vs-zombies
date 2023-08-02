@@ -58,7 +58,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT, 
 		Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT
 	);
-	// @Patoke: GOTY has another X value
+	
 	mAdventureButton->Resize(0, 0, Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON->mWidth, 125);
 	mAdventureButton->mClip = false;
 	mAdventureButton->mBtnNoDraw = true;
@@ -142,7 +142,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mZombatarClick->mMouseVisible = false;
 
 	mAchievementsButton = MakeNewButton(
-		GameSelector::GameSelector_Acheesements,
+		GameSelector::GameSelector_Achievements,
 		this,
 		"",
 		nullptr,
@@ -150,10 +150,21 @@ GameSelector::GameSelector(LawnApp* theApp)
 		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS,
 		Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS
 	);
-	mAchievementsButton->Resize(820, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
+	mAchievementsButton->Resize(20, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
 	mAchievementsButton->mClip = false;
 	mAchievementsButton->mBtnNoDraw = false;
 	mAchievementsButton->mMouseVisible = false;
+
+	mQuickPlayButton = MakeNewButton(
+		GameSelector::GameSelector_QuickPlay,
+		this,
+		"",
+		nullptr,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT
+	);
+	mQuickPlayButton->Resize(mApp->mWidth - 150, 455, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mWidth, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mHeight);
 
 	mZenGardenButton = MakeNewButton(
 		GameSelector::GameSelector_ZenGarden, 
@@ -343,6 +354,8 @@ GameSelector::~GameSelector()
 		delete mZombatarClick;
 	if (mAchievementsButton)
 		delete mAchievementsButton;
+	if (mQuickPlayButton)
+		delete mQuickPlayButton;
 
 	delete mToolTip;
 }
@@ -359,6 +372,8 @@ void GameSelector::SyncButtons()
 	mAlmanacButton->mVisible = aAlmanacAvailable;
 	mStoreButton->mDisabled = !aStoreOpen;
 	mStoreButton->mVisible = aStoreOpen;
+	mZombatarClick->mDisabled = false; // @Patoke: added these
+	mZombatarClick->mVisible = true;
 
 	Reanimation* aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
 	if (aAlmanacAvailable)
@@ -442,6 +457,7 @@ void GameSelector::SyncButtons()
 }
 
 //0x44A2E0
+// GOTY @Patoke: 0x44D230
 void GameSelector::AddTrophySparkle()
 {
 	TOD_ASSERT(mTrophyParticleID == PARTICLESYSTEMID_NULL);
@@ -1140,6 +1156,7 @@ void GameSelector::ButtonPress(int theId, int theClickCount)
 }
 
 //0x44C590
+// GOTY @Patoke: 0x44F270
 void GameSelector::ClickedAdventure()
 {
 	if (mApp->IsTrialStageLocked() && (mLevel >= 25 || mApp->HasFinishedAdventure()))
@@ -1265,10 +1282,26 @@ void GameSelector::ButtonDepress(int theId)
 		if (ShouldDoZenTuturialBeforeAdventure())
 			mApp->mZenGarden->SetupForZenTutorial();
 		break;
+	case GameSelector::GameSelector_Zombatar:
+		//if (mApp->mPlayerInfo->mHasOpenedZombatar??)
+		//	this->sub_450170();
+		//else
+		//	mApp->sub_4534C0();
+		break;
+	case GameSelector::GameSelector_UnkScreen:
+		// this->sub_450140(0, 0);
+		break;
+	case GameSelector::GameSelector_Achievements:
+		// this->sub_450200();
+		break;
+	case GameSelector::GameSelector_QuickPlay:
+		// this->sub_4501C0();
+		break;
 	}
 }
 
 //0x44CB00
+// GOTY @Patoke: 0x44F880
 void GameSelector::AddPreviewProfiles()
 {
 	PlayerInfo* aProfile;

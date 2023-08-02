@@ -1139,6 +1139,7 @@ void StoreScreen::EnableButtons(bool theEnable)
 }
 
 //0x48D3A0
+// GOTY @Patoke: 0x498110
 void StoreScreen::SetupForIntro(int theDialogIndex)
 {
     mStartDialog = theDialogIndex;

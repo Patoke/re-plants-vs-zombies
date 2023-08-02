@@ -2327,8 +2327,9 @@ void Challenge::DrawArtChallenge(Graphics* g)
 	
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_ART_CHALLENGE_WALLNUT)
 	{
-		g->DrawImage(Sexy::IMAGE_GOOGLYEYE, 357, 174);
-		g->DrawImage(Sexy::IMAGE_GOOGLYEYE, 516, 174);
+		// @Patoke: assets, removed, perhaps add back?
+		//g->DrawImage(Sexy::IMAGE_GOOGLYEYE, 357, 174);
+		//g->DrawImage(Sexy::IMAGE_GOOGLYEYE, 516, 174);
 	}
 
 	g->SetColorizeImages(false);

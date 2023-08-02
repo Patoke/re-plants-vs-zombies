@@ -80,6 +80,7 @@ void PopDRMComm::EnableLocking()
 }
 
 //0x5D5CB0
+// GOTY @Patoke: 0x6383C3
 bool PopDRMComm::QueryData()
 {
 #ifdef _ENABLE_DRM_FOR_DEBUGGING

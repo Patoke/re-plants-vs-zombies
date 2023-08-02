@@ -709,6 +709,7 @@ void TodParticleEmitter::DeleteAll()
 }
 
 //0x517370
+// GOTY @Patoke: 0x521A20
 void TodParticleSystem::Update()
 {
 	if (!mDontUpdate)
@@ -1121,6 +1122,7 @@ void TodParticleSystem::OverrideExtraAdditiveDraw(const char* theEmitterName, bo
 }
 
 //0x518600
+// GOTY @Patoke: 0x522CB0
 void TodParticleSystem::OverrideImage(const char* theEmitterName, Image* theImage)
 {
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)

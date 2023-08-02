@@ -417,7 +417,8 @@ void GridItem::DrawSquirrel(Graphics* g)
         aXPos += TodAnimateCurve(50, 0, mGridItemCounter, -80, 0, TodCurves::CURVE_EASE_IN);
     }
 
-    g->DrawImage(IMAGE_SQUIRREL, aXPos, aYPos);
+    // @Patoke: assets, removed, perhaps add back?
+    //g->DrawImage(IMAGE_SQUIRREL, aXPos, aYPos);
 }
 
 //0x44E090

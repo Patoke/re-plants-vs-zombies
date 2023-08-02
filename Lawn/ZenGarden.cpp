@@ -767,6 +767,7 @@ bool ZenGarden::PlantShouldRefreshNeed(PottedPlant* thePottedPlant)
     return aNowTM.tm_year > aLastWateredTM.tm_year || aNowTM.tm_yday > aLastWateredTM.tm_yday;
 }
 
+// GOTY @Patoke: 0x5292A0
 void ZenGarden::RefreshPlantNeeds(PottedPlant* thePottedPlant)
 {
     if (thePottedPlant->mPlantAge != PottedPlantAge::PLANTAGE_FULL || !PlantShouldRefreshNeed(thePottedPlant))

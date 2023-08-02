@@ -47,7 +47,7 @@
 #include "SexyAppFramework/Dialog.h"
 #include "SexyAppFramework/resource.h"
 
-bool gIsPartnerBuild = false;
+bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659
 bool gSlowMo = false;  //0x6A9EAA
 bool gFastMo = false;  //0x6A9EAB
 LawnApp* gLawnApp = nullptr;  //0x6A9EC0
@@ -391,6 +391,7 @@ void LawnApp::ReadFromRegistry()
 }
 
 //0x44F540
+// GOTY @Patoke: 0x452800
 bool LawnApp::WriteCurrentUserConfig()
 {
 	if (mPlayerInfo)
@@ -834,6 +835,7 @@ void LawnApp::FinishUserDialog(bool isYes)
 }
 
 //0x450A10
+// GOTY @Patoke: 0x453DE0
 void LawnApp::DoCreateUserDialog()
 {
 	KillDialog(Dialogs::DIALOG_CREATEUSER);
@@ -2016,6 +2018,7 @@ void LawnApp::CenterDialog(Dialog* theDialog, int theWidth, int theHeight)
 }
 
 //0x453630
+// GOTY @Patoke: 0x456B00
 void LawnApp::PlayFoley(FoleyType theFoleyType)
 {
 	if (!mMuteSoundsForCutscene)
@@ -2150,6 +2153,7 @@ bool LawnApp::IsShovelLevel()
 }
 
 //0x453840
+// GOTY @Patoke: 0x456D10
 bool LawnApp::IsWallnutBowlingLevel()
 {
 	if (mBoard == nullptr)
