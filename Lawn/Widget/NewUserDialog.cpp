@@ -4,12 +4,14 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 
 //0x45D610
+// GOTY @Patoke: 0x460F20
 NewUserDialog::NewUserDialog(LawnApp* theApp, bool isRename) : LawnDialog(
 	theApp, 
 	isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER, 
 	true, 
-	isRename ? _S("[RENAME_USER]") : _S("[NEW_USER]"), 
-	_S("[PLEASE_ENTER_NAME]"), 
+	// @Patoke: these locals don't exist
+	isRename ? _S("RENAME USER") : _S("NEW USER"), 
+	_S("Please enter your name:"), 
 	_S("[DIALOG_BUTTON_OK]"), 
 	Dialog::BUTTONS_OK_CANCEL)
 {
