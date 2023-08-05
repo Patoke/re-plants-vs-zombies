@@ -902,6 +902,9 @@
     <ClCompile Include="..\Lawn\Widget\CreditScreen.cpp">
       <Filter>Lawn\Widget\Widget Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Lawn\Widget\AchievementsScreen.cpp">
+      <Filter>Lawn\Widget\Widget Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h">
@@ -1440,6 +1443,9 @@
       <Filter>Lawn\Widget\Widget Include</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="..\Lawn\Widget\AchievementsScreen.h">
+      <Filter>Lawn\Widget\Widget Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BltRotatedHelper.inc">

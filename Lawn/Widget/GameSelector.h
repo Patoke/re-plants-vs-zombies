@@ -4,6 +4,7 @@
 #include "../../ConstEnums.h"
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/ButtonListener.h"
+#include "AchievementsScreen.h"
 
 class LawnApp;
 class ToolTipWidget;
@@ -39,7 +40,7 @@ private:
         GameSelector_ZenGarden = 109,
         GameSelector_Survival = 110,
         GameSelector_Zombatar = 111, // @Patoke: add stuff after 110
-        GameSelector_UnkScreen = 112,
+        GameSelector_AchievementsBack = 112,
         GameSelector_Achievements = 113,
         GameSelector_QuickPlay = 114
     };
@@ -57,7 +58,7 @@ public:
     NewLawnButton*              mZenGardenButton;           //+0xB0
     NewLawnButton*              mSurvivalButton;            //+0xB4
     NewLawnButton*              mChangeUserButton;          //+0xB8
-    NewLawnButton*              mZombatarClick;             //+GOTY @Patoke: 0xC0
+    NewLawnButton*              mZombatarButton;             //+GOTY @Patoke: 0xC0
     NewLawnButton*              mAchievementsButton;        //+GOTY @Patoke: 0xC4
     NewLawnButton*              mQuickPlayButton;           //+GOTY @Patoke: 0xC8
     Widget*                     mOverlayWidget;             //+0xBC
@@ -81,6 +82,14 @@ public:
     ToolTipWidget*              mToolTip;                   //+0x128
     bool                        mHasTrophy;                 //+0x12C
     bool                        mUnlockSelectorCheat;       //+0x12D
+    int                         mSlideCounter;              //+GOTY @Patoke: 0x154
+    int                         mStartX;                    //+GOTY @Patoke: 0x158
+    int                         mStartY;                    //+GOTY @Patoke: 0x15C
+    int                         mDestX;                     //+GOTY @Patoke: 0x160
+    int                         mDestY;                     //+GOTY @Patoke: 0x164
+    //ZombatarWidget*           mZombatarWidget;            //+GOTY @Patoke: 0x168
+    AchievementsWidget*       mAchievementsWidget;        //+GOTY @Patoke: 0x16C
+    float mExtraOffset;
 
 public:
     GameSelector(LawnApp* theApp);
@@ -106,6 +115,9 @@ public:
     void                        UpdateTooltip();
     /*inline*/ bool             ShouldDoZenTuturialBeforeAdventure();
     void                        AddPreviewProfiles();
+    // @Patoke: implement functions
+    /*inline*/ void             SlideTo(int theX, int theY);
+    void                        ShowAchievementsScreen(); // @Patoke: unofficial name
 };
 
 class GameSelectorOverlay : public Widget

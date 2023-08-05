@@ -1226,6 +1226,7 @@ void Reanimation::AssignRenderGroupToTrack(const char* theTrackName, int theRend
 }
 
 //0x473A40
+// GOTY @Patoke: 0x478170
 void Reanimation::AssignRenderGroupToPrefix(const char* theTrackName, int theRenderGroup)
 {
 	size_t aPrifixLength = strlen(theTrackName);
