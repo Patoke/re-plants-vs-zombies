@@ -1282,6 +1282,7 @@ SexyString TodReplaceNumberString(const SexyString& theText, const SexyChar* the
 }
 
 //0x5137F0
+// GOTY @Patoke: 0x51DB00
 bool TodIsPointInPolygon(const SexyVector2* thePolygonPoint, int theNumberPolygonPoints, const SexyVector2& theCheckPoint)
 {
 	TOD_ASSERT(theNumberPolygonPoints >= 3);

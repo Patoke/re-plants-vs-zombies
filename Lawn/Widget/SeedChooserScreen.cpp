@@ -912,7 +912,8 @@ void SeedChooserScreen::ShowToolTip()
 					}
 					else
 					{
-						mToolTip->SetWarningText(_S("[NOT_RECOMMEND_FOR_LEVEL]"));
+						// @Patoke: fix local name
+						mToolTip->SetWarningText(_S("[NOT_RECOMMENDED_FOR_LEVEL]"));
 					}
 				}
 				else

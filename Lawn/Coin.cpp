@@ -1035,6 +1035,7 @@ void Coin::TryAutoCollectAfterLevelAward()
 }
 
 //0x432060
+// GOTY @Patoke: 0x434DC0
 void Coin::Collect()
 {
     if (mDead)
@@ -1319,6 +1320,7 @@ void Coin::PlayGroundSound()
     }
 }
 
+// GOTY @Patoke: 0x435850
 void Coin::PlayCollectSound()
 {
     if (mType == CoinType::COIN_USABLE_SEED_PACKET)

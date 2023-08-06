@@ -579,7 +579,8 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         mScaleZombie = 0.8f;
         if (!IsOnBoard())
         {
-            PlayZombieReanim("anim_moonwalk", ReanimLoopType::REANIM_LOOP, 0, 12.0f);
+            // @Patoke: oops
+            PlayZombieReanim("anim_armraise", ReanimLoopType::REANIM_LOOP, 0, 12.0f);
         }
         else
         {
@@ -3615,6 +3616,15 @@ void Zombie::SetupReanimForLostArm(unsigned int theDamageFlags)
     case ZombieType::ZOMBIE_POLEVAULTER:
         ReanimShowTrack("Zombie_polevaulter_outerarm_lower", RENDER_GROUP_HIDDEN);
         ReanimShowTrack("Zombie_outerarm_hand", RENDER_GROUP_HIDDEN);
+        break;
+    // @Patoke: add cases
+    case ZombieType::ZOMBIE_DANCER:
+        ReanimShowTrack("Zombie_disco_outerarm_lower", RENDER_GROUP_HIDDEN);
+        ReanimShowTrack("Zombie_disco_outerhand_point", RENDER_GROUP_HIDDEN);
+        break;   
+    case ZombieType::ZOMBIE_BACKUP_DANCER:
+        ReanimShowTrack("Zombie_disco_outerarm_lower", RENDER_GROUP_HIDDEN);
+        ReanimShowTrack("Zombie_disco_outerhand", RENDER_GROUP_HIDDEN);
         break;
     default:
         ReanimShowPrefix("Zombie_outerarm_lower", RENDER_GROUP_HIDDEN);
@@ -8891,6 +8901,7 @@ void Zombie::ReanimShowPrefix(const char* theTrackPrefix, int theRenderGroup)
 }
 
 //0x533200
+// GOTY @Patoke: 0x543C00
 void Zombie::ReanimShowTrack(const char* theTrackName, int theRenderGroup)
 {
     Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);

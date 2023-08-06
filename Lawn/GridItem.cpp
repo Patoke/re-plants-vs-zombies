@@ -137,6 +137,7 @@ void GridItem::DrawIZombieBrain(Graphics* g)
 }
 
 //0x44D3A0
+// GOTY @Patoke: 0x450673
 void GridItem::DrawGraveStone(Graphics* g)
 {
     if (mGridItemCounter <= 0)

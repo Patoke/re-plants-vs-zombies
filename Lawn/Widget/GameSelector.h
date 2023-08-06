@@ -89,7 +89,6 @@ public:
     int                         mDestY;                     //+GOTY @Patoke: 0x164
     //ZombatarWidget*           mZombatarWidget;            //+GOTY @Patoke: 0x168
     AchievementsWidget*       mAchievementsWidget;        //+GOTY @Patoke: 0x16C
-    float mExtraOffset;
 
 public:
     GameSelector(LawnApp* theApp);

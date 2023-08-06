@@ -699,6 +699,7 @@ bool SeedPacket::CanPickUp()
 }
 
 //0x488590
+// GOTY @Patoke: 0x4931C0
 void SeedPacket::MouseDown(int x, int y, int theClickCount)
 {
 	if (mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mPacketType == SeedType::SEED_NONE)

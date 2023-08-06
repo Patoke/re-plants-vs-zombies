@@ -773,8 +773,22 @@ void GameSelector::Update()
 		Move(aNewX, aNewY);
 
 		// @Patoke: not from the original binaries but fixes bugs
-		mOverlayWidget->Move(aNewX, aNewY);
+		mOverlayWidget->mY = aNewY;
 		mAchievementsWidget->mY = aNewY + mApp->mHeight - 1;
+		mAdventureButton->mButtonOffsetY = aNewY;
+		mMinigameButton->mButtonOffsetY = aNewY;
+		mPuzzleButton->mButtonOffsetY = aNewY;
+		mOptionsButton->mButtonOffsetY = aNewY + 15;
+		mQuitButton->mButtonOffsetY = aNewY + 5;
+		mHelpButton->mButtonOffsetY = aNewY + 30;
+		mStoreButton->mButtonOffsetY = aNewY;
+		mAlmanacButton->mButtonOffsetY = aNewY;
+		mZenGardenButton->mButtonOffsetY = aNewY;
+		mSurvivalButton->mButtonOffsetY = aNewY;
+		mChangeUserButton->mButtonOffsetY = aNewY;
+		mZombatarButton->mButtonOffsetY = aNewY;
+		mAchievementsButton->mButtonOffsetY = aNewY;
+		mQuickPlayButton->mButtonOffsetY = aNewY;
 
 		mSlideCounter--;
 	}
