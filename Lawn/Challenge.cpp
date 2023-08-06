@@ -2005,6 +2005,7 @@ void Challenge::UpdateStormyNight()
 }
 
 //0x423800
+// GOTY @Patoke: 0x426320
 void Challenge::UpdateSlotMachine()
 {
 	int aSunMoney = ClampInt(mBoard->mSunMoney, 0, 2000);
@@ -2088,7 +2089,8 @@ void Challenge::UpdateSlotMachine()
 			else
 			{
 				mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_3_OF_A_KIND]"), MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
-				for (int i = 0; i < 20; i++)
+				// @Patoke: fix silly bug XD
+				for (int i = 0; i < 3; i++)
 				{
 					mBoard->AddCoin(320 + i * 20, 85, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType = aPacket1;
 				}
