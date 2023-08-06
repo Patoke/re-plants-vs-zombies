@@ -6676,6 +6676,7 @@ bool Board::ProgressMeterHasFlags()
 }
 
 //0x417500
+// GOTY @Patoke: 0x419E30
 void Board::DrawProgressMeter(Graphics* g)
 {
 	if (!HasProgressMeter())
@@ -6697,31 +6698,32 @@ void Board::DrawProgressMeter(Graphics* g)
 	// ====================================================================================================
 	int aPosX = aCelWidth / 2 + 600;
 	Color aColor(224, 187, 98);
+	// @Patoke: updated these
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
 	{
-		SexyString aMatchStr = StrFormat(_S("%d / %d %s"), mChallenge->mChallengeScore, 75, TodStringTranslate(_S("[MATCHES]")).c_str());
+		SexyString aMatchStr = StrFormat(_S("%d/%d %s"), mChallenge->mChallengeScore, 75, TodStringTranslate(_S("[MATCHES]")).c_str());
 		TodDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->IsSquirrelLevel())
 	{
-		SexyString aMatchStr = StrFormat(_S("%d / %d %s"), mChallenge->mChallengeScore, 7, TodStringTranslate(_S("[SQUIRRELS]")).c_str());
+		SexyString aMatchStr = StrFormat(_S("%d/%d %s"), mChallenge->mChallengeScore, 7, TodStringTranslate(_S("[SQUIRRELS]")).c_str());
 		TodDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE)
 	{
 		int aSunMoney = ClampInt(mSunMoney, 0, 2000);
-		SexyString aMatchStr = StrFormat(_S("%d / %d %s"), aSunMoney, 2000, TodStringTranslate(_S("[PROGRESS_METER_SUN_SLOT_MACHINE]")).c_str());
+		SexyString aMatchStr = StrFormat(_S("%d/%d %s"), aSunMoney, 2000, TodStringTranslate(_S("[SUN]")).c_str());
 		TodDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
 	{
 		int aSunMoney = ClampInt(mSunMoney, 0, 1000);
-		SexyString aMatchStr = StrFormat(_S("%d / %d %s"), aSunMoney, 1000, TodStringTranslate(_S("[SUN]")).c_str());
+		SexyString aMatchStr = StrFormat(_S("%d/%d %s"), aSunMoney, 1000, TodStringTranslate(_S("[SUN]")).c_str());
 		TodDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->IsIZombieLevel())
 	{
-		SexyString aMatchStr = StrFormat(_S("%d / %d %s"), mChallenge->mChallengeScore, 5, TodStringTranslate(_S("[PROGRESS_METER_BRAINS]")).c_str());
+		SexyString aMatchStr = StrFormat(_S("%d/%d %s"), mChallenge->mChallengeScore, 5, TodStringTranslate(_S("[BRAINS]")).c_str());
 		TodDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (ProgressMeterHasFlags())
@@ -6799,6 +6801,7 @@ void Board::DrawHouseDoorTop(Graphics* g)
 }
 
 //0x417DA0
+// GOTY @Patoke: 0x41A700
 void Board::DrawLevel(Graphics* g)
 {
 	// ====================================================================================================
