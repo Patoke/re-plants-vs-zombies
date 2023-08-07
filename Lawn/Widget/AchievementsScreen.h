@@ -8,6 +8,37 @@ class LawnApp;
 
 using namespace Sexy;
 
+enum AchievementId {
+	HomeSecurity,
+	NovelPeasPrize,
+	BetterOffDead,
+	ChinaShop,
+	Spudow,
+	Explodonator,
+	Morticulturalist,
+	DontPea,
+	RollSomeHeads,
+	Grounded,
+	Zombologist,
+	PennyPincher,
+	SunnyDays,
+	PopcornParty,
+	GoodMorning,
+	NoFungusAmongUs,
+	BeyondTheGrave,
+	Immortal,
+	ToweringWisdom,
+	MustacheMode,
+    MAX_ACHIEVEMENTS
+};
+
+// todo @Patoke: add these
+class AchievementItem {
+public:
+    std::string name;
+    std::string description;
+};
+
 class AchievementsWidget : public Widget {
 public:
 	LawnApp*	mApp;                       //+GOTY @Patoke: 0xA8

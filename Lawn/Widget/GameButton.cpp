@@ -333,7 +333,7 @@ void NewLawnButton::Draw(Graphics* g)
 
 		aFontY += (mHeight - mFont->GetAscent() / 6 + mFont->GetAscent() - 1) / 2;
 	}
-	
+
 	g->SetColorizeImages(true);
 	if (!isDown)
 	{
@@ -412,4 +412,9 @@ NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyS
 	aButton->mTranslateY = 1;
 
 	return aButton;
+}
+
+void NewLawnButton::SetOffset(int theX, int theY) {
+	this->mButtonOffsetX = theX;
+	this->mButtonOffsetY = theY;
 }

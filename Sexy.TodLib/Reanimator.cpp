@@ -950,6 +950,7 @@ AttachEffect* Reanimation::AttachParticleToTrack(const char* theTrackName, TodPa
 }
 
 //0x473110
+// GOTY @Patoke: 0x477810
 void Reanimation::GetAttachmentOverlayMatrix(int theTrackIndex, SexyTransform2D& theOverlayMatrix)
 {
 	ReanimatorTransform aTransform;

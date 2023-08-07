@@ -107,6 +107,8 @@ public:
     virtual void			Draw(Graphics* g);
 	virtual bool			IsPointVisible(int x, int y);
     void					SetLabel(const SexyString& theLabel);
+	// @Patoke: user defined
+	void					SetOffset(int theX, int theY);
 };
 
 LawnStoneButton*			MakeButton(int theId, ButtonListener* theListener, const SexyString& theText);
