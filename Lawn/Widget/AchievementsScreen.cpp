@@ -19,6 +19,29 @@
 
 Rect aBackButtonRect = { 120, 35, 130, 80 };
 
+AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
+	{ "Home Lawn Security", "Complete Adventure Mode." },
+	{ "Nobel Peas Prize", "Get the golden sunflower trophy." },
+	{ "Better Off Dead", "Get to a streak of 10 in I, Zombie Endless" },
+	{ "China Shop", "Get to a streak of 15 in Vasebreaker Endless" },
+	{ "SPUDOW!", "Blow up a zombie using a Potato Mine." },
+	{ "Explodonator", "Take out 10 full-sized zombies with a single Cherry Bomb." },
+	{ "Morticulturalist", "Collect all 49 plants (including plants from Crazy Dave's shop)." },
+	{ "Don't Pea in the Pool", "Complete a daytime pool level without using pea shooters of any kind." },
+	{ "Roll Some Heads", "Complete a daytime pool level without using pea shooters of any k" },
+	{ "Grounded", "Defeat a normal roof level without using any catapult plants." },
+	{ "Zombologist", "Discover the Yeti zombie." },
+	{ "Penny Pincher", "Pick up 30 coins in a row on a single level without letting any disappear." },
+	{ "Sunny Days", "Get 8000 sun during a single level." },
+	{ "Popcorn Party", "Defeat 2 Gargantuars with Corn Cob missiles in a single level." },
+	{ "Good Morning", "Complete a daytime level by planting only Mushrooms and Coffee Be" },
+	{ "No Fungus Among Us", "Complete a nighttime level without planting any Mushrooms.." },
+	{ "Beyond the Grave", "Beat all 20 mini games." },
+	{ "Immortal", "Survive 20 waves of pure zombie ferocity." },
+	{ "Towering Wisdom", "Grow the Tree of Wisdom to 100 feet." },
+	{ "Mustache Mode", "Enable Mustache Mode" }
+};
+
 // GOTY @Patoke: 0x401000
 AchievementsWidget::AchievementsWidget(LawnApp* theApp) {
 	mApp = theApp;
@@ -72,12 +95,8 @@ void AchievementsWidget::Draw(Graphics* g) {
 	g->DrawImage(IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG, 0, 0);
 
 	int aHeight = IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG->mHeight;
-	int i = 70;
-	do {
-		g->DrawImage(IMAGE_ACHEESEMENTS_HOLE_TILE, 0, aHeight);
-		aHeight += 225;
-		--i;
-	} while (i);
+	for (int i = 1; i <= 70; i++)
+		g->DrawImage(IMAGE_ACHEESEMENTS_HOLE_TILE, 0, aHeight * i);
 
 	g->DrawImage(IMAGE_ACHEESEMENTS_BOOKWORM, 0, 1125);
 	g->DrawImage(IMAGE_ACHEESEMENTS_BEJEWELED, 0, 2250);
@@ -91,7 +110,38 @@ void AchievementsWidget::Draw(Graphics* g) {
 	if (aBackButtonRect.Contains(mWidgetManager->mLastMouseX - mX, mWidgetManager->mLastMouseY - mY))
 		g->DrawImage(IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, 128, 55);
 
-	// todo @Patoke: finish rebuilding this
+	for (int i = 0; i < MAX_ACHIEVEMENTS; i++) {
+		bool aHasAchievement = false; // @Patoke: implement the achievements system
+		int aCurrAchievementOff = 57 * int(i / 2);
+		int aImageXPos = i % 2 == 0 ? 120 : 410;
+		int aImageYPos = 178 + aCurrAchievementOff;
+		int aTextXPos = aImageXPos + 70;
+		int aTextYPos = aImageYPos + 16;
+
+		// Achievement images
+		Rect aSrcRect(70 * (i % 7), 70 * (i / 7), 70, 70);
+		Rect aDestRect(aImageXPos, aImageYPos, 56, 56);
+		
+		g->SetColorizeImages(true);
+		g->SetColor(aHasAchievement ? Color(255, 255, 255) : Color(255, 255, 255, 32));
+
+		g->DrawImage(IMAGE_ACHEESEMENTS_ICONS, aDestRect, aSrcRect);
+		g->SetColorizeImages(false);
+		
+		// Achievement titles
+		g->SetFont(FONT_DWARVENTODCRAFT15);
+		g->SetColor(Color(21, 175, 0));
+
+		g->DrawString(gAchievementList[i].name, aTextXPos, aTextYPos);
+
+		// Achievement descriptions	
+		Rect aPos = Rect(aTextXPos, aTextYPos + 3, 212, 60);
+		
+		g->SetFont(FONT_DWARVENTODCRAFT12);
+		g->SetColor(Color(255, 255, 255));
+
+		g->WriteWordWrapped(aPos, gAchievementList[i].description, 12);
+	}
 
 	g->DrawImage(IMAGE_ACHEESEMENTS_MORE_ROCK, 700, 450);
 

@@ -177,6 +177,7 @@ SexyString TodStringListFind(const SexyString& theName)
 }
 
 //0x519520
+// GOTY @Patoke: 0x523B90
 SexyString TodStringTranslate(const SexyString& theString)
 {
 	if (theString.size() >= 3 && theString[0] == '[')

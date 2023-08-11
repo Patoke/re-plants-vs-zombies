@@ -21,7 +21,7 @@ public:
 	GameButton*			mMenuButton;		//+0x8C
 	LawnApp*			mApp;				//+0x90
 	int					mFadeInCounter;		//+0x94
-	AwardType			mAwardType;			//+0x98
+	AwardType			mAwardType;			//+0x98 GOTY @Patoke: 0xD8
 
 public:
 	AwardScreen(LawnApp* theApp, AwardType theAwardType);
@@ -39,6 +39,8 @@ public:
 	void				StartButtonPressed();
 	virtual void		MouseDown(int x, int y, int theClickCount);
 	virtual void		MouseUp(int x, int y, int theClickCount);
+	// @Patoke: implement functions
+	void				DrawAchievements(Graphics* g);
 };
 
 #endif

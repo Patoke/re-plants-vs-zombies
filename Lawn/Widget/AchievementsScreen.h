@@ -39,6 +39,8 @@ public:
     std::string description;
 };
 
+extern AchievementItem gAchievementList[MAX_ACHIEVEMENTS];
+
 class AchievementsWidget : public Widget {
 public:
 	LawnApp*	mApp;                       //+GOTY @Patoke: 0xA8

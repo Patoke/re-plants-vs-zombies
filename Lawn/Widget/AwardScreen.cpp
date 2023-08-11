@@ -202,6 +202,7 @@ void AwardScreen::DrawAwardSeed(Graphics* g)
 }
 
 //0x4068D0
+// GOTY @Patoke: 0x4081C0
 void AwardScreen::Draw(Graphics* g)
 {
     g->SetLinearBlend(true);
@@ -325,6 +326,7 @@ void AwardScreen::Draw(Graphics* g)
             DrawAwardSeed(g);
         }
     }
+    DrawAchievements(g);
 
     mStartButton->Draw(g);
     mMenuButton->Draw(g);
@@ -475,4 +477,18 @@ void AwardScreen::MouseUp(int x, int y, int theClickCount)
             mApp->ShowGameSelector();
         }
     }
+}
+
+// @Patoke: implement functions
+// GOTY @Patoke: 0x407C20
+void AwardScreen::DrawAchievements(Graphics* g) {
+    //g->SetColorizeImages(true);
+    //Rect aTextWrap = Rect(0, 0, 0, 77);
+    //g->SetColor(Color(255, 255, 255));
+    //g->FillRect(0, 0, mWidth, mHeight);
+    //g->SetColorizeImages(false);
+
+    //g->DrawImage(IMAGE_CHALLENGE_BACKGROUND, 0, 0);
+    //
+    //TodDrawString(g, _S("ACHIEVEMENTS"), BOARD_WIDTH / 2, 58, FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 }
