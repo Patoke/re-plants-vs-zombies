@@ -20,6 +20,7 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/ImageFont.h"
 #include "../../SexyAppFramework/WidgetManager.h"
+#include "AchievementsScreen.h"
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] =
 {
@@ -517,6 +518,7 @@ void StoreScreen::DrawOverlay(Graphics* g)
 }
 
 //0x48BAA0
+// GOTY @Patoke: 0x4578F0
 void StoreScreen::SetBubbleText(int theCrazyDaveMessage, int theTime, bool theClickToContinue)
 {
     mApp->CrazyDaveTalkIndex(theCrazyDaveMessage);
@@ -911,7 +913,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
     mApp->CrazyDaveStopTalking();
     if (!CanAffordItem(theStoreItem))
     {
-        // @Patoke: fix relocs
+        // @Patoke: fix locals
         Dialog* aDialog = mApp->DoDialog(DIALOG_NOT_ENOUGH_MONEY, true,
             _S("Not enough money"), 
             _S("You can't afford this item yet. Earn more coins by killing zombies!"), 
@@ -1030,6 +1032,22 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
             if (mApp->mSeedChooserScreen)
             {
                 mApp->mSeedChooserScreen->UpdateAfterPurchase();
+            }
+
+            // @Patoke: implemented
+            bool aGiveAchievement = true;
+            for (int i = 0; i <= STORE_ITEM_PLANT_IMITATER; i++) {
+                if (mApp->IsTrialStageLocked() || mApp->mPlayerInfo->mPurchases[i] <= 0)
+                    aGiveAchievement = false;;
+            }
+
+            if (aGiveAchievement) {
+                ReportAchievement::GiveAchievement(mApp, Morticulturalist, aGiveAchievement);
+                SetBubbleText(4000, 800, false);
+                // todo @Patoke: add these?
+                //*(a2 + 412) = 150;
+                //*(a2 + 416) = 0;
+                //*(a2 + 584) = 1;
             }
 
             mApp->WriteCurrentUserConfig();

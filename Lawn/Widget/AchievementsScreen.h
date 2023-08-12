@@ -1,5 +1,6 @@
 #ifndef __ACHIEVEMENTSSCREEN_H__
 #define __ACHIEVEMENTSSCREEN_H__
+// @Patoke: implement file
 
 #include "../../ConstEnums.h"
 #include "../../SexyAppFramework/Widget.h"
@@ -60,6 +61,11 @@ public:
 	virtual void                MouseDown(int x, int y, int theClickCount);
 	virtual void                MouseUp(int x, int y, int theClickCount);
 	virtual void				MouseWheel(int theDelta);
+};
+
+class ReportAchievement {
+public:
+	static void GiveAchievement(LawnApp* theApp, int theAchievement, bool theForceGive);
 };
 
 #endif

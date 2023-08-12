@@ -1,3 +1,4 @@
+// @Patoke: implement file
 #include "AchievementsScreen.h"
 #include "../Board.h"
 #include "GameButton.h"
@@ -111,7 +112,7 @@ void AchievementsWidget::Draw(Graphics* g) {
 		g->DrawImage(IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, 128, 55);
 
 	for (int i = 0; i < MAX_ACHIEVEMENTS; i++) {
-		bool aHasAchievement = false; // @Patoke: implement the achievements system
+		bool aHasAchievement = mApp->mPlayerInfo->mEarnedAchievements[i];
 		int aCurrAchievementOff = 57 * int(i / 2);
 		int aImageXPos = i % 2 == 0 ? 120 : 410;
 		int aImageYPos = 178 + aCurrAchievementOff;
@@ -198,4 +199,25 @@ void AchievementsWidget::MouseWheel(int theDelta) {
 		mScrollDirection = 1;
 	else if (theDelta < 0)
 		mScrollDirection = -1;
+}
+
+// GOTY @Patoke: 0x459670
+void ReportAchievement::GiveAchievement(LawnApp* theApp, int theAchievement, bool theForceGive) {
+	// todo @Patoke: finish adding the achievement give events
+	if (!theApp->mPlayerInfo)
+		return;
+
+	if (theApp->mPlayerInfo->mEarnedAchievements[theAchievement])
+		return;
+
+	theApp->mPlayerInfo->mEarnedAchievements[theAchievement] = true;
+
+	if (!theForceGive)
+		return;
+
+	std::string aAchievementName = gAchievementList[theAchievement].name;
+	aAchievementName.append(" Achievement!");
+
+	theApp->mBoard->DisplayAdvice(aAchievementName, MESSAGE_STYLE_BIG_MIDDLE, AdviceType::ADVICE_NONE);
+	theApp->PlaySample(SOUND_ACHIEVEMENT);
 }

@@ -317,6 +317,7 @@ bool CutScene::Is2x2Zombie(ZombieType theZombieType)
 }
 
 //0x439640
+// GOTY @Patoke: 0x43C840
 void CutScene::PreloadResources()
 {
 	TodHesitationTrace("pre-CutScene::PreloadResources()");

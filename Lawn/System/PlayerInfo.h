@@ -72,6 +72,8 @@ public:
     int                 mPlaceHolderPlayerStats;            //+0x??????
     int                 mNumPottedPlants;                   //+0x350
     PottedPlant         mPottedPlant[MAX_POTTED_PLANTS];    //+0x358
+    bool                mEarnedAchievements[20];            //+GOTY @Patoke: 0x24
+    bool                mShownAchievements[20];             //+GOTY @Patoke: 0x38
 
 public:
     PlayerInfo();

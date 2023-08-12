@@ -523,10 +523,10 @@ void LawnApp::KillGameSelector()
 
 //0x44FA20
 // GOTY @Patoke: 0x452CB0
-void LawnApp::ShowAwardScreen(AwardType theAwardType)
+void LawnApp::ShowAwardScreen(AwardType theAwardType, bool theShowAchievements)
 {
 	mGameScene = GameScenes::SCENE_AWARD;
-	mAwardScreen = new AwardScreen(this, theAwardType);
+	mAwardScreen = new AwardScreen(this, theAwardType, theShowAchievements);
 	mAwardScreen->Resize(0, 0, mWidth, mHeight);
 	mWidgetManager->AddWidget(mAwardScreen);
 	mWidgetManager->BringToBack(mAwardScreen);
@@ -534,6 +534,7 @@ void LawnApp::ShowAwardScreen(AwardType theAwardType)
 }
 
 //0x44FAF0
+// GOTY @Patoke: 0x452D80
 void LawnApp::KillAwardScreen()
 {
 	if (mAwardScreen)
@@ -1471,6 +1472,7 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 }
 
 //0x4524F0
+// GOTY @Patoke: 0x4558E0
 void LawnApp::CheckForGameEnd()
 {
 	if (mBoard == nullptr || !mBoard->mLevelComplete)
@@ -1485,22 +1487,22 @@ void LawnApp::CheckForGameEnd()
 
 		if (IsFirstTimeAdventureMode() && aLevel < 50)
 		{
-			ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+			ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 		}
 		else if (aLevel == FINAL_LEVEL)
 		{
 			if (mPlayerInfo->mFinishedAdventure == 1)
 			{
-				ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+				ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 			}
 			else
 			{
-				ShowAwardScreen(AwardType::AWARD_CREDITS_ZOMBIENOTE);
+				ShowAwardScreen(AwardType::AWARD_CREDITS_ZOMBIENOTE, true);
 			}
 		}
 		else if (aLevel == 9 || aLevel == 19 || aLevel == 29 || aLevel == 39 || aLevel == 49)
 		{
-			ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+			ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 		}
 		else
 		{
@@ -1515,7 +1517,7 @@ void LawnApp::CheckForGameEnd()
 
 			if (aUnlockedNewChallenge && HasFinishedAdventure())
 			{
-				ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+				ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 			}
 			else
 			{
@@ -1535,7 +1537,7 @@ void LawnApp::CheckForGameEnd()
 
 		if (aUnlockedNewChallenge)
 		{
-			ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+			ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 		}
 		else
 		{
@@ -1548,7 +1550,7 @@ void LawnApp::CheckForGameEnd()
 
 		if (aUnlockedNewChallenge && HasFinishedAdventure())
 		{
-			ShowAwardScreen(AwardType::AWARD_FORLEVEL);
+			ShowAwardScreen(AwardType::AWARD_FORLEVEL, true);
 		}
 		else
 		{

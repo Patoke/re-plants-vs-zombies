@@ -312,7 +312,7 @@ void NewOptionsDialog::ButtonDepress(int theId)
         {
             mApp->KillNewOptionsDialog();
             mApp->KillGameSelector();
-            mApp->ShowAwardScreen(AwardType::AWARD_CREDITS_ZOMBIENOTE);
+            mApp->ShowAwardScreen(AwardType::AWARD_CREDITS_ZOMBIENOTE, false);
         }
         else if (mApp->mBoard && mApp->mBoard->NeedSaveGame())
         {
