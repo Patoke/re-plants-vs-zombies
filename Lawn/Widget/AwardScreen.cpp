@@ -228,6 +228,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 AwardScreen::~AwardScreen()
 {
 	if (mStartButton) delete mStartButton;
+	if (mContinueButton) delete mContinueButton; // @Patoke: add new button
 	if (mMenuButton) delete mMenuButton;
 }
 
