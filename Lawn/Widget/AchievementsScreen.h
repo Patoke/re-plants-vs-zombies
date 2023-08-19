@@ -10,26 +10,26 @@ class LawnApp;
 using namespace Sexy;
 
 enum AchievementId {
-	HomeSecurity,
+	HomeSecurity, //
 	NovelPeasPrize,
-	BetterOffDead,
-	ChinaShop,
-	Spudow,
-	Explodonator,
-	Morticulturalist,
+	BetterOffDead, //
+	ChinaShop, //
+	Spudow, //
+	Explodonator, //
+	Morticulturalist, //
 	DontPea,
-	RollSomeHeads,
+	RollSomeHeads, //
 	Grounded,
-	Zombologist,
-	PennyPincher,
-	SunnyDays,
-	PopcornParty,
+	Zombologist, //
+	PennyPincher, //
+	SunnyDays, //
+	PopcornParty, //
 	GoodMorning,
 	NoFungusAmongUs,
-	BeyondTheGrave,
-	Immortal,
-	ToweringWisdom,
-	MustacheMode,
+	BeyondTheGrave, //
+	Immortal, //
+	ToweringWisdom, //
+	MustacheMode, //
     MAX_ACHIEVEMENTS
 };
 

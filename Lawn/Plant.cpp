@@ -20,6 +20,7 @@
 #include "../Sexy.TodLib/TodParticle.h"
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/TodStringFile.h"
+#include "Widget/AchievementsScreen.h"
 
 PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES] = {  //0x69F2B0
     { SeedType::SEED_PEASHOOTER,        nullptr, ReanimationType::REANIM_PEASHOOTER,    0,  100,    750,    PlantSubClass::SUBCLASS_SHOOTER,    150,    _S("PEASHOOTER") },
@@ -2378,6 +2379,7 @@ void Plant::Squish()
 }
 
 //0x462CE0
+// GOTY @Patoke: 0x4666E0
 void Plant::UpdateBowling()
 {
     Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
@@ -2495,6 +2497,7 @@ void Plant::UpdateBowling()
             {
                 mApp->PlayFoley(FoleyType::FOLEY_SPAWN_SUN);
                 mBoard->AddCoin(aPosX, aPosY, CoinType::COIN_GOLD, CoinMotion::COIN_MOTION_COIN);
+                ReportAchievement::GiveAchievement(mApp, RollSomeHeads, true);
             }
         }
 
@@ -4341,6 +4344,7 @@ void Plant::KillAllPlantsNearDoom()
 }
 
 //0x4666A0
+// GOTY @Patoke: 0x46A110
 void Plant::DoSpecial()
 {
     int aPosX = mX + mWidth / 2;
@@ -4363,7 +4367,8 @@ void Plant::DoSpecial()
         mApp->PlayFoley(FoleyType::FOLEY_CHERRYBOMB);
         mApp->PlayFoley(FoleyType::FOLEY_JUICY);
 
-        mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 115, 1, true, aDamageRangeFlags);
+        if (mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 115, 1, true, aDamageRangeFlags) >= 10)
+            ReportAchievement::GiveAchievement(mApp, Explodonator, true); // @Patoke: add achievement
 
         mApp->AddTodParticle(aPosX, aPosY, (int)RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_POWIE);
         mBoard->ShakeBoard(3, -4);
@@ -4426,7 +4431,8 @@ void Plant::DoSpecial()
         aPosY = mY + mHeight / 2;
 
         mApp->PlaySample(SOUND_POTATO_MINE);
-        mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 60, 0, false, aDamageRangeFlags);
+        if (mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 60, 0, false, aDamageRangeFlags) >= 1)
+            ReportAchievement::GiveAchievement(mApp, Spudow, true); // @Patoke: add achievement
 
         int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
         mApp->AddTodParticle(aPosX + 20.0f, aPosY, aRenderPosition, ParticleEffect::PARTICLE_POTATO_MINE);

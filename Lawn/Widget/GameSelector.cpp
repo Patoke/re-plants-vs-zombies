@@ -1082,6 +1082,7 @@ void GameSelector::KeyDown(KeyCode theKey)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_POLEVAULT);
 		mApp->mMustacheMode = !mApp->mMustacheMode;
+		ReportAchievement::GiveAchievement(mApp, MustacheMode, false);
 		return;
 	}
 	if (mApp->mSuperMowerCheck->Check(theKey) || mApp->mSuperMowerCheck2->Check(theKey))
@@ -1173,6 +1174,11 @@ void GameSelector::KeyChar(char theChar)
 		mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId));
 	}
 	
+	if (theChar == 'k') {
+		for (auto& achievement : mApp->mPlayerInfo->mEarnedAchievements)
+			achievement = false;
+	}
+
 	if (mApp->mDebugKeysEnabled)
 	{
 		TodTraceAndLog(_S("Selector cheat key '%c'"), theChar);

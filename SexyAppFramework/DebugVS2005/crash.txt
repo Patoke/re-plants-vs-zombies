@@ -1,16 +1,16 @@
-Exception: Access Violation (code 0xc0000005) at address 003C135A in thread 1C94
+Exception: Access Violation (code 0xc0000005) at address 00693698 in thread 2B90
 Module: LawnProject.exe
-Logical Address: 0001:002B035A
+Logical Address: 0001:00032698
 
-010FF384 003C135A Sexy::Image::GetHeight+A
-Params: 010FF3C4 010FFA18 010FFA28 00000000
+00F1F758 00693698 Board::DisplayAdvice+38
+Params: 00F1F770 0000000C FFFFFFFF 032B2EB4
 
 StackWalk failed (error 299)
 
-EAX:00000000 EBX:00EF4000 ECX:00000000 EDX:010FF3C4 ESI:00111343 EDI:00111343
-EIP:003C135A ESP:010FF380  EBP:010FF384
+EAX:0000000C EBX:005C3000 ECX:00F1F770 EDX:00000000 ESI:1B13A0E4 EDI:00F1F844
+EIP:00693698 ESP:00F1F74C  EBP:00F1F758
 CS:0023 SS:002B DS:002B ES:002B FS:0053 GS:002B
-Flags:00010206
+Flags:00010246
 
 Windows Ver: NT 6.2  Build 9200
 DDraw Ver: 
@@ -18,8 +18,8 @@ DSound Ver:
 
 Product: PlantsVsZombies
 Version: 
-Time Loaded: 00:00:12
+Time Loaded: 00:00:22
 Fullscreen: No
-Primary ThreadId: 1C94
+Primary ThreadId: 2B90
 Times Played: 0
 

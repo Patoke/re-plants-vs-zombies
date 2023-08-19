@@ -14,6 +14,7 @@
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/Attachment.h"
+#include "Widget/AchievementsScreen.h"
 
 Coin::Coin()
 {
@@ -423,6 +424,7 @@ bool Coin::IsPresentWithAdvice()
 }
 
 //0x4309D0
+// GOTY @Patoke: 0x4336C0
 void Coin::ScoreCoin()
 {
     Die();
@@ -439,6 +441,13 @@ void Coin::ScoreCoin()
         if (mBoard)
         {
             mBoard->mCoinsCollected += aCoinValue;
+
+            // @Patoke: implemented
+            if (mType == CoinType::COIN_SILVER || mType == CoinType::COIN_GOLD) {
+                mBoard->mLevelCoinsCollected++;
+                if (mBoard->mLevelCoinsCollected == 30 && mApp->mPlayerInfo->mCoins != 0)
+                    ReportAchievement::GiveAchievement(mApp, PennyPincher, true);
+            }
         }
     }
 
@@ -591,6 +600,7 @@ void Coin::UpdateFall()
 }
 
 //0x430E40
+// GOTY @Patoke: 0x433BD0
 void Coin::UpdateCollected()
 {
     int aDestX, aDestY;
@@ -688,6 +698,9 @@ void Coin::UpdateCollected()
                 else if (mType == CoinType::COIN_PRESENT_PUZZLE_MODE)
                 {
                     mBoard->DisplayAdvice(_S("[UNLOCKED_PUZZLE_MODE]"), MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE, AdviceType::ADVICE_UNLOCKED_MODE);
+                }
+                else { // @Patoke: add case
+                    mBoard->DisplayAdvice(_S("[UNLOCKED_SURVIVAL_MODE]"), MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE, AdviceType::ADVICE_UNLOCKED_MODE);
                 }
             }
             else if (mBoard->mHelpIndex != AdviceType::ADVICE_UNLOCKED_MODE || !mBoard->mAdvice->IsBeingDisplayed())
@@ -1396,6 +1409,7 @@ void Coin::MouseDown(int x, int y, int theClickCount)
 }
 
 //0x432DD0
+// GOTY @Patoke: 0x435B20
 void Coin::Die()
 {
     TOD_ASSERT(!mBoard || mBoard->mCursorObject->mCoinID != (CoinID)mBoard->mCoins.DataArrayGetID(this));

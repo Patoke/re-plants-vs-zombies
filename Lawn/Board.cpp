@@ -32,6 +32,7 @@
 
 #define SEXY_PERF_ENABLED
 #include "../SexyAppFramework/PerfTimer.h"
+#include "Widget/AchievementsScreen.h"
 
 //#define SEXY_MEMTRACE
 //#include "../SexyAppFramework/memmgr.h"
@@ -126,6 +127,7 @@ Board::Board(LawnApp* theApp)
 	mGravesCleared = 0;
 	mPlantsEaten = 0;
 	mPlantsShoveled = 0;
+	mLevelCoinsCollected = 0;
 	mCoinsCollected = 0;
 	mDiamondsCollected = 0;
 	mPottedPlantsCollected = 0;
@@ -278,6 +280,20 @@ int Board::CountZombiesOnScreen()
 	while (IterateZombies(aZombie))
 	{
 		if (aZombie->mHasHead && !aZombie->IsDeadOrDying() && !aZombie->mMindControlled && aZombie->IsOnBoard())
+		{
+			aCount++;
+		}
+	}
+	return aCount;
+}
+
+// GOTY @Patoke: 0x40B3B0
+int Board::GetLiveGargantuarCount() {
+	int aCount = 0;
+	Zombie* aZombie = nullptr;
+	while (IterateZombies(aZombie))
+	{
+		if (aZombie->mDead && aZombie->mHasHead && !aZombie->IsDeadOrDying() && aZombie->IsOnBoard() && (aZombie->mZombieType == ZombieType::ZOMBIE_GARGANTUAR || aZombie->mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR))
 		{
 			aCount++;
 		}
@@ -1681,11 +1697,21 @@ bool Board::ChooseSeedsOnCurrentLevel()
 }
 
 //0x40BE00
+// GOTY @Patoke: 0x40E6A0
 void Board::StartLevel()
 {
 	mCoinBankFadeCount = 0;
 	mApp->mLastLevelStats->Reset();
 	mChallenge->StartLevel();
+
+	// @Patoke: implemented, i think it's intentional to cause an underflow here?
+	unsigned int aSurvivalStage = mApp->mGameMode - GAMEMODE_SURVIVAL_ENDLESS_STAGE_1;
+	if (aSurvivalStage <= 4) {
+		if (GetSurvivalFlagsCompleted() >= 20) {
+			// if ( !*(mApp->mPlayerInfo + 53) ) todo @Patoke: add this?
+			ReportAchievement::GiveAchievement(mApp, Immortal, true);
+		}
+	}
 
 	if (mApp->IsSurvivalMode() && mChallenge->mSurvivalStage > 0)
 	{
@@ -1724,6 +1750,7 @@ LawnMower* Board::GetBottomLawnMower()
 }
 
 //0x40BF60
+// GOTY @Patoke: 0x40E860
 void Board::UpdateLevelEndSequence()
 {
 	if (mNextSurvivalStageCounter > 0)
@@ -2673,12 +2700,19 @@ bool Board::CanAddBobSled()
 }
 
 //0x40DDC0
+// GOTY @Patoke: 0x410700
 Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave)
 {
 	if (mZombies.mSize >= mZombies.mMaxSize - 1)
 	{
 		TodTrace("Too many zombies!!");
 		return nullptr;
+	}
+
+	// @Patoke: implemented
+	if (theZombieType == ZombieType::ZOMBIE_YETI) {
+		if (mApp->IsAdventureMode() && mLevel == 40 && theFromWave >= 0)
+			ReportAchievement::GiveAchievement(mApp, Zombologist, true);
 	}
 
 	bool aVariant = !Rand(5);
@@ -5134,6 +5168,7 @@ void Board::StopAllZombieSounds()
 }
 
 //0x413260
+// GOTY @Patoke: 0x415BD0
 int Board::GetSurvivalFlagsCompleted()
 {
 	int aWavesPerFlag = GetNumWavesPerFlag();
@@ -7684,6 +7719,7 @@ void Board::Draw(Graphics* g)
 }
 
 //0x41AE60
+// GOTY @Patoke: 0x41D910
 void Board::SetMustacheMode(bool theEnableMustache)
 {
 	mApp->PlayFoley(FoleyType::FOLEY_POLEVAULT);
@@ -7775,6 +7811,7 @@ void Board::DoTypingCheck(KeyCode theKey)
 	if (mApp->mMustacheCheck->Check(theKey) || mApp->mMoustacheCheck->Check(theKey))
 	{
 		SetMustacheMode(!mMustacheMode);
+		ReportAchievement::GiveAchievement(mApp, MustacheMode, false); // @Patoke: add achievement
 		return;
 	}
 	if (mApp->mSuperMowerCheck->Check(theKey) || mApp->mSuperMowerCheck2->Check(theKey))
@@ -8652,6 +8689,7 @@ void Board::KeyChar(SexyChar theChar)
 }
 
 //0x41B960
+// GOTY @Patoke: 0x41E6E0
 void Board::AddSunMoney(int theAmount)
 {
 	mSunMoney += theAmount;
@@ -8659,6 +8697,9 @@ void Board::AddSunMoney(int theAmount)
 	{
 		mSunMoney = 9990;
 	}
+	if (mSunMoney >= 8000)
+		// if ( !*(mApp->mPlayerInfo + 48) ) todo @Patoke: figure this out
+		ReportAchievement::GiveAchievement(mApp, SunnyDays, true);
 }
 
 //0x41B980
@@ -9253,6 +9294,7 @@ bool GetCircleRectOverlap(int theCircleX, int theCircleY, int theRadius, const R
 }
 
 //0x41C8F0
+// GOTY @Patoke: 0x41F6B0
 bool Board::IterateZombies(Zombie*& theZombie)
 {
 	while (mZombies.IterateNext(theZombie))
@@ -9715,9 +9757,11 @@ bool Board::PlantingRequirementsMet(SeedType theSeedType)
 }
 
 //0x41D8A0
-void Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags)
+// GOTY @Patoke: 0x420670
+int Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags)
 {
 	Zombie* aZombie = nullptr;
+	int aKilledZombies = 0; // @Patoke: implemented this
 	while (IterateZombies(aZombie))
 	{
 		if (aZombie->EffectedByDamage(theDamageRangeFlags))
@@ -9739,6 +9783,8 @@ void Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius
 				{
 					aZombie->TakeDamage(1800, 18U);
 				}
+
+				aKilledZombies++;
 			}
 		}
 	}
@@ -9756,6 +9802,8 @@ void Board::KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius
 			}
 		}
 	}
+
+	return aKilledZombies;
 }
 
 //0x41DA10

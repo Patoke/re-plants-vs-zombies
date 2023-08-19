@@ -1400,6 +1400,7 @@ bool CutScene::IsShowingCrazyDave()
 }
 
 //0x43C200
+// GOTY @Patoke: 0x43F440
 void CutScene::Update()
 {
 	if (mPreUpdatingBoard)

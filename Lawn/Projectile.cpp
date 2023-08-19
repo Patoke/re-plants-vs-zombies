@@ -10,6 +10,7 @@
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/Attachment.h"
+#include "Widget/AchievementsScreen.h"
 
 ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_PEA,           0,  20  },
@@ -488,6 +489,7 @@ void Projectile::DoSplashDamage(Zombie* theZombie)
 }
 
 //0x46D490
+// GOTY @Patoke: 0x471B41
 void Projectile::UpdateLobMotion()
 {
 	if (mProjectileType == ProjectileType::PROJECTILE_COBBIG && mPosZ < -700.0f)
@@ -604,7 +606,14 @@ void Projectile::UpdateLobMotion()
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
 	{
+		// @Patoke: implemented
+		int aBeforeGargantuarCount = mBoard->GetLiveGargantuarCount();
 		mBoard->KillAllZombiesInRadius(mRow, mPosX + 80, mPosY + 40, 115, 1, true, mDamageRangeFlags);
+		int aAfterGargantuarCount = mBoard->GetLiveGargantuarCount();
+		mBoard->mGargantuarsKillsByCornCob += aBeforeGargantuarCount - aAfterGargantuarCount;
+		if (mBoard->mGargantuarsKillsByCornCob >= 2)
+			ReportAchievement::GiveAchievement(mApp, PopcornParty, true);
+
 		DoImpact(nullptr);
 	}
 	else

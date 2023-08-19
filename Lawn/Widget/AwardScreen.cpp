@@ -185,7 +185,7 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 	}
 	else if (mApp->HasFinishedAdventure()) // @Patoke: change case
 	{
-		ReportAchievement::GiveAchievement(mApp, HomeSecurity, false);
+		ReportAchievement::GiveAchievement(mApp, HomeSecurity, false); // @Patoke: add achievement
 		mStartButton->SetLabel("[CONTINUE_BUTTON]");
 		mMenuButton->mBtnNoDraw = true;
 		mMenuButton->mDisabled = true;

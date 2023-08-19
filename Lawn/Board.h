@@ -214,8 +214,10 @@ public:
 	int								mGravesCleared;											//+0x5794
 	int								mPlantsEaten;											//+0x5798
 	int								mPlantsShoveled;										//+0x579C
-	int								mCoinsCollected;										//+0x57A0
-	int								mDiamondsCollected;										//+0x57A4
+	int								mLevelCoinsCollected;									//+GOTY @Patoke: 0x5788
+	int								mGargantuarsKillsByCornCob;								//+GOTY @Patoke: 0x578C
+	int								mCoinsCollected;										//+0x57A0 GOTY @Patoke: 0x57C8
+	int								mDiamondsCollected;										//+0x57A4 GOTY @Patoke: 0x57CC
 	int								mPottedPlantsCollected;									//+0x57A8
 	int								mChocolateCollected;									//+0x57AC
 
@@ -390,7 +392,7 @@ public:
 	bool							IsValidCobCannonSpot(int theGridX, int theGridY);
 	bool							IsValidCobCannonSpotHelper(int theGridX, int theGridY);
 	void							MouseDownCobcannonFire(int x, int y, int theClickCount);
-	void							KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags);
+	int								KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags); // @Patoke: modified function prototype
 	/*inline*/ int					GetSeedBankExtraWidth();
 	bool							IsFlagWave(int theWaveNumber);
 	void							DrawHouseDoorTop(Graphics* g);
@@ -415,6 +417,7 @@ public:
 	bool							IsFinalSurvivalStage();
 	void							SurvivalSaveScore();
 	int								CountZombiesOnScreen();
+	int								GetLiveGargantuarCount(); // @Patoke: implemented
 	/*inline*/ int					GetNumWavesPerSurvivalStage();
 	int								GetLevelRandSeed();
 	void							AddBossRenderItem(RenderItem* theRenderList, int& theCurRenderItem, Zombie* theBossZombie);

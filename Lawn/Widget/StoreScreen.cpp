@@ -1042,7 +1042,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
             }
 
             if (aGiveAchievement) {
-                ReportAchievement::GiveAchievement(mApp, Morticulturalist, aGiveAchievement);
+                ReportAchievement::GiveAchievement(mApp, Morticulturalist, aGiveAchievement); // @Patoke: add achievement
                 SetBubbleText(4000, 800, false);
                 // todo @Patoke: add these?
                 //*(a2 + 412) = 150;
