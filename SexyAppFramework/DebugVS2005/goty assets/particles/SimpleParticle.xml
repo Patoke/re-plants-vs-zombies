@@ -1,8 +1,0 @@
-<Emitter>
-<SpawnMinActive>1</SpawnMinActive>
-<ParticleDuration>400</ParticleDuration>
-<SystemDuration>400</SystemDuration>
-<Image>IMAGE_SUN</Image>
-<RandomLaunchSpin>0</RandomLaunchSpin>
-<ParticleSpinSpeed>-50</ParticleSpinSpeed>
-</Emitter>
