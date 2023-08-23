@@ -1700,6 +1700,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Cursor13.cur" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="BltRotatedHelper.inc" />
     <None Include="DDI_Additive.inc" />
     <None Include="DDI_AlphaBlt.inc" />

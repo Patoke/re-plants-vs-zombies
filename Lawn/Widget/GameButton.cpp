@@ -109,6 +109,7 @@ bool GameButton::IsButtonDown()
 }
 
 //0x447EC0
+// GOTY @Patoke: 0x44AAC0
 void GameButton::Draw(Graphics* g)
 {
 	if (mBtnNoDraw)
@@ -207,6 +208,7 @@ bool GameButton::IsMouseOver()
 }
 
 //0x448330
+// GOTY @Patoke: 0x44AF50
 void GameButton::Update()
 {
 	WidgetManager* aManager = mApp->mWidgetManager;

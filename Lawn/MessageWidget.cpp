@@ -48,6 +48,7 @@ void MessageWidget::ClearLabel()
 }
 
 //0x459010
+// GOTY @Patoke: inlined 0x459715
 void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
@@ -105,6 +106,10 @@ void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMess
 
 		case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
 			mDuration = 750;
+			break;
+
+		case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT: // @Patoke: implemented
+			mDuration = 250;
 			break;
 
 		default:
@@ -267,6 +272,7 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 }
 
 //0x459990
+// GOTY @Patoke: inlined 0x45CAEF
 Font* MessageWidget::GetFont()
 {
 	switch (mMessageStyle)
@@ -287,6 +293,7 @@ Font* MessageWidget::GetFont()
 	case MessageStyle::MESSAGE_STYLE_HOUSE_NAME:
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
 	case MessageStyle::MESSAGE_STYLE_ZEN_GARDEN_LONG:
+	case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT: // @Patoke: implemented
 		return Sexy::FONT_HOUSEOFTERROR28;
 
 	case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
@@ -297,6 +304,7 @@ Font* MessageWidget::GetFont()
 }
 
 //0x4599E0
+// GOTY @Patoke: 0x45D2B0
 void MessageWidget::Draw(Graphics* g)
 {
 	if (mDuration <= 0)
@@ -334,6 +342,7 @@ void MessageWidget::Draw(Graphics* g)
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_LONG:
+	case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT: // @Patoke: implemented
 		aPosY = 476;
 		aRectHeight = 100;
 		aTextOffsetY = -4;

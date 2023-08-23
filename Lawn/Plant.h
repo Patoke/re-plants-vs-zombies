@@ -212,6 +212,7 @@ public:
     static SexyString       GetToolTip(SeedType theSeedType);
     static int              GetRefreshTime(SeedType theSeedType, SeedType theImitaterType = SeedType::SEED_NONE);
     static /*inline*/ bool  IsNocturnal(SeedType theSeedtype);
+    static /*inline*/ bool  IsFungus(SeedType theSeedType);
     static /*inline*/ bool  IsAquatic(SeedType theSeedType);
     static /*inline*/ bool  IsFlying(SeedType theSeedtype);
     static /*inline*/ bool  IsUpgrade(SeedType theSeedtype);

@@ -29,14 +29,14 @@ AchievementItem gAchievementList[MAX_ACHIEVEMENTS] = {
 	{ "Explodonator", "Take out 10 full-sized zombies with a single Cherry Bomb." },
 	{ "Morticulturalist", "Collect all 49 plants (including plants from Crazy Dave's shop)." },
 	{ "Don't Pea in the Pool", "Complete a daytime pool level without using pea shooters of any kind." },
-	{ "Roll Some Heads", "Complete a daytime pool level without using pea shooters of any k" },
+	{ "Roll Some Heads", "Complete a daytime pool level without using pea shooters of any kind." },
 	{ "Grounded", "Defeat a normal roof level without using any catapult plants." },
 	{ "Zombologist", "Discover the Yeti zombie." },
 	{ "Penny Pincher", "Pick up 30 coins in a row on a single level without letting any disappear." },
 	{ "Sunny Days", "Get 8000 sun during a single level." },
 	{ "Popcorn Party", "Defeat 2 Gargantuars with Corn Cob missiles in a single level." },
-	{ "Good Morning", "Complete a daytime level by planting only Mushrooms and Coffee Be" },
-	{ "No Fungus Among Us", "Complete a nighttime level without planting any Mushrooms.." },
+	{ "Good Morning", "Complete a daytime level by planting only Mushrooms and Coffee Beans." },
+	{ "No Fungus Among Us", "Complete a nighttime level without planting any Mushrooms." },
 	{ "Beyond the Grave", "Beat all 20 mini games." },
 	{ "Immortal", "Survive 20 waves of pure zombie ferocity." },
 	{ "Towering Wisdom", "Grow the Tree of Wisdom to 100 feet." },
@@ -218,6 +218,39 @@ void ReportAchievement::GiveAchievement(LawnApp* theApp, int theAchievement, boo
 	std::string aAchievementName = gAchievementList[theAchievement].name;
 	aAchievementName.append(" Achievement!");
 
-	theApp->mBoard->DisplayAdvice(aAchievementName, MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_NONE);
+	theApp->mBoard->DisplayAdvice(aAchievementName, MESSAGE_STYLE_ACHIEVEMENT, AdviceType::ADVICE_NONE);
 	theApp->PlaySample(SOUND_ACHIEVEMENT);
+}
+
+// GOTY @Patoke: 0x44D5B0
+void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
+	if (!theApp || !theApp->mPlayerInfo)
+		return;
+
+	if (theApp->HasFinishedAdventure()) {
+		GiveAchievement(theApp, HomeSecurity, true);
+	}
+
+	if (theApp->EarnedGoldTrophy()) {
+		GiveAchievement(theApp, NovelPeasPrize, true);
+	}
+
+	if (theApp->CanSpawnYetis()) {
+		GiveAchievement(theApp, Zombologist, true);
+	}
+
+	int aTreeSize = theApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];
+	if (aTreeSize >= 100) {
+		GiveAchievement(theApp, ToweringWisdom, true);
+	}
+
+	bool aGiveAchievement = true;
+	for (int i = STORE_ITEM_PLANT_GATLINGPEA; i <= STORE_ITEM_PLANT_IMITATER; i++) {
+		if (theApp->SeedTypeAvailable(SeedType(i)))
+			aGiveAchievement = false;
+	}
+
+	if (aGiveAchievement) {
+		GiveAchievement(theApp, Morticulturalist, aGiveAchievement);
+	}
 }

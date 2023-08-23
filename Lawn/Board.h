@@ -214,6 +214,10 @@ public:
 	int								mGravesCleared;											//+0x5794
 	int								mPlantsEaten;											//+0x5798
 	int								mPlantsShoveled;										//+0x579C
+	bool							mPeaShooterUsed;										//+GOTY @Patoke: 0x5784
+	bool							mCatapultPlantsUsed;									//+GOTY @Patoke: 0x5785
+	bool							mMushroomAndCoffeeBeansOnly;							//+GOTY @Patoke: 0x5790
+	bool							mMushroomsUsed;											//+GOTY @Patoke: 0x5791
 	int								mLevelCoinsCollected;									//+GOTY @Patoke: 0x5788
 	int								mGargantuarsKillsByCornCob;								//+GOTY @Patoke: 0x578C
 	int								mCoinsCollected;										//+0x57A0 GOTY @Patoke: 0x57C8
@@ -279,6 +283,8 @@ public:
 	/*inline*/ bool					StageHasPool();
 	/*inline*/ bool					StageHas6Rows();
 	/*inline*/ bool					StageHasFog();
+	/*inline*/ bool					StageIsDayWithoutPool();
+	/*inline*/ bool					StageIsDayWithPool();
 	bool							StageHasGraveStones();
 	int								PixelToGridX(int theX, int theY);
 	int								PixelToGridY(int theX, int theY);

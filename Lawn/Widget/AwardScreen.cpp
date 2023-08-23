@@ -197,6 +197,11 @@ AwardScreen::AwardScreen(LawnApp* theApp, AwardType theAwardType, bool theShowin
 	else
 		mStartButton->SetLabel("[NEXT_LEVEL_BUTTON]");
 
+	// @Patoke: implemented
+	if (mApp->IsAdventureMode() && mApp->EarnedGoldTrophy()) {
+		ReportAchievement::GiveAchievement(mApp, NovelPeasPrize, false);
+	}
+
 	if (mApp->IsFirstTimeAdventureMode() && aLevel == 25 && mApp->IsTrialStageLocked() && !mApp->mPlayerInfo->mHasSeenUpsell)
 	{
 		mMenuButton->mBtnNoDraw = true;
@@ -397,6 +402,7 @@ void AwardScreen::Draw(Graphics* g)
 
 	mStartButton->Draw(g);
 	mMenuButton->Draw(g);
+	mContinueButton->Draw(g); // @Patoke: add call
 
 	int aFadeInAlpha = TodAnimateCurve(180, 0, mFadeInCounter, 255, 0, CURVE_LINEAR);
 	g->SetColor(IsPaperNote() ? Color(0, 0, 0, aFadeInAlpha) : Color(255, 255, 255, aFadeInAlpha));
@@ -427,6 +433,7 @@ void AwardScreen::Update()
 	if (mApp->GetDialogCount() > 0) return;
 	mStartButton->Update();
 	mMenuButton->Update();
+	mContinueButton->Update(); // @Patoke: add call
 	mApp->SetCursor(mStartButton->IsMouseOver() || mMenuButton->IsMouseOver() ? CURSOR_HAND : CURSOR_POINTER);
 	MarkDirty();
 	if (mFadeInCounter > 0) mFadeInCounter--;
@@ -543,10 +550,16 @@ void AwardScreen::StartButtonPressed()
 }
 
 //0x4079F0
+// GOTY @Patoke: 0x4097A0
 void AwardScreen::MouseDown(int x, int y, int theClickCount)
 {
-	if (theClickCount == 1 && (mStartButton->IsMouseOver() || mMenuButton->IsMouseOver()))
-		mApp->PlaySample(Sexy::SOUND_TAP);
+	if (theClickCount == 1) {
+		mStartButton->Update(); // @Patoke: implemented
+		mMenuButton->Update();
+		mContinueButton->Update();
+		if (mStartButton->IsMouseOver() || mMenuButton->IsMouseOver())
+			mApp->PlaySample(Sexy::SOUND_TAP);
+	}
 }
 
 //0x407A70

@@ -4094,7 +4094,7 @@ void Challenge::ScaryPotterPopulate()
 			ScaryPotterPlacePot(SCARYPOT_ZOMBIE, ZOMBIE_GARGANTUAR, SEED_NONE, 1 + aNumExtraGargantuars, aGridArray, aGridArrayCount);
 			ScaryPotterChangePotType(GRIDITEM_STATE_SCARY_POT_LEAF, 2);
 
-			if (mSurvivalStage == 15)
+			if (mSurvivalStage == 15) // @Patoke: add achievement
 				ReportAchievement::GiveAchievement(mApp, ChinaShop, true);
 
 			break;
@@ -4668,7 +4668,7 @@ void Challenge::IZombieInitLevel()
 		break;
 	case GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS:
 	{
-		if (mSurvivalStage == 10)
+		if (mSurvivalStage == 10) // @Patoke: add achievement
 			ReportAchievement::GiveAchievement(mApp, BetterOffDead, true);
 
 		int aFormationHit = RandRangeInt(0, 4);
@@ -5465,7 +5465,7 @@ void Challenge::TreeOfWisdomGrow()
 		mChallengeState = STATECHALLENGE_NORMAL;
 	}
 
-	if (aTreeSize == 100)
+	if (aTreeSize == 100) // @Patoke: add achievement
 		ReportAchievement::GiveAchievement(mApp, ToweringWisdom, true);
 }
 

@@ -2497,7 +2497,7 @@ void Plant::UpdateBowling()
             {
                 mApp->PlayFoley(FoleyType::FOLEY_SPAWN_SUN);
                 mBoard->AddCoin(aPosX, aPosY, CoinType::COIN_GOLD, CoinMotion::COIN_MOTION_COIN);
-                ReportAchievement::GiveAchievement(mApp, RollSomeHeads, true);
+                ReportAchievement::GiveAchievement(mApp, RollSomeHeads, true); // @Patoke: add achievement
             }
         }
 
@@ -5157,6 +5157,22 @@ bool Plant::IsNocturnal(SeedType theSeedtype)
         theSeedtype == SeedType::SEED_ICESHROOM ||
         theSeedtype == SeedType::SEED_MAGNETSHROOM ||
         theSeedtype == SeedType::SEED_SCAREDYSHROOM ||
+        theSeedtype == SeedType::SEED_GLOOMSHROOM;
+}
+
+// GOTY @Patoke: inlined 0x40FB2B
+bool Plant::IsFungus(SeedType theSeedtype) 
+{
+    return
+        theSeedtype == SeedType::SEED_PUFFSHROOM ||
+        theSeedtype == SeedType::SEED_SUNSHROOM ||
+        theSeedtype == SeedType::SEED_FUMESHROOM ||
+        theSeedtype == SeedType::SEED_HYPNOSHROOM ||
+        theSeedtype == SeedType::SEED_SCAREDYSHROOM ||
+        theSeedtype == SeedType::SEED_ICESHROOM ||
+        theSeedtype == SeedType::SEED_DOOMSHROOM ||
+        theSeedtype == SeedType::SEED_SEASHROOM ||
+        theSeedtype == SeedType::SEED_MAGNETSHROOM ||
         theSeedtype == SeedType::SEED_GLOOMSHROOM;
 }
 

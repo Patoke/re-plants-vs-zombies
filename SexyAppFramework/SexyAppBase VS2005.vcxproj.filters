@@ -1497,6 +1497,8 @@
       <Filter>Sexy\Graphics\Inc Routines</Filter>
     </None>
     <None Include="..\Cursor13.cur" />
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\ImageLib\jpeg2000\jas_cm.h">

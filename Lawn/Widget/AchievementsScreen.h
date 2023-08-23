@@ -11,21 +11,21 @@ using namespace Sexy;
 
 enum AchievementId {
 	HomeSecurity, //
-	NovelPeasPrize,
+	NovelPeasPrize, //
 	BetterOffDead, //
 	ChinaShop, //
 	Spudow, //
 	Explodonator, //
 	Morticulturalist, //
-	DontPea,
+	DontPea, //
 	RollSomeHeads, //
-	Grounded,
+	Grounded, //
 	Zombologist, //
 	PennyPincher, //
 	SunnyDays, //
 	PopcornParty, //
-	GoodMorning,
-	NoFungusAmongUs,
+	GoodMorning, //
+	NoFungusAmongUs, //
 	BeyondTheGrave, //
 	Immortal, //
 	ToweringWisdom, //
@@ -66,6 +66,7 @@ public:
 class ReportAchievement {
 public:
 	static void GiveAchievement(LawnApp* theApp, int theAchievement, bool theForceGive);
+	static void AchievementInitForPlayer(LawnApp* theApp);
 };
 
 #endif

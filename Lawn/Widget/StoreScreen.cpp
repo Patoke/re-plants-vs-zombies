@@ -1036,9 +1036,9 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 
             // @Patoke: implemented
             bool aGiveAchievement = true;
-            for (int i = 0; i <= STORE_ITEM_PLANT_IMITATER; i++) {
-                if (mApp->IsTrialStageLocked() || mApp->mPlayerInfo->mPurchases[i] <= 0)
-                    aGiveAchievement = false;;
+            for (int i = STORE_ITEM_PLANT_GATLINGPEA; i <= STORE_ITEM_PLANT_IMITATER; i++) {
+                if (mApp->SeedTypeAvailable(SeedType(i)))
+                    aGiveAchievement = false;
             }
 
             if (aGiveAchievement) {
