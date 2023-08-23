@@ -1174,11 +1174,6 @@ void GameSelector::KeyChar(char theChar)
 
 		mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId));
 	}
-	
-	if (theChar == 'k') {
-		for (auto& achievement : mApp->mPlayerInfo->mEarnedAchievements)
-			achievement = false;
-	}
 
 	if (mApp->mDebugKeysEnabled)
 	{
