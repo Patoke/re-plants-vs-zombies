@@ -184,9 +184,12 @@ typedef unsigned int JDIMENSION;
 /* a function used only in its module: */
 #define LOCAL(type)		static type
 
+/* Foolishly ignore a config error
 #if !defined(_VISUALC_)
 #	error Something is very very wrong. This header must only be used under Visual C++.
 #endif
+*/
+
 /**
  * Under VISUALC we have single threaded static libraries, or
  * mutli-threaded DLLs using the multithreaded runtime DLLs.

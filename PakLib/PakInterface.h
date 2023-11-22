@@ -10,33 +10,33 @@
 
 class PakCollection;
 
-// [¶¨Òå]×ÊÔ´°üÎÄ¼ş£º°üº¬ÁËÈô¸ÉÓÎÏ·×ÊÔ´µÄ .pak ÎÄ¼ş¡£ÀıÈç£ºmain.pak
-// [¶¨Òå]×ÊÔ´ÎÄ¼ş£º×ÊÔ´°üÎÄ¼şÖĞµÄÒ»Ïî¾ßÌå×ÊÔ´µÄÎÄ¼ş¡£ÀıÈç£ºzombie_falling_1.ogg
+// [å®šä¹‰]èµ„æºåŒ…æ–‡ä»¶ï¼šåŒ…å«äº†è‹¥å¹²æ¸¸æˆèµ„æºçš„ .pak æ–‡ä»¶ã€‚ä¾‹å¦‚ï¼šmain.pak
+// [å®šä¹‰]èµ„æºæ–‡ä»¶ï¼šèµ„æºåŒ…æ–‡ä»¶ä¸­çš„ä¸€é¡¹å…·ä½“èµ„æºçš„æ–‡ä»¶ã€‚ä¾‹å¦‚ï¼šzombie_falling_1.ogg
 
 // ====================================================================================================
-// ¡ï Ò»¸ö PakRecord ÊµÀı¶ÔÓ¦×ÊÔ´°üÄÚµÄÒ»¸ö×ÊÔ´ÎÄ¼şµÄÊı¾İ£¬°üÀ¨ÎÄ¼şÃû£¬µØÖ·£¬´óĞ¡µÈĞÅÏ¢
+// â˜… ä¸€ä¸ª PakRecord å®ä¾‹å¯¹åº”èµ„æºåŒ…å†…çš„ä¸€ä¸ªèµ„æºæ–‡ä»¶çš„æ•°æ®ï¼ŒåŒ…æ‹¬æ–‡ä»¶åï¼Œåœ°å€ï¼Œå¤§å°ç­‰ä¿¡æ¯
 // ====================================================================================================
 class PakRecord
 {
 public:
-	PakCollection*			mCollection;			//+0x0£ºÖ¸Ïò¸Ã×ÊÔ´ÎÄ¼şËùÔÚµÄ×ÊÔ´°üµÄ PakCollection
-	std::string				mFileName;				//+0x4£º×ÊÔ´ÎÄ¼şµÄÃû³Æ¼°Â·¾¶£¨Â·¾¶´Ó .pak ¿ªÊ¼£©£¬ÀıÈç sounds\zombie_falling_1.ogg
-	FILETIME				mFileTime;				//+0x20£º°Ë×Ö½ÚĞÍµÄ×ÊÔ´ÎÄ¼şµÄÊ±¼ä´Á
-	int						mStartPos;				//+0x28£º¸Ã×ÊÔ´ÎÄ¼şÔÚ×ÊÔ´°üÖĞµÄÎ»ÖÃ£¨¼´ÔÚ mCollection->mDataPtr ÖĞµÄÆ«ÒÆÁ¿£©
-	int						mSize;					//+0x2C£º×ÊÔ´ÎÄ¼şµÄ´óĞ¡£¬µ¥Î»Îª Byte£¨×Ö½ÚÊı£©
+	PakCollection*			mCollection;			//+0x0ï¼šæŒ‡å‘è¯¥èµ„æºæ–‡ä»¶æ‰€åœ¨çš„èµ„æºåŒ…çš„ PakCollection
+	std::string				mFileName;				//+0x4ï¼šèµ„æºæ–‡ä»¶çš„åç§°åŠè·¯å¾„ï¼ˆè·¯å¾„ä» .pak å¼€å§‹ï¼‰ï¼Œä¾‹å¦‚ sounds\zombie_falling_1.ogg
+	FILETIME				mFileTime;				//+0x20ï¼šå…«å­—èŠ‚å‹çš„èµ„æºæ–‡ä»¶çš„æ—¶é—´æˆ³
+	int						mStartPos;				//+0x28ï¼šè¯¥èµ„æºæ–‡ä»¶åœ¨èµ„æºåŒ…ä¸­çš„ä½ç½®ï¼ˆå³åœ¨ mCollection->mDataPtr ä¸­çš„åç§»é‡ï¼‰
+	int						mSize;					//+0x2Cï¼šèµ„æºæ–‡ä»¶çš„å¤§å°ï¼Œå•ä½ä¸º Byteï¼ˆå­—èŠ‚æ•°ï¼‰
 };
 
 typedef std::map<std::string, PakRecord> PakRecordMap;
 
 // ====================================================================================================
-// ¡ï Ò»¸ö PakCollection ÊµÀı¶ÔÓ¦Ò»¸ö pak ×ÊÔ´°üÔÚÄÚ´æÖĞµÄÓ³ÉäÎÄ¼ş
+// â˜… ä¸€ä¸ª PakCollection å®ä¾‹å¯¹åº”ä¸€ä¸ª pak èµ„æºåŒ…åœ¨å†…å­˜ä¸­çš„æ˜ å°„æ–‡ä»¶
 // ====================================================================================================
 class PakCollection
 {
 public:
 	HANDLE					mFileHandle;
 	HANDLE					mMappingHandle;
-	void*					mDataPtr;				//+0x8£º×ÊÔ´°üÖĞµÄËùÓĞÊı¾İ
+	void*					mDataPtr;				//+0x8ï¼šèµ„æºåŒ…ä¸­çš„æ‰€æœ‰æ•°æ®
 };
 
 typedef std::list<PakCollection> PakCollectionList;
@@ -78,8 +78,8 @@ public:
 class PakInterface : public PakInterfaceBase
 {
 public:
-	PakCollectionList		mPakCollectionList;		//+0x4£ºÍ¨¹ı AddPakFile() Ìí¼ÓµÄ¸÷¸ö×ÊÔ´°üµÄÄÚ´æÓ³ÉäÎÄ¼şÊı¾İµÄÁ´±í
-	PakRecordMap			mPakRecordMap;			//+0x10£ºËùÓĞÒÑÌí¼ÓµÄ×ÊÔ´°üÖĞµÄËùÓĞ×ÊÔ´ÎÄ¼şµÄ¡¢´ÓÎÄ¼şÃûµ½ÎÄ¼şÊı¾İµÄÓ³ÉäÈİÆ÷
+	PakCollectionList		mPakCollectionList;		//+0x4ï¼šé€šè¿‡ AddPakFile() æ·»åŠ çš„å„ä¸ªèµ„æºåŒ…çš„å†…å­˜æ˜ å°„æ–‡ä»¶æ•°æ®çš„é“¾è¡¨
+	PakRecordMap			mPakRecordMap;			//+0x10ï¼šæ‰€æœ‰å·²æ·»åŠ çš„èµ„æºåŒ…ä¸­çš„æ‰€æœ‰èµ„æºæ–‡ä»¶çš„ã€ä»æ–‡ä»¶ååˆ°æ–‡ä»¶æ•°æ®çš„æ˜ å°„å®¹å™¨
 
 public:
 	bool					PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFileData);
@@ -109,6 +109,7 @@ extern PakInterface* gPakInterface;
 static HANDLE gPakFileMapping = NULL;
 static PakInterfaceBase** gPakInterfaceP = NULL;
 
+[[maybe_unused]]
 static PakInterfaceBase* GetPakPtr()
 {
 	if (gPakFileMapping == NULL)
@@ -121,6 +122,7 @@ static PakInterfaceBase* GetPakPtr()
 	return *gPakInterfaceP;
 }
 
+[[maybe_unused]]
 static PFILE* p_fopen(const char* theFileName, const char* theAccess) 
 {
 	if (GetPakPtr() != NULL)
@@ -135,6 +137,7 @@ static PFILE* p_fopen(const char* theFileName, const char* theAccess)
 	return aPFile;
 }
 
+[[maybe_unused]]
 static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess) 
 {
 	if (GetPakPtr() != NULL)
@@ -149,6 +152,7 @@ static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess)
 	return aPFile;
 }
 
+[[maybe_unused]]
 static int p_fclose(PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -158,6 +162,7 @@ static int p_fclose(PFILE* theFile)
 	return aResult;
 }
 
+[[maybe_unused]]
 static int p_fseek(PFILE* theFile, long theOffset, int theOrigin)
 {
 	if (GetPakPtr() != NULL)
@@ -165,6 +170,7 @@ static int p_fseek(PFILE* theFile, long theOffset, int theOrigin)
 	return fseek(theFile->mFP, theOffset, theOrigin);
 }
 
+[[maybe_unused]]
 static int p_ftell(PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -172,6 +178,7 @@ static int p_ftell(PFILE* theFile)
 	return ftell(theFile->mFP);
 }
 
+[[maybe_unused]]
 static size_t p_fread(void* thePtr, int theSize, int theCount, PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -179,6 +186,7 @@ static size_t p_fread(void* thePtr, int theSize, int theCount, PFILE* theFile)
 	return fread(thePtr, theSize, theCount, theFile->mFP);
 }
 
+[[maybe_unused]]
 static size_t p_fwrite(const void* thePtr, int theSize, int theCount, PFILE* theFile)
 {	
 	if (theFile->mFP == NULL)
@@ -186,6 +194,7 @@ static size_t p_fwrite(const void* thePtr, int theSize, int theCount, PFILE* the
 	return fwrite(thePtr, theSize, theCount, theFile->mFP);
 }
 
+[[maybe_unused]]
 static int p_fgetc(PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -193,6 +202,7 @@ static int p_fgetc(PFILE* theFile)
 	return fgetc(theFile->mFP);
 }
 
+[[maybe_unused]]
 static int p_ungetc(int theChar, PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -200,6 +210,7 @@ static int p_ungetc(int theChar, PFILE* theFile)
 	return ungetc(theChar, theFile->mFP);
 }
 
+[[maybe_unused]]
 static char* p_fgets(char* thePtr, int theSize, PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -207,6 +218,7 @@ static char* p_fgets(char* thePtr, int theSize, PFILE* theFile)
 	return fgets(thePtr, theSize, theFile->mFP);
 }
 
+[[maybe_unused]]
 static wchar_t* p_fgets(wchar_t* thePtr, int theSize, PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -214,6 +226,7 @@ static wchar_t* p_fgets(wchar_t* thePtr, int theSize, PFILE* theFile)
 	return fgetws(thePtr, theSize, theFile->mFP);
 }
 
+[[maybe_unused]]
 static int p_feof(PFILE* theFile)
 {
 	if (GetPakPtr() != NULL)
@@ -221,6 +234,7 @@ static int p_feof(PFILE* theFile)
 	return feof(theFile->mFP);
 }
 
+[[maybe_unused]]
 static HANDLE p_FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData)
 {
 	if (GetPakPtr() != NULL)
@@ -228,6 +242,7 @@ static HANDLE p_FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileDa
 	return FindFirstFile(lpFileName, lpFindFileData);
 }
 
+[[maybe_unused]]
 static BOOL p_FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData)
 {
 	if (GetPakPtr() != NULL)
@@ -235,6 +250,7 @@ static BOOL p_FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData)
 	return FindNextFile(hFindFile, lpFindFileData);
 }
 
+[[maybe_unused]]
 static BOOL p_FindClose(HANDLE hFindFile)
 {
 	if (GetPakPtr() != NULL)

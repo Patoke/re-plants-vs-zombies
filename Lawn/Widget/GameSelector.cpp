@@ -933,6 +933,8 @@ void GameSelector::Update()
 		if (aSelectorReanim->mLoopCount > 0)
 			mSelectorState = SelectorAnimState::SELECTOR_IDLE;
 		break;
+	case SelectorAnimState::SELECTOR_IDLE:
+		break;
 	}
 
 	for (int i = 0; i < 6; i++)

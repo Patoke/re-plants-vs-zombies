@@ -31,7 +31,7 @@ TodStringListFormat::TodStringListFormat()
 	mFormatFlags = 0U;
 }
 
-TodStringListFormat::TodStringListFormat(const char* theFormatName, Font** theFont, const Color& theColor, int theLineSpacingOffset, unsigned int theFormatFlags) : 
+TodStringListFormat::TodStringListFormat(const char* theFormatName, _Font** theFont, const Color& theColor, int theLineSpacingOffset, unsigned int theFormatFlags) : 
 	mFormatName(theFormatName), mNewFont(theFont), mNewColor(theColor), mLineSpacingOffset(theLineSpacingOffset), mFormatFlags(theFormatFlags)
 { 
 }
@@ -46,9 +46,9 @@ void TodStringListSetColors(TodStringListFormat* theFormats, int theCount)
 bool TodStringListReadName(const char*& thePtr, std::string& theName)
 {
 	const char* aNameStart = strchr(thePtr, '[');
-	if (aNameStart == nullptr)  // Èç¹ûÎÄ±¾ÖĞ²»´æÔÚ¡°[¡±
+	if (aNameStart == nullptr)  // å¦‚æœæ–‡æœ¬ä¸­ä¸å­˜åœ¨â€œ[â€
 	{
-		if (strspn(thePtr, " \n\r\t") != strlen(thePtr))  // Èç¹ûÎÄ±¾²»È«ÊÇ¿Õ°××Ö·û
+		if (strspn(thePtr, " \n\r\t") != strlen(thePtr))  // å¦‚æœæ–‡æœ¬ä¸å…¨æ˜¯ç©ºç™½å­—ç¬¦
 		{
 			TodTrace("Failed to find string name");
 			return false;
@@ -60,21 +60,21 @@ bool TodStringListReadName(const char*& thePtr, std::string& theName)
 	else
 	{
 		const char* aNameEnd = strchr(aNameStart + 1, ']');
-		if (aNameEnd == nullptr)  // Èç¹û¡°[¡±ºó²»´æÔÚ¡°]¡±
+		if (aNameEnd == nullptr)  // å¦‚æœâ€œ[â€åä¸å­˜åœ¨â€œ]â€
 		{
 			TodTrace("Failed to find ']'");
 			return false;
 		}
 
 		int aCount = aNameEnd - aNameStart - 1;
-		theName = Sexy::Trim(string(aNameStart + 1, aCount));  // È¡µÃÖĞÀ¨ºÅÖ®¼äµÄ²¿·Ö²¢È¥³ı×Ö·û´®Ç°ºóµÄ¿Õ°××Ö·û
+		theName = Sexy::Trim(string(aNameStart + 1, aCount));  // å–å¾—ä¸­æ‹¬å·ä¹‹é—´çš„éƒ¨åˆ†å¹¶å»é™¤å­—ç¬¦ä¸²å‰åçš„ç©ºç™½å­—ç¬¦
 		if (theName.size() == 0)
 		{
 			TodTrace("Name Too Short");
 			return false;
 		}
 
-		thePtr += aCount + 2;  // ÒÆ¶¯¶ÁÈ¡Ö¸ÕëÖÁ¡°]¡±ºó
+		thePtr += aCount + 2;  // ç§»åŠ¨è¯»å–æŒ‡é’ˆè‡³â€œ]â€å
 		return true;
 	}
 }
@@ -85,7 +85,7 @@ void TodStringRemoveReturnChars(std::string& theString)
 	for (int i = 0; i < theString.size(); )
 	{
 		if (theString[i] == '\r')
-			theString.replace(i, 1, "", 0);  // Ô­°æÖĞ´Ë´¦µÄ¡°1¡±ºÍ¡°""¡±ÒÑÄÚÁªÖÁº¯ÊıÄÚ²¿
+			theString.replace(i, 1, "", 0);  // åŸç‰ˆä¸­æ­¤å¤„çš„â€œ1â€å’Œâ€œ""â€å·²å†…è”è‡³å‡½æ•°å†…éƒ¨
 		else
 			i++;
 	}
@@ -96,9 +96,9 @@ bool TodStringListReadValue(const char*& thePtr, std::string& theValue)
 {
 	const char* aValueEnd = strchr(thePtr, '[');
 	int aLen = aValueEnd ? aValueEnd - thePtr : strlen(thePtr);
-	theValue = Sexy::Trim(string(thePtr, aLen));  // Èç¹û´æÔÚÏÂÒ»¸ö¡°[¡±£¬ÔòÈ¡µ½¡°[¡±Ç°ÎªÖ¹£»·ñÔò£¬È¡Ê£ÏÂµÄÈ«²¿
-	TodStringRemoveReturnChars(theValue);  // ÒÆ³ıËùÓĞµÄ»»ĞĞ·û
-	thePtr += aLen;  // ÒÆ¶¯¶ÁÈ¡Ö¸ÕëÖÁ¡°[¡±´¦£¨»ò½áÎ²´¦£©
+	theValue = Sexy::Trim(string(thePtr, aLen));  // å¦‚æœå­˜åœ¨ä¸‹ä¸€ä¸ªâ€œ[â€ï¼Œåˆ™å–åˆ°â€œ[â€å‰ä¸ºæ­¢ï¼›å¦åˆ™ï¼Œå–å‰©ä¸‹çš„å…¨éƒ¨
+	TodStringRemoveReturnChars(theValue);  // ç§»é™¤æ‰€æœ‰çš„æ¢è¡Œç¬¦
+	thePtr += aLen;  // ç§»åŠ¨è¯»å–æŒ‡é’ˆè‡³â€œ[â€å¤„ï¼ˆæˆ–ç»“å°¾å¤„ï¼‰
 	return true;
 }
 
@@ -111,11 +111,11 @@ bool TodStringListReadItems(const char* theFileText)
 
 	for (;;)
 	{
-		if (!TodStringListReadName(aPtr, aName))  // ¶ÁÈ¡Ò»¸ö±êÇ©
+		if (!TodStringListReadName(aPtr, aName))  // è¯»å–ä¸€ä¸ªæ ‡ç­¾
 			return false;
-		if (aName.size() == 0)  // ¶ÁÈ¡³É¹¦µ«Ã»ÓĞ¶ÁÈ¡µ½±êÇ©£¬±íÃ÷¶ÁÈ¡Íê³É
+		if (aName.size() == 0)  // è¯»å–æˆåŠŸä½†æ²¡æœ‰è¯»å–åˆ°æ ‡ç­¾ï¼Œè¡¨æ˜è¯»å–å®Œæˆ
 			return true;
-		if (!TodStringListReadValue(aPtr, aValue))  // ¶ÁÈ¡¶ÔÓ¦µÄÄÚÈİ
+		if (!TodStringListReadValue(aPtr, aValue))  // è¯»å–å¯¹åº”çš„å†…å®¹
 			return false;
 
 		std::string aNameUpper = Sexy::StringToUpper(aName);
@@ -133,12 +133,12 @@ bool TodStringListReadFile(const char* theFileName)
 		return false;
 	}
 
-	p_fseek(pFile, 0, SEEK_END);  // Ö¸Õëµ÷ÕûÖÁÎÄ¼şÄ©Î²
-	int aSize = p_ftell(pFile);  // µ±Ç°Î»ÖÃ¼´ÎªÎÄ¼ş³¤¶È
-	p_fseek(pFile, 0, SEEK_SET);  // Ö¸Õëµ÷»ØÎÄ¼ş¿ªÍ·
+	p_fseek(pFile, 0, SEEK_END);  // æŒ‡é’ˆè°ƒæ•´è‡³æ–‡ä»¶æœ«å°¾
+	int aSize = p_ftell(pFile);  // å½“å‰ä½ç½®å³ä¸ºæ–‡ä»¶é•¿åº¦
+	p_fseek(pFile, 0, SEEK_SET);  // æŒ‡é’ˆè°ƒå›æ–‡ä»¶å¼€å¤´
 	char* aFileText = new char[aSize + 1];
 	bool aSuccess = true;
-	if (p_fread(aFileText, sizeof(char), aSize, pFile) <= 0)  // °´×Ö½Ú¶ÁÈ¡Êı¾İ
+	if (p_fread(aFileText, sizeof(char), aSize, pFile) <= 0)  // æŒ‰å­—èŠ‚è¯»å–æ•°æ®
 	{
 		TodTrace("Failed to read '%s'", theFileName);
 		aSuccess = false;
@@ -148,7 +148,7 @@ bool TodStringListReadFile(const char* theFileName)
 	{
 		aSuccess = TodStringListReadItems(aFileText);
 	}
-	p_fclose(pFile);  // ¹Ø±ÕÎÄ¼şÁ÷
+	p_fclose(pFile);  // å…³é—­æ–‡ä»¶æµ
 	delete[] aFileText;
 
 	return aSuccess;
@@ -182,7 +182,7 @@ SexyString TodStringTranslate(const SexyString& theString)
 {
 	if (theString.size() >= 3 && theString[0] == '[')
 	{
-		SexyString aName = theString.substr(1, theString.size() - 2);  // È¡¡°[¡±Óë¡°]¡±ÖĞ¼äµÄ²¿·Ö
+		SexyString aName = theString.substr(1, theString.size() - 2);  // å–â€œ[â€ä¸â€œ]â€ä¸­é—´çš„éƒ¨åˆ†
 		return TodStringListFind(aName);
 	}
 	return theString;
@@ -196,7 +196,7 @@ SexyString TodStringTranslate(const SexyChar* theString)
 		int aLen = strlen(theString);
 		if (aLen >= 3 && theString[0] == '[')
 		{
-			SexyString aName(theString, 1, aLen - 2);  // È¡¡°[¡±Óë¡°]¡±ÖĞ¼äµÄ²¿·Ö
+			SexyString aName(theString, 1, aLen - 2);  // å–â€œ[â€ä¸â€œ]â€ä¸­é—´çš„éƒ¨åˆ†
 			return TodStringListFind(aName);
 		}
 		else
@@ -211,7 +211,7 @@ bool TodStringListExists(const SexyString& theString)
 {
 	if (theString.size() >= 3 && theString[0] == '[')
 	{
-		SexyString aName = theString.substr(1, theString.size() - 2);  // È¡¡°[¡±Óë¡°]¡±ÖĞ¼äµÄ²¿·Ö
+		SexyString aName = theString.substr(1, theString.size() - 2);  // å–â€œ[â€ä¸â€œ]â€ä¸­é—´çš„éƒ¨åˆ†
 		return gSexyAppBase->mStringProperties.find(aName) != gSexyAppBase->mStringProperties.end();
 	}
 	return false;
@@ -245,11 +245,11 @@ bool CharIsSpaceInFormat(char theChar, const TodStringListFormat& theCurrentForm
 //0x519870
 int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY, TodStringListFormat& theCurrentFormat, int theWidth, DrawStringJustification theJustification, bool drawString, int theOffset, int theLength)
 {
-	Font* aFont = *theCurrentFormat.mNewFont;
-	if (drawString)  // Èç¹ûĞèÒªÊµ¼Ê»æÖÆ
+	_Font* aFont = *theCurrentFormat.mNewFont;
+	if (drawString)  // å¦‚æœéœ€è¦å®é™…ç»˜åˆ¶
 	{
 		int aSpareX = theWidth - TodWriteString(g, theString, theX, theY, theCurrentFormat, theWidth, DrawStringJustification::DS_ALIGN_LEFT, false, theOffset, theLength);
-		switch (theJustification)  // ¸ù¾İ¶ÔÆë·½Ê½µ÷ÕûÊµ¼Ê»æÖÆµÄºá×ø±ê
+		switch (theJustification)  // æ ¹æ®å¯¹é½æ–¹å¼è°ƒæ•´å®é™…ç»˜åˆ¶çš„æ¨ªåæ ‡
 		{
 		case DrawStringJustification::DS_ALIGN_RIGHT:
 		case DrawStringJustification::DS_ALIGN_RIGHT_VERTICAL_MIDDLE:
@@ -259,13 +259,16 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 		case DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE:
 			theX += aSpareX / 2;
 			break;
+		case DrawStringJustification::DS_ALIGN_LEFT:
+		case DrawStringJustification::DS_ALIGN_LEFT_VERTICAL_MIDDLE:
+			break;
 		}
 	}
 
 	if (theLength < 0 || theOffset + theLength > theString.size())
 		theLength = theString.size();
 	else
-		theLength = theOffset + theLength;  // ½« theLength ¸ü¸ÄÎª×Ó´®½áÊøÎ»ÖÃ
+		theLength = theOffset + theLength;  // å°† theLength æ›´æ”¹ä¸ºå­ä¸²ç»“æŸä½ç½®
 
 	SexyString aString;
 	int aXOffset = 0;
@@ -276,46 +279,46 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 		{
 			const char* aFormatStart = theString.c_str() + i;
 			const char* aFormatEnd = strchr(aFormatStart + 1, '}');
-			if (aFormatEnd != nullptr)  // Èç¹û´æÔÚÍêÕûµÄ¡°{FORMAT}¡±¿ØÖÆ×Ö·û
+			if (aFormatEnd != nullptr)  // å¦‚æœå­˜åœ¨å®Œæ•´çš„â€œ{FORMAT}â€æ§åˆ¶å­—ç¬¦
 			{
-				i += aFormatEnd - aFormatStart;  // i ÒÆ¶¯ÖÁ "}" ´¦
-				if (drawString)  // Èç¹ûĞèÒªÊµ¼Ê»æÖÆ
-					aFont->DrawString(g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);  // ½«ÒÑ¾­»ıÔÜµÄ×Ö·û½øĞĞ»æÖÆ
+				i += aFormatEnd - aFormatStart;  // i ç§»åŠ¨è‡³ "}" å¤„
+				if (drawString)  // å¦‚æœéœ€è¦å®é™…ç»˜åˆ¶
+					aFont->DrawString(g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);  // å°†å·²ç»ç§¯æ”’çš„å­—ç¬¦è¿›è¡Œç»˜åˆ¶
 				
-				aXOffset += aFont->StringWidth(aString);  // ºáÏòÆ«ÒÆÖµ¼ÓÉÏ»æÖÆµÄ×Ö·û´®µÄ¿í¶È
-				aString.assign("");  // Çå¿Õ×Ö·û´®
-				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat);  // ¸ù¾İµ±Ç°¿ØÖÆ×Ö·ûµ÷Õû¸ñÊ½
-				Font* aFont = *theCurrentFormat.mNewFont;
+				aXOffset += aFont->StringWidth(aString);  // æ¨ªå‘åç§»å€¼åŠ ä¸Šç»˜åˆ¶çš„å­—ç¬¦ä¸²çš„å®½åº¦
+				aString.assign("");  // æ¸…ç©ºå­—ç¬¦ä¸²
+				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat);  // æ ¹æ®å½“å‰æ§åˆ¶å­—ç¬¦è°ƒæ•´æ ¼å¼
+				// _Font* aFont = *theCurrentFormat.mNewFont; // unused
 			}
 		}
 		else
 		{
-			if (TestBit(theCurrentFormat.mFormatFlags, TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES))  // Èç¹û½«»»ĞĞ·ûÊÓ×÷¿Õ¸ñ
+			if (TestBit(theCurrentFormat.mFormatFlags, TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES))  // å¦‚æœå°†æ¢è¡Œç¬¦è§†ä½œç©ºæ ¼
 			{
-				if (CharIsSpaceInFormat(theString[i], theCurrentFormat))  // Èç¹ûµ±Ç°×Ö·ûÊÇ¿Õ¸ñ
+				if (CharIsSpaceInFormat(theString[i], theCurrentFormat))  // å¦‚æœå½“å‰å­—ç¬¦æ˜¯ç©ºæ ¼
 				{
-					if (!aPrevCharWasSpace)  // Èç¹ûÇ°Ò»¸ö×Ö·û²»ÊÇ¿Õ¸ñ
-						aString.append(1, ' ');  // »ıÔÜÒ»¸ö¿Õ¸ñ
+					if (!aPrevCharWasSpace)  // å¦‚æœå‰ä¸€ä¸ªå­—ç¬¦ä¸æ˜¯ç©ºæ ¼
+						aString.append(1, ' ');  // ç§¯æ”’ä¸€ä¸ªç©ºæ ¼
 					continue;
 				}
 				else
-					aPrevCharWasSpace = false;  // È·±£×Ö·û´®ÖĞÖÁ¶àÖ»ÄÜÁ¬Ğø³öÏÖ 1 ¸ö¿Õ¸ñ×Ö·û
+					aPrevCharWasSpace = false;  // ç¡®ä¿å­—ç¬¦ä¸²ä¸­è‡³å¤šåªèƒ½è¿ç»­å‡ºç° 1 ä¸ªç©ºæ ¼å­—ç¬¦
 			}
 
 			aString.append(1, theString[i]);
 		}
 	}
 
-	if (drawString)  // Èç¹ûĞèÒªÊµ¼Ê»æÖÆ
-		aFont->DrawString(g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);  // ½«ÒÑ¾­»ıÔÜµÄ×Ö·û½øĞĞ»æÖÆ
+	if (drawString)  // å¦‚æœéœ€è¦å®é™…ç»˜åˆ¶
+		aFont->DrawString(g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);  // å°†å·²ç»ç§¯æ”’çš„å­—ç¬¦è¿›è¡Œç»˜åˆ¶
 	return aXOffset + aFont->StringWidth(aString);
 }
 
 int TodWriteWordWrappedHelper(Graphics* g, const SexyString& theString, int theX, int theY, TodStringListFormat& theCurrentFormat, int theWidth, DrawStringJustification theJustification, bool drawString, int theOffset, int theLength, int theMaxChars)
 {
-	if (theOffset + theLength > theMaxChars)  // Èç¹ûÖ¸¶¨×Ó´®³¬³öÁË×Ö·û´®µÄ×î´ó³¤¶È
+	if (theOffset + theLength > theMaxChars)  // å¦‚æœæŒ‡å®šå­ä¸²è¶…å‡ºäº†å­—ç¬¦ä¸²çš„æœ€å¤§é•¿åº¦
 	{
-		theLength = theMaxChars - theOffset;  // ĞŞÕı×Ó´®³¤¶È
+		theLength = theMaxChars - theOffset;  // ä¿®æ­£å­ä¸²é•¿åº¦
 		if (theLength <= 0)
 			return -1;
 	}
@@ -324,7 +327,7 @@ int TodWriteWordWrappedHelper(Graphics* g, const SexyString& theString, int theX
 
 //0x519B50
 // GOTY @Patoke: 0x5241C0
-int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rect& theRect, Font* theFont, const Color& theColor, DrawStringJustification theJustification, bool drawString)
+int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rect& theRect, _Font* theFont, const Color& theColor, DrawStringJustification theJustification, bool drawString)
 {
 	int theMaxChars = theText.size();
 	TodStringListFormat aCurrentFormat;
@@ -347,18 +350,18 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 	while (aCurPos < theText.size())
 	{
 		aCurChar = theText[aCurPos];
-		if (aCurChar == '{')  // Èç¹ûµ±Ç°×Ö·ûÊÇÌØÊâ¸ñÊ½¿ØÖÆ×Ö·ûµÄÆğÊ¼±êÖ¾£¨¼´¡°{¡±£©
+		if (aCurChar == '{')  // å¦‚æœå½“å‰å­—ç¬¦æ˜¯ç‰¹æ®Šæ ¼å¼æ§åˆ¶å­—ç¬¦çš„èµ·å§‹æ ‡å¿—ï¼ˆå³â€œ{â€ï¼‰
 		{
 			const char* aFmtStart = aCurPos + theText.c_str();
 			const char* aFormat = aFmtStart + 1;
 			const char* aFmtEnd = strchr(aFormat, '}');
-			if (aFmtEnd != nullptr)  // Èç¹û´æÔÚÓë¡°{¡±¶ÔÓ¦µÄ¡°}¡±£¬¼´´æÔÚÍêÕûµÄ¿ØÖÆ×Ö·û
+			if (aFmtEnd != nullptr)  // å¦‚æœå­˜åœ¨ä¸â€œ{â€å¯¹åº”çš„â€œ}â€ï¼Œå³å­˜åœ¨å®Œæ•´çš„æ§åˆ¶å­—ç¬¦
 			{
-				aCurPos += aFmtEnd - aFormat;  // aCurPos ÒÆÖÁ¡°}¡±µÄÏÂÒ»¸ö×Ö·û´¦
+				aCurPos += aFmtEnd - aFormat;  // aCurPos ç§»è‡³â€œ}â€çš„ä¸‹ä¸€ä¸ªå­—ç¬¦å¤„
 				int aOldAscentOffset = theFont->GetAscent() - theFont->GetAscentPadding();
-				Color aExistingColor = aCurrentFormat.mNewColor;  // ±¸·İµ±Ç°¸ñÊ½µÄÑÕÉ«
-				TodWriteStringSetFormat(aFormat, aCurrentFormat);  // ¸ù¾İµ±Ç°¿ØÖÆ×Ö·ûÉèÖÃĞÂµÄ¸ñÊ½
-				aCurrentFormat.mNewColor = aExistingColor;  // »¹Ô­ÎªÔ­ÓĞ¸ñÊ½µÄÑÕÉ«
+				Color aExistingColor = aCurrentFormat.mNewColor;  // å¤‡ä»½å½“å‰æ ¼å¼çš„é¢œè‰²
+				TodWriteStringSetFormat(aFormat, aCurrentFormat);  // æ ¹æ®å½“å‰æ§åˆ¶å­—ç¬¦è®¾ç½®æ–°çš„æ ¼å¼
+				aCurrentFormat.mNewColor = aExistingColor;  // è¿˜åŸä¸ºåŸæœ‰æ ¼å¼çš„é¢œè‰²
 				int aNewAscentOffset = (*aCurrentFormat.mNewFont)->GetAscent() - (*aCurrentFormat.mNewFont)->GetAscentPadding();
 				aLineSpacing = (*aCurrentFormat.mNewFont)->GetLineSpacing() + aCurrentFormat.mLineSpacingOffset;
 				aYOffset += aNewAscentOffset - aOldAscentOffset;
@@ -377,15 +380,15 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 			aCurPos++;
 		}
 
-		aCurWidth += (*aCurrentFormat.mNewFont)->CharWidthKern(aCurChar, aPrevChar);  // µ±Ç°¿í¶È¼ÓÉÏµ±Ç°×Ö·ûµÄ¿í¶È
+		aCurWidth += (*aCurrentFormat.mNewFont)->CharWidthKern(aCurChar, aPrevChar);  // å½“å‰å®½åº¦åŠ ä¸Šå½“å‰å­—ç¬¦çš„å®½åº¦
 		aPrevChar = aCurChar;
-		if (aCurWidth > theRect.mWidth)  // Èç¹ûµ±Ç°¿í¶È³¬³öÁËÏŞÖÆÇøÓòµÄ¿í¶È£¬Ôò½øĞĞ»»ĞĞµÄ´¦Àí
+		if (aCurWidth > theRect.mWidth)  // å¦‚æœå½“å‰å®½åº¦è¶…å‡ºäº†é™åˆ¶åŒºåŸŸçš„å®½åº¦ï¼Œåˆ™è¿›è¡Œæ¢è¡Œçš„å¤„ç†
 		{
 			int aLineWidth;
-			if (aSpacePos != -1)  // Èç¹û±¾ĞĞÇ°ÃæµÄ×Ö·ûÖĞ´æÔÚ¿Õ¸ñ×Ö·û
+			if (aSpacePos != -1)  // å¦‚æœæœ¬è¡Œå‰é¢çš„å­—ç¬¦ä¸­å­˜åœ¨ç©ºæ ¼å­—ç¬¦
 			{
 				int aCurY = (int)g->mTransY + theRect.mY + aYOffset;
-				if (aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight + aLineSpacing)  // È·±£µ±Ç°»æÖÆÎ»ÖÃ×İ×ø±êÔÚ²Ã¼ô·¶Î§ÄÚ
+				if (aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight + aLineSpacing)  // ç¡®ä¿å½“å‰ç»˜åˆ¶ä½ç½®çºµåæ ‡åœ¨è£å‰ªèŒƒå›´å†…
 				{
 					TodWriteWordWrappedHelper(
 						g, 
@@ -396,25 +399,25 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 						theRect.mWidth, 
 						theJustification, 
 						drawString, 
-						aLineFeedPos, // ÉÏ´Î»»ĞĞµÄÎ»ÖÃ¼´ÎªĞÂĞĞ¿ªÊ¼µÄÎ»ÖÃ
-						aSpacePos - aLineFeedPos, // »æÖÆ²¿·ÖÎª´ÓÉÏ´Î»»ĞĞµÄÎ»ÖÃ¿ªÊ¼ÖÁ±¾ĞĞ¿Õ¸ñ×Ö·ûÖ®Ç°µÄÎÄ±¾
+						aLineFeedPos, // ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å³ä¸ºæ–°è¡Œå¼€å§‹çš„ä½ç½®
+						aSpacePos - aLineFeedPos, // ç»˜åˆ¶éƒ¨åˆ†ä¸ºä»ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å¼€å§‹è‡³æœ¬è¡Œç©ºæ ¼å­—ç¬¦ä¹‹å‰çš„æ–‡æœ¬
 						theMaxChars
-					);  // »æÖÆĞÂÒ»ĞĞµÄÎÄ±¾£¨ÈôĞèÒª£©
+					);  // ç»˜åˆ¶æ–°ä¸€è¡Œçš„æ–‡æœ¬ï¼ˆè‹¥éœ€è¦ï¼‰
 				}
 
 				aLineWidth = aCurWidth;
-				if (aLineWidth < 0)  // Èç¹û±¾ĞĞ×Ö·û×Ü¿í¶ÈĞ¡ÓÚ 0
+				if (aLineWidth < 0)  // å¦‚æœæœ¬è¡Œå­—ç¬¦æ€»å®½åº¦å°äº 0
 					break;
 
-				aCurPos = aSpacePos + 1;  // ½« aCurPos ÒÆÖÁÏÂÒ»ĞĞµÄ¿ªÊ¼´¦
+				aCurPos = aSpacePos + 1;  // å°† aCurPos ç§»è‡³ä¸‹ä¸€è¡Œçš„å¼€å§‹å¤„
 				if (aCurChar != '\n')
 					while (aCurPos < theText.size() && CharIsSpaceInFormat(theText[aCurPos], aCurrentFormat))
-						aCurPos++;  // aCurPos Ìø¹ıËùÓĞÁ¬ĞøµÄ¿Õ°××Ö·û
+						aCurPos++;  // aCurPos è·³è¿‡æ‰€æœ‰è¿ç»­çš„ç©ºç™½å­—ç¬¦
 			}
 			else
 			{
 				if (aCurPos < aLineFeedPos + 1)
-					aCurPos++;  // È·±£Ã¿ĞĞÖÁÉÙÓĞ 1 ¸ö×Ö·û
+					aCurPos++;  // ç¡®ä¿æ¯è¡Œè‡³å°‘æœ‰ 1 ä¸ªå­—ç¬¦
 
 				aLineWidth = TodWriteWordWrappedHelper(
 					g,
@@ -425,25 +428,25 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 					theRect.mWidth, 
 					theJustification, 
 					drawString, 
-					aLineFeedPos, // ÉÏ´Î»»ĞĞµÄÎ»ÖÃ¼´ÎªĞÂĞĞ¿ªÊ¼µÄÎ»ÖÃ
-					aCurPos - aLineFeedPos, // »æÖÆ²¿·ÖÎª´ÓÉÏ´Î»»ĞĞµÄÎ»ÖÃ¿ªÊ¼ÖÁµ±Ç°Î»ÖÃµÄÎÄ±¾
+					aLineFeedPos, // ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å³ä¸ºæ–°è¡Œå¼€å§‹çš„ä½ç½®
+					aCurPos - aLineFeedPos, // ç»˜åˆ¶éƒ¨åˆ†ä¸ºä»ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å¼€å§‹è‡³å½“å‰ä½ç½®çš„æ–‡æœ¬
 					theMaxChars
-				);  // »æÖÆĞÂÒ»ĞĞµÄÎÄ±¾£¨ÈôĞèÒª£©
-				if (aLineWidth < 0)  // Èç¹û±¾ĞĞ×Ö·û×Ü¿í¶ÈĞ¡ÓÚ 0
+				);  // ç»˜åˆ¶æ–°ä¸€è¡Œçš„æ–‡æœ¬ï¼ˆè‹¥éœ€è¦ï¼‰
+				if (aLineWidth < 0)  // å¦‚æœæœ¬è¡Œå­—ç¬¦æ€»å®½åº¦å°äº 0
 					break;
 			}
 
 			if (aLineWidth > aMaxWidth)
-				aMaxWidth = aLineWidth;  // ¸üĞÂ×î´óĞĞ¿í¶È
+				aMaxWidth = aLineWidth;  // æ›´æ–°æœ€å¤§è¡Œå®½åº¦
 			aYOffset += aLineSpacing;
-			aLineFeedPos = aCurPos;  // ¼ÇÂ¼µ±Ç°Î»ÖÃÎª¡°ÉÏ´Î»»ĞĞµÄÎ»ÖÃ¡±
+			aLineFeedPos = aCurPos;  // è®°å½•å½“å‰ä½ç½®ä¸ºâ€œä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®â€
 			aSpacePos = -1;
 			aCurWidth = 0;
 			aPrevChar = '\0';
 		}
-		else  // µ±Ç°¿í¶ÈÎ´³¬¹ıÏŞÖÆÇøÓò¿í¶ÈÊ±
+		else  // å½“å‰å®½åº¦æœªè¶…è¿‡é™åˆ¶åŒºåŸŸå®½åº¦æ—¶
 		{
-			aCurPos++;  // ¼ÌĞøÏÂÒ»¸ö×Ö·û
+			aCurPos++;  // ç»§ç»­ä¸‹ä¸€ä¸ªå­—ç¬¦
 		}
 	}
 
@@ -458,10 +461,10 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 			theRect.mWidth,
 			theJustification,
 			drawString,
-			aLineFeedPos, // ÉÏ´Î»»ĞĞµÄÎ»ÖÃ¼´Îª×îºóÒ»ĞĞ¿ªÊ¼µÄÎ»ÖÃ
-			theText.size() - aLineFeedPos, // »æÖÆ²¿·ÖÎª´ÓÉÏ´Î»»ĞĞµÄÎ»ÖÃ¿ªÊ¼µÄËùÓĞÊ£ÓàÎÄ±¾
+			aLineFeedPos, // ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å³ä¸ºæœ€åä¸€è¡Œå¼€å§‹çš„ä½ç½®
+			theText.size() - aLineFeedPos, // ç»˜åˆ¶éƒ¨åˆ†ä¸ºä»ä¸Šæ¬¡æ¢è¡Œçš„ä½ç½®å¼€å§‹çš„æ‰€æœ‰å‰©ä½™æ–‡æœ¬
 			theMaxChars
-		);  // »æÖÆ×îºóÒ»ĞĞµÄÎÄ±¾
+		);  // ç»˜åˆ¶æœ€åä¸€è¡Œçš„æ–‡æœ¬
 		if (aLastLineLength >= 0)
 			aYOffset += aLineSpacing;
 	}
@@ -473,13 +476,13 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 
 //0x51A040
 // GOTY @Patoke: 0x5246A0
-void TodDrawStringWrapped(Graphics* g, const SexyString& theText, const Rect& theRect, Font* theFont, const Color& theColor, DrawStringJustification theJustification)
+void TodDrawStringWrapped(Graphics* g, const SexyString& theText, const Rect& theRect, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
 {
 	SexyString aTextFinal = TodStringTranslate(theText);
 	Rect aRectTodUse = theRect;
 	if (theJustification == DrawStringJustification::DS_ALIGN_LEFT_VERTICAL_MIDDLE ||
 		theJustification == DrawStringJustification::DS_ALIGN_RIGHT_VERTICAL_MIDDLE ||
-		theJustification == DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE)  // Èç¹û×İÏòĞèÒª¾ÓÖĞ
+		theJustification == DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE)  // å¦‚æœçºµå‘éœ€è¦å±…ä¸­
 	{
 		aRectTodUse.mY += (aRectTodUse.mHeight - TodDrawStringWrappedHelper(g, aTextFinal, aRectTodUse, theFont, theColor, theJustification, false)) / 2;
 	}

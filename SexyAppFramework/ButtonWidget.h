@@ -31,7 +31,7 @@ public:
 	int						mId;	
 	SexyString				mLabel;
 	int						mLabelJustify;
-	Font*					mFont;
+	_Font*					mFont;
 	Image*					mButtonImage;
 	Image*					mOverImage;
 	Image*					mDownImage;	
@@ -58,7 +58,7 @@ public:
 	ButtonWidget(int theId, ButtonListener* theButtonListener);
 	virtual ~ButtonWidget();
 	
-	virtual void			SetFont(Font* theFont);
+	virtual void			SetFont(_Font* theFont);
 	virtual bool			IsButtonDown();
 	virtual void			Draw(Graphics* g);
 	virtual void			SetDisabled(bool isDisabled);

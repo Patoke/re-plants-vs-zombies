@@ -584,7 +584,7 @@ void AwardScreen::MouseUp(int x, int y, int theClickCount)
 // GOTY @Patoke: 0x407C20
 void AwardScreen::DrawAchievements(Graphics* g) {
 	g->SetColorizeImages(true);
-	Rect aTextWrap = Rect(0, 0, 0, 77);
+	// Rect aTextWrap = Rect(0, 0, 0, 77); // unused
 	g->SetColor(Color(255, 255, 255));
 	g->FillRect(0, 0, mWidth, mHeight);
 	g->SetColorizeImages(false);

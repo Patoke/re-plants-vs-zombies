@@ -9,7 +9,7 @@ namespace Sexy
 class ImageFont;
 class SexyAppBase;
 
-class SysFont : public Font
+class SysFont : public _Font
 {
 public:	
 	HFONT					mHFont;
@@ -30,7 +30,7 @@ public:
 	virtual int				StringWidth(const SexyString& theString);
 	virtual void			DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect);
 
-	virtual Font*			Duplicate();
+	virtual _Font*			Duplicate();
 };
 
 }

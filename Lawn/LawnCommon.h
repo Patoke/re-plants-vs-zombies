@@ -3,7 +3,7 @@
 
 #include "../ConstEnums.h"
 #include "../SexyAppFramework/Graphics.h"
-#include "../../SexyAppFramework/EditWidget.h"
+#include "../SexyAppFramework/EditWidget.h"
 
 using namespace Sexy;
 using namespace std;

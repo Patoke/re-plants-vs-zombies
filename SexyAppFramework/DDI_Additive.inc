@@ -1,8 +1,9 @@
 {
 	aMemoryImage->CommitBits();
 
-	RECT aDestRect = {theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
+	// unused
+	// RECT aDestRect = {theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
+	// RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
 
 	if (!LockSurface())
 		return;
@@ -19,9 +20,10 @@
 		ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 		ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 		
-		int aMaxR = (1<<mDDInterface->mRedBits) - 1;
-		int aMaxG = (1<<mDDInterface->mGreenBits) - 1;
-		int aMaxB = (1<<mDDInterface->mBlueBits) - 1;
+		// unused
+		//int aMaxR = (1<<mDDInterface->mRedBits) - 1;
+		//int aMaxG = (1<<mDDInterface->mGreenBits) - 1;
+		//int aMaxB = (1<<mDDInterface->mBlueBits) - 1;
 
 		int aRedShift = mDDInterface->mRedShift;
 		int aGreenShift = mDDInterface->mGreenShift;
@@ -144,9 +146,10 @@
 		ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 		ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 		
-		int aMaxR = (1<<mDDInterface->mRedBits) - 1;
-		int aMaxG = (1<<mDDInterface->mGreenBits) - 1;
-		int aMaxB = (1<<mDDInterface->mBlueBits) - 1;
+		// unused
+		// int aMaxR = (1<<mDDInterface->mRedBits) - 1;
+		// int aMaxG = (1<<mDDInterface->mGreenBits) - 1;
+		// int aMaxB = (1<<mDDInterface->mBlueBits) - 1;
 
 		int aRedShift = mDDInterface->mRedShift;
 		int aGreenShift = mDDInterface->mGreenShift;

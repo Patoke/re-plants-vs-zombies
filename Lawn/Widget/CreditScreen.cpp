@@ -1447,7 +1447,7 @@ void TodsHackyUnprotectedPerfTimer::SetStartTime(int theTimeMillisecondsAgo)
     QueryPerformanceCounter(&mStart);
     LARGE_INTEGER aFreq;
     QueryPerformanceFrequency(&aFreq);
-    mStart.QuadPart += theTimeMillisecondsAgo * aFreq.QuadPart / -1000i64;
+    mStart.QuadPart += theTimeMillisecondsAgo * aFreq.QuadPart / -1000;
 }
 
 //0x438010

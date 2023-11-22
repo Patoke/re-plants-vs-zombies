@@ -109,13 +109,13 @@ bool TodAppCloseRequest()
 	return false;
 }
 
-int TodPickFromArray(const int* theArray, int theCount)
+intptr_t TodPickFromArray(const intptr_t* theArray, int theCount)
 {
 	TOD_ASSERT(theCount > 0);
 	return theCount > 0 ? theArray[Sexy::Rand(theCount)] : 0;
 }
 
-int TodPickFromWeightedArray(const TodWeightedArray* theArray, int theCount)
+intptr_t TodPickFromWeightedArray(const TodWeightedArray* theArray, int theCount)
 {
 	return TodPickArrayItemFromWeightedArray(theArray, theCount)->mItem;
 }
@@ -184,10 +184,10 @@ float TodCalcSmoothWeight(float aWeight, float aLastPicked, float aSecondLastPic
 		return 0.0f;
 	}
 
-	float aExpectedLength1 = 1.0f / aWeight;								// theLastPicked µÄÆÚÍûÖµ
-	float aExpectedLength2 = aExpectedLength1 * 2.0f;						// theSecondLastPicked µÄÆÚÍûÖµ
-	float aAdvancedLength1 = aLastPicked + 1.0f - aExpectedLength1;			// Ïà½ÏÓÚ theLastPicked µÄÆÚÍûÖµ£¬ÌáÇ°µÄÂÖÊý
-	float aAdvancedLength2 = aSecondLastPicked + 1.0f - aExpectedLength2;	// Ïà½ÏÓÚ theSecondLastPicked µÄÆÚÍûÖµ£¬ÌáÇ°µÄÂÖÊý
+	float aExpectedLength1 = 1.0f / aWeight;								// theLastPicked çš„æœŸæœ›å€¼
+	float aExpectedLength2 = aExpectedLength1 * 2.0f;						// theSecondLastPicked çš„æœŸæœ›å€¼
+	float aAdvancedLength1 = aLastPicked + 1.0f - aExpectedLength1;			// ç›¸è¾ƒäºŽ theLastPicked çš„æœŸæœ›å€¼ï¼Œæå‰çš„è½®æ•°
+	float aAdvancedLength2 = aSecondLastPicked + 1.0f - aExpectedLength2;	// ç›¸è¾ƒäºŽ theSecondLastPicked çš„æœŸæœ›å€¼ï¼Œæå‰çš„è½®æ•°
 	float aFactor1 = 1.0f + aAdvancedLength1 / aExpectedLength1 * 2.0f;		// = aWeight * aLastPicked * 2 + aWeight * 2 - 1
 	float aFactor2 = 1.0f + aAdvancedLength2 / aExpectedLength2 * 2.0f;		// = aSecondLastPicked * aWeight + aWeight - 1
 	float aFactorFinal = ClampFloat(aFactor1 * 0.75f + aFactor2 * 0.25f, 0.01f, 100.0f);
@@ -430,7 +430,7 @@ float RandRangeFloat(float theMin, float theMax)
 }
 
 //0x511CE0
-void TodDrawString(Graphics* g, const SexyString& theText, int thePosX, int thePosY, Font* theFont, const Color& theColor, DrawStringJustification theJustification)
+void TodDrawString(Graphics* g, const SexyString& theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification)
 {
 	SexyString aFinalString = TodStringTranslate(theText);
 
@@ -466,7 +466,7 @@ static RenderCommand* gRenderTail[256];
 static RenderCommand* gRenderHead[256];
 
 //0x511E50
-void TodDrawStringMatrix(Graphics* g, const Font* theFont, const SexyMatrix3& theMatrix, const SexyString& theString, const Color& theColor)
+void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, const SexyString& theString, const Color& theColor)
 {
 	SexyString aFinalString = TodStringTranslate(theString);
 
@@ -708,7 +708,7 @@ void TodSandImageIfNeeded(Image* theImage)
 	{
 		FixPixelsOnAlphaEdgeForBlending(theImage);
 		//((MemoryImage*)theImage)->mD3DFlags &= ~D3DIMAGEFLAG_SANDING;
-		SetBit((unsigned int&)aImage->mD3DFlags, D3DIMAGEFLAG_SANDING, false);  // Çå³ý±ê¼Ç
+		SetBit((unsigned int&)aImage->mD3DFlags, D3DIMAGEFLAG_SANDING, false);  // æ¸…é™¤æ ‡è®°
 	}
 }
 
@@ -877,19 +877,19 @@ unsigned long AverageNearByPixels(MemoryImage* theImage, unsigned long* thePixel
 	int aBlue = 0;
 	int aBitsCount = 0;
 
-	for (int i = -1; i <= 1; i++)  // ÒÀ´ÎÑ­»·ÉÏ·½¡¢µ±Ç°¡¢ÏÂ·½µÄÒ»ÐÐ
+	for (int i = -1; i <= 1; i++)  // ä¾æ¬¡å¾ªçŽ¯ä¸Šæ–¹ã€å½“å‰ã€ä¸‹æ–¹çš„ä¸€è¡Œ
 	{
-		if (i == 0)  // ÅÅ³ýµ±Ç°ÐÐ
+		if (i == 0)  // æŽ’é™¤å½“å‰è¡Œ
 		{
 			continue;
 		}
 
-		for (int j = -1; j <= 1; j++)  // ÒÀ´ÎÑ­»·×ó·½¡¢µ±Ç°¡¢ÓÒ·½µÄÒ»ÁÐ
+		for (int j = -1; j <= 1; j++)  // ä¾æ¬¡å¾ªçŽ¯å·¦æ–¹ã€å½“å‰ã€å³æ–¹çš„ä¸€åˆ—
 		{
 			if ((x != 0 || j != -1) && (x != theImage->mWidth - 1 || j != 1) && (y != 0 || i != -1) && (y != theImage->mHeight - 1 || i != 1))
 			{
 				unsigned long aPixel = *(thePixel + i * theImage->mWidth + j);
-				if (aPixel & 0xFF000000UL)  // Èç¹û²»ÊÇÍ¸Ã÷ÏñËØ
+				if (aPixel & 0xFF000000UL)  // å¦‚æžœä¸æ˜¯é€æ˜Žåƒç´ 
 				{
 					aRed += (aPixel >> 16) & 0x000000FFUL;
 					aGreen += (aPixel >> 8) & 0x000000FFUL;
@@ -919,7 +919,7 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	if (aImage->mBits == nullptr)
 		return;
 
-	aImage->CommitBits();  // ·ÖÎö mHasTrans ºÍ mHasAlpha
+	aImage->CommitBits();  // åˆ†æž mHasTrans å’Œ mHasAlpha
 	if (!aImage->mHasTrans)
 		return;
 
@@ -931,9 +931,9 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	{
 		for (int x = 0; x < theImage->mWidth; x++)
 		{
-			if ((*aBitsPtr & 0xFF000000UL) == 0)  // Èç¹ûÏñËØµÄ²»Í¸Ã÷¶ÈÎª 0
+			if ((*aBitsPtr & 0xFF000000UL) == 0)  // å¦‚æžœåƒç´ çš„ä¸é€æ˜Žåº¦ä¸º 0
 			{
-				*aBitsPtr = AverageNearByPixels(aImage, aBitsPtr, x, y);  // ¼ÆËã¸ÃµãÖÜÎ§·ÇÍ¸Ã÷ÏñËØµÄÆ½¾ùÑÕÉ«
+				*aBitsPtr = AverageNearByPixels(aImage, aBitsPtr, x, y);  // è®¡ç®—è¯¥ç‚¹å‘¨å›´éžé€æ˜Žåƒç´ çš„å¹³å‡é¢œè‰²
 			}
 
 			aBitsPtr++;
@@ -941,7 +941,7 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	}
 	aImage->mBitsChangedCount++;
 
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADING:Long sanding '%s' %d ms on %s", theImage->mFilePath.c_str(), aDuration, gGetCurrentLevelName().c_str());
@@ -1041,14 +1041,14 @@ Color ColorAdd(const Color& theColor1, const Color& theColor2)
 	int b = theColor1.mBlue + theColor2.mBlue;
 	int a = theColor1.mAlpha + theColor2.mAlpha;
 
-	return Color(ClampInt(r, 0, 255), ClampInt(g, 0, 255), ClampInt(b, 0, 255), ClampInt(a, 0, 255));  // ÏßÐÔ¼õµ­
+	return Color(ClampInt(r, 0, 255), ClampInt(g, 0, 255), ClampInt(b, 0, 255), ClampInt(a, 0, 255));  // çº¿æ€§å‡æ·¡
 }
 
 //0x513020
 // GOTY @Patoke: 0x51D3C0
 int ColorComponentMultiply(int theColor1, int theColor2)
 {
-	return ClampInt(theColor1 * theColor2 / 255, 0, 255);  // ÕýÆ¬µþµ×
+	return ClampInt(theColor1 * theColor2 / 255, 0, 255);  // æ­£ç‰‡å åº•
 }
 
 //0x513050
@@ -1059,7 +1059,7 @@ Color ColorsMultiply(const Color& theColor1, const Color& theColor2)
 		ColorComponentMultiply(theColor1.mGreen, theColor2.mGreen),
 		ColorComponentMultiply(theColor1.mBlue, theColor2.mBlue),
 		ColorComponentMultiply(theColor1.mAlpha, theColor2.mAlpha)
-	);  // ÕýÆ¬µþµ×
+	);  // æ­£ç‰‡å åº•
 }
 
 //0x513120
@@ -1098,7 +1098,7 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 
 	mLoadedGroups.insert(theGroup);
 
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADED: '%s' %d ms on %s", theGroup.c_str(), aDuration, gGetCurrentLevelName().c_str());

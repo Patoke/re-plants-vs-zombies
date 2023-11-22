@@ -18,29 +18,29 @@ public:
 	SoundManager() {}
 	virtual ~SoundManager() {}
 
-	virtual bool			Initialized() = NULL;
+	virtual bool			Initialized() = 0;
 
-	virtual bool			LoadSound(unsigned int theSfxID, const std::string& theFilename) = NULL;
-	virtual int				LoadSound(const std::string& theFilename) = NULL;
-	virtual void			ReleaseSound(unsigned int theSfxID) = NULL;
+	virtual bool			LoadSound(unsigned int theSfxID, const std::string& theFilename) = 0;
+	virtual int				LoadSound(const std::string& theFilename) = 0;
+	virtual void			ReleaseSound(unsigned int theSfxID) = 0;
 
-	virtual void			SetVolume(double theVolume) = NULL;
-	virtual bool			SetBaseVolume(unsigned int theSfxID, double theBaseVolume) = NULL;
-	virtual bool			SetBasePan(unsigned int theSfxID, int theBasePan) = NULL;	
+	virtual void			SetVolume(double theVolume) = 0;
+	virtual bool			SetBaseVolume(unsigned int theSfxID, double theBaseVolume) = 0;
+	virtual bool			SetBasePan(unsigned int theSfxID, int theBasePan) = 0;	
 
-	virtual SoundInstance*	GetSoundInstance(unsigned int theSfxID) = NULL;
+	virtual SoundInstance*	GetSoundInstance(unsigned int theSfxID) = 0;
 
-	virtual void			ReleaseSounds() = NULL;
-	virtual void			ReleaseChannels() = NULL;
+	virtual void			ReleaseSounds() = 0;
+	virtual void			ReleaseChannels() = 0;
 
-	virtual double			GetMasterVolume() = NULL;
-	virtual void			SetMasterVolume(double theVolume) = NULL;
+	virtual double			GetMasterVolume() = 0;
+	virtual void			SetMasterVolume(double theVolume) = 0;
 
-	virtual void			Flush() = NULL;
-	virtual void			SetCooperativeWindow(HWND theHWnd, bool isWindowed) = NULL;
-	virtual void			StopAllSounds() = NULL;
-	virtual int				GetFreeSoundId() = NULL;
-	virtual int				GetNumSounds() = NULL;
+	virtual void			Flush() = 0;
+	virtual void			SetCooperativeWindow(HWND theHWnd, bool isWindowed) = 0;
+	virtual void			StopAllSounds() = 0;
+	virtual int				GetFreeSoundId() = 0;
+	virtual int				GetNumSounds() = 0;
 
 };
 

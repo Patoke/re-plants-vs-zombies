@@ -3,6 +3,7 @@
 
 #include "ConstEnums.h"
 #include "SexyAppFramework/SexyApp.h"
+#include "Sexy.TodLib/TodFoley.h"
 
 class Board;
 class GameSelector;
@@ -98,7 +99,7 @@ public:
 	int								mAppRandSeed;									//+0x870
 	HICON							mBigArrowCursor;								//+0x874
 	PopDRMComm*						mDRM;											//+0x878
-	int								mSessionID;										//+0x87C
+	intptr_t						mSessionID;										//+0x87C
 	int								mPlayTimeActiveSession;							//+0x880
 	int								mPlayTimeInactiveSession;						//+0x884
 	BoardResult						mBoardResult;									//+0x888

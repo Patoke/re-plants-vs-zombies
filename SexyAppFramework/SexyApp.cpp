@@ -62,8 +62,8 @@ SexyApp::SexyApp()
 
 SexyApp::~SexyApp()
 {
-	delete mBetaSupport;
-	delete mInternetManager;
+	//delete mBetaSupport;
+	//delete mInternetManager;
 }
 
 bool SexyApp::Validate(const std::string& theUserName, const std::string& theRegCode)

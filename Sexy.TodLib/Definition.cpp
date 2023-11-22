@@ -251,14 +251,14 @@ void* DefinitionAlloc(int theSize)
 //0x443BE0
 bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
 {
-    // µ±ÌùÍ¼ÎÄ¼şÂ·¾¶²»´æÔÚÊ±£¬ÎŞĞë»ñÈ¡ÌùÍ¼
+    // å½“è´´å›¾æ–‡ä»¶è·¯å¾„ä¸å­˜åœ¨æ—¶ï¼Œæ— é¡»è·å–è´´å›¾
     if (theName.size() == 0)
     {
         *theImage = nullptr;
         return true;
     }
 
-    // ³¢ÊÔ½èÖú×ÊÔ´¹ÜÀíÆ÷£¬´Ó XML ÖĞ¼ÓÔØÌùÍ¼
+    // å°è¯•å€ŸåŠ©èµ„æºç®¡ç†å™¨ï¼Œä» XML ä¸­åŠ è½½è´´å›¾
     Image* anImage = (Image*)gSexyAppBase->mResourceManager->LoadImage(theName);
     if (anImage)
     {
@@ -266,7 +266,7 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
         return true;
     }
 
-    // ´Ó¿ÉÄÜµÄÌùÍ¼Â·¾¶ÖĞÊÖ¶¯¼ÓÔØÌùÍ¼
+    // ä»å¯èƒ½çš„è´´å›¾è·¯å¾„ä¸­æ‰‹åŠ¨åŠ è½½è´´å›¾
     for (const DefLoadResPath& aLoadResPath : gDefLoadResPaths)
     {
         int aNameLen = theName.size();
@@ -289,9 +289,9 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
 }
 
 //0x443F60
-bool DefinitionLoadFont(Font** theFont, const SexyString& theName)
+bool DefinitionLoadFont(_Font** theFont, const SexyString& theName)
 {
-    Font* aFont = gSexyAppBase->mResourceManager->LoadFont(SexyStringToString(theName));
+    _Font* aFont = gSexyAppBase->mResourceManager->LoadFont(SexyStringToString(theName));
     *theFont = aFont;
     return aFont != nullptr;
 }
@@ -305,21 +305,21 @@ bool DefinitionLoadXML(const SexyString& theFileName, DefMap* theDefMap, void* t
 bool DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefMap* theDefMap)
 {
     int aDefSize;
-    SMemR(theReadPtr, &aDefSize, sizeof(int));  // ÏÈ¶ÁÈ¡Ò»¸öÕûÊı±íÊ¾ theDefMap ÃèÊöµÄ¶¨Òå½á¹¹ÀàµÄ´óĞ¡
-    if (aDefSize != theDefMap->mDefSize)  // ±È½ÏÆäÓëµ±Ç°¸ø³öµÄ¶¨Òå½á¹¹Í¼ÉùÃ÷µÄ´óĞ¡ÊÇ·ñÒ»ÖÂ
+    SMemR(theReadPtr, &aDefSize, sizeof(int));  // å…ˆè¯»å–ä¸€ä¸ªæ•´æ•°è¡¨ç¤º theDefMap æè¿°çš„å®šä¹‰ç»“æ„ç±»çš„å¤§å°
+    if (aDefSize != theDefMap->mDefSize)  // æ¯”è¾ƒå…¶ä¸å½“å‰ç»™å‡ºçš„å®šä¹‰ç»“æ„å›¾å£°æ˜çš„å¤§å°æ˜¯å¦ä¸€è‡´
     {
         TodTrace("cache has old def: array size");
         return false;
     }
-    if (theArray->mArrayCount == 0)  // Èç¹ûÀàÖĞÃ»ÓĞÊµÀı£¬ÔòÎŞĞè¶ÁÈ¡
+    if (theArray->mArrayCount == 0)  // å¦‚æœç±»ä¸­æ²¡æœ‰å®ä¾‹ï¼Œåˆ™æ— éœ€è¯»å–
         return true;
 
     int aArraySize = aDefSize * theArray->mArrayCount;
-    void* pData = DefinitionAlloc(aArraySize);  // ÉêÇëÄÚ´æ²¢³õÊ¼»¯Ìî³äÎª 0
+    void* pData = DefinitionAlloc(aArraySize);  // ç”³è¯·å†…å­˜å¹¶åˆå§‹åŒ–å¡«å……ä¸º 0
     theArray->mArrayData = pData;
-    SMemR(theReadPtr, pData, aArraySize);  // ÈÔÈ»ÊÇ´ÖÂÔ¶ÁÈ¡È«²¿Êı¾İ£¬È»ºóÔÙ¸ù¾İ theDefMap µÄ½á¹¹×Ö¶ÎÊı×éĞŞ¸´Ö¸Õë
+    SMemR(theReadPtr, pData, aArraySize);  // ä»ç„¶æ˜¯ç²—ç•¥è¯»å–å…¨éƒ¨æ•°æ®ï¼Œç„¶åå†æ ¹æ® theDefMap çš„ç»“æ„å­—æ®µæ•°ç»„ä¿®å¤æŒ‡é’ˆ
     for (int i = 0; i < theArray->mArrayCount; i++)
-        if (!DefMapReadFromCache(theReadPtr, theDefMap, (void*)((int)pData + theDefMap->mDefSize * i)))  // ×îºóÒ»¸ö²ÎÊı±íÊ¾ pData[i]
+        if (!DefMapReadFromCache(theReadPtr, theDefMap, (void*)((intptr_t)pData + theDefMap->mDefSize * i)))  // æœ€åä¸€ä¸ªå‚æ•°è¡¨ç¤º pData[i]
             return false;
     return true;
 }
@@ -346,7 +346,7 @@ bool DefReadFromCacheString(void*& theReadPtr, char** theString)
     SMemR(theReadPtr, &aLen, sizeof(int));
     TOD_ASSERT(aLen >= 0 && aLen <= 100000);
     if (aLen == 0)
-        *theString = "";
+        *theString = (char*)"";
     else
     {
         char* aPtr = (char*)DefinitionAlloc(aLen + 1);
@@ -361,9 +361,9 @@ bool DefReadFromCacheString(void*& theReadPtr, char** theString)
 bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
 {
     int aLen;
-    SMemR(theReadPtr, &aLen, sizeof(int));  // ¶ÁÈ¡ÌùÍ¼±êÇ©×Ö·ûÊı×éµÄ³¤¶È
-    char* aImageName = (char*)_alloca(aLen + 1);  // ÔÚÕ»ÉÏ·ÖÅäÌùÍ¼±êÇ©×Ö·ûÊı×éµÄÄÚ´æ¿Õ¼ä
-    SMemR(theReadPtr, aImageName, aLen);  // ¶ÁÈ¡ÌùÍ¼±êÇ©×Ö·ûÊı×é
+    SMemR(theReadPtr, &aLen, sizeof(int));  // è¯»å–è´´å›¾æ ‡ç­¾å­—ç¬¦æ•°ç»„çš„é•¿åº¦
+    char* aImageName = (char*)_alloca(aLen + 1);  // åœ¨æ ˆä¸Šåˆ†é…è´´å›¾æ ‡ç­¾å­—ç¬¦æ•°ç»„çš„å†…å­˜ç©ºé—´
+    SMemR(theReadPtr, aImageName, aLen);  // è¯»å–è´´å›¾æ ‡ç­¾å­—ç¬¦æ•°ç»„
     aImageName[aLen] = '\0';
 
     *theImage = nullptr;
@@ -371,12 +371,12 @@ bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
 }
 
 //0x444220
-bool DefReadFromCacheFont(void*& theReadPtr, Font** theFont)
+bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
 {
     int aLen;
-    SMemR(theReadPtr, &aLen, sizeof(int));  // ¶ÁÈ¡×ÖÌå±êÇ©×Ö·ûÊı×éµÄ³¤¶È
-    char* aFontName = (char*)_alloca(aLen + 1);  // ÔÚÕ»ÉÏ·ÖÅä×ÖÌå±êÇ©×Ö·ûÊı×éµÄÄÚ´æ¿Õ¼ä
-    SMemR(theReadPtr, aFontName, aLen);  // ¶ÁÈ¡×ÖÌå±êÇ©×Ö·ûÊı×é
+    SMemR(theReadPtr, &aLen, sizeof(int));  // è¯»å–å­—ä½“æ ‡ç­¾å­—ç¬¦æ•°ç»„çš„é•¿åº¦
+    char* aFontName = (char*)_alloca(aLen + 1);  // åœ¨æ ˆä¸Šåˆ†é…å­—ä½“æ ‡ç­¾å­—ç¬¦æ•°ç»„çš„å†…å­˜ç©ºé—´
+    SMemR(theReadPtr, aFontName, aLen);  // è¯»å–å­—ä½“æ ‡ç­¾å­—ç¬¦æ•°ç»„
     aFontName[aLen] = '\0';
 
     *theFont = nullptr;
@@ -386,11 +386,11 @@ bool DefReadFromCacheFont(void*& theReadPtr, Font** theFont)
 //0x4442C0
 bool DefMapReadFromCache(void*& theReadPtr, DefMap* theDefMap, void* theDefinition)
 {
-    // ·Ö±ğÈ·ÈÏÃ¿Ò»¸ö³ÉÔ±±äÁ¿£¬²¢ĞŞ¸´ÆäÖĞµÄÖ¸ÕëÀàĞÍºÍ±êÖ¾ÀàĞÍµÄ±äÁ¿
+    // åˆ†åˆ«ç¡®è®¤æ¯ä¸€ä¸ªæˆå‘˜å˜é‡ï¼Œå¹¶ä¿®å¤å…¶ä¸­çš„æŒ‡é’ˆç±»å‹å’Œæ ‡å¿—ç±»å‹çš„å˜é‡
     for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
     {
         bool aSucceed = true;
-        void* aDest = (void*)((int)theDefinition + aField->mFieldOffset);  // Ö¸Ïò¸Ã³ÉÔ±±äÁ¿µÄÖ¸Õë
+        void* aDest = (void*)((intptr_t)theDefinition + aField->mFieldOffset);  // æŒ‡å‘è¯¥æˆå‘˜å˜é‡çš„æŒ‡é’ˆ
         switch (aField->mFieldType)
         {
         case DefFieldType::DT_STRING:
@@ -403,10 +403,12 @@ bool DefMapReadFromCache(void*& theReadPtr, DefMap* theDefMap, void* theDefiniti
             aSucceed = DefReadFromCacheImage(theReadPtr, (Image**)aDest);
             break;
         case DefFieldType::DT_FONT:
-            aSucceed = DefReadFromCacheFont(theReadPtr, (Font**)aDest);
+            aSucceed = DefReadFromCacheFont(theReadPtr, (_Font**)aDest);
             break;
         case DefFieldType::DT_TRACK_FLOAT:
             aSucceed = DefReadFromCacheFloatTrack(theReadPtr, (FloatParameterTrack*)aDest);
+            break;
+        default:
             break;
         }
 
@@ -450,6 +452,8 @@ uint DefinitionCalcHashDefMap(int aSchemaHash, DefMap* theDefMap, TodList<DefMap
         case DefFieldType::DT_ARRAY:
             aSchemaHash = DefinitionCalcHashDefMap(aSchemaHash, (DefMap*)aField->mExtraData, theProgressMaps);
             break;
+        default:
+            break;
         }
     }
     return aSchemaHash;
@@ -467,13 +471,13 @@ uint DefinitionCalcHash(DefMap* theDefMap)
 //0x444500 : UnCompress(&theUncompressedSize, theCompressedBufferSize, esi = *theCompressedBuffer)
 void* DefinitionUncompressCompiledBuffer(void* theCompressedBuffer, size_t theCompressedBufferSize, size_t& theUncompressedSize, const SexyString& theCompiledFilePath)
 {
-    // theCompressedBuffer µÄÇ°Á½¸öËÄ×Ö½Ú´æÓĞÌØÊâÊı¾İ£¬´Ë´¦¼ì²âÆä³¤¶ÈÊÇ·ñ×ã¹» 8 ×Ö½Ú£¨¼´ 2 ¸öËÄ×Ö½Ú£©
+    // theCompressedBuffer çš„å‰ä¸¤ä¸ªå››å­—èŠ‚å­˜æœ‰ç‰¹æ®Šæ•°æ®ï¼Œæ­¤å¤„æ£€æµ‹å…¶é•¿åº¦æ˜¯å¦è¶³å¤Ÿ 8 å­—èŠ‚ï¼ˆå³ 2 ä¸ªå››å­—èŠ‚ï¼‰
     if (theCompressedBufferSize < 8)
     {
         TodTrace("Compile def too small", theCompiledFilePath.c_str());
         return nullptr;
     }
-    // ½« theCompressedBuffer µÄÇ°Á½¸öËÄ×Ö½ÚÊÓÎªÒ»¸ö CompressedDefinitionHeader
+    // å°† theCompressedBuffer çš„å‰ä¸¤ä¸ªå››å­—èŠ‚è§†ä¸ºä¸€ä¸ª CompressedDefinitionHeader
     CompressedDefinitionHeader* aHeader = (CompressedDefinitionHeader*)theCompressedBuffer;
     if (aHeader->mCookie != 0xDEADFED4L)
     {
@@ -482,9 +486,10 @@ void* DefinitionUncompressCompiledBuffer(void* theCompressedBuffer, size_t theCo
     }
     
     Bytef* aUncompressedBuffer = (Bytef*)DefinitionAlloc(aHeader->mUncompressedSize);
-    Bytef* aSrc = (Bytef*)((int)theCompressedBuffer + sizeof(CompressedDefinitionHeader));  // Êµ¼Ê½âÑ¹Êı¾İ´ÓµÚ 3 ¸öËÄ×Ö½Ú¿ªÊ¼
-    ulong aUncompressedSizeResult;  // ÓÃ×÷³ö²ÎµÄÎ´Ñ¹ËõÊı¾İÊµ¼Ê³¤¶È
+    Bytef* aSrc = (Bytef*)((intptr_t)theCompressedBuffer + sizeof(CompressedDefinitionHeader));  // å®é™…è§£å‹æ•°æ®ä»ç¬¬ 3 ä¸ªå››å­—èŠ‚å¼€å§‹
+    ulong aUncompressedSizeResult;  // ç”¨ä½œå‡ºå‚çš„æœªå‹ç¼©æ•°æ®å®é™…é•¿åº¦
     int aResult = uncompress(aUncompressedBuffer, &aUncompressedSizeResult, aSrc, theCompressedBufferSize - sizeof(CompressedDefinitionHeader));
+    (void)aResult; // Compiler can't work out that this is used in the Debug build
     TOD_ASSERT(aResult == Z_OK);
     TOD_ASSERT(aUncompressedSizeResult == aHeader->mUncompressedSize);
     theUncompressedSize = aHeader->mUncompressedSize;
@@ -499,54 +504,54 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     PFILE* pFile = p_fopen(theCompiledFilePath.c_str(), _S("rb"));
     if (pFile)
     {
-        p_fseek(pFile, 0, 2);  // ½«¶ÁÈ¡Î»ÖÃµÄÖ¸ÕëÒÆ¶¯ÖÁÎÄ¼şÄ©Î²
-        size_t aCompressedSize = p_ftell(pFile);  // ´ËÊ±»ñÈ¡µ½µÄÆ«ÒÆÁ¿¼´ÎªÕû¸öÎÄ¼şµÄ´óĞ¡
-        p_fseek(pFile, 0, 0);  // ÔÙ°Ñ¶ÁÈ¡Î»ÖÃµÄÖ¸ÕëÒÆ»ØÎÄ¼ş¿ªÍ·
+        p_fseek(pFile, 0, 2);  // å°†è¯»å–ä½ç½®çš„æŒ‡é’ˆç§»åŠ¨è‡³æ–‡ä»¶æœ«å°¾
+        size_t aCompressedSize = p_ftell(pFile);  // æ­¤æ—¶è·å–åˆ°çš„åç§»é‡å³ä¸ºæ•´ä¸ªæ–‡ä»¶çš„å¤§å°
+        p_fseek(pFile, 0, 0);  // å†æŠŠè¯»å–ä½ç½®çš„æŒ‡é’ˆç§»å›æ–‡ä»¶å¼€å¤´
         void* aCompressedBuffer = DefinitionAlloc(aCompressedSize);
-        // ¶ÁÈ¡ÎÄ¼ş£¬²¢ÅĞ¶ÏÊµ¼Ê¶ÁÈ¡µÄ´óĞ¡ÊÇ·ñÎªÍêÕûµÄÎÄ¼ş´óĞ¡£¬Èô²»µÈÔòÅĞ¶ÏÎª¶ÁÈ¡Ê§°Ü
+        // è¯»å–æ–‡ä»¶ï¼Œå¹¶åˆ¤æ–­å®é™…è¯»å–çš„å¤§å°æ˜¯å¦ä¸ºå®Œæ•´çš„æ–‡ä»¶å¤§å°ï¼Œè‹¥ä¸ç­‰åˆ™åˆ¤æ–­ä¸ºè¯»å–å¤±è´¥
         bool aReadCompressedFailed = p_fread(aCompressedBuffer, sizeof(char), aCompressedSize, pFile) != aCompressedSize;
-        p_fclose(pFile);  // ¹Ø±Õ×ÊÔ´ÎÄ¼şÁ÷²¢ÊÍ·Å pFile Õ¼ÓÃµÄÄÚ´æ
-        if (aReadCompressedFailed)  // ÅĞ¶ÏÊÇ·ñ¶ÁÈ¡³É¹¦
+        p_fclose(pFile);  // å…³é—­èµ„æºæ–‡ä»¶æµå¹¶é‡Šæ”¾ pFile å ç”¨çš„å†…å­˜
+        if (aReadCompressedFailed)  // åˆ¤æ–­æ˜¯å¦è¯»å–æˆåŠŸ
         {
             TodTrace(_S("Failed to read compiled file: %s\n"), theCompiledFilePath.c_str());
-            delete[] aCompressedBuffer;
+            free(aCompressedBuffer);
         }
         else
         {
             size_t aUncompressedSize;
             void* aUncompressedBuffer = DefinitionUncompressCompiledBuffer(aCompressedBuffer, aCompressedSize, aUncompressedSize, theCompiledFilePath);
-            delete[] aCompressedBuffer;
+            delete[] (char *)aCompressedBuffer;
             if (aUncompressedBuffer)
             {
-                uint aDefHash = DefinitionCalcHash(theDefMap);  // ¼ÆËã CRC Ğ£ÑéÖµ£¬ºó½«ÓÃÓÚ¼ì²âÊı¾İµÄÍêÕûĞÔ
-                if (aUncompressedSize < theDefMap->mDefSize + sizeof(uint))  // ¼ì²â½âÑ¹Êı¾İµÄ³¤¶ÈÊÇ·ñ×ã¹»¡°¶¨ÒåÊı¾İ + Ò»¸öĞ£ÑéÖµ¼ÇÂ¼Êı¾İ¡±µÄ³¤¶È
+                uint aDefHash = DefinitionCalcHash(theDefMap);  // è®¡ç®— CRC æ ¡éªŒå€¼ï¼Œåå°†ç”¨äºæ£€æµ‹æ•°æ®çš„å®Œæ•´æ€§
+                if (aUncompressedSize < theDefMap->mDefSize + sizeof(uint))  // æ£€æµ‹è§£å‹æ•°æ®çš„é•¿åº¦æ˜¯å¦è¶³å¤Ÿâ€œå®šä¹‰æ•°æ® + ä¸€ä¸ªæ ¡éªŒå€¼è®°å½•æ•°æ®â€çš„é•¿åº¦
                     TodTrace(_S("Compiled file size too small: %s\n"), theCompiledFilePath.c_str());
                 else
                 {
-                    // ¸´ÖÆÒ»·İ½âÑ¹Êı¾İµÄÖ¸ÕëÓÃÓÚ¶ÁÈ¡Ê±ÒÆ¶¯£¬Ô­Ö¸ÕëºóĞøÒªÓÃÓÚ¼ÆËã¶ÁÈ¡ÇøÓò´óĞ¡¼° delete[] ²Ù×÷
+                    // å¤åˆ¶ä¸€ä»½è§£å‹æ•°æ®çš„æŒ‡é’ˆç”¨äºè¯»å–æ—¶ç§»åŠ¨ï¼ŒåŸæŒ‡é’ˆåç»­è¦ç”¨äºè®¡ç®—è¯»å–åŒºåŸŸå¤§å°åŠ delete[] æ“ä½œ
                     void* aBufferPtr = aUncompressedBuffer;
                     uint aCashHash;
-                    SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // ¶ÁÈ¡¼ÇÂ¼µÄ CRC Ğ£ÑéÖµ
-                    if (aCashHash != aDefHash)  // ÅĞ¶ÏĞ£ÑéÖµÊÇ·ñÒ»ÖÂ£¬Èô²»Ò»ÖÂÔòËµÃ÷Êı¾İ·¢Éú´íÎó
+                    SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // è¯»å–è®°å½•çš„ CRC æ ¡éªŒå€¼
+                    if (aCashHash != aDefHash)  // åˆ¤æ–­æ ¡éªŒå€¼æ˜¯å¦ä¸€è‡´ï¼Œè‹¥ä¸ä¸€è‡´åˆ™è¯´æ˜æ•°æ®å‘ç”Ÿé”™è¯¯
                         TodTrace(_S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
                     else
                     {
-                        // ¡î ÕıÊ½¿ªÊ¼¶ÁÈ¡¶¨ÒåÊı¾İ ¡î
-                        // ³õ´Î´ÖÂÔ¶ÁÈ¡ theDefinition Ô­ÀàĞÍµÄ¶¨ÒåÊı¾İ£¬àñàğÍÌÔæµØ½«ËùÓĞ¼ÇÂ¼µÄÊı¾İÈ«²¿¶ÁÈëµ½ theDefinition ÖĞ
-                        // ´ËÊ± theDefinition Ô­±¾µÄ·ÇÖ¸ÕëÀàĞÍµÄÊı¾İ½«È«²¿±»ÕıÈ·¶ÁÈ¡£¬µ«ÆäÖ¸ÕëÀàĞÍµÄ±äÁ¿»á±»¶ÁÈ¡²¢¸³ÖµÎªÒ°Ö¸Õë
-                        // ÕâĞ©Ò°Ö¸ÕëµÄÎÊÌâºóĞø½«»áÔÚ DefMapReadFromCache() ÖĞ½èÖúÏàÓ¦ DefField µÄ mExtraData ½øĞĞĞŞ¸´
+                        // â˜† æ­£å¼å¼€å§‹è¯»å–å®šä¹‰æ•°æ® â˜†
+                        // åˆæ¬¡ç²—ç•¥è¯»å– theDefinition åŸç±»å‹çš„å®šä¹‰æ•°æ®ï¼Œå›«å›µåæ£åœ°å°†æ‰€æœ‰è®°å½•çš„æ•°æ®å…¨éƒ¨è¯»å…¥åˆ° theDefinition ä¸­
+                        // æ­¤æ—¶ theDefinition åŸæœ¬çš„éæŒ‡é’ˆç±»å‹çš„æ•°æ®å°†å…¨éƒ¨è¢«æ­£ç¡®è¯»å–ï¼Œä½†å…¶æŒ‡é’ˆç±»å‹çš„å˜é‡ä¼šè¢«è¯»å–å¹¶èµ‹å€¼ä¸ºé‡æŒ‡é’ˆ
+                        // è¿™äº›é‡æŒ‡é’ˆçš„é—®é¢˜åç»­å°†ä¼šåœ¨ DefMapReadFromCache() ä¸­å€ŸåŠ©ç›¸åº” DefField çš„ mExtraData è¿›è¡Œä¿®å¤
                         SMemR(aBufferPtr, theDefinition, theDefMap->mDefSize);
-                        // ĞŞ¸´Ò°Ö¸Õë¼°±êÖ¾ĞÍÊı¾İ£¬²¢±£´æÊÇ·ñ³É¹¦µÄ½á¹û£¬ºóĞø×÷Îª·µ»ØÖµ
+                        // ä¿®å¤é‡æŒ‡é’ˆåŠæ ‡å¿—å‹æ•°æ®ï¼Œå¹¶ä¿å­˜æ˜¯å¦æˆåŠŸçš„ç»“æœï¼Œåç»­ä½œä¸ºè¿”å›å€¼
                         bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
-                        size_t aReadMemSize = (uint)aBufferPtr - (uint)aUncompressedBuffer;
-                        delete[] aUncompressedBuffer;
+                        size_t aReadMemSize = (uintptr_t)aBufferPtr - (uintptr_t)aUncompressedBuffer;
+                        delete[] (char *)aUncompressedBuffer;
                         if (aResult && aReadMemSize != aUncompressedSize)
                             TodTrace(_S("Compiled file wrong size: %s\n"), theCompiledFilePath.c_str());
                         return aResult;
                     }
                 }
             }
-            delete[] aUncompressedBuffer;
+            delete[] (char *)aUncompressedBuffer;
         }
     }
     return false;
@@ -561,7 +566,7 @@ SexyString DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString& theXML
 bool IsFileInPakFile(const SexyString& theFilePath)
 {
     PFILE* pFile = p_fopen(theFilePath.c_str(), _S("rb"));
-    bool aIsInPak = pFile && !pFile->mFP;  // Í¨¹ı mPakRecordMap.find ÕÒµ½²¢´ò¿ªµÄÎÄ¼ş£¬Æä mFP Îª¿ÕÖ¸Õë£¨ÒòÎª²»ÊÇ´ÓÊµ¼ÊÎÄ¼şÖĞ´ò¿ªµÄ£©
+    bool aIsInPak = pFile && !pFile->mFP;  // é€šè¿‡ mPakRecordMap.find æ‰¾åˆ°å¹¶æ‰“å¼€çš„æ–‡ä»¶ï¼Œå…¶ mFP ä¸ºç©ºæŒ‡é’ˆï¼ˆå› ä¸ºä¸æ˜¯ä»å®é™…æ–‡ä»¶ä¸­æ‰“å¼€çš„ï¼‰
     if (pFile)
     {
         p_fclose(pFile);
@@ -583,7 +588,7 @@ bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
     
     if (!GetFileAttributesEx(theXMLFilePath.c_str(), _GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard, &lpFileData))
     {
-        TodTrace(_S("Can't file source file to compile '%s'"), theXMLFilePath);
+        TodTrace(_S("Can't file source file to compile '%s'"), theXMLFilePath.c_str());
         return false;
     }
     else
@@ -592,10 +597,10 @@ bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
 
 void DefinitionFillWithDefaults(DefMap* theDefMap, void* theDefinition)
 {
-    memset(theDefinition, NULL, theDefMap->mDefSize);  // ½« theDefinition ³õÊ¼»¯Ìî³äÎª 0
-    for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)  // ±éÀú theDefinition µÄÃ¿Ò»¸ö³ÉÔ±±äÁ¿
+    memset(theDefinition, NULL, theDefMap->mDefSize);  // å°† theDefinition åˆå§‹åŒ–å¡«å……ä¸º 0
+    for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)  // éå† theDefinition çš„æ¯ä¸€ä¸ªæˆå‘˜å˜é‡
         if (aField->mFieldType == DefFieldType::DT_STRING)
-            *(char**)((uint)theDefinition + aField->mFieldOffset) = "";  // ½«ËùÓĞ char* ÀàĞÍµÄ³ÉÔ±±äÁ¿¸³ÖµÎª¿Õ×Ö·ûÊı×éµÄÖ¸Õë
+            *(char**)((uintptr_t)theDefinition + aField->mFieldOffset) = (char *)"";  // å°†æ‰€æœ‰ char* ç±»å‹çš„æˆå‘˜å˜é‡èµ‹å€¼ä¸ºç©ºå­—ç¬¦æ•°ç»„çš„æŒ‡é’ˆ
 }
 
 void DefinitionXmlError(XMLParser* theXmlParser, const char* theFormat, ...)
@@ -613,27 +618,27 @@ void DefinitionXmlError(XMLParser* theXmlParser, const char* theFormat, ...)
 bool DefinitionReadXMLString(XMLParser* theXmlParser, SexyString& theValue)
 {
     XMLElement aXMLElement;
-    if (!theXmlParser->NextElement(&aXMLElement))  // ¶ÁÈ¡ÏÂÒ»¸ö XML ÔªËØ
+    if (!theXmlParser->NextElement(&aXMLElement))  // è¯»å–ä¸‹ä¸€ä¸ª XML å…ƒç´ 
     {
         DefinitionXmlError(theXmlParser, "Missing element value");
         return false;
     }
-    if (aXMLElement.mType == XMLElement::TYPE_END)  // ¶ÁÈ¡µ½½áÊø±êÇ©Ôò½áÊø´¦Àí
+    if (aXMLElement.mType == XMLElement::TYPE_END)  // è¯»å–åˆ°ç»“æŸæ ‡ç­¾åˆ™ç»“æŸå¤„ç†
         return true;
-    else if (aXMLElement.mType != XMLElement::TYPE_ELEMENT)  // ³ı½áÊø±êÇ©Íâ£¬Õı³£Çé¿öÏÂ£¬´Ë´¦¶ÁÈ¡µ½µÄÓ¦ÊÇ¶¨ÒåµÄÕıÆ¬ÄÚÈİ
+    else if (aXMLElement.mType != XMLElement::TYPE_ELEMENT)  // é™¤ç»“æŸæ ‡ç­¾å¤–ï¼Œæ­£å¸¸æƒ…å†µä¸‹ï¼Œæ­¤å¤„è¯»å–åˆ°çš„åº”æ˜¯å®šä¹‰çš„æ­£ç‰‡å†…å®¹
     {
         DefinitionXmlError(theXmlParser, "unknown element type");
         return false;
     }
 
-    theValue = aXMLElement.mValue;  // ¡î ¸³Öµ³ö²Î
+    theValue = aXMLElement.mValue;  // â˜† èµ‹å€¼å‡ºå‚
 
-    if (!theXmlParser->NextElement(&aXMLElement))  // ¼ÌĞø¶ÁÈ¡ÏÂÒ»¸ö XML ÔªËØ
+    if (!theXmlParser->NextElement(&aXMLElement))  // ç»§ç»­è¯»å–ä¸‹ä¸€ä¸ª XML å…ƒç´ 
     {
         DefinitionXmlError(theXmlParser, "Can't read element end");
         return false;
     }
-    if (aXMLElement.mType != XMLElement::TYPE_END)  // Õı³£Çé¿öÏÂ£¬´Ë´¦¶ÁÈ¡µ½µÄÓ¦ÊÇ½áÊø±êÇ©
+    if (aXMLElement.mType != XMLElement::TYPE_END)  // æ­£å¸¸æƒ…å†µä¸‹ï¼Œæ­¤å¤„è¯»å–åˆ°çš„åº”æ˜¯ç»“æŸæ ‡ç­¾
     {
         DefinitionXmlError(theXmlParser, "Missing element end");
         return false;
@@ -689,7 +694,7 @@ bool DefinitionReadStringField(XMLParser* theXmlParser, char** theValue)
 
     if (aStringValue.size() == 0)
     {
-        *theValue = "";
+        *theValue = (char *)"";
     }
     else
     {
@@ -736,13 +741,14 @@ bool DefinitionReadArrayField(XMLParser* theXmlParser, DefinitionArrayDef* theAr
     }
     else
     {
-        // µ± theArray ÖĞÒÑ´æÔÚÔªËØ£¬ÇÒÔªËØµÄ¸öÊıÎª 2 µÄÕûÊı´ÎÃİÊ±
-        if (theArray->mArrayCount >= 1 && (theArray->mArrayCount == 1 || (theArray->mArrayCount & (theArray->mArrayCount - 1) == 0)))
+        // å½“ theArray ä¸­å·²å­˜åœ¨å…ƒç´ ï¼Œä¸”å…ƒç´ çš„ä¸ªæ•°ä¸º 2 çš„æ•´æ•°æ¬¡å¹‚æ—¶
+        // TODO Potential error with the bracketing for the &
+        if (theArray->mArrayCount >= 1 && (theArray->mArrayCount == 1 || ((theArray->mArrayCount & (theArray->mArrayCount - 1)) == 0)))
         {
             void* anOldData = theArray->mArrayData;
             theArray->mArrayData = DefinitionAlloc(2 * theArray->mArrayCount * aDefMap->mDefSize);
             memcpy(theArray->mArrayData, anOldData, theArray->mArrayCount * aDefMap->mDefSize);
-            delete[] anOldData;
+            delete[] (char *)anOldData;
         }
         theArray->mArrayCount++;
     }
@@ -808,11 +814,13 @@ bool DefinitionReadImageField(XMLParser* theXmlParser, Image** theImage)
     if (DefinitionLoadImage(theImage, aStringValue))
         return true;
 
-    std::string aMessgae = StrFormat("Failed to find image '%s' in %s", SexyStringToStringFast(aStringValue).c_str(), theXmlParser->GetFileName());
+    std::string aMessgae = StrFormat("Failed to find image '%s' in %s", SexyStringToStringFast(aStringValue).c_str(), theXmlParser->GetFileName().c_str());
     TodErrorMessageBox(aMessgae.c_str(), "Missing image");
+
+    return false;
 }
 
-bool DefinitionReadFontField(XMLParser* theXmlParser, Font** theFont)
+bool DefinitionReadFontField(XMLParser* theXmlParser, _Font** theFont)
 {
     SexyString aStringValue;
     if (!DefinitionReadXMLString(theXmlParser, aStringValue))
@@ -821,8 +829,10 @@ bool DefinitionReadFontField(XMLParser* theXmlParser, Font** theFont)
     if (DefinitionLoadFont(theFont, aStringValue))
         return true;
 
-    std::string aMessgae = StrFormat("Failed to find font '%s' in %s", SexyStringToStringFast(aStringValue).c_str(), theXmlParser->GetFileName());
+    std::string aMessgae = StrFormat("Failed to find font '%s' in %s", SexyStringToStringFast(aStringValue).c_str(), theXmlParser->GetFileName().c_str());
     TodErrorMessageBox(aMessgae.c_str(), "Missing font");
+
+    return false;
 }
 
 bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition, bool* theDone)
@@ -831,12 +841,12 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
         return false;
 
     XMLElement aXMLElement;
-    if (!theXmlParser->NextElement(&aXMLElement) || aXMLElement.mType == XMLElement::TYPE_END)  // ¶ÁÈ¡ÏÂÒ»¸ö XML ÔªËØ
+    if (!theXmlParser->NextElement(&aXMLElement) || aXMLElement.mType == XMLElement::TYPE_END)  // è¯»å–ä¸‹ä¸€ä¸ª XML å…ƒç´ 
     {
-        *theDone = true;  // Ã»ÓĞÏÂÒ»¸öÔªËØÔò±íÊ¾¶ÁÈ¡Íê³É
+        *theDone = true;  // æ²¡æœ‰ä¸‹ä¸€ä¸ªå…ƒç´ åˆ™è¡¨ç¤ºè¯»å–å®Œæˆ
         return true;
     }
-    if (aXMLElement.mType != XMLElement::TYPE_START)  // Õı³£Çé¿öÏÂ£¬´Ë´¦¶ÁÈ¡µ½µÄÓ¦ÊÇ¿ªÊ¼±êÇ©£¬¶øÆäËûÄÚÈİÔÚºóĞøµÄÏàÓ¦º¯ÊıÖĞ¶ÁÈ¡
+    if (aXMLElement.mType != XMLElement::TYPE_START)  // æ­£å¸¸æƒ…å†µä¸‹ï¼Œæ­¤å¤„è¯»å–åˆ°çš„åº”æ˜¯å¼€å§‹æ ‡ç­¾ï¼Œè€Œå…¶ä»–å†…å®¹åœ¨åç»­çš„ç›¸åº”å‡½æ•°ä¸­è¯»å–
     {
         DefinitionXmlError(theXmlParser, "Missing element start");
         return false;
@@ -844,11 +854,11 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
 
     for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
     {
-        void* pVar = (void*)((uint)theDefinition + aField->mFieldOffset);
+        void* pVar = (void*)((uintptr_t)theDefinition + aField->mFieldOffset);
         if (aField->mFieldType == DefFieldType::DT_FLAGS && DefinitionReadFlagField(theXmlParser, aXMLElement.mValue, nullptr, (DefSymbol*)aField->mExtraData))
             return true;
         
-        if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0)  // ÅĞ¶Ï aXMLElement ¶¨ÒåµÄÊÇ·ñÎª¸Ã³ÉÔ±±äÁ¿
+        if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0)  // åˆ¤æ–­ aXMLElement å®šä¹‰çš„æ˜¯å¦ä¸ºè¯¥æˆå‘˜å˜é‡
         {
             bool aSuccess;
             switch (aField->mFieldType)
@@ -878,9 +888,10 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
                 aSuccess = DefinitionReadImageField(theXmlParser, (Image**)pVar);
                 break;
             case DefFieldType::DT_FONT:
-                aSuccess = DefinitionReadFontField(theXmlParser, (Font**)pVar);
+                aSuccess = DefinitionReadFontField(theXmlParser, (_Font**)pVar);
                 break;
             default:
+                aSuccess = false;
                 TOD_ASSERT(false);
                 break;
             }
@@ -891,16 +902,16 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
             return false;
         }
     }
-    DefinitionXmlError(theXmlParser, "Ignoring unknown element '%s'", aXMLElement.mValue.c_str());  // aXMLElement Î´¶¨ÒåÈÎºÎ³ÉÔ±±äÁ¿Ê±
+    DefinitionXmlError(theXmlParser, "Ignoring unknown element '%s'", aXMLElement.mValue.c_str());  // aXMLElement æœªå®šä¹‰ä»»ä½•æˆå‘˜å˜é‡æ—¶
     return false;
 }
 
 bool DefinitionLoadMap(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition)
 {
     if (theDefMap->mConstructorFunc)
-        theDefMap->mConstructorFunc(theDefinition);  // ÀûÓÃ¹¹Ôìº¯Êı¹¹Ôì theDefinition
+        theDefMap->mConstructorFunc(theDefinition);  // åˆ©ç”¨æ„é€ å‡½æ•°æ„é€  theDefinition
     else
-        DefinitionFillWithDefaults(theDefMap, theDefinition);  // ÒÔÄ¬ÈÏÖµÌî³ä theDefinition
+        DefinitionFillWithDefaults(theDefMap, theDefinition);  // ä»¥é»˜è®¤å€¼å¡«å…… theDefinition
 
     bool aDone = false;
     while (!aDone)
@@ -944,7 +955,7 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& th
 //0x4447F0 : (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC
 bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMap, void* theDefinition)
 {
-#ifdef _DEBUG  // ÄÚ²â°æÖ´ĞĞµÄÄÚÈİ
+#ifdef _DEBUG  // å†…æµ‹ç‰ˆæ‰§è¡Œçš„å†…å®¹
 
     TodHesitationTrace(_S("predef"));
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
@@ -963,7 +974,7 @@ bool DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMa
         return aResult;
     }
 
-#else  // Ô­°æÖ´ĞĞµÄÄÚÈİ
+#else  // åŸç‰ˆæ‰§è¡Œçš„å†…å®¹
 
     SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
     if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
@@ -981,16 +992,16 @@ float FloatTrackEvaluate(FloatParameterTrack& theTrack, float theTimeValue, floa
     if (theTrack.mCountNodes == 0)
         return 0.0f;
 
-    if (theTimeValue < theTrack.mNodes[0].mTime)  // Èç¹ûµ±Ç°Ê±¼äĞ¡ÓÚµÚÒ»¸ö½ÚµãµÄ¿ªÊ¼Ê±¼ä
+    if (theTimeValue < theTrack.mNodes[0].mTime)  // å¦‚æœå½“å‰æ—¶é—´å°äºç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„å¼€å§‹æ—¶é—´
         return TodCurveEvaluate(theInterp, theTrack.mNodes[0].mLowValue, theTrack.mNodes[0].mHighValue, theTrack.mNodes[0].mDistribution);
 
     for (int i = 1; i < theTrack.mCountNodes; i++)
     {
         FloatParameterTrackNode* aNodeNxt = &theTrack.mNodes[i];
-        if (theTimeValue <= aNodeNxt->mTime)  // Ñ°ÕÒÊ×¸ö¿ªÊ¼Ê±¼ä´óÓÚµ±Ç°Ê±¼äµÄ½Úµã
+        if (theTimeValue <= aNodeNxt->mTime)  // å¯»æ‰¾é¦–ä¸ªå¼€å§‹æ—¶é—´å¤§äºå½“å‰æ—¶é—´çš„èŠ‚ç‚¹
         {
             FloatParameterTrackNode* aNodeCur = &theTrack.mNodes[i - 1];
-            // ¼ÆËãµ±Ç°Ê±¼äÔÚ¡²µ±Ç°½ÚµãÖÁÏÂÒ»½Úµã¡³µÄ¹ı³ÌÖĞµÄ½ø¶È
+            // è®¡ç®—å½“å‰æ—¶é—´åœ¨ã€”å½“å‰èŠ‚ç‚¹è‡³ä¸‹ä¸€èŠ‚ç‚¹ã€•çš„è¿‡ç¨‹ä¸­çš„è¿›åº¦
             float aTimeFraction = (theTimeValue - aNodeCur->mTime) / (aNodeNxt->mTime - aNodeCur->mTime);
             float aLeftValue = TodCurveEvaluate(theInterp, aNodeCur->mLowValue, aNodeCur->mHighValue, aNodeCur->mDistribution);
             float aRightValue = TodCurveEvaluate(theInterp, aNodeNxt->mLowValue, aNodeNxt->mHighValue, aNodeNxt->mDistribution);
@@ -998,16 +1009,16 @@ float FloatTrackEvaluate(FloatParameterTrack& theTrack, float theTimeValue, floa
         }
     }
 
-    FloatParameterTrackNode* aLastNode = &theTrack.mNodes[theTrack.mCountNodes - 1];  // Èç¹ûµ±Ç°Ê±¼ä´óÓÚ×îºóÒ»¸ö½ÚµãµÄ¿ªÊ¼Ê±¼ä
+    FloatParameterTrackNode* aLastNode = &theTrack.mNodes[theTrack.mCountNodes - 1];  // å¦‚æœå½“å‰æ—¶é—´å¤§äºæœ€åä¸€ä¸ªèŠ‚ç‚¹çš„å¼€å§‹æ—¶é—´
     return TodCurveEvaluate(theInterp, aLastNode->mLowValue, aLastNode->mHighValue, aLastNode->mDistribution);
 }
 
 //0x4449F0
 void FloatTrackSetDefault(FloatParameterTrack& theTrack, float theValue)
 {
-    if (theTrack.mNodes == nullptr && theValue != 0.0f)  // È·±£¸Ã²ÎÊı¹ìµÀÎŞ½Úµã£¨Î´±»¸³Öµ¹ı£©ÇÒ¸ø¶¨µÄÄ¬ÈÏÖµ²»Îª 0
+    if (theTrack.mNodes == nullptr && theValue != 0.0f)  // ç¡®ä¿è¯¥å‚æ•°è½¨é“æ— èŠ‚ç‚¹ï¼ˆæœªè¢«èµ‹å€¼è¿‡ï¼‰ä¸”ç»™å®šçš„é»˜è®¤å€¼ä¸ä¸º 0
     {
-        theTrack.mCountNodes = 1;  // Ä¬ÈÏ²ÎÊı¹ìµÀÓĞÇÒ½öÓĞ 1 ¸ö½Úµã
+        theTrack.mCountNodes = 1;  // é»˜è®¤å‚æ•°è½¨é“æœ‰ä¸”ä»…æœ‰ 1 ä¸ªèŠ‚ç‚¹
         FloatParameterTrackNode* aNode = (FloatParameterTrackNode*)DefinitionAlloc(sizeof(FloatParameterTrackNode));
         theTrack.mNodes = aNode;
         aNode->mTime = 0.0f;
@@ -1020,12 +1031,12 @@ void FloatTrackSetDefault(FloatParameterTrack& theTrack, float theValue)
 
 bool FloatTrackIsSet(const FloatParameterTrack& theTrack)
 {
-	return theTrack.mCountNodes != 0 && theTrack.mNodes[0].mCurveType != TodCurves::CURVE_CONSTANT;
+    return theTrack.mCountNodes != 0 && theTrack.mNodes[0].mCurveType != TodCurves::CURVE_CONSTANT;
 }
 
 bool FloatTrackIsConstantZero(FloatParameterTrack& theTrack)
 {
-    // µ±¹ìµÀÎŞ½Úµã£¬»ò½ö´æÔÚÒ»¸ö½ÚµãÇÒ¸Ã½ÚµãµÄ×î´ó¡¢×îĞ¡Öµ¾ùÎª 0 Ê±£¬ÈÏÎª¸Ã¹ìµÀÉÏµÄÖµºãÎªÁã
+    // å½“è½¨é“æ— èŠ‚ç‚¹ï¼Œæˆ–ä»…å­˜åœ¨ä¸€ä¸ªèŠ‚ç‚¹ä¸”è¯¥èŠ‚ç‚¹çš„æœ€å¤§ã€æœ€å°å€¼å‡ä¸º 0 æ—¶ï¼Œè®¤ä¸ºè¯¥è½¨é“ä¸Šçš„å€¼æ’ä¸ºé›¶
     return theTrack.mCountNodes == 0 || (theTrack.mCountNodes == 1 && theTrack.mNodes[0].mLowValue == 0.0f && theTrack.mNodes[0].mHighValue == 0.0f);
 }
 
@@ -1039,23 +1050,23 @@ float FloatTrackEvaluateFromLastTime(FloatParameterTrack& theTrack, float theTim
 void DefinitionFreeArrayField(DefinitionArrayDef* theArray, DefMap* theDefMap)
 {
     for (int i = 0; i < theArray->mArrayCount; i++)
-        DefinitionFreeMap(theDefMap, (void*)((int)theArray->mArrayData + theDefMap->mDefSize * i));  // ×îºóÒ»¸ö²ÎÊı±íÊ¾ pData[i]
-    delete[] theArray->mArrayData;
+        DefinitionFreeMap(theDefMap, (void*)((intptr_t)theArray->mArrayData + theDefMap->mDefSize * i));  // æœ€åä¸€ä¸ªå‚æ•°è¡¨ç¤º pData[i]
+    delete[] (char *)theArray->mArrayData;
     theArray->mArrayData = nullptr;
 }
 
 //0x444A90
 void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
 {
-    // ¸ù¾İ theDefMap ±éÀú theDefinition µÄÃ¿¸ö³ÉÔ±±äÁ¿
+    // æ ¹æ® theDefMap éå† theDefinition çš„æ¯ä¸ªæˆå‘˜å˜é‡
     for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
     {
-        void* aVar = (void*)((int)theDefinition + aField->mFieldOffset);  // Ö¸Ïò¸Ã³ÉÔ±±äÁ¿µÄÖ¸Õë
+        void* aVar = (void*)((intptr_t)theDefinition + aField->mFieldOffset);  // æŒ‡å‘è¯¥æˆå‘˜å˜é‡çš„æŒ‡é’ˆ
         switch (aField->mFieldType)
         {
         case DefFieldType::DT_STRING:
             if (**(char**)aVar != '\0')
-                delete[] *(char**)aVar;  // ÊÍ·Å×Ö·ûÊı×é
+                delete[] *(char**)aVar;  // é‡Šæ”¾å­—ç¬¦æ•°ç»„
             *(char**)aVar = nullptr;
             break;
         case DefFieldType::DT_ARRAY:
@@ -1063,8 +1074,10 @@ void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
             break;
         case DefFieldType::DT_TRACK_FLOAT:
             if (((FloatParameterTrack*)aVar)->mCountNodes != 0)
-                delete[]((FloatParameterTrack*)aVar)->mNodes;  // ÊÍ·Å¸¡µã²ÎÊı¹ìµÀµÄ½Úµã
+                delete[]((FloatParameterTrack*)aVar)->mNodes;  // é‡Šæ”¾æµ®ç‚¹å‚æ•°è½¨é“çš„èŠ‚ç‚¹
             ((FloatParameterTrack*)aVar)->mNodes = nullptr;
+            break;
+        default:
             break;
         }
     }

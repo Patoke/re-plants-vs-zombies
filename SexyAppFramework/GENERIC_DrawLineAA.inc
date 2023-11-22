@@ -7,7 +7,7 @@
 		ulong anErrAdj = (ulong)(dyd / dxd * 0x10000);
 
 		uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-		uchar aWeight2 = (aWeight ^ 0xFF);
+		//uchar aWeight2 = (aWeight ^ 0xFF); // unused
 
 		int a = CALC_WEIGHT_A(aWeight);
 		int oma = 256 - a;
@@ -47,7 +47,7 @@
 		ulong anErrAdj = (ulong)(dxd / dyd * 0x10000);
 
 		uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-		uchar aWeight2 = (aWeight ^ 0xFF);
+		//uchar aWeight2 = (aWeight ^ 0xFF); // unused
 
 		int a = CALC_WEIGHT_A(aWeight);
 		int oma = 256 - a;
@@ -83,7 +83,7 @@
 	}
 	aDestPixels = &aBits[aY1*STRIDE + aX1];
 	uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-	uchar aWeight2 = (aWeight ^ 0xFF);
+	// uchar aWeight2 = (aWeight ^ 0xFF); // unused
 
 	int a = CALC_WEIGHT_A(aWeight);
 	int oma = 256 - a;

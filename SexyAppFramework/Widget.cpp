@@ -4,7 +4,7 @@
 #include "Font.h"
 #include "Image.h"
 #include "SexyAppBase.h"
-#include "debug.h"
+#include "Debug.h"
 
 using namespace Sexy;
 
@@ -315,7 +315,7 @@ void Widget::MouseWheel(int theDelta)
 
 Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const SexyString& theLine)
 {
-	Font* aFont = g->GetFont();
+	_Font* aFont = g->GetFont();
 	int aWidth = aFont->StringWidth(theLine);
 	int aX = (mWidth - aWidth) / 2;
 
@@ -326,7 +326,7 @@ Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const SexyString& theL
 
 Rect Widget::WriteCenteredLine(Graphics* g, int anOffset, const SexyString& theLine, Color theColor1, Color theColor2, const Point& theShadowOffset)
 {
-	Font* aFont = g->GetFont();
+	_Font* aFont = g->GetFont();
 	int aWidth = aFont->StringWidth(theLine);
 	int aX = (mWidth - aWidth) / 2;
 	

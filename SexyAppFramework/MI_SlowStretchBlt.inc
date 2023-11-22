@@ -26,6 +26,7 @@
 	ZeroMemory(aNewHorzPixels, aTempDestWidth*aSrcHeightI*4*4);
 
 	int aSrcImageWidth = theImage->GetWidth();
+	(void)aSrcImageWidth; // unused, but not sure if no side-effects
 
 	if (theSrcRect.mWidth >= theDestRect.mWidth)
 	{

@@ -5,10 +5,12 @@
 	int aCosLong = (int) (aCos * 0x10000);
 	int aSinLong = (int) (aSin * 0x10000);	
 
+/* unused
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 	int aRotCenterXLong = (int)(theRotCenterX * 0x10000);
 	int aRotCenterYLong = (int)(theRotCenterY * 0x10000);
 #endif
+*/
 
 	ulong* aDestPixelsRow = GetBits() + ((int)aDestRect.mY * mWidth) + (int)aDestRect.mX;		
 	int aDestPixelsPitch = mWidth;
@@ -53,7 +55,7 @@
 				aDestPixels++; \
 			else \
 			{ \
-				ulong destPixel = *aDestPixels; \
+				/*ulong destPixel = *aDestPixels; unused*/ \
 			\
 				ulong r = aMaxTable[((((((src1&0xFF0000)*a1) + ((src2&0xFF0000)*a2) + ((src3&0xFF0000)*a3) + ((src4&0xFF0000)*a4))>>24)*cr)>>8) + ((dest&0xFF0000)>>16)]; \
 				ulong g = aMaxTable[(((((src1&0x00FF00)*a1) + ((src2&0x00FF00)*a2) + ((src3&0x00FF00)*a3) + ((src4&0x00FF00)*a4))*cg)>>24) + ((dest&0x00FF00)>>8)]; \

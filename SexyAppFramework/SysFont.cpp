@@ -296,7 +296,7 @@ void SysFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theS
 				int aBlue = 255 * (*ptr2 & 0xFF) / ba;
 				int aGreen = 255 * ((*ptr2 >> 8) & 0xFF) / ga;
 				int aRed = 255 * ((*ptr2 >> 16) & 0xFF) / ra;
-				int anAlpha = min(ra, min(ga, ba));
+				int anAlpha = std::min(ra, std::min(ga, ba));
 				*ptr1 = (aBlue) | (aGreen << 8) | (aRed << 16) | (anAlpha << 24);
 			}
 			else *ptr1 &= 0;
@@ -315,7 +315,7 @@ void SysFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theS
 	}
 }
 
-Font* SysFont::Duplicate()
+_Font* SysFont::Duplicate()
 {
 	return new SysFont(*this);
 }

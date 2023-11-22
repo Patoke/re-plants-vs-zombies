@@ -5,10 +5,12 @@
 	int aCosLong = (int) (aCos * 0x10000);
 	int aSinLong = (int) (aSin * 0x10000);	
 
+/* unused
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 	int aRotCenterXLong = (int)(theRotCenterX * 0x10000);
 	int aRotCenterYLong = (int)(theRotCenterY * 0x10000);
 #endif
+*/
 
 	if (!LockSurface())
 		return;
@@ -29,9 +31,10 @@
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// unused
+	// ulong aRRoundAdd = aRMask >> 1;
+	// ulong aGRoundAdd = aGMask >> 1;
+	// ulong aBRoundAdd = aBMask >> 1;
 	
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{

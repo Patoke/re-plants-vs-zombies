@@ -7,31 +7,37 @@ using namespace Sexy;
 ///////////////////////////////////////////////////////////////////////////////
 inline int QueryCounters(__int64 *lpPerformanceCount)
 {
+	// Argh fuck it just hope it never happens
+	__builtin_unreachable();
 	/* returns TSC only */
-	_asm
-	{
-		mov ebx, dword ptr [lpPerformanceCount]
-		rdtsc
-			mov dword ptr [ebx], eax
-			mov dword ptr [ebx+4], edx
-	}
+	/*
+	asm (
+		"mov ebx, dword ptr [lpPerformanceCount]"
+		"rdtsc"
+		"	mov dword ptr [ebx], eax"
+		"	mov dword ptr [ebx+4], edx"
+	);
 	return 1;
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 inline int DeltaCounters(__int64 *lpPerformanceCount)
 {
-	_asm
-	{
-		mov ebx, dword ptr [lpPerformanceCount]
-		rdtsc
-			sub eax, dword ptr [ebx]
-			sbb edx, dword ptr [ebx+4]
-			mov dword ptr [ebx],   eax
-				mov dword ptr [ebx+4], edx
-	}
+	// Argh fuck it just hope it never happens
+	__builtin_unreachable();
+	/*
+	asm (
+		"mov ebx, dword ptr [lpPerformanceCount]"
+		"rdtsc"
+		"	sub eax, dword ptr [ebx]"
+		"	sbb edx, dword ptr [ebx+4]"
+		"	mov dword ptr [ebx],   eax"
+		"		mov dword ptr [ebx+4], edx"
+	);
 	return 1;
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,7 +148,7 @@ struct PerfInfo
 	mutable int mStartCount;
 	mutable int mCallCount;
 
-	PerfInfo(const char *theName) : mPerfName(theName), mStartTime(0), mDuration(0), mStartCount(0), mCallCount(0), mLongestCall(0) { }
+	PerfInfo(const char *theName) : mPerfName(theName), mStartTime(0), mDuration(0), mLongestCall(0), mStartCount(0), mCallCount(0) { }
 
 	bool operator<(const PerfInfo &theInfo) const { return stricmp(mPerfName,theInfo.mPerfName)<0; }
 };
@@ -220,7 +226,7 @@ static inline void CollatePerfRecords()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-static inline void PushPerfRecord(PerfRecord &theRecord)
+static inline void PushPerfRecord(PerfRecord theRecord)
 {
 	if(gPerfRecordTop >= (int)gPerfRecordVector.size())
 		gPerfRecordVector.push_back(theRecord);

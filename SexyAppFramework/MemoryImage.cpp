@@ -35,16 +35,16 @@ MemoryImage::MemoryImage(SexyAppBase* theApp)
 
 MemoryImage::MemoryImage(const MemoryImage& theMemoryImage) :
 	Image(theMemoryImage),
-	mApp(theMemoryImage.mApp),
-	mHasAlpha(theMemoryImage.mHasAlpha),
+	mBitsChangedCount(theMemoryImage.mBitsChangedCount),
+	mD3DData(NULL),
+	mD3DFlags(theMemoryImage.mD3DFlags),
 	mHasTrans(theMemoryImage.mHasTrans),
-	mBitsChanged(theMemoryImage.mBitsChanged),
+	mHasAlpha(theMemoryImage.mHasAlpha),
 	mIsVolatile(theMemoryImage.mIsVolatile),
 	mPurgeBits(theMemoryImage.mPurgeBits),
 	mWantPal(theMemoryImage.mWantPal),
-	mD3DFlags(theMemoryImage.mD3DFlags),
-	mBitsChangedCount(theMemoryImage.mBitsChangedCount),
-	mD3DData(NULL)
+	mBitsChanged(theMemoryImage.mBitsChanged),
+	mApp(theMemoryImage.mApp)
 {
 	bool deleteBits = false;
 
@@ -184,10 +184,10 @@ void MemoryImage::BitsChanged()
 
 void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor)
 {
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
 	ulong aRMask = 0xFF0000;
 	ulong aGMask = 0x00FF00;
@@ -209,7 +209,8 @@ void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theE
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG; // unused
+			int G, DeltaG1, DeltaG2;
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -300,7 +301,7 @@ void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theE
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -337,7 +338,8 @@ void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theE
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG; // unused
+			int G, DeltaG1, DeltaG2;
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -438,7 +440,7 @@ void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theE
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -474,10 +476,10 @@ void MemoryImage::NormalDrawLine(double theStartX, double theStartY, double theE
 
 void MemoryImage::AdditiveDrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor)
 {
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
 	ulong aRMask = 0xFF0000;
 	ulong aGMask = 0x00FF00;
@@ -486,9 +488,10 @@ void MemoryImage::AdditiveDrawLine(double theStartX, double theStartY, double th
 	int aGreenShift = 8;
 	int aBlueShift = 0;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// unused
+	//ulong aRRoundAdd = aRMask >> 1;
+	//ulong aGRoundAdd = aGMask >> 1;
+	//ulong aBRoundAdd = aBMask >> 1;
 
 	uchar* aMaxTable = mApp->mAdd8BitMaxTable;
 	DWORD *aSurface = GetBits();
@@ -501,7 +504,8 @@ void MemoryImage::AdditiveDrawLine(double theStartX, double theStartY, double th
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
-		int minG, maxG, G, DeltaG1, DeltaG2;
+		// int minG, maxG; // unused
+		int G, DeltaG1, DeltaG2;
 		double swap;
 		int inc = 1;
 		int aCurX;
@@ -621,7 +625,7 @@ void MemoryImage::AdditiveDrawLine(double theStartX, double theStartY, double th
 			aCurY = theStartY + 1;
 
 			G = 2 * dh - dv;
-			minG = maxG = G;
+			// minG = maxG = G; // unused
 			DeltaG1 = 2 * ( dh - dv );
 			DeltaG2 = 2 * dh;
 			while (aCurY <= theEndY)
@@ -662,16 +666,16 @@ void MemoryImage::DrawLine(double theStartX, double theStartY, double theEndX, d
 {	
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
 		return;
@@ -778,16 +782,16 @@ void MemoryImage::DrawLineAA(double theStartX, double theStartY, double theEndX,
 {
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
 		return;
@@ -1425,6 +1429,7 @@ void MemoryImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& the
 
 			#define NEXT_SRC_COLOR		(*(aSrcPtr++))
 			#define READ_SRC_COLOR		(*(aSrcPtr))
+			#undef EACH_ROW
 			#define EACH_ROW			ulong* aSrcPtr = aSrcPixelsRow
 
 			#include "MI_NormalBlt.inc"
@@ -1491,8 +1496,8 @@ bool MemoryImage::BltRotatedClipHelper(float &theX, float &theY, const Rect &the
 	float aSin = sinf(theRot);
 
 	// Map the four corners and find the bounding rectangle
-	float px[4] = { 0, theSrcRect.mWidth, theSrcRect.mWidth, 0 };
-	float py[4] = { 0, 0, theSrcRect.mHeight, theSrcRect.mHeight };
+	float px[4] = { 0, (float)theSrcRect.mWidth, (float)theSrcRect.mWidth, 0 };
+	float py[4] = { 0, 0, (float)theSrcRect.mHeight, (float)theSrcRect.mHeight };
 	float aMinX = 10000000;
 	float aMaxX = -10000000;
 	float aMinY = 10000000;
@@ -1767,10 +1772,10 @@ void MemoryImage::BltMatrixHelper(Image* theImage, float x, float y, const SexyM
 
 	SWHelper::XYZStruct aVerts[4] =
 	{
-		{ -w2,	-h2,	u0, v0, 0xFFFFFFFF },
-		{ w2,	-h2,	u1,	v0,	0xFFFFFFFF },
-		{ -w2,	h2,		u0,	v1,	0xFFFFFFFF },
-		{ w2,	h2,		u1,	v1,	0xFFFFFFFF }
+		{ -w2,	-h2,	u0, v0, static_cast<long int>(0xFFFFFFFF) },
+		{ w2,	-h2,	u1,	v0,	static_cast<long int>(0xFFFFFFFF) },
+		{ -w2,	h2,		u0,	v1,	static_cast<long int>(0xFFFFFFFF) },
+		{ w2,	h2,		u1,	v1,	static_cast<long int>(0xFFFFFFFF) }
 	};
 
 	for (int i=0; i<4; i++)
@@ -1804,7 +1809,7 @@ void MemoryImage::BltTrianglesTexHelper(Image *theTexture, const TriVertex theVe
 //	if (anImage==NULL)
 //		return;
 
-	int aColor = theColor.ToInt();
+	// int aColor = theColor.ToInt(); // unused
 	for (int i=0; i<theNumTriangles; i++)
 	{
 		bool vertexColor = false;

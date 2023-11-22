@@ -139,7 +139,7 @@ const std::string Sexy::GetKeyNameFromCode(const KeyCode& theKeyCode)
 
 	if ((theKeyCode >= KEYCODE_ASCIIBEGIN2) && (theKeyCode <= KEYCODE_ASCIIEND2))
 	{
-		char aStr[2] = {((unsigned char) theKeyCode) - 0x80, 0};
+		char aStr[2] = {(char)(((unsigned char) theKeyCode) - 0x80), 0};
 		return aStr;
 	}
 

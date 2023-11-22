@@ -95,7 +95,7 @@ void GameButton::SetDisabled(bool theDisabled)
 	mDisabled = theDisabled;
 }
 
-void GameButton::SetFont(Font* theFont)
+void GameButton::SetFont(_Font* theFont)
 {
 	if (mFont)
 		delete mFont;
@@ -397,7 +397,7 @@ bool NewLawnButton::IsPointVisible(int x, int y)
 
 //0x448BC0
 // GOTY @Patoke: 0x44B810
-NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
+NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
 {
 	NewLawnButton* aButton = new NewLawnButton(nullptr, theId, theListener);
 	aButton->SetFont(theFont == nullptr ? Sexy::FONT_BRIANNETOD12 : theFont);

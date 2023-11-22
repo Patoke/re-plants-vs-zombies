@@ -12,7 +12,7 @@ typedef std::vector<Color> ColorVector;
 
 class ScrollbarWidget;
 class ListListener;
-class Font;
+class _Font;
 
 class ListWidget : public Widget, public ScrollListener 
 {
@@ -36,7 +36,7 @@ public:
 
 public:
 	int							mId;	
-	Font*						mFont;
+	_Font*						mFont;
 	ScrollbarWidget*			mScrollbar;
 	int							mJustify;
 
@@ -60,7 +60,7 @@ public:
 	void						SetHilite(int theHiliteIdx, bool notifyListener = false);
 
 public:
-	ListWidget(int theId, Font *theFont, ListListener *theListListener);
+	ListWidget(int theId, _Font *theFont, ListListener *theListListener);
 	virtual ~ListWidget();
 
 	virtual void				RemovedFromManager(WidgetManager *theManager);

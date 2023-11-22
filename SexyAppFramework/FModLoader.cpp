@@ -29,7 +29,7 @@ FMOD_INSTANCE::FMOD_INSTANCE(const char *dllName)
 
     #define GETPROC(_x, _y)                                                                       \
     {                                                                                             \
-		CheckFModFunction(*((unsigned int *)&_x) = (unsigned int)GetProcAddress(mModule, _y),#_y);    \
+		CheckFModFunction(*((uintptr_t *)&_x) = (uintptr_t)GetProcAddress(mModule, _y),#_y);    \
     }
 
     GETPROC(FSOUND_SetBufferSize, "_FSOUND_SetBufferSize@4");

@@ -25,30 +25,30 @@ void TodAllocator::Grow()
 	TOD_ASSERT(mGrowCount > 0);
 	TOD_ASSERT(mItemSize >= sizeof(void*));
 
-	void* aBlock = TodMalloc(mGrowCount * mItemSize + 4);
+	void* aBlock = TodMalloc(mGrowCount * mItemSize + sizeof(void*));
 	*(void**)aBlock = mBlockList;
 	mBlockList = aBlock;
 
 	void* aFreeList = mFreeList;
-	void* aItem = (void*)((uint)aBlock + 4);
+	void* aItem = (void*)((uintptr_t)aBlock + sizeof(void*));
 	for (int i = 0; i < mGrowCount; i++)
 	{
 		*(void**)aItem = aFreeList;
 		aFreeList = aItem;
-		aItem = (void*)((uint)aItem + mItemSize);
+		aItem = (void*)((uintptr_t)aItem + mItemSize);
 	}
 	mFreeList = aFreeList;
 }
 
 bool TodAllocator::IsPointerFromAllocator(void* theItem)
 {
-	size_t aBlockSize = mGrowCount * mItemSize;  // Ã¿´Î¡°Grow¡±µÄÄÚ´æ´óÐ¡£¬¼´Ã¿¸öÇø¿éµÄÄÚ´æ´óÐ¡
+	size_t aBlockSize = mGrowCount * mItemSize;  // æ¯æ¬¡â€œGrowâ€çš„å†…å­˜å¤§å°ï¼Œå³æ¯ä¸ªåŒºå—çš„å†…å­˜å¤§å°
 	for (void* aPtr = mBlockList; aPtr != nullptr; aPtr = *(void**)aPtr)
 	{
-		uint aItemPtr = (uint)theItem;
-		// Çø¿éµÄÊ×¸öËÄ×Ö½ÚÎª¶îÍâÉêÇëµÄ¡¢ÓÃÓÚ´æ´¢Ö¸ÏòÏÂÒ»Çø¿éµÄÖ¸ÕëµÄÇøÓò
-		uint aBlockPtr = (uint)aPtr + sizeof(void*);
-		// ÅÐ¶Ï theItem ÊÇ·ñÎ»ÓÚµ±Ç°Çø¿éÄÚÇÒÖ¸ÏòÄ³Ò»ÏîµÄÇøÓòµÄÆðÊ¼µØÖ·
+		uintptr_t aItemPtr = (uintptr_t)theItem;
+		// åŒºå—çš„é¦–ä¸ªå››å­—èŠ‚ä¸ºé¢å¤–ç”³è¯·çš„ã€ç”¨äºŽå­˜å‚¨æŒ‡å‘ä¸‹ä¸€åŒºå—çš„æŒ‡é’ˆçš„åŒºåŸŸ
+		uintptr_t aBlockPtr = (uintptr_t)aPtr + sizeof(void*);
+		// åˆ¤æ–­ theItem æ˜¯å¦ä½äºŽå½“å‰åŒºå—å†…ä¸”æŒ‡å‘æŸä¸€é¡¹çš„åŒºåŸŸçš„èµ·å§‹åœ°å€
 		if (aItemPtr >= aBlockPtr && aItemPtr < aBlockPtr + aBlockSize && (aItemPtr - aBlockPtr) % mItemSize == 0)
 			return true;
 	}
@@ -86,8 +86,8 @@ void TodAllocator::Free(void* theItem, int theItemSize)
 	mTotalItems--;
 	TOD_ASSERT(IsPointerFromAllocator(theItem));
 	TOD_ASSERT(!IsPointerOnFreeList(theItem));
-	*(void**)theItem = mFreeList;  // ½«Ô­¿ÉÓÃÇøÓòÍ·´æÈë [*theItem] ÖÐ
-	mFreeList = theItem;  // ½« theItem ÉèÎªÐÂµÄ¿ÉÓÃÇøÓòÍ·
+	*(void**)theItem = mFreeList;  // å°†åŽŸå¯ç”¨åŒºåŸŸå¤´å­˜å…¥ [*theItem] ä¸­
+	mFreeList = theItem;  // å°† theItem è®¾ä¸ºæ–°çš„å¯ç”¨åŒºåŸŸå¤´
 }
 
 void TodAllocator::FreeAll()

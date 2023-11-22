@@ -7,9 +7,9 @@
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/TodCommon.h"
 #include "../SexyAppFramework/Font.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include "../SexyAppFramework/Dialog.h"
 #include "../SexyAppFramework/SexyMatrix.h"
-#include "../../SexyAppFramework/Checkbox.h"
+#include "../SexyAppFramework/Checkbox.h"
 
 int gLawnEditWidgetColors[][4] = {
     { 0,   0,   0,   0 },

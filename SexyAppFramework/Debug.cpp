@@ -8,8 +8,9 @@
 
 #include "memmgr.h"
 
-extern bool gInAssert = false;
-extern bool gSexyDumpLeakedMem = false;
+bool gInAssert = false;
+// Seemingly unused
+//extern bool gSexyDumpLeakedMem = false;
 
 static FILE *gTraceFile = NULL;
 static int gTraceFileLen = 0;
@@ -158,14 +159,14 @@ void SexyDumpUnfreed()
 
 	time_t aTime = time(NULL);
 	sprintf(buf, "Memory Leak Report for %s\n",	asctime(localtime(&aTime)));
-	fprintf(f, buf);
+	fprintf(f, "%s", buf);
 	OutputDebugString("\n");
 	OutputDebugString(buf);
 	for(i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++) 
 	{
 		sprintf(buf, "%s(%d) : Leak %d byte%s\n", i->second.file, i->second.line, i->second.size,i->second.size>1?"s":"");
 		OutputDebugString(buf);
-		fprintf(f, buf);
+		fprintf(f, "%s", buf);
 
 #ifdef SEXY_DUMP_LEAKED_MEM
 		unsigned char* data = (unsigned char*)i->first;
@@ -225,11 +226,11 @@ void SexyDumpUnfreed()
 
 
 	sprintf(buf, "-----------------------------------------------------------\n");
-	fprintf(f, buf);
+	fprintf(f, "%s", buf);
 	OutputDebugString(buf);
 	sprintf(buf, "Total Unfreed: %d bytes (%dKB)\n\n", totalSize, totalSize / 1024);
 	OutputDebugString(buf);
-	fprintf(f, buf);
+	fprintf(f, "%s", buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

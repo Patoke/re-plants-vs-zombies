@@ -198,6 +198,7 @@ int SeedChooserScreen::PickFromWeightedArrayUsingSpecialRandSeed(TodWeightedArra
 		if (aWeight > aRndResult) return theArray[j].mItem;
 	}
 	DBG_ASSERT(false);
+	__builtin_unreachable();
 }
 
 //0x483F70
@@ -207,7 +208,8 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		aSeedArray[aSeedType].mItem = aSeedType;
-		uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
+		// Seems to be a pure function, should be okay to comment out
+		// uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
 		if ((aSeedType == SEED_GATLINGPEA && !mApp->mPlayerInfo->mPurchases[STORE_ITEM_PLANT_GATLINGPEA]) || !mApp->SeedTypeAvailable(aSeedType) ||
 			SeedNotAllowedToPick(aSeedType) || Plant::IsUpgrade(aSeedType) || aSeedType == SEED_IMITATER || aSeedType == SEED_UMBRELLA || aSeedType == SEED_BLOVER)
 		{
@@ -255,7 +257,7 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 //0x484220
 bool SeedChooserScreen::Has7Rows()
 {
-	PlayerInfo* aPlayer = mApp->mPlayerInfo;
+	// PlayerInfo* aPlayer = mApp->mPlayerInfo; // unused
 	if (mApp->HasFinishedAdventure() || mApp->mPlayerInfo->mPurchases[STORE_ITEM_PLANT_GATLINGPEA]) return true;
 	for (SeedType aSeedType = SEED_TWINSUNFLOWER; aSeedType < SEED_COBCANNON; aSeedType = (SeedType)(aSeedType + 1))
 		if (aSeedType != SEED_SPIKEROCK && mApp->SeedTypeAvailable(aSeedType)) return true;

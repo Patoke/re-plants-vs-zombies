@@ -118,7 +118,7 @@ public:
 	GameButton*						mStoreButton;											//+0x14C
 	bool							mIgnoreMouseUp;											//+0x150
 	ToolTipWidget*					mToolTip;												//+0x154
-	Font*							mDebugFont;												//+0x158
+	_Font*							mDebugFont;												//+0x158
 	CutScene*						mCutScene;												//+0x15C
 	Challenge*						mChallenge;												//+0x160
 	bool							mPaused;												//+0x164
@@ -210,7 +210,7 @@ public:
 	int								mIntervalDrawCountStart;								//+0x5784
 	float							mMinFPS;												//+0x5788
 	int								mPreloadTime;											//+0x578C
-	int								mGameID;												//+0x5790
+	intptr_t						mGameID;												//+0x5790
 	int								mGravesCleared;											//+0x5794
 	int								mPlantsEaten;											//+0x5798
 	int								mPlantsShoveled;										//+0x579C

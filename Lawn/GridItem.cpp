@@ -87,7 +87,7 @@ void GridItem::DrawGridItem(Graphics* g)
     case GridItemType::GRIDITEM_RAKE:                                                               break;
     case GridItemType::GRIDITEM_BRAIN:              g->DrawImageF(IMAGE_BRAIN, mPosX, mPosY);       break;
     case GridItemType::GRIDITEM_SCARY_POT:          DrawScaryPot(g);                                break;
-    case GridItemType::GRIDITEM_SQUIRREL:           DrawSquirrel(g);                                break;
+//  case GridItemType::GRIDITEM_SQUIRREL:           DrawSquirrel(g);                                break;
     case GridItemType::GRIDITEM_STINKY:             DrawStinky(g);                                  break;
     case GridItemType::GRIDITEM_IZOMBIE_BRAIN:      DrawIZombieBrain(g);                            break;
     default:                                        TOD_ASSERT();                                   break;
@@ -393,6 +393,7 @@ void GridItem::DrawLadder(Graphics* g)
     TodDrawImageScaledF(g, IMAGE_REANIM_ZOMBIE_LADDER_5, aXPos + 25.0f, aYPos - 4.0f, 0.8f, 0.8f);
 }
 
+/*
 void GridItem::DrawSquirrel(Graphics* g)
 {
     int aXPos = mBoard->GridToPixelX(mGridX, mGridY);
@@ -421,6 +422,7 @@ void GridItem::DrawSquirrel(Graphics* g)
     // @Patoke: assets, removed, perhaps add back?
     //g->DrawImage(IMAGE_SQUIRREL, aXPos, aYPos);
 }
+*/
 
 //0x44E090
 void GridItem::AddGraveStoneParticles()

@@ -96,12 +96,12 @@ Graphics* Graphics::Create()
 	return new Graphics(*this);
 }
 
-Sexy::Font* Graphics::GetFont()
+Sexy::_Font* Graphics::GetFont()
 {
 	return mFont;
 }
 
-void Graphics::SetFont(Sexy::Font* theFont)
+void Graphics::SetFont(Sexy::_Font* theFont)
 {
 	mFont = theFont;
 }
@@ -294,8 +294,8 @@ void Graphics::PolyFill(const Point *theVertexList, int theNumVertices, bool con
 
     mPFNumActiveEdges = 0;				/* start with empty active list */
     k = 0;				/* ind[k] is next vertex to process */
-    y0 = (int) max(aMinY, ceil(mPFPoints[ind[0]].mY-0.5 + mTransY));		/* ymin of polygon */
-    y1 = (int) min(aMaxY, floor(mPFPoints[ind[mPFNumVertices-1]].mY-0.5 + mTransY));	/* ymax of polygon */
+    y0 = std::max(aMinY, (int)ceil(mPFPoints[ind[0]].mY-0.5 + mTransY));		/* ymin of polygon */
+    y1 = std::min(aMaxY, (int)floor(mPFPoints[ind[mPFNumVertices-1]].mY-0.5 + mTransY));	/* ymax of polygon */
 
     for (y=y0; y<=y1; y++) 
 	{
@@ -381,10 +381,10 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 		}
 		else
 		{
-			aCoverLeft = min(aCoverLeft, aPt->mX);
-			aCoverRight = max(aCoverRight, aPt->mX);
-			aCoverTop = min(aCoverTop, aPt->mY);
-			aCoverBottom = max(aCoverBottom, aPt->mY);
+			aCoverLeft = std::min(aCoverLeft, aPt->mX);
+			aCoverRight = std::max(aCoverRight, aPt->mX);
+			aCoverTop = std::min(aCoverTop, aPt->mY);
+			aCoverBottom = std::max(aCoverBottom, aPt->mY);
 		}
 	}
 	BYTE* coverPtr = aCoverageBuffer;
@@ -419,8 +419,8 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 
     mPFNumActiveEdges = 0;				/* start with empty active list */
     k = 0;				/* ind[k] is next vertex to process */
-    y0 = (int) max(aMinY, ceil(mPFPoints[ind[0]].mY-0.5 + mTransY));		/* ymin of polygon */
-    y1 = (int) min(aMaxY, floor(mPFPoints[ind[mPFNumVertices-1]].mY-0.5 + mTransY));	/* ymax of polygon */
+    y0 =  std::max(aMinY, (int)ceil(mPFPoints[ind[0]].mY-0.5 + mTransY));		/* ymin of polygon */
+    y1 =  std::min(aMaxY, (int)floor(mPFPoints[ind[mPFNumVertices-1]].mY-0.5 + mTransY));	/* ymax of polygon */
 
     for (y=y0; y<=y1; y++) 
 	{
@@ -481,7 +481,7 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 				BYTE* coverRow = coverPtr + (y - aCoverTop) * aCoverWidth;
 				if (xr == xl)
 				{
-					coverRow[xl-aCoverLeft] = min(255, coverRow[xl-aCoverLeft] + ((lErr*rErr)>>8));
+					coverRow[xl-aCoverLeft] = std::min(255, coverRow[xl-aCoverLeft] + ((lErr*rErr)>>8));
 				}
 				else
 				{
@@ -493,15 +493,15 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 						do
 						{
 							double _y =	m * xl + b;
-							lErr = min(255, int(fabs((_y) - y - .5) * 255));
-							coverRow[xl-aCoverLeft] = min(255, coverRow[xl-aCoverLeft] + lErr);
+							lErr = std::min(255, int(fabs((_y) - y - .5) * 255));
+							coverRow[xl-aCoverLeft] = std::min(255, coverRow[xl-aCoverLeft] + lErr);
 							xl++;
 							c -= 1.0;
 						} while (xl <= xr && c > 0);
 					}
 					else
 					{
-						coverRow[xl-aCoverLeft] = min(255, coverRow[xl-aCoverLeft] + lErr);
+						coverRow[xl-aCoverLeft] = std::min(255, coverRow[xl-aCoverLeft] + lErr);
 						xl++;
 					}
 
@@ -513,15 +513,15 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 						do
 						{
 							double _y =	m * xr + b;
-							rErr = min(255, int(fabs((_y) - y - .5) * 255));
-							coverRow[xr-aCoverLeft] = min(255, coverRow[xr-aCoverLeft] + rErr);
+							rErr = std::min(255, int(fabs((_y) - y - .5) * 255));
+							coverRow[xr-aCoverLeft] = std::min(255, coverRow[xr-aCoverLeft] + rErr);
 							xr--;
 							c -= 1.0;
 						} while (xr >= xl && c > 0);
 					}
 					else
 					{
-						coverRow[xr-aCoverLeft] = min(255, coverRow[xr-aCoverLeft] + rErr);
+						coverRow[xr-aCoverLeft] = std::min(255, coverRow[xr-aCoverLeft] + rErr);
 						xr--;
 					}
 
@@ -1075,7 +1075,7 @@ void Graphics::DrawImageCel(Image* theImageStrip, const Rect& theDestRect, int t
 
 int Graphics::WriteString(const SexyString& theString, int theX, int theY, int theWidth, int theJustification, bool drawString, int theOffset, int theLength, int theOldColor)
 {
-	Font* aFont = GetFont();
+	// _Font* aFont = GetFont(); // unused
 	if (theOldColor==-1)
 		theOldColor = mColor.ToInt();
 	
@@ -1192,7 +1192,7 @@ int	Graphics::WriteWordWrapped(const Rect& theRect, const SexyString& theLine, i
 	if (theMaxChars<0)
 		theMaxChars = (int)theLine.length();
 
-	Font* aFont = GetFont();						
+	_Font* aFont = GetFont();						
 
 	//纵向偏移值 = 字体主要部分高度 - 字体内边距
 	int aYOffset = aFont->GetAscent() - aFont->GetAscentPadding();

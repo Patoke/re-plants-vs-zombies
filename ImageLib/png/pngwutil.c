@@ -694,7 +694,7 @@ png_check_keyword(png_structp png_ptr, png_charp key, png_charpp new_key)
    if (key_len > 79)
    {
       png_chunk_warning(png_ptr, "keyword length must be 1 - 79 characters");
-      new_key[79] = '\0';
+      new_key[79] = NULL;
       key_len = 79;
    }
 

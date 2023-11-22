@@ -17,7 +17,7 @@ using namespace Sexy;
 typedef HRESULT (WINAPI *DirectDrawCreateFunc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 typedef HRESULT (WINAPI *DirectDrawCreateExFunc)(GUID FAR *lpGUID, LPVOID *lplpDD, REFIID iid, IUnknown FAR *pUnkOuter);
 
-extern HMODULE gDDrawDLL;
+//extern HMODULE gDDrawDLL;
 static DirectDrawCreateFunc gDirectDrawCreateFunc = NULL;
 static DirectDrawCreateExFunc gDirectDrawCreateExFunc = NULL;
 
@@ -331,7 +331,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 			rc.right = rc.left + mDisplayWidth;
 			rc.bottom = rc.top + mDisplayHeight;
 			::AdjustWindowRectEx(&rc, info.dwStyle, false, info.dwExStyle);
-			::MoveWindow(theWindow, max(0, rc.left), max(0, rc.top), rc.right-rc.left, rc.bottom-rc.top, false);
+			::MoveWindow(theWindow, std::max((LONG)0, rc.left), std::max((LONG)0, rc.top), rc.right-rc.left, rc.bottom-rc.top, false);
 
 			if ( mApp->mWidescreenAware )
 			{
@@ -559,7 +559,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		ZeroMemory(&aDesc, sizeof(aDesc));
 		aDesc.dwSize = sizeof(aDesc);
 		aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
-		HRESULT aResult = mPrimarySurface->GetSurfaceDesc(&aDesc);
+		HRESULT aResult = mPrimarySurface->GetSurfaceDesc(&aDesc); (void)aResult;
 
 		if ((aDesc.ddpfPixelFormat.dwRGBBitCount != 16) &&
 			(aDesc.ddpfPixelFormat.dwRGBBitCount != 32))
@@ -604,11 +604,11 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		mBlueAddTable = new int[aMaxB*2+1];
 
 		for (i = 0; i < aMaxR*2+1; i++)
-			mRedAddTable[i] = min(i, aMaxR);
+			mRedAddTable[i] = std::min(i, aMaxR);
 		for (i = 0; i < aMaxG*2+1; i++)
-			mGreenAddTable[i] = min(i, aMaxG);
+			mGreenAddTable[i] = std::min(i, aMaxG);
 		for (i = 0; i < aMaxB*2+1; i++)
-			mBlueAddTable[i] = min(i, aMaxB);
+			mBlueAddTable[i] = std::min(i, aMaxB);
 
 		// Create the tables that we will use to convert from 
 		// internal color representation to surface representation
@@ -714,7 +714,7 @@ ulong DDInterface::GetColorRef(ulong theRGB)
 	ZeroMemory(&aDesc, sizeof(aDesc));
 	aDesc.dwSize = sizeof(aDesc);
     aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
-    HRESULT aResult = mPrimarySurface->GetSurfaceDesc(&aDesc);
+    HRESULT aResult = mPrimarySurface->GetSurfaceDesc(&aDesc); (void)aResult;
 
 	BYTE bRed   = (BYTE) ((theRGB >> 16) & 0xFF);
     BYTE bGreen = (BYTE) ((theRGB >>  8) & 0xFF);
@@ -831,6 +831,7 @@ bool DDInterface::CopyBitmap(LPDIRECTDRAWSURFACE theSurface, HBITMAP theBitmap, 
 
     // Get size of the bitmap
     BITMAP bmBitmap;
+
     GetObject(theBitmap, sizeof(bmBitmap), &bmBitmap);
     theWidth  = (theWidth  == 0) ? bmBitmap.bmWidth : theWidth;
     theHeight = (theHeight == 0) ? bmBitmap.bmHeight : theHeight;
@@ -932,7 +933,7 @@ bool DDInterface::Redraw(Rect* theClipRect)
 	OffsetRect(&aDestRect, aPoint.x, aPoint.y);
 	
 	DDSURFACEDESC aDesc;
-	ZeroMemory(&aDesc,sizeof(&aDesc));
+	ZeroMemory(&aDesc,sizeof(aDesc));
 	aDesc.dwSize=sizeof(aDesc);
 	mDrawSurface->Lock(NULL,&aDesc,DDLOCK_SURFACEMEMORYPTR|DDLOCK_WAIT|DDLOCK_READONLY ,0);
 	mDrawSurface->Unlock(NULL);
@@ -1087,8 +1088,10 @@ bool DDInterface::Redraw(Rect* theClipRect)
 		// Don't flip away from the GDI surface during the TryMedia purchasing process
 		if (!mApp->mNoDefer && mApp->mFullScreenPageFlip)
 		{
-			if (!mVideoOnlyDraw)
+			if (!mVideoOnlyDraw) {
 				HRESULT aResult = mSecondarySurface->Blt(&aDestRect, mDrawSurface, &aSrcRect, DDBLT_WAIT, &aBltFX);
+				(void)aResult; // Unused
+			}
 
 			mCursorX = mNextCursorX;
 			mCursorY = mNextCursorY;
@@ -1144,6 +1147,7 @@ void DDInterface::RestoreOldCursorAreaFrom(LPDIRECTDRAWSURFACE theSurface, bool 
 
 		// From mNewCursorArea to theSurface
 		HRESULT aResult = theSurface->Blt(&aScreenRect, mOldCursorArea, &aLocalRect, DDBLT_WAIT, &aBltFX);
+		(void)aResult; // Unused
 
 		mHasOldCursorArea = false;
 	}

@@ -156,7 +156,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	if (mApp->mGameMode != GAMEMODE_UPSELL || mApp->mGameScene != SCENE_LEVEL_INTRO)
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 
-	bool aIsIZombie = false;
+	// bool aIsIZombie = false; // Unused
 	if (mPageIndex == CHALLENGE_PAGE_SURVIVAL && mApp->mPlayerInfo->mHasNewSurvival)
 	{
 		SetUnlockChallengeIndex(mPageIndex, false);
@@ -331,6 +331,8 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 			return aIdxInPage >= aNumTrophies ? aIdxInPage - aNumTrophies + 1 : 0;
 		}
 	}
+
+	__builtin_unreachable();
 }
 
 //0x42E6E0

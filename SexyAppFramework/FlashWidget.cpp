@@ -6,12 +6,80 @@
 
 using namespace Sexy;
 
-#pragma comment(lib, "comsuppw.lib")
+//#pragma comment(lib, "comsuppw.lib")
 
 //////////////////////////////////////////////////////////////////////////
 // Interfaces imported from flash.ocx
 
 #include <comdef.h>
+
+//implement our own conversion functions
+
+//------------------------//
+// Convert char * to BSTR //
+
+inline BSTR _com_util::ConvertStringToBSTR(const char* pSrc)
+{
+    if(!pSrc) return NULL;
+
+    DWORD cwch;
+
+    BSTR wsOut(NULL);
+
+    if(cwch = ::MultiByteToWideChar(CP_ACP, 0, pSrc, 
+         -1, NULL, 0))//get size minus NULL terminator
+    {
+                cwch--;
+            wsOut = ::SysAllocStringLen(NULL, cwch);
+
+        if(wsOut)
+        {
+            if(!::MultiByteToWideChar(CP_ACP, 
+                     0, pSrc, -1, wsOut, cwch))
+            {
+                if(ERROR_INSUFFICIENT_BUFFER == ::GetLastError())
+                    return wsOut;
+                ::SysFreeString(wsOut);//must clean up
+                wsOut = NULL;
+            }
+        }
+
+    };
+
+    return wsOut;
+};
+
+//------------------------//
+// Convert BSTR to char * //
+//------------------------//
+inline char* _com_util::ConvertBSTRToString(BSTR pSrc)
+{
+    if(!pSrc) return NULL;
+
+    //convert even embeded NULL
+    DWORD cb,cwch = ::SysStringLen(pSrc);
+
+    char *szOut = NULL;
+
+    if(cb = ::WideCharToMultiByte(CP_ACP, 0, 
+               pSrc, cwch + 1, NULL, 0, 0, 0))
+    {
+        szOut = new char[cb];
+        if(szOut)
+        {
+            szOut[cb - 1]  = '\0';
+
+            if(!::WideCharToMultiByte(CP_ACP, 0, 
+                pSrc, cwch + 1, szOut, cb, 0, 0))
+            {
+                delete []szOut;//clean up if failed;
+                szOut = NULL;
+            }
+        }
+    }
+
+    return szOut;
+};
 
 #pragma pack(push, 8)
 
@@ -310,10 +378,10 @@ IDispatchEx : IDispatch
         long id,
         unsigned long lcid,
         unsigned long dwFlags,
-        struct DISPPARAMS * pdp,
+        DISPPARAMS * pdp,
         VARIANT * pvarRes,
-        struct EXCEPINFO * pei,
-        struct IServiceProvider * pspCaller,
+        EXCEPINFO * pei,
+        IServiceProvider * pspCaller,
         unsigned int cvarRefArg,
         unsigned int * rgiRefArg,
         VARIANT * rgvarRefArg );
@@ -348,9 +416,9 @@ IDispatchEx : IDispatch
         /*[in]*/ long id,
         /*[in]*/ unsigned long lcid,
         /*[in]*/ unsigned long dwFlags,
-        /*[in]*/ struct DISPPARAMS * pdp,
-        /*[out]*/ VARIANT * pvarRes,
-        /*[out]*/ struct EXCEPINFO * pei,
+        /*[in]*/ DISPPARAMS * pdp,
+        /*[out]*/VARIANT * pvarRes,
+        /*[out]*/EXCEPINFO * pei,
         /*[in]*/ struct IServiceProvider * pspCaller,
         /*[in]*/ unsigned int cvarRefArg,
         /*[in]*/ unsigned int * rgiRefArg,

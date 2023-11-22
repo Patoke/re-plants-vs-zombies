@@ -5,6 +5,7 @@
 	// Special path that avoids generating cached native alpha data 
 	
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 
 	if (!LockSurface())
 		return;

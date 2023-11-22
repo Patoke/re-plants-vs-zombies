@@ -17,9 +17,10 @@
 			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-			ulong aRRoundAdd = aRMask >> 1;
-			ulong aGRoundAdd = aGMask >> 1;
-			ulong aBRoundAdd = aBMask >> 1;					
+			// unused
+			// ulong aRRoundAdd = aRMask >> 1;
+			// ulong aGRoundAdd = aGMask >> 1;
+			// ulong aBRoundAdd = aBMask >> 1;					
 	
 			for (int y = 0; y < theDestRect.mHeight; y++)
 			{
@@ -63,9 +64,10 @@
 			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-			ulong aRRoundAdd = aRMask >> 1;
-			ulong aGRoundAdd = aGMask >> 1;
-			ulong aBRoundAdd = aBMask >> 1;					
+			// unused
+			// ulong aRRoundAdd = aRMask >> 1;
+			// ulong aGRoundAdd = aGMask >> 1;
+			// ulong aBRoundAdd = aBMask >> 1;					
 	
 			for (int y = 0; y < theDestRect.mHeight; y++)
 			{
@@ -117,9 +119,10 @@
 			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-			ulong aRRoundAdd = aRMask >> 1;
-			ulong aGRoundAdd = aGMask >> 1;
-			ulong aBRoundAdd = aBMask >> 1;					
+			// unused
+			// ulong aRRoundAdd = aRMask >> 1;
+			// ulong aGRoundAdd = aGMask >> 1;
+			// ulong aBRoundAdd = aBMask >> 1;					
 	
 			for (int y = 0; y < theDestRect.mHeight; y++)
 			{
@@ -162,9 +165,10 @@
 			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-			ulong aRRoundAdd = aRMask >> 1;
-			ulong aGRoundAdd = aGMask >> 1;
-			ulong aBRoundAdd = aBMask >> 1;					
+			// unused
+			// ulong aRRoundAdd = aRMask >> 1;
+			// ulong aGRoundAdd = aGMask >> 1;
+			// ulong aBRoundAdd = aBMask >> 1;					
 	
 			for (int y = 0; y < theDestRect.mHeight; y++)
 			{
@@ -185,7 +189,8 @@
 					
 					if (a != 0)
 					{
-						int oma = 256 - a;
+						// redundant line
+						// int oma = 256 - a;
 						
 						*(aDestPixels _PLUSPLUS) = 
 							(((((dest & aRMask) * oma) + ((src & aRMask) * cr)) >> 8) & aRMask) +

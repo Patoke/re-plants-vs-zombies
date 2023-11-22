@@ -75,14 +75,14 @@ void	funcname(SWHelper::SWVertex* pVerts, void* pFrameBuffer, const unsigned int
 
 	const int pitch = bytepitch / sizeof(PTYPE);
 	const int tex_pitch = textureInfo->pitch;
-	const int tex_height = textureInfo->height;
+	const int tex_height = textureInfo->height;(void)tex_height; // unused?
 	const unsigned int tex_endpos = textureInfo->endpos;
 
 	const SWHelper::signed64 bigOne = static_cast<SWHelper::signed64>(1) << 48;
 #define  swap(a,b,type) {type tmp = a; a = b; b = tmp;}
 
 	const unsigned int* pTexture;
-	unsigned int		vShift, uMask, vMask;
+	unsigned int		vShift, uMask, vMask;(void)vShift;(void)uMask;(void)vMask;
 
 #if defined(TEXTURED)
 	{
@@ -131,6 +131,7 @@ void	funcname(SWHelper::SWVertex* pVerts, void* pFrameBuffer, const unsigned int
 
 	SWHelper::signed64	oneOverHeight = bigOne / (v2->y - v0->y);
 	int		ldx, ldr, ldg, ldb, lda, ldu, ldv;
+	(void)ldr;(void)ldg;(void)ldb;(void)lda; // unused
 	ldx = static_cast<int>(((v2->x - v0->x) * oneOverHeight) >> 32);
 
 #if defined(MOD_ARGB)		
@@ -156,6 +157,7 @@ void	funcname(SWHelper::SWVertex* pVerts, void* pFrameBuffer, const unsigned int
 
 	SWHelper::signed64	subPix = (y0 << 16) - v0->y;
 	int		lx, lr, lg, lb, la, lu, lv;
+	(void)lr;(void)lg;(void)lb;(void)la; // unused
 	lx = v0->x + static_cast<int>((ldx * subPix) >> 16);
 
 #if defined(MOD_ARGB)
@@ -174,6 +176,7 @@ void	funcname(SWHelper::SWVertex* pVerts, void* pFrameBuffer, const unsigned int
 
 	SWHelper::signed64	oneOverWidth;
 	int		dr, dg, db, da, du, dv;
+	(void)dr;(void)dg;(void)db;(void)da; // unused
 #if defined(TEXTURED) || defined(MOD_ARGB)	
 	oneOverWidth = bigOne / (v1->x - mid);
 #endif

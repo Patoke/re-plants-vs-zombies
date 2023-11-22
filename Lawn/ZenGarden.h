@@ -48,7 +48,7 @@ public:
     void                    MouseDownWithTool(int x, int y, CursorType theCursorType);
     void                    MovePlant(Plant* thePlant, int theGridX, int theGridY);
     void                    MouseDownWithMoneySign(Plant* thePlant);
-    Plant*                  PlacePottedPlant(int thePottedPlantIndex);
+    Plant*                  PlacePottedPlant(intptr_t thePottedPlantIndex);
     float                   PlantPottedDrawHeightOffset(SeedType theSeedType, float theScale);
     static float            ZenPlantOffsetX(PottedPlant* thePottedPlant);
     int                     GetPlantSellPrice(Plant* thePlant);
@@ -70,7 +70,7 @@ public:
     PottedPlantNeed         GetPlantsNeed(PottedPlant* thePottedPlant);
     void                    MouseDownWithFeedingTool(int x, int y, CursorType theCursorType);
     void                    DrawPlantOverlay(Graphics* g, Plant* thePlant);
-    PottedPlant*            PottedPlantFromIndex(int thePottedPlantIndex);
+    PottedPlant*            PottedPlantFromIndex(intptr_t thePottedPlantIndex);
     bool                    WasPlantNeedFulfilledToday(PottedPlant* thePottedPlant);
     void                    PottedPlantUpdate(Plant* thePlant);
     void                    AddHappyEffect(Plant* thePlant);

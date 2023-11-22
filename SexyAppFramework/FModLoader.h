@@ -127,7 +127,7 @@ struct FMOD_INSTANCE
     void            (F_API *FSOUND_3D_SetRolloffFactor)(float scale);
     signed char     (F_API *FSOUND_3D_SetAttributes)(int channel, float *pos, float *vel);
     signed char     (F_API *FSOUND_3D_GetAttributes)(int channel, float *pos, float *vel);
-    void            (F_API *FSOUND_3D_Listener_SetCurrent)(int current, int numlisteners);  /* use this if you use multiple listeners / splitscreen 
+    void            (F_API *FSOUND_3D_Listener_SetCurrent)(int current, int numlisteners);  // use this if you use multiple listeners / splitscreen
     void            (F_API *FSOUND_3D_Listener_SetAttributes)(float *pos, float *vel, float fx, float fy, float fz, float tx, float ty, float tz);
     void            (F_API *FSOUND_3D_Listener_GetAttributes)(float *pos, float *vel, float *fx, float *fy, float *fz, float *tx, float *ty, float *tz);
     signed char     (F_API *FSOUND_Stream_SetBufferSize)(int ms);      // call this before opening streams, not after 

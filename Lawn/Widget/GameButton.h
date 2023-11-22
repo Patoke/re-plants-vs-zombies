@@ -42,7 +42,7 @@ public:
 	int						mId;							//+0x7C
 	SexyString				mLabel;							//+0x80
 	int						mLabelJustify;					//+0x9C
-	Font*					mFont;							//+0xA0
+	_Font*					mFont;							//+0xA0
 	Image*					mButtonImage;					//+0xA4
 	Image*					mOverImage;						//+0xA8
 	Image*					mDownImage;						//+0xAC
@@ -70,7 +70,7 @@ public:
 
 	static /*inline*/ bool	HaveButtonImage(Image* theImage, Rect& theRect);
 	void					DrawButtonImage(Graphics* g, Image* theImage, Rect& theRect, int theX, int theY);
-	/*inline*/ void			SetFont(Font* theFont);
+	/*inline*/ void			SetFont(_Font* theFont);
 	/*inline*/ bool			IsButtonDown();
 	void					Draw(Graphics* g);
 	/*inline*/ void			SetDisabled(bool theDisabled);
@@ -92,7 +92,7 @@ public:
 class NewLawnButton : public DialogButton
 {
 public:
-    Font*					mHiliteFont;            //+0x138
+    _Font*					mHiliteFont;            //+0x138
     int						mTextDownOffsetX;       //+0x13C
     int						mTextDownOffsetY;       //+0x140
 	int						mButtonOffsetX;			//+0x144
@@ -112,7 +112,7 @@ public:
 };
 
 LawnStoneButton*			MakeButton(int theId, ButtonListener* theListener, const SexyString& theText);
-NewLawnButton*				MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown);
+NewLawnButton*				MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown);
 void						DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const SexyString& theLabel);
 
 #endif

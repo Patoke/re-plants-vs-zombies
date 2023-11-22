@@ -22,9 +22,10 @@
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// unused
+	// ulong aRRoundAdd = aRMask >> 1;
+	// ulong aGRoundAdd = aGMask >> 1;
+	// ulong aBRoundAdd = aBMask >> 1;
 	
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{

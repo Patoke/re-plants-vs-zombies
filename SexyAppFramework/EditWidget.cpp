@@ -53,7 +53,7 @@ void EditWidget::ClearWidthCheckFonts()
 	mWidthCheckList.clear();
 }
 
-void EditWidget::AddWidthCheckFont(Font *theFont, int theMaxPixels)
+void EditWidget::AddWidthCheckFont(_Font *theFont, int theMaxPixels)
 {
 	mWidthCheckList.push_back(WidthCheck());
 	WidthCheck &aCheck = mWidthCheckList.back();
@@ -102,7 +102,7 @@ void EditWidget::Resize(int theX, int theY, int theWidth, int theHeight)
 	FocusCursor(false);		
 }
 
-void EditWidget::SetFont(Font* theFont, Font* theWidthCheckFont)
+void EditWidget::SetFont(_Font* theFont, _Font* theWidthCheckFont)
 {
 	delete mFont;
 	mFont = theFont->Duplicate();
@@ -263,7 +263,7 @@ bool EditWidget::IsPartOfWord(SexyChar theChar)
 	return (((theChar >= _S('A')) && (theChar <= _S('Z'))) ||
 			((theChar >= _S('a')) && (theChar <= _S('z'))) ||
 			((theChar >= _S('0')) && (theChar <= _S('9'))) ||
-			(((unsigned int)theChar >= (unsigned int)(L'?')) && ((unsigned int)theChar <= (unsigned int)(L'ÿ'))) ||
+			(((unsigned int)theChar >= (unsigned int)(L'?')) && ((unsigned int)theChar <= (unsigned int)(L'Ã¿'))) ||
 			(theChar == _S('_')));
 }
 

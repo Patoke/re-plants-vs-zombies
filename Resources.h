@@ -1,11 +1,13 @@
 #ifndef __RESOURCES__
 #define __RESOURCES__
 
+#include <cstdint>
+
 extern bool gNeedRecalcVariableToIdMap;
 
 namespace Sexy
 {
-    class Font;
+    class _Font;
     class Image;
     class ResourceManager;
 
@@ -965,8 +967,8 @@ namespace Sexy
 	extern Image* IMAGE_SURVIVAL_THUMBNAILS;
 
 	// DelayLoad_Credits Resources
-	extern Font* FONT_BRIANNETOD32;
-	extern Font* FONT_BRIANNETOD32BLACK;
+	extern _Font* FONT_BRIANNETOD32;
+	extern _Font* FONT_BRIANNETOD32BLACK;
 	extern Image* IMAGE_CREDITS_PLAYBUTTON;
 	extern Image* IMAGE_CREDITS_ZOMBIENOTE;
 	extern Image* IMAGE_REANIM_CREDITS_DISCOLIGHTS;
@@ -1269,7 +1271,7 @@ namespace Sexy
 	extern Image* IMAGE_POPCAP_LOGO;
 
 	// LoaderBar Resources
-	extern Font* FONT_BRIANNETOD16;
+	extern _Font* FONT_BRIANNETOD16;
 	extern Image* IMAGE_LOADBAR_DIRT;
 	extern Image* IMAGE_LOADBAR_GRASS;
 	extern Image* IMAGE_PVZ_LOGO;
@@ -1280,23 +1282,23 @@ namespace Sexy
 	extern int SOUND_LOADINGBAR_ZOMBIE;
 
 	// LoadingFonts Resources
-	extern Font* FONT_BRIANNETOD12;
-	extern Font* FONT_CONTINUUMBOLD14;
-	extern Font* FONT_CONTINUUMBOLD14OUTLINE;
-	extern Font* FONT_DWARVENTODCRAFT12;
-	extern Font* FONT_DWARVENTODCRAFT15;
-	extern Font* FONT_DWARVENTODCRAFT18;
-	extern Font* FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
-	extern Font* FONT_DWARVENTODCRAFT18GREENINSET;
-	extern Font* FONT_DWARVENTODCRAFT18YELLOW;
-	extern Font* FONT_DWARVENTODCRAFT24;
-	extern Font* FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
-	extern Font* FONT_DWARVENTODCRAFT36GREENINSET;
-	extern Font* FONT_HOUSEOFTERROR16;
-	extern Font* FONT_HOUSEOFTERROR20;
-	extern Font* FONT_HOUSEOFTERROR28;
-	extern Font* FONT_PICO129;
-	extern Font* FONT_TINYBOLD;
+	extern _Font* FONT_BRIANNETOD12;
+	extern _Font* FONT_CONTINUUMBOLD14;
+	extern _Font* FONT_CONTINUUMBOLD14OUTLINE;
+	extern _Font* FONT_DWARVENTODCRAFT12;
+	extern _Font* FONT_DWARVENTODCRAFT15;
+	extern _Font* FONT_DWARVENTODCRAFT18;
+	extern _Font* FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
+	extern _Font* FONT_DWARVENTODCRAFT18GREENINSET;
+	extern _Font* FONT_DWARVENTODCRAFT18YELLOW;
+	extern _Font* FONT_DWARVENTODCRAFT24;
+	extern _Font* FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
+	extern _Font* FONT_DWARVENTODCRAFT36GREENINSET;
+	extern _Font* FONT_HOUSEOFTERROR16;
+	extern _Font* FONT_HOUSEOFTERROR20;
+	extern _Font* FONT_HOUSEOFTERROR28;
+	extern _Font* FONT_PICO129;
+	extern _Font* FONT_TINYBOLD;
 	extern Image* FONT_IMAGE_HOUSEOFTERROR28;
 
 	// LoadingImages Resources
@@ -1870,17 +1872,17 @@ namespace Sexy
     /* #################################################################################################### */
 
     Image*              GetImageById(ResourceId theId);
-    Font*               GetFontById(ResourceId theId);
+    _Font*               GetFontById(ResourceId theId);
     int                 GetSoundById(ResourceId theId);
     
     Image*&             GetImageRefById(ResourceId theId);
-    Font*&              GetFontRefById(ResourceId theId);
+    _Font*&              GetFontRefById(ResourceId theId);
     int&                GetSoundRefById(ResourceId theId);
 
     ResourceId          GetIdByVariable(void* theVariable);
     ResourceId          GetIdByImage(Image* theImage);
-    ResourceId          GetIdByFont(Font* theFont);
-    ResourceId          GetIdBySound(int theSound);
+    ResourceId          GetIdByFont(_Font* theFont);
+    ResourceId          GetIdBySound(intptr_t theSound);
     
     //const char*         GetStringIdById(ResourceId theId);
     //ResourceId          GetIdByString(const char* theStringId);

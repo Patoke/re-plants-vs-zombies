@@ -30,7 +30,7 @@ static const int	TimePanRightStart				= 1500;
 static const int	TimePanRightEnd					= 3500;		//[0x6A4FFC]
 static const int	TimeEarlyDaveEnterStart			= 2000;		//[0x6A5000]
 static const int	TimeEarlyDaveEnterEnd			= 2750;		//[0x6AA220]
-static const int	TimeEarlyDaveLeaveStart			= 3250;		//[0x6AA224]
+//static const int	TimeEarlyDaveLeaveStart			= 3250;		//[0x6AA224]
 static const int	TimeEarlyDaveLeaveEnd			= 4000;		//[0x6AA228]
 static const int	TimeSeedChoserSlideOnStart		= 4000;		//[0x6AA22C]
 static const int	TimeSeedChoserSlideOnEnd		= 4250;		//[0x6AA230]
@@ -49,10 +49,10 @@ static const int	TimeGraveStoneEnd				= 7000;		//[0x6AA260]
 static const int	TimeReadySetPlantStart			= 6000;		//[0x6AA264]
 static const int	TimeReadySetPlantEnd			= 7830;		//[0x6AA268]
 static const int	TimeFogRollIn					= 5950;		//[0x6AA26C]
-static const int	TimeCrazyDaveEnterStart			= 6500;		//[0x6AA270]
-static const int	TimeCrazyDaveEnterEnd			= 7250;		//[0x6AA274]
-static const int	TimeCrazyDaveLeaveStart			= 7750;		//[0x6AA278]
-static const int	TimeCrazyDaveLeaveEnd			= 8500;		//[0x6AA27C]
+//static const int	TimeCrazyDaveEnterStart			= 6500;		//[0x6AA270]
+//static const int	TimeCrazyDaveEnterEnd			= 7250;		//[0x6AA274]
+//static const int	TimeCrazyDaveLeaveStart			= 7750;		//[0x6AA278]
+//static const int	TimeCrazyDaveLeaveEnd			= 8500;		//[0x6AA27C]
 static const int	TimeIntroEnd					= 6000;		//[0x6AA280]
 static const int	LostTimePanRightStart			= 1500;
 static const int	LostTimePanRightEnd				= 3500;		//[0x6A5004]
@@ -477,7 +477,7 @@ void CutScene::PreloadResources()
 
 	PlaceStreetZombies();
 
-	mBoard->mPreloadTime = max(aTimer.GetDuration(), 0);
+	mBoard->mPreloadTime = max(aTimer.GetDuration(), 0.0);
 	TodTrace("preloading: %d ms", mBoard->mPreloadTime);
 	TodHesitationTrace("CutScene::PreloadResources");
 }
@@ -493,7 +493,7 @@ void CutScene::PlaceStreetZombies()
 		return;
 
 	// 以下统计出怪列表中各种可预览的僵尸的数量
-	int aZombieValueTotal = 0;
+	// int aZombieValueTotal = 0;
 	int aTotalZombieCount = 0;
 	int aZombieTypeCount[(int)ZombieType::NUM_ZOMBIE_TYPES] = { 0 };
 	TOD_ASSERT(mBoard->mNumWaves <= MAX_ZOMBIE_WAVES);
@@ -508,7 +508,8 @@ void CutScene::PlaceStreetZombies()
 				break;
 			}
 
-			aZombieValueTotal += GetZombieDefinition(aZombieType).mZombieValue;
+			// aZombieValueTotal += GetZombieDefinition(aZombieType).mZombieValue;
+			// (void)aZombieValueTotal; // Unused
 
 			if (aZombieType == ZombieType::ZOMBIE_FLAG)
 			{
@@ -550,7 +551,7 @@ void CutScene::PlaceStreetZombies()
 		aZombieTypeCount[(int)ZombieType::ZOMBIE_DUCKY_TUBE] = 1;  // 泳池关卡，必定出现鸭子僵尸预览
 	}
 	
-	bool aZombieGrid[5][5] = { false };
+	bool aZombieGrid[5][5] = {{ false }};
 	int aPreviewCapacity = 10;
 	if (mApp->IsLittleTroubleLevel())
 	{

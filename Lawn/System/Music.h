@@ -73,8 +73,8 @@ public:
 	MusicFile					mCurMusicFileDrums;					//+0x10
 	MusicFile					mCurMusicFileHihats;				//+0x14
 	int							mBurstOverride;						//+0x18
-	int							mBaseBPM;							//+0x1C
-	int							mBaseModSpeed;						//+0x20
+	float						mBaseBPM;							//+0x1C
+	float						mBaseModSpeed;						//+0x20
 	MusicBurstState				mMusicBurstState;					//+0x24
 	int							mBurstStateCounter;					//+0x28
 	MusicDrumsState				mMusicDrumsState;					//+0x2C

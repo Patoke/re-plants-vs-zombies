@@ -1,5 +1,7 @@
 #pragma once
 #include <stdlib.h>
+#include <cmath>
+#include <cfloat>
 #include "../Lawn/LawnCommon.h"
 #include "../SexyAppFramework/Common.h"
 #include "../SexyAppFramework/ResourceManager.h"
@@ -22,7 +24,7 @@ using namespace Sexy;
 
 struct TodWeightedArray
 {
-    int mItem;
+    intptr_t mItem;
 	int mWeight;
 };
 
@@ -42,8 +44,8 @@ public:
 	float		mSecondLastPicked;
 };
 
-/*inline*/ int			TodPickFromArray(const int* theArray, int theCount);
-int						TodPickFromWeightedArray(const TodWeightedArray* theArray, int theCount);
+/*inline*/ intptr_t		TodPickFromArray(const intptr_t* theArray, int theCount);
+intptr_t				TodPickFromWeightedArray(const TodWeightedArray* theArray, int theCount);
 TodWeightedArray*		TodPickArrayItemFromWeightedArray(const TodWeightedArray* theArray, int theCount);
 TodWeightedGridArray*	TodPickFromWeightedGridArray(const TodWeightedGridArray* theArray, int theCount);
 float					TodCalcSmoothWeight(float aWeight, float aLastPicked, float aSecondLastPicked);
@@ -94,11 +96,11 @@ void					SexyMatrix3ExtractScale(const SexyMatrix3& m, float& theScaleX, float& 
 /*inline*/ void			SexyMatrix3Translation(SexyMatrix3& m, float x, float y);
 void					SexyMatrix3Transpose(const SexyMatrix3& m, SexyMatrix3& r);  // r = m ^ T
 void					SexyMatrix3Inverse(const SexyMatrix3& m, SexyMatrix3& r);  // r = m ^ -1
-void					SexyMatrix3Multiply(SexyMatrix3& m, const SexyMatrix3& l, const SexyMatrix3& r);  // m = l ¡Á r
+void					SexyMatrix3Multiply(SexyMatrix3& m, const SexyMatrix3& l, const SexyMatrix3& r);  // m = l Ã— r
 bool					TodIsPointInPolygon(const SexyVector2* thePolygonPoint, int theNumberPolygonPoints, const SexyVector2& theCheckPoint);
 
-void					TodDrawString(Graphics* g, const SexyString& theText, int thePosX, int thePosY, Font* theFont, const Color& theColor, DrawStringJustification theJustification);
-void					TodDrawStringMatrix(Graphics* g, const Font* theFont, const SexyMatrix3& theMatrix, const SexyString& theString, const Color& theColor);
+void					TodDrawString(Graphics* g, const SexyString& theText, int thePosX, int thePosY, _Font* theFont, const Color& theColor, DrawStringJustification theJustification);
+void					TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, const SexyString& theString, const Color& theColor);
 void					TodDrawImageScaledF(Graphics* g, Image* theImage, float thePosX, float thePosY, float theScaleX, float theScaleY);
 void					TodDrawImageCenterScaledF(Graphics* g, Image* theImage, float thePosX, float thePosY, float theScaleX, float theScaleY);
 void					TodDrawImageCelF(Graphics* g, Image* theImageStrip, float thePosX, float thePosY, int theCelCol, int theCelRow);

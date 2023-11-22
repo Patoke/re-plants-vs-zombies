@@ -1,7 +1,7 @@
 #ifndef __TODDEBUG_H__
 #define __TODDEBUG_H__
 
-#include <Windows.h>
+#include <windows.h>
 
 class TodHesitationBracket
 {

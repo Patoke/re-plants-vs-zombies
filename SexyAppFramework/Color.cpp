@@ -14,10 +14,10 @@ Color::Color() :
 }
 
 Color::Color(int theColor) :
-	mAlpha((theColor >> 24) & 0xFF),
 	mRed((theColor   >> 16) & 0xFF),
 	mGreen((theColor >> 8 ) & 0xFF),
-	mBlue((theColor       ) & 0xFF)
+	mBlue((theColor       ) & 0xFF),
+	mAlpha((theColor >> 24) & 0xFF)
 {
 	if(mAlpha==0)
 		mAlpha = 0xff;

@@ -532,10 +532,11 @@ void Challenge::StartLevel()
 	{
 		IZombieStart();
 	}
+	/* Unused
 	if (mApp->IsSquirrelLevel())
 	{
 		SquirrelStart();
-	}
+	}*/
 }
 
 //0x420150
@@ -972,9 +973,9 @@ int Challenge::BeghouledBoardHasMatch(BeghouledBoardState* theBoardState)
 SeedType Challenge::BeghouledPickSeed(int theGridX, int theGridY, BeghouledBoardState* theBoardState, int theAllowMatches)
 {
 	TOD_ASSERT(theBoardState->mSeedType[theGridX][theGridY] == SEED_NONE);
-	SeedType* aSeedState = &theBoardState->mSeedType[theGridX][theGridY];
+	// SeedType* aSeedState = &theBoardState->mSeedType[theGridX][theGridY];
 	int aCount = 0;
-	int aPickArray[6];
+	intptr_t aPickArray[6];
 	
 	for (int i = 0; i < 6; i++)
 	{
@@ -1115,6 +1116,8 @@ int Challenge::BeghouledCheckForPossibleMoves(BeghouledBoardState* theBoardState
 			}
 		}
 	}
+
+	return false;
 }
 
 void Challenge::BeghouledDragStart(int x, int y)
@@ -2207,10 +2210,11 @@ void Challenge::Update()
 	{
 		UpdatePortalCombat();
 	}
+	/* Unused
 	if (mApp->IsSquirrelLevel())
 	{
 		SquirrelUpdate();
-	}
+	}*/
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
 	{
 		ZombiquariumUpdate();
@@ -2471,7 +2475,7 @@ PlantingReason Challenge::CanPlantAt(int theGridX, int theGridY, SeedType theSee
 			aLimit = 5;
 		}
 
-		if (theSeedType == ZOMBIE_BUNGEE)
+		if (theSeedType == SEED_ZOMBIE_BUNGEE)
 		{
 			return theGridX < aLimit ? PLANTING_OK : PLANTING_NOT_HERE;
 		}
@@ -2874,7 +2878,7 @@ void Challenge::WhackAZombieSpawning()
 				Plant* aPlant = mBoard->GetTopPlantAt(aGridItem->mGridX, aGridItem->mGridY, TOPPLANT_ONLY_NORMAL_POSITION);
 				if (aPlant == nullptr || aPlant->mSeedType != SEED_GRAVEBUSTER)
 				{
-					aGridPicks[aGridPicksCount].mItem = (int)aGridItem;
+					aGridPicks[aGridPicksCount].mItem = (intptr_t)aGridItem;
 					aGridPicks[aGridPicksCount].mWeight = 1;
 					aGridPicksCount++;
 				}
@@ -2925,6 +2929,7 @@ int Challenge::UpdateZombieSpawning()
 	if (mApp->IsWhackAZombieLevel())
 	{
 		WhackAZombieSpawning();
+		return 0;
 	}
 	else return
 		mApp->IsFinalBossLevel() ||
@@ -3063,7 +3068,9 @@ void Challenge::DrawRain(Graphics* g)
 	if (mBoard->mCutScene->IsBeforePreloading() || !mApp->Is3DAccelerated())
 		return;
 
+	// Whatever is going on here is a bit yikes
 	int aBoardOffsetX;
+	/*
 	if (aBoardOffsetX > 0)
 	{
 		aBoardOffsetX = (mBoard->mX + 100) / 100 * -100;
@@ -3072,17 +3079,23 @@ void Challenge::DrawRain(Graphics* g)
 	{
 		aBoardOffsetX = mBoard->mX / 100 * -100;
 	}
+	*/
+
+	aBoardOffsetX = mBoard->mX / 100 * -100;
 
 	int aTime = mBoard->mEffectCounter % 100;
 	int aTimeOffsetXEst = TodAnimateCurve(0, 100, aTime, 0, -100, CURVE_LINEAR);
 	int aTimeOffsetYEst = TodAnimateCurve(0, 20, aTime, -100, 0, CURVE_LINEAR);
+
 	// »æÖÆÔ¶¾°µÄÓê
 	for (int aHorCnt = 9; aHorCnt > 0; aHorCnt--)
 	{
 		for (int aVerCnt = 7; aVerCnt > 0; aVerCnt--)
 		{
 			int aImageX = aTimeOffsetXEst + 100 * aHorCnt + aBoardOffsetX;
-			int aImageY = aTimeOffsetXEst + 100 * aVerCnt;
+			//int aImageY = aTimeOffsetXEst + 100 * aVerCnt;
+			// aTimeOffsetYEst went unused, potential bug? Fixed with best guess.
+			int aImageY = aTimeOffsetYEst + 100 * aVerCnt;
 			g->DrawImage(Sexy::IMAGE_RAIN, aImageX, aImageY);
 		}
 	}
@@ -3297,7 +3310,7 @@ void Challenge::MoveAPortal()
 		{
 			TOD_ASSERT(aNumpicks < MAX_PORTALS);
 			aPickArray[aNumpicks].mWeight = 1;
-			aPickArray[aNumpicks].mItem = (int)aGridItem;
+			aPickArray[aNumpicks].mItem = (intptr_t)aGridItem;
 			aNumpicks++;
 		}
 	}
@@ -3864,7 +3877,7 @@ void Challenge::ScaryPotterChangePotType(GridItemState thePotType, int theCount)
 			if ((thePotType == GRIDITEM_STATE_SCARY_POT_LEAF && aGridItem->mScaryPotType == SCARYPOT_SEED) ||
 				(thePotType == GRIDITEM_STATE_SCARY_POT_ZOMBIE && aGridItem->mZombieType == ZOMBIE_GARGANTUAR))
 			{
-				aPotArray[aPotCount].mItem = (int)aGridItem;
+				aPotArray[aPotCount].mItem = (intptr_t)aGridItem;
 				aPotArray[aPotCount].mWeight = 1;
 				aPotCount++;
 			}
@@ -4378,6 +4391,8 @@ ZombieType Challenge::IZombieSeedTypeToZombieType(SeedType theSeedType)
 	case SEED_ZOMBIE_IMP:			return ZOMBIE_IMP;
 	default:						TOD_ASSERT();
 	}
+
+	__builtin_unreachable();
 }
 
 //0x42A0F0
@@ -4986,6 +5001,7 @@ void Challenge::IZombieSquishBrain(GridItem* theBrain)
 	IZombieScoreBrain(theBrain);
 }
 
+/*
 //0x42BAC0
 int Challenge::SquirrelCountUncaught()
 {
@@ -5196,6 +5212,7 @@ void Challenge::SquirrelUpdate()
 	mChallengeScore = MAX_SQUIRRELS - SquirrelCountUncaught();
 	mBoard->mProgressMeterWidth = TodAnimateCurve(0, MAX_SQUIRRELS, mChallengeScore, 0, PROGRESS_METER_COUNTER, CURVE_LINEAR);
 }
+*/
 
 //0x42C340
 void Challenge::UpdateRain()
@@ -5213,6 +5230,7 @@ void Challenge::UpdateRain()
 		aPosX = RandRangeFloat(40.0f, 740.0f);
 		aPosY = RandRangeFloat(290.0f, 410.0f);
 		Reanimation* aCircleReanim = mApp->AddReanimation(aPosX, aPosY, RENDER_LAYER_GROUND, REANIM_RAIN_CIRCLE);
+		(void)aCircleReanim; // unused
 		aSplashReanim->mColorOverride = Color(255, 255, 255, RandRangeInt(50, 150));
 		aScale = RandRangeFloat(0.7f, 1.1f);
 		aSplashReanim->OverrideScale(aScale, aScale);
@@ -5220,6 +5238,7 @@ void Challenge::UpdateRain()
 		aPosX = RandRangeFloat(40.0f, 740.0f);
 		aPosY = RandRangeFloat(450.0f, 580.0f);
 		Reanimation* aRainReanim = mApp->AddReanimation(aPosX, aPosY, RENDER_LAYER_GROUND, REANIM_RAIN_SPLASH);
+		(void)aRainReanim; // unused
 		aSplashReanim->mColorOverride = Color(255, 255, 255, RandRangeInt(100, 200));
 		aScale = RandRangeFloat(0.7f, 1.2f);
 		aSplashReanim->OverrideScale(aScale, aScale);

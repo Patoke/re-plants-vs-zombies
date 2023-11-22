@@ -9,7 +9,7 @@ static unsigned long crc_table[256];
 using namespace Sexy;
 using namespace std;
 
-static char* gWebEncodeMap = ".-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+static char* gWebEncodeMap = (char *)".-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 static int gWebDecodeMap[256] = 
 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -33,8 +33,8 @@ static void GenerateCRCTable(void)
 {
 	bCrcTableGenerated = TRUE;
 
-	register int i, j;
-	register unsigned long crc_accum;
+	int i, j;
+	unsigned long crc_accum;
 	for (i = 0;  i < 256;  i++)
 	{
 		crc_accum = ((unsigned long) i << 24);
@@ -59,7 +59,7 @@ static unsigned long UpdateCRC(unsigned long crc_accum,
 	if (!bCrcTableGenerated)
 		GenerateCRCTable();
 	
-	register int i, j;
+	int i, j;
 	for (j = 0; j < data_blk_size; j++)
 	{
 		i = ((int) (crc_accum >> 24) ^ *data_blk_ptr++) & 0xff;
@@ -442,7 +442,7 @@ int Buffer::ReadNumBits(int theBits, bool isSigned) const
 		if (aBytePos >= aByteLength)
 			break;
 
-		if (bset = (mData[aBytePos] & (1<<(mReadBitPos%8))) != 0)			
+		if ((bset = (mData[aBytePos] & (1<<(mReadBitPos%8))) != 0))	
 			theNum |= 1<<aBitNum;
 		
 		mReadBitPos++;

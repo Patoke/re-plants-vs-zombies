@@ -43,10 +43,10 @@ public:
 
 	TRect<_T>				Intersection(const TRect<_T>& theTRect)	const
 	{
-		_T x1 = max(mX, theTRect.mX);
-		_T x2 = min(mX + mWidth, theTRect.mX + theTRect.mWidth);
-		_T y1 = max(mY, theTRect.mY);
-		_T y2 = min(mY + mHeight, theTRect.mY + theTRect.mHeight);
+		_T x1 = std::max(mX, theTRect.mX);
+		_T x2 = std::min(mX + mWidth, theTRect.mX + theTRect.mWidth);
+		_T y1 = std::max(mY, theTRect.mY);
+		_T y2 = std::min(mY + mHeight, theTRect.mY + theTRect.mHeight);
 		if (((x2 - x1) < 0) || ((y2 - y1) < 0))
 			return TRect<_T>(0,0,0,0);
 		else
@@ -55,10 +55,10 @@ public:
 
 	TRect<_T>				Union(const TRect<_T>& theTRect)	
 	{
-		_T x1 = min(mX, theTRect.mX);
-		_T x2 = max(mX + mWidth, theTRect.mX + theTRect.mWidth);
-		_T y1 = min(mY, theTRect.mY);
-		_T y2 = max(mY + mHeight, theTRect.mY + theTRect.mHeight);
+		_T x1 = std::min(mX, theTRect.mX);
+		_T x2 = std::max(mX + mWidth, theTRect.mX + theTRect.mWidth);
+		_T y1 = std::min(mY, theTRect.mY);
+		_T y2 = std::max(mY + mHeight, theTRect.mY + theTRect.mHeight);
 			return TRect<_T>(x1, y1, x2 - x1, y2 - y1);
 	}
 

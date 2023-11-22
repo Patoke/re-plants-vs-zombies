@@ -1,8 +1,10 @@
 // This file is included by SWTri.cpp and should not be built directly by the project.
 
 	SWHelper::signed64	subTex = x0 - lx;
+	(void)subTex; // unused
 	unsigned int	u, v, r, g, b, a;
-
+	(void)u;(void)v;(void)r;(void)g;(void)b;(void)a; // unused
+	
 	#if defined(MOD_ARGB)
 		a = la + static_cast<int>((da * subTex)>>16);
 		r = lr + static_cast<int>((dr * subTex)>>16);
@@ -16,6 +18,7 @@
 	#endif
 	
 	PTYPE *		pix = fb + (x0>>16);
+	(void)pix; // unused
 	int		width = ((x1-x0)>>16);
 	
 	while(width-- > 0)

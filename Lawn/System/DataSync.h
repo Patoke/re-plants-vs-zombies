@@ -51,7 +51,7 @@ public:
 	bool					OpenFile(const std::string& theFileName);
 	void					OpenMemory(unsigned long theReserveAmount = 0x20);
 	void					Close();
-	inline bool				WriteToFile(const std::string& theFileName) { /* Œ¥’“µΩ */ }
+	inline bool				WriteToFile(const std::string& theFileName);
 	void					WriteBytes(const void* theData, unsigned long theDataLen);
 	void					WriteLong(unsigned long theLong);
 	void					WriteShort(unsigned short theShort);
@@ -60,7 +60,7 @@ public:
 	void					WriteFloat(float theFloat);
 	void					WriteDouble(double theDouble);
 	void					WriteString(const SexyString& theStr);
-	inline unsigned long	GetPos() { /* Œ¥’“µΩ */ }
+	inline unsigned long	GetPos();
 	inline void				SetLong(unsigned long, unsigned long) { /* Œ¥’“µΩ */ }
 	inline void				SetShort(unsigned int, unsigned long) { /* Œ¥’“µΩ */ }
 	inline void				SetByte(unsigned int, unsigned long) { /* Œ¥’“µΩ */ }

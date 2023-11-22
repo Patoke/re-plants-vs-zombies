@@ -142,18 +142,18 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 //0x5D84D0
 static void FixFileName(const char* theFileName, char* theUpperName)
 {
-	// ¼ì²âÂ·¾¶ÊÇ·ñÎª´ÓÅÌ·û¿ªÊ¼µÄ¾ø¶ÔÂ·¾¶
+	// æ£€æµ‹è·¯å¾„æ˜¯å¦ä¸ºä»Žç›˜ç¬¦å¼€å§‹çš„ç»å¯¹è·¯å¾„
 	if ((theFileName[0] != 0) && (theFileName[1] == ':'))
 	{
 		char aDir[256];
-		getcwd(aDir, 256);  // È¡µÃµ±Ç°¹¤×÷Â·¾¶
+		getcwd(aDir, 256);  // å–å¾—å½“å‰å·¥ä½œè·¯å¾„
 		int aLen = strlen(aDir);
 		aDir[aLen++] = '\\';
 		aDir[aLen] = 0;
 
-		// ÅÐ¶Ï theFileName ÎÄ¼þÊÇ·ñÎ»ÓÚµ±Ç°Ä¿Â¼ÏÂ
+		// åˆ¤æ–­ theFileName æ–‡ä»¶æ˜¯å¦ä½äºŽå½“å‰ç›®å½•ä¸‹
 		if (strnicmp(aDir, theFileName, aLen) == 0)
-			theFileName += aLen;  // ÈôÊÇ£¬ÔòÌø¹ý´ÓÅÌ·ûµ½µ±Ç°Ä¿Â¼µÄ²¿·Ö£¬×ª»¯ÎªÏà¶ÔÂ·¾¶
+			theFileName += aLen;  // è‹¥æ˜¯ï¼Œåˆ™è·³è¿‡ä»Žç›˜ç¬¦åˆ°å½“å‰ç›®å½•çš„éƒ¨åˆ†ï¼Œè½¬åŒ–ä¸ºç›¸å¯¹è·¯å¾„
 	}
 
 	bool lastSlash = false;
@@ -166,7 +166,7 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 
 		if ((c == '\\') || (c == '/'))
 		{
-			// Í³Ò»×ªÎªÓÒÐ±¸Ü£¬ÇÒ¶à¸öÐ±¸ÜµÄÇé¿öÏÂÖ»±£ÁôÒ»¸ö
+			// ç»Ÿä¸€è½¬ä¸ºå³æ–œæ ï¼Œä¸”å¤šä¸ªæ–œæ çš„æƒ…å†µä¸‹åªä¿ç•™ä¸€ä¸ª
 			if (!lastSlash)
 				*(aDest++) = '\\';
 			lastSlash = true;
@@ -175,10 +175,10 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 		{
 			// We have a '/..' on our hands
 			aDest--;
-			while ((aDest > theUpperName + 1) && (*(aDest-1) != '\\'))  // »ØÍËµ½ÉÏÒ»²ãÄ¿Â¼
+			while ((aDest > theUpperName + 1) && (*(aDest-1) != '\\'))  // å›žé€€åˆ°ä¸Šä¸€å±‚ç›®å½•
 				--aDest;
 			aSrc++;
-			// ´Ë´¦½«ÐÎÈç¡°a\b\..\c¡±µÄÂ·¾¶¼ò»¯Îª¡°a\c¡±
+			// æ­¤å¤„å°†å½¢å¦‚â€œa\b\..\câ€çš„è·¯å¾„ç®€åŒ–ä¸ºâ€œa\câ€
 		}
 		else
 		{
@@ -240,8 +240,8 @@ int PakInterface::FSeek(PFILE* theFile, long theOffset, int theOrigin)
 		else if (theOrigin == SEEK_CUR)
 			theFile->mPos += theOffset;
 
-		// µ±Ç°Ö¸ÕëÎ»ÖÃ²»ÄÜ³¬¹ýÕû¸öÎÄ¼þµÄ´óÐ¡£¬ÇÒ²»ÄÜÐ¡ÓÚ 0
-		theFile->mPos = max(min(theFile->mPos, theFile->mRecord->mSize), 0);
+		// å½“å‰æŒ‡é’ˆä½ç½®ä¸èƒ½è¶…è¿‡æ•´ä¸ªæ–‡ä»¶çš„å¤§å°ï¼Œä¸”ä¸èƒ½å°äºŽ 0
+		theFile->mPos = std::max(std::min(theFile->mPos, theFile->mRecord->mSize), 0);
 		return 0;
 	}
 	else
@@ -262,16 +262,16 @@ size_t PakInterface::FRead(void* thePtr, int theElemSize, int theCount, PFILE* t
 {
 	if (theFile->mRecord != NULL)
 	{
-		// Êµ¼Ê¶ÁÈ¡µÄ×Ö½ÚÊý²»ÄÜ³¬¹ýµ±Ç°×ÊÔ´ÎÄ¼þÊ£Óà¿É¶ÁÈ¡µÄ×Ö½ÚÊý
-		int aSizeBytes = min(theElemSize*theCount, theFile->mRecord->mSize - theFile->mPos);
+		// å®žé™…è¯»å–çš„å­—èŠ‚æ•°ä¸èƒ½è¶…è¿‡å½“å‰èµ„æºæ–‡ä»¶å‰©ä½™å¯è¯»å–çš„å­—èŠ‚æ•°
+		int aSizeBytes = std::min(theElemSize*theCount, theFile->mRecord->mSize - theFile->mPos);
 
-		// È¡µÃÔÚÕû¸ö pak ÖÐ¿ªÊ¼¶ÁÈ¡µÄÎ»ÖÃµÄÖ¸Õë
+		// å–å¾—åœ¨æ•´ä¸ª pak ä¸­å¼€å§‹è¯»å–çš„ä½ç½®çš„æŒ‡é’ˆ
 		uchar* src = (uchar*) theFile->mRecord->mCollection->mDataPtr + theFile->mRecord->mStartPos + theFile->mPos;
 		uchar* dest = (uchar*) thePtr;
 		for (int i = 0; i < aSizeBytes; i++)
 			*(dest++) = (*src++) ^ 0xF7; // 'Decrypt'
-		theFile->mPos += aSizeBytes;  // ¶ÁÈ¡Íê³Éºó£¬ÒÆ¶¯µ±Ç°¶ÁÈ¡Î»ÖÃµÄÖ¸Õë
-		return aSizeBytes / theElemSize;  // ·µ»ØÊµ¼Ê¶ÁÈ¡µÄÏîÊý
+		theFile->mPos += aSizeBytes;  // è¯»å–å®ŒæˆåŽï¼Œç§»åŠ¨å½“å‰è¯»å–ä½ç½®çš„æŒ‡é’ˆ
+		return aSizeBytes / theElemSize;  // è¿”å›žå®žé™…è¯»å–çš„é¡¹æ•°
 	}
 	
 	return fread(thePtr, theElemSize, theCount, theFile->mFP);	
@@ -299,7 +299,7 @@ int PakInterface::UnGetC(int theChar, PFILE* theFile)
 	if (theFile->mRecord != NULL)
 	{
 		// This won't work if we're not pushing the same chars back in the stream
-		theFile->mPos = max(theFile->mPos - 1, 0);
+		theFile->mPos = std::max(theFile->mPos - 1, 0);
 		return theChar;
 	}
 
@@ -369,7 +369,7 @@ bool PakInterface::PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFil
 					aFileName + strlen(aFileName) - (theFindData->mFindCriteria.length() - aStarPos) + 1) == 0))
 				{
 					// Matches before and after star
-					memset(lpFindFileData, 0, sizeof(lpFindFileData));
+					memset(lpFindFileData, 0, sizeof(WIN32_FIND_DATAA));
 					
 					int aLastSlashPos = (int) anItr->second.mFileName.rfind('\\');
 					if (aLastSlashPos == -1)

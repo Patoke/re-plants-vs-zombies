@@ -124,7 +124,7 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
 
     float aGridSquareX = IMAGE_POOL->GetWidth() / 15.0f;
     float aGridSquareY = IMAGE_POOL->GetHeight() / 5.0f;
-    float aOffsetArray[3][16][6][2] = { 0 };
+    float aOffsetArray[3][16][6][2] = {{{{ 0 }}}};
     for (int x = 0; x <= 15; x++)
     {
         for (int y = 0; y <= 5; y++)

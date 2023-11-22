@@ -192,6 +192,7 @@
 		else if (aNumBits == 32)
 		{
 			EACH_ROW
+			(void)aDestPixels; // Unused only in this specific instance
 			for (int x = aLeft; x <= aRight; x++)
 			{
 				int aUInt = (aU >> 16);
@@ -212,6 +213,8 @@
 				int a2 = ((src2 >> 24) * ((ulong) ((           aUFactor) * (0x10000  - aVFactor)) >> 16)) >> 16;
 				int a3 = ((src3 >> 24) * ((ulong) ((0x10000  - aUFactor) * (           aVFactor)) >> 16)) >> 16;
 				int a4 = ((src4 >> 24) * ((ulong) ((           aUFactor) * (           aVFactor)) >> 16)) >> 16;
+				// Used, but the compiler can't work it out
+				(void)a1;(void)a2;(void)a3;(void)a4;
 				
 				WRITE_PIXEL_OPTIMIZED;
 

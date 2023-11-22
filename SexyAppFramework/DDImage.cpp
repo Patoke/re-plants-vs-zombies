@@ -1,5 +1,5 @@
 #include "DDImage.h"
-#include <Math.h>
+#include <math.h>
 #include "DDInterface.h"
 #include "D3DInterface.h"
 #include "Rect.h"
@@ -117,7 +117,8 @@ void DDImage::SetSurface(LPDIRECTDRAWSURFACE theSurface)
 	ZeroMemory(&aDesc, sizeof(aDesc));
 	aDesc.dwSize = sizeof(aDesc);
     aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH;
-    HRESULT aResult = mSurface->GetSurfaceDesc(&aDesc);	
+    
+    HRESULT aResult = mSurface->GetSurfaceDesc(&aDesc);	(void)aResult;
 
 	mWidth = aDesc.dwWidth;
 	mHeight = aDesc.dwHeight;
@@ -289,7 +290,7 @@ bool DDImage::GenerateDDSurface()
 								break;
 						}
 
-						delete aUsedColorArray;
+						delete[] aUsedColorArray;
 					}
 
 					if (mBits != NULL)
@@ -454,7 +455,7 @@ bool DDImage::GenerateDDSurface()
 								break;
 						}						
 
-						delete aUsedColorArray;
+						delete[] aUsedColorArray;
 					}
 
 					if (mBits != NULL)
@@ -736,12 +737,13 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 	if (mNoLock)
 		return;
 
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // Unused
 
 	if (!LockSurface())
 		return;	
@@ -765,7 +767,9 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG unused
+			int G, DeltaG1, DeltaG2;
+
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -856,7 +860,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -893,7 +897,8 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG unused
+			int G, DeltaG1, DeltaG2;
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -994,7 +999,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -1037,7 +1042,8 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG // unused
+			int G, DeltaG1, DeltaG2;
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -1128,7 +1134,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -1165,7 +1171,8 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
-			int minG, maxG, G, DeltaG1, DeltaG2;
+			// int minG, maxG // unused
+			int G, DeltaG1, DeltaG2;
 			double swap;
 			int inc = 1;
 			int aCurX;
@@ -1266,7 +1273,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				aCurY = theStartY + 1;
 
 				G = 2 * dh - dv;
-				minG = maxG = G;
+				// minG = maxG = G; // unused
 				DeltaG1 = 2 * ( dh - dv );
 				DeltaG2 = 2 * dh;
 
@@ -1307,12 +1314,13 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 	if (mNoLock)
 		return;
 
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 
 	if (!LockSurface())
 		return;
@@ -1321,9 +1329,10 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// unused
+	// ulong aRRoundAdd = aRMask >> 1;
+	// ulong aGRoundAdd = aGMask >> 1;
+	// ulong aBRoundAdd = aBMask >> 1;
 
 	int aRedShift = mDDInterface->mRedShift;
 	int aGreenShift = mDDInterface->mGreenShift;
@@ -1341,7 +1350,8 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
-		int minG, maxG, G, DeltaG1, DeltaG2;
+		// int minG, maxG // unused
+		int G, DeltaG1, DeltaG2;
 		double swap;
 		int inc = 1;
 		int aCurX;
@@ -1459,7 +1469,7 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 			aCurY = theStartY + 1;
 
 			G = 2 * dh - dv;
-			minG = maxG = G;
+			// minG = maxG = G; // unused
 			DeltaG1 = 2 * ( dh - dv );
 			DeltaG2 = 2 * dh;	
 			
@@ -1503,7 +1513,8 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
-		int minG, maxG, G, DeltaG1, DeltaG2;
+		// int minG, maxG // unused
+		int G, DeltaG1, DeltaG2;
 		double swap;
 		int inc = 1;
 		int aCurX;
@@ -1620,7 +1631,7 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 			aCurY = theStartY + 1;
 
 			G = 2 * dh - dv;
-			minG = maxG = G;
+			// minG = maxG = G; // unused
 			DeltaG1 = 2 * ( dh - dv );
 			DeltaG2 = 2 * dh;
 			while (aCurY <= theEndY)
@@ -1673,16 +1684,16 @@ void DDImage::DrawLine(double theStartX, double theStartY, double theEndX, doubl
 
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
 		return;
@@ -1706,6 +1717,7 @@ void DDImage::DrawLine(double theStartX, double theStartY, double theEndX, doubl
 void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor)
 {
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 
 	if (!LockSurface())
 		return;
@@ -1937,16 +1949,16 @@ void DDImage::DrawLineAA(double theStartX, double theStartY, double theEndX, dou
 
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
 		return;
@@ -2007,7 +2019,8 @@ ulong* DDImage::GetBits()
 		if (mNoLock)
 			return NULL;
 
-		LPDIRECTDRAWSURFACE aSurface = mSurface;		
+		LPDIRECTDRAWSURFACE aSurface = mSurface;
+		(void)aSurface; // unused
 
 		if (!LockSurface())
 			return NULL;
@@ -2015,9 +2028,10 @@ ulong* DDImage::GetBits()
 		mBits = new ulong[mWidth*mHeight + 1];
 		mBits[mWidth*mHeight] = MEMORYCHECK_ID;
 
-		int aRRound = (1 << (7 - mDDInterface->mRedBits));
-		int aGRound = (1 << (7 - mDDInterface->mGreenBits));
-		int aBRound = (1 << (7 - mDDInterface->mBlueBits));
+		// unused
+		//int aRRound = (1 << (7 - mDDInterface->mRedBits));
+		//int aGRound = (1 << (7 - mDDInterface->mGreenBits));
+		//int aBRound = (1 << (7 - mDDInterface->mBlueBits));
 
 		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 		{
@@ -2078,6 +2092,7 @@ void DDImage::NormalFillRect(const Rect& theRect, const Color& theColor)
 		return;
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 
 	if (!LockSurface())
 		return;	
@@ -2198,6 +2213,7 @@ void DDImage::AdditiveFillRect(const Rect& theRect, const Color& theColor)
 		return;
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 
 	if (!LockSurface())
 		return;	
@@ -2206,9 +2222,9 @@ void DDImage::AdditiveFillRect(const Rect& theRect, const Color& theColor)
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// ulong aRRoundAdd = aRMask >> 1;
+	// ulong aGRoundAdd = aGMask >> 1;
+	// ulong aBRoundAdd = aBMask >> 1;
 	
 	int aRedShift = mDDInterface->mRedShift;
 	int aGreenShift = mDDInterface->mGreenShift;
@@ -2328,6 +2344,7 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 				return;			
 
 			LPDIRECTDRAWSURFACE aSurface = GetSurface();
+			(void)aSurface; // unused
 
  			if (!LockSurface())
 				return;
@@ -2380,6 +2397,7 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 
 			//TODO: Have some sort of cool thing here
 			LPDIRECTDRAWSURFACE aSurface = GetSurface();
+			(void)aSurface; // unused
 
 			if (!LockSurface())
 				return;
@@ -2430,6 +2448,7 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 				aFlags |= DDBLT_KEYSRC;
 
 			HRESULT aResult = GetSurface()->Blt(&aDestRect, aDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
+			(void)aResult; // unused
 		
 			if (mLockCount > 0)
 			{
@@ -2449,7 +2468,7 @@ void DDImage::NormalBltMirror(Image* theImage, int theX, int theY, const Rect& t
 	theX += theSrcRect.mWidth-1;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
-	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);	
+	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
 
 	if (aMemoryImage != NULL)
 	{
@@ -2459,6 +2478,7 @@ void DDImage::NormalBltMirror(Image* theImage, int theX, int theY, const Rect& t
 			return;
 
 		LPDIRECTDRAWSURFACE aSurface = GetSurface();
+		(void)aSurface; // unused
 
  		if (!LockSurface())
 			return;
@@ -2515,7 +2535,7 @@ void DDImage::AdditiveBlt(Image* theImage, int theX, int theY, const Rect& theSr
 		return;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
-	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);
+	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
 
 	if (aMemoryImage != NULL)
 	{
@@ -2574,7 +2594,7 @@ void DDImage::AdditiveBltMirror(Image* theImage, int theX, int theY, const Rect&
 	theX += theSrcRect.mWidth-1;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
-	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);
+	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
 
 	if (aMemoryImage != NULL)
 	{
@@ -2661,6 +2681,7 @@ void DDImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, c
 			RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
 
 			HRESULT aResult = GetSurface()->Blt(&aDestRect, aDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
+			(void)aResult; // unused
 		
 			if (mLockCount > 0)
 			{
@@ -2774,7 +2795,7 @@ void DDImage::BltRotated(Image* theImage, float theX, float theY, const Rect &th
 		return;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
-	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);
+	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
 
 	if (aMemoryImage != NULL)
 	{
@@ -2869,7 +2890,9 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 			(!aSrcDDImage->mHasAlpha) && (aSrcDDImage->GetSurface() != NULL))
 		{
 			LPDIRECTDRAWSURFACE aSrcSurface = aSrcDDImage->GetSurface();
+			(void)aSrcSurface; // unused
 			LPDIRECTDRAWSURFACE aDestSurface = GetSurface();
+			(void)aDestSurface; // unused
 
 			DDBLTFX aBltFX;
 			ZeroMemory(&aBltFX, sizeof(aBltFX));
@@ -2881,14 +2904,15 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 				aFlags |= DDBLT_KEYSRC;
 
 			RECT aDestRect = {theDestRect.mX, theDestRect.mY, theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-			RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
+			RECT aSrcRect = {(LONG)theSrcRect.mX, (LONG)theSrcRect.mY, (LONG)(theSrcRect.mX + theSrcRect.mWidth), (LONG)(theSrcRect.mY + theSrcRect.mHeight)};	
 			
 			if (mLockCount > 0)
 			{
 				mSurface->Unlock(NULL);
 			}
 			
-			HRESULT aResult = GetSurface()->Blt(&aDestRect, aSrcDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);	
+			HRESULT aResult = GetSurface()->Blt(&aDestRect, aSrcDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
+			(void)aResult; // unused
 		
 			if (mLockCount > 0)
 			{
@@ -2997,7 +3021,7 @@ void DDImage::StretchBltMirror(Image* theImage, const Rect& theDestRectOrig, con
 {
 	theImage->mDrawn = true;
 
-	DDImage* aSrcDDImage = dynamic_cast<DDImage*>(theImage);
+	// DDImage* aSrcDDImage = dynamic_cast<DDImage*>(theImage); // unused
 	MemoryImage* aSrcMemoryImage = dynamic_cast<MemoryImage*>(theImage);
 
 	CommitBits();
@@ -3100,10 +3124,11 @@ void DDImage::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3 &th
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
  	if (!LockSurface())
 		return;
 
-	int aPixelFormat;
+	int aPixelFormat = 0;
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 		aPixelFormat = 0x888;
 	else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask == 0xf800 && mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask == 0x07e0 && mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask == 0x001f)
@@ -3132,10 +3157,11 @@ void DDImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
  	if (!LockSurface())
 		return;
 
-	int aPixelFormat;
+	int aPixelFormat = 0;
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 		aPixelFormat = 0x888;
 	else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask == 0xf800 && mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask == 0x07e0 && mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask == 0x001f)
@@ -3176,10 +3202,10 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 		int r = l + theSpans[0].mWidth, b = t;
 		for (int i = 1; i < theSpanCount; ++i)  //此循环结束后，Rect(l, t, r - l + 1, b - t + 1) 即为包含所有 Span 的最小矩形区域
 		{
-			l = min(theSpans[i].mX, l);
-			r = max(theSpans[i].mX + theSpans[i].mWidth - 1, r);
-			t = min(theSpans[i].mY, t);
-			b = max(theSpans[i].mY, b);
+			l = std::min(theSpans[i].mX, l);
+			r = std::max(theSpans[i].mX + theSpans[i].mWidth - 1, r);
+			t = std::min(theSpans[i].mY, t);
+			b = std::max(theSpans[i].mY, b);
 		}
 		for (int i = 0; i < theSpanCount; ++i)  //此循环将所有 Span 的绝对坐标更改为在上述矩形区域内的相对坐标
 		{
@@ -3196,6 +3222,7 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
+	(void)aSurface; // unused
 	
 	if (!LockSurface())
 		return;
@@ -3204,9 +3231,10 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	// unused
+	// ulong aRRoundAdd = aRMask >> 1;
+	// ulong aGRoundAdd = aGMask >> 1;
+	// ulong aBRoundAdd = aBMask >> 1;
 	
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{

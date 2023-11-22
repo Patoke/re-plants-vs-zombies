@@ -10,7 +10,7 @@
 class LawnApp;
 namespace Sexy
 {
-	class Font;
+	class _Font;
 	class Graphics;
 }
 
@@ -38,8 +38,8 @@ public:
 	void				ClearReanim();
 	/*inline*/ void		ClearLabel();
 	inline bool			IsBeingDisplayed() { return mDuration != 0; }
-	/*inline*/ Font*	GetFont();
-	void				DrawReanimatedText(Sexy::Graphics* g, Sexy::Font* theFont, const Sexy::Color& theColor, float thePosY);
+	/*inline*/ _Font*	GetFont();
+	void				DrawReanimatedText(Sexy::Graphics* g, Sexy::_Font* theFont, const Sexy::Color& theColor, float thePosY);
 	void				LayoutReanimText();
 };
 

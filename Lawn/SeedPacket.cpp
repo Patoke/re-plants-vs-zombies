@@ -498,6 +498,8 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 	case SeedType::SEED_ZOMBIQUARIUM_TROPHY:
 		aDrawSeedInMiddle = false;
 		break;
+	default:
+		break;
 	}
 	if (((LawnApp*)gSexyAppBase)->mGameMode == GameMode::GAMEMODE_CHALLENGE_BIG_TIME)
 	{
@@ -553,7 +555,7 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 			aCostStr = StrFormat(_S("%d"), Plant::GetCost(theSeedType, theImitaterType));
 		}
 
-		Font* aTextFont = Sexy::FONT_PICO129;
+		_Font* aTextFont = Sexy::FONT_PICO129;
 		int aTextOffsetX = 32 - aTextFont->StringWidth(aCostStr);
 		int aTextOffsetY = aTextFont->GetAscent() + 54;
 		if (g->mScaleX == 1.0f && g->mScaleY == 1.0f)

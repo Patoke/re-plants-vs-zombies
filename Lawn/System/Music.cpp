@@ -38,8 +38,8 @@ MusicFileData gMusicFileData[MusicFile::NUM_MUSIC_FILES];  //0x6A9ED0
 //0x45A2C0
 bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 {
-	HMUSIC aHMusic = NULL;
-	HSTREAM aStream = NULL;
+	HMUSIC aHMusic = 0;
+	HSTREAM aStream = 0;
 	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
 	std::string anExt;
 
@@ -56,7 +56,7 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 		p_fseek(pFile, 0, SEEK_END);  // 指针调整至文件末尾
 		int aSize = p_ftell(pFile);  // 当前位置即为文件长度
 		p_fseek(pFile, 0, SEEK_SET);  // 指针调回文件开头
-		void* aData = operator new[](aSize);
+		void* aData = malloc(aSize);
 		p_fread(aData, sizeof(char), aSize, pFile);  // 按字节读取数据
 		p_fclose(pFile);  // 关闭文件流
 
@@ -64,9 +64,9 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 			aHMusic = gBass->BASS_MusicLoad2(true, aData, 0, 0, aBass->mMusicLoadFlags, 0);
 		else
 			aHMusic = gBass->BASS_MusicLoad(true, aData, 0, 0, aBass->mMusicLoadFlags);
-		delete[] aData;
+		free(aData);
 
-		if (aHMusic == NULL)
+		if (aHMusic == 0)
 			return false;
 	}
 	else
@@ -86,7 +86,7 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 		TOD_ASSERT(gMusicFileData[theMusicFile].mFileData == nullptr);
 		gMusicFileData[theMusicFile].mFileData = (unsigned int*)aData;
 
-		if (aStream == NULL)
+		if (aStream == 0)
 			return false;
 	}
 	
@@ -110,24 +110,28 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 23;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 27;	aTrackEnd1 = 27;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 24;	aTrackEnd1 = 26;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 17;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 18;	aTrackEnd1 = 24;	aTrackStart2 = 29;	aTrackEnd2 = 29;	break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 25;	aTrackEnd1 = 28;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_FOG_RIGORMORMIST:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 15;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 23;	aTrackEnd1 = 23;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 16;	aTrackEnd1 = 22;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_ROOF_GRAZETHEROOF:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 17;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 21;	aTrackEnd1 = 21;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 18;	aTrackEnd1 = 20;											break;
+		default: break;
 		} break;
 	default:
 		if (theMusicFile == MusicFile::MUSIC_FILE_MAIN_MUSIC || theMusicFile == MusicFile::MUSIC_FILE_DRUMS)
@@ -142,15 +146,15 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 	HMUSIC aHMusic = GetBassMusicHandle(theMusicFile);
 	for (int aTrack = 0; aTrack < aTrackCount; aTrack++)
 	{
-		int aVolume;
+		float aVolume;
 		if (aTrack >= aTrackStart1 && aTrack <= aTrackEnd1)
-			aVolume = 100;
+			aVolume = 1;
 		else if (aTrack >= aTrackStart2 && aTrack <= aTrackEnd2)
-			aVolume = 100;
+			aVolume = 1;
 		else
 			aVolume = 0;
 
-		gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_VOL_CHAN + aTrack, aVolume);  // 设置音乐每条轨道的音量属性（静音与否）
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, aVolume);  // 设置音乐每条轨道的音量属性（静音与否）
 	}
 }
 
@@ -164,7 +168,7 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string& theFileName)
 	}
 	else
 	{
-		gBass->BASS_MusicSetAttribute(GetBassMusicHandle(theMusicFile), BASS_MUSIC_ATTRIB_PSCALER, 4);  // 设置音乐定位精确度属性
+		gBass->BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);  // 设置音乐定位精确度属性
 		TodHesitationTrace("song '%s'", theFileName.c_str());
 	}
 }
@@ -261,9 +265,10 @@ void Music::PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolu
 		aMusicInfo->mStopOnFade = false;
 		aMusicInfo->mVolume = aMusicInfo->mVolumeCap * theVolume;
 		aMusicInfo->mVolumeAdd = 0.0;
-		gBass->BASS_ChannelSetAttributes(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // 调整音乐音量
-		gBass->BASS_ChannelSetFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP);
-		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset | 0x80000000);  // 设置偏移位置
+		//gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // 调整音乐音量
+		gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, BASS_ATTRIB_VOL, aMusicInfo->mVolume);
+		gBass->BASS_ChannelFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP, -1);
+		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset | 0x80000000,BASS_POS_BYTE);  // 设置偏移位置
 		gBass->BASS_ChannelPlay(aMusicInfo->mHMusic, false);  // 重新开始播放
 	}
 }
@@ -404,27 +409,27 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		if (mCurMusicFileMain != MusicFile::MUSIC_FILE_NONE)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileMain);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 		if (mCurMusicFileDrums != -1)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileDrums);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 		if (mCurMusicFileHihats != -1)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileHihats);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 	}
 	else
 	{
 		HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileMain);
-		mBaseBPM = gBass->BASS_MusicGetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM);
-		mBaseModSpeed = gBass->BASS_MusicGetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED);
+		gBass->BASS_ChannelGetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, &mBaseBPM);
+		gBass->BASS_ChannelGetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, &mBaseModSpeed);
 	}
 }
 
@@ -454,7 +459,7 @@ void Music::MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusic
 		else if (aDiff < 0)
 			aBPM -= 1;
 
-		gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, aBPM);  // 适当调整待同步音乐的速率以缩小差距
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, aBPM);  // 适当调整待同步音乐的速率以缩小差距
 	}
 }
 
@@ -633,6 +638,8 @@ void Music::UpdateMusicBurst()
 			if (mDrumsStateCounter == 0)
 				mMusicDrumsState = MusicDrumsState::MUSIC_DRUMS_OFF;
 			break;
+		case MusicDrumsState::MUSIC_DRUMS_OFF:
+			break;
 	}
 
 	if (aBurstScheme == 1)
@@ -645,7 +652,7 @@ void Music::UpdateMusicBurst()
 		mMusicInterface->SetSongVolume(mCurMusicFileMain, aMainTrackVolume);
 		mMusicInterface->SetSongVolume(mCurMusicFileDrums, aDrumsVolume);
 		if (aDrumsJumpOrder != -1)
-			gBass->BASS_ChannelSetPosition(GetBassMusicHandle(mCurMusicFileDrums), LOWORD(aDrumsJumpOrder) | 0x80000000);
+			gBass->BASS_ChannelSetPosition(GetBassMusicHandle(mCurMusicFileDrums), LOWORD(aDrumsJumpOrder) | 0x80000000, BASS_POS_BYTE);
 	}
 }
 
@@ -727,7 +734,7 @@ void Music::GameMusicPause(bool thePause)
 			
 			if (aMusicInfo->mHStream)
 			{
-				mPauseOffset = gBass->BASS_ChannelGetPosition(aMusicInfo->mHStream);
+				mPauseOffset = gBass->BASS_ChannelGetPosition(aMusicInfo->mHStream, BASS_POS_BYTE);
 				mMusicInterface->StopMusic(mCurMusicFileMain);
 			}
 			else

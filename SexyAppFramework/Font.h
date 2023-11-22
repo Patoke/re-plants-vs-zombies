@@ -10,7 +10,7 @@ namespace Sexy
 
 class Graphics;
 
-class Font
+class _Font
 {
 public:
 	int						mAscent;
@@ -19,9 +19,9 @@ public:
 	int						mLineSpacingOffset; // This plus height should get added between lines
 	
 public:
-	Font();
-	Font(const Font& theFont);
-	virtual ~Font();
+	_Font();
+	_Font(const _Font& theFont);
+	virtual ~_Font();
 
 	virtual int				GetAscent();
 	virtual int				GetAscentPadding();
@@ -35,7 +35,7 @@ public:
 
 	virtual void			DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect);
 
-	virtual Font*			Duplicate() = NULL;
+	virtual _Font*			Duplicate() = 0;
 };
 
 }

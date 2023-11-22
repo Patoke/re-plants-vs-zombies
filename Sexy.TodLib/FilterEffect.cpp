@@ -154,6 +154,9 @@ MemoryImage* FilterEffectCreateImage(Image* theImage, FilterEffect theFilterEffe
 	case FilterEffect::FILTER_EFFECT_WASHED_OUT:		FilterEffectDoWashedOut(aImage);		break;
 	case FilterEffect::FILTER_EFFECT_LESS_WASHED_OUT:	FilterEffectDoLessWashedOut(aImage);	break;
 	case FilterEffect::FILTER_EFFECT_WHITE:				FilterEffectDoWhite(aImage);			break;
+	case FilterEffect::NUM_FILTER_EFFECTS:
+	case FilterEffect::FILTER_EFFECT_NONE:
+		break;
 	}
 
 	aImage->mBitsChangedCount++;

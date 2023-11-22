@@ -210,6 +210,8 @@ void CursorObject::Draw(Graphics* g)
 
         break;
     }
+    case CursorType::CURSOR_TYPE_NORMAL:
+        break;
     }
 }
 

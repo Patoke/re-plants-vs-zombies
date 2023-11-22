@@ -11,81 +11,81 @@ using namespace zylom::zylomso;
 using namespace Sexy;
 
 LPTOP_LEVEL_EXCEPTION_FILTER SEHCatcher::mPreviousFilter;
-SexyAppBase*				SEHCatcher::mApp = NULL;
-HFONT						SEHCatcher::mDialogFont = NULL;
-HFONT						SEHCatcher::mBoldFont = NULL;
-bool						SEHCatcher::mHasDemoFile = false;
-bool						SEHCatcher::mDebugError = false;
-std::string					SEHCatcher::mErrorTitle;
-std::string					SEHCatcher::mErrorText;
-std::string					SEHCatcher::mUserText;
-std::string					SEHCatcher::mUploadFileName;
-HWND						SEHCatcher::mYesButtonWindow = NULL;
-HWND						SEHCatcher::mNoButtonWindow = NULL;
-HWND						SEHCatcher::mDebugButtonWindow = NULL;
-HWND						SEHCatcher::mEditWindow = NULL;
-HMODULE						SEHCatcher::mImageHelpLib = NULL;
-SYMINITIALIZEPROC			SEHCatcher::mSymInitialize = NULL;
-SYMSETOPTIONSPROC			SEHCatcher::mSymSetOptions = NULL;
-UNDECORATESYMBOLNAMEPROC	SEHCatcher::mUnDecorateSymbolName = NULL;
-SYMCLEANUPPROC				SEHCatcher::mSymCleanup = NULL;
-STACKWALKPROC				SEHCatcher::mStackWalk = NULL;
-SYMFUNCTIONTABLEACCESSPROC	SEHCatcher::mSymFunctionTableAccess = NULL;
-SYMGETMODULEBASEPROC		SEHCatcher::mSymGetModuleBase = NULL;
-SYMGETSYMFROMADDRPROC		SEHCatcher::mSymGetSymFromAddr = NULL;
-HTTPTransfer				SEHCatcher::mSubmitReportTransfer;
-bool						SEHCatcher::mExiting = false;
-bool						SEHCatcher::mShowUI = true;
-bool						SEHCatcher::mAllowSubmit = true;
+SexyAppBase*                SEHCatcher::mApp = NULL;
+HFONT                       SEHCatcher::mDialogFont = NULL;
+HFONT                       SEHCatcher::mBoldFont = NULL;
+bool                        SEHCatcher::mHasDemoFile = false;
+bool                        SEHCatcher::mDebugError = false;
+std::string                 SEHCatcher::mErrorTitle;
+std::string                 SEHCatcher::mErrorText;
+std::string                 SEHCatcher::mUserText;
+std::string                 SEHCatcher::mUploadFileName;
+HWND                        SEHCatcher::mYesButtonWindow = NULL;
+HWND                        SEHCatcher::mNoButtonWindow = NULL;
+HWND                        SEHCatcher::mDebugButtonWindow = NULL;
+HWND                        SEHCatcher::mEditWindow = NULL;
+HMODULE                     SEHCatcher::mImageHelpLib = NULL;
+SYMINITIALIZEPROC           SEHCatcher::mSymInitialize = NULL;
+SYMSETOPTIONSPROC           SEHCatcher::mSymSetOptions = NULL;
+UNDECORATESYMBOLNAMEPROC    SEHCatcher::mUnDecorateSymbolName = NULL;
+SYMCLEANUPPROC              SEHCatcher::mSymCleanup = NULL;
+STACKWALKPROC               SEHCatcher::mStackWalk = NULL;
+SYMFUNCTIONTABLEACCESSPROC  SEHCatcher::mSymFunctionTableAccess = NULL;
+SYMGETMODULEBASEPROC        SEHCatcher::mSymGetModuleBase = NULL;
+SYMGETSYMFROMADDRPROC       SEHCatcher::mSymGetSymFromAddr = NULL;
+HTTPTransfer                SEHCatcher::mSubmitReportTransfer;
+bool                        SEHCatcher::mExiting = false;
+bool                        SEHCatcher::mShowUI = true;
+bool                        SEHCatcher::mAllowSubmit = true;
 
-std::wstring					SEHCatcher::mCrashMessage = L"An unexpected error has occured!";
-std::string						SEHCatcher::mSubmitHost;
-std::wstring					SEHCatcher::mSubmitMessage = L"Please help out by providing as much information as you can about this crash.";
-std::wstring					SEHCatcher::mSubmitErrorMessage = L"Failed to connect to server.";
+std::wstring                    SEHCatcher::mCrashMessage = L"An unexpected error has occured!";
+std::string                     SEHCatcher::mSubmitHost;
+std::wstring                    SEHCatcher::mSubmitMessage = L"Please help out by providing as much information as you can about this crash.";
+std::wstring                    SEHCatcher::mSubmitErrorMessage = L"Failed to connect to server.";
 
 static bool gUseDefaultFonts = true;
 
 struct 
 {
-    DWORD   dwExceptionCode;
-    char    *szMessage;
+	DWORD   dwExceptionCode;
+	char    *szMessage;
 } gMsgTable[] = {
-   { STATUS_SEGMENT_NOTIFICATION,     "Segment Notification" },
-   { STATUS_BREAKPOINT,               "Breakpoint" },
-   { STATUS_SINGLE_STEP,              "Single step" },
-   { STATUS_WAIT_0,                   "Wait 0" },
-   { STATUS_ABANDONED_WAIT_0,         "Abandoned Wait 0" },
-   { STATUS_USER_APC,                 "User APC" },
-   { STATUS_TIMEOUT,                  "Timeout" },
-   { STATUS_PENDING,                  "Pending" },
-   { STATUS_GUARD_PAGE_VIOLATION,     "Guard Page Violation" },
-   { STATUS_DATATYPE_MISALIGNMENT,    "Data Type Misalignment" },
-   { STATUS_ACCESS_VIOLATION,         "Access Violation" },
-   { STATUS_IN_PAGE_ERROR,            "In Page Error" },
-   { STATUS_NO_MEMORY,                "No Memory" },
-   { STATUS_ILLEGAL_INSTRUCTION,      "Illegal Instruction" },
-   { STATUS_NONCONTINUABLE_EXCEPTION, "Noncontinuable Exception" },
-   { STATUS_INVALID_DISPOSITION,      "Invalid Disposition" },
-   { STATUS_ARRAY_BOUNDS_EXCEEDED,    "Array Bounds Exceeded" },
-   { STATUS_FLOAT_DENORMAL_OPERAND,   "Float Denormal Operand" },
-   { STATUS_FLOAT_DIVIDE_BY_ZERO,     "Divide by Zero" },
-   { STATUS_FLOAT_INEXACT_RESULT,     "Float Inexact Result" },
-   { STATUS_FLOAT_INVALID_OPERATION,  "Float Invalid Operation" },
-   { STATUS_FLOAT_OVERFLOW,           "Float Overflow" },
-   { STATUS_FLOAT_STACK_CHECK,        "Float Stack Check" },
-   { STATUS_FLOAT_UNDERFLOW,          "Float Underflow" },
-   { STATUS_INTEGER_DIVIDE_BY_ZERO,   "Integer Divide by Zero" },
-   { STATUS_INTEGER_OVERFLOW,         "Integer Overflow" },
-   { STATUS_PRIVILEGED_INSTRUCTION,   "Privileged Instruction" },
-   { STATUS_STACK_OVERFLOW,           "Stack Overflow" },
-   { STATUS_CONTROL_C_EXIT,           "Ctrl+C Exit" },
-   { 0xFFFFFFFF,                      "" }
+   { STATUS_SEGMENT_NOTIFICATION,     (char *)"Segment Notification" },
+   { STATUS_BREAKPOINT,               (char *)"Breakpoint" },
+   { STATUS_SINGLE_STEP,              (char *)"Single step" },
+   { STATUS_WAIT_0,                   (char *)"Wait 0" },
+   { STATUS_ABANDONED_WAIT_0,         (char *)"Abandoned Wait 0" },
+   { STATUS_USER_APC,                 (char *)"User APC" },
+   { STATUS_TIMEOUT,                  (char *)"Timeout" },
+   { STATUS_PENDING,                  (char *)"Pending" },
+   { STATUS_GUARD_PAGE_VIOLATION,     (char *)"Guard Page Violation" },
+   { STATUS_DATATYPE_MISALIGNMENT,    (char *)"Data Type Misalignment" },
+   { STATUS_ACCESS_VIOLATION,         (char *)"Access Violation" },
+   { STATUS_IN_PAGE_ERROR,            (char *)"In Page Error" },
+   { STATUS_NO_MEMORY,                (char *)"No Memory" },
+   { STATUS_ILLEGAL_INSTRUCTION,      (char *)"Illegal Instruction" },
+   { STATUS_NONCONTINUABLE_EXCEPTION, (char *)"Noncontinuable Exception" },
+   { STATUS_INVALID_DISPOSITION,      (char *)"Invalid Disposition" },
+   { STATUS_ARRAY_BOUNDS_EXCEEDED,    (char *)"Array Bounds Exceeded" },
+   { STATUS_FLOAT_DENORMAL_OPERAND,   (char *)"Float Denormal Operand" },
+   { STATUS_FLOAT_DIVIDE_BY_ZERO,     (char *)"Divide by Zero" },
+   { STATUS_FLOAT_INEXACT_RESULT,     (char *)"Float Inexact Result" },
+   { STATUS_FLOAT_INVALID_OPERATION,  (char *)"Float Invalid Operation" },
+   { STATUS_FLOAT_OVERFLOW,           (char *)"Float Overflow" },
+   { STATUS_FLOAT_STACK_CHECK,        (char *)"Float Stack Check" },
+   { STATUS_FLOAT_UNDERFLOW,          (char *)"Float Underflow" },
+   { STATUS_INTEGER_DIVIDE_BY_ZERO,   (char *)"Integer Divide by Zero" },
+   { STATUS_INTEGER_OVERFLOW,         (char *)"Integer Overflow" },
+   { STATUS_PRIVILEGED_INSTRUCTION,   (char *)"Privileged Instruction" },
+   { STATUS_STACK_OVERFLOW,           (char *)"Stack Overflow" },
+   { STATUS_CONTROL_C_EXIT,           (char *)"Ctrl+C Exit" },
+   { 0xFFFFFFFF,                      (char *)"" }
 };
 
 
 SEHCatcher::SEHCatcher() 
-{ 	
-	mPreviousFilter = SetUnhandledExceptionFilter(UnhandledExceptionFilter); 	
+{   
+	mPreviousFilter = SetUnhandledExceptionFilter(UnhandledExceptionFilter);    
 }
 
 SEHCatcher::~SEHCatcher() 
@@ -96,72 +96,73 @@ SEHCatcher::~SEHCatcher()
 long __stdcall SEHCatcher::UnhandledExceptionFilter(LPEXCEPTION_POINTERS lpExceptPtr)
 {
 	if (mApp != NULL)
-		mApp->SEHOccured();	
+		mApp->SEHOccured(); 
 
 	DoHandleDebugEvent(lpExceptPtr);
 	
 	if (!mDebugError)
 		SetErrorMode(SEM_NOGPFAULTERRORBOX);
 	
-	return EXCEPTION_CONTINUE_SEARCH;	
+	return EXCEPTION_CONTINUE_SEARCH;   
 }
 
 bool SEHCatcher::LoadImageHelp()
 {
 	mImageHelpLib = LoadLibraryA("IMAGEHLP.DLL");
-    if (!mImageHelpLib)
-        return false;
+	if (!mImageHelpLib)
+		return false;
 
-    mSymInitialize = (SYMINITIALIZEPROC) GetProcAddress(mImageHelpLib, "SymInitialize");
-    if (!mSymInitialize)
-        return false;
+	mSymInitialize = (SYMINITIALIZEPROC) GetProcAddress(mImageHelpLib, "SymInitialize");
+	if (!mSymInitialize)
+		return false;
 
 	mSymSetOptions = (SYMSETOPTIONSPROC) GetProcAddress(mImageHelpLib, "SymSetOptions");
-    if (!mSymSetOptions)
-        return false;
+	if (!mSymSetOptions)
+		return false;
 
-    mSymCleanup = (SYMCLEANUPPROC) GetProcAddress(mImageHelpLib, "SymCleanup");
-    if (!mSymCleanup)
-        return false;
+	mSymCleanup = (SYMCLEANUPPROC) GetProcAddress(mImageHelpLib, "SymCleanup");
+	if (!mSymCleanup)
+		return false;
 
 	mUnDecorateSymbolName = (UNDECORATESYMBOLNAMEPROC) GetProcAddress(mImageHelpLib, "UnDecorateSymbolName");
-    if (!mUnDecorateSymbolName)
-        return false;
+	if (!mUnDecorateSymbolName)
+		return false;
 
-    mStackWalk = (STACKWALKPROC) GetProcAddress(mImageHelpLib, "StackWalk");
-    if (!mStackWalk)
-        return false;
+	mStackWalk = (STACKWALKPROC) GetProcAddress(mImageHelpLib, "StackWalk");
+	if (!mStackWalk)
+		return false;
 
-    mSymFunctionTableAccess = (SYMFUNCTIONTABLEACCESSPROC) GetProcAddress(mImageHelpLib, "SymFunctionTableAccess");
-    if (!mSymFunctionTableAccess)
-        return false;
+	mSymFunctionTableAccess = (SYMFUNCTIONTABLEACCESSPROC) GetProcAddress(mImageHelpLib, "SymFunctionTableAccess");
+	if (!mSymFunctionTableAccess)
+		return false;
 
-    mSymGetModuleBase = (SYMGETMODULEBASEPROC) GetProcAddress(mImageHelpLib, "SymGetModuleBase");
-    if (!mSymGetModuleBase)
-        return false;
+	mSymGetModuleBase = (SYMGETMODULEBASEPROC) GetProcAddress(mImageHelpLib, "SymGetModuleBase");
+	if (!mSymGetModuleBase)
+		return false;
 
-    mSymGetSymFromAddr = (SYMGETSYMFROMADDRPROC) GetProcAddress(mImageHelpLib, "SymGetSymFromAddr" );
-    if (!mSymGetSymFromAddr)
-        return false;    
+	mSymGetSymFromAddr = (SYMGETSYMFROMADDRPROC) GetProcAddress(mImageHelpLib, "SymGetSymFromAddr" );
+	if (!mSymGetSymFromAddr)
+		return false;    
 
 	mSymSetOptions(SYMOPT_DEFERRED_LOADS);
 
 	// Get image filename of the main executable
 	char filepath[MAX_PATH], *lastdir, *pPath;
 	DWORD filepathlen = GetModuleFileNameA ( NULL, filepath, sizeof(filepath));
-        
-    lastdir = strrchr (filepath, '/');
-    if (lastdir == NULL) lastdir = strrchr (filepath, '\\');
-    if (lastdir != NULL) lastdir[0] = '\0';
+	(void)filepathlen;
+		
+	lastdir = strrchr (filepath, '/');
+	if (lastdir == NULL) lastdir = strrchr (filepath, '\\');
+	if (lastdir != NULL) lastdir[0] = '\0';
 
-    // Initialize the symbol table routines, supplying a pointer to the path
-    pPath = filepath;
-    if (strlen (filepath) == 0) pPath = NULL;
+	// Initialize the symbol table routines, supplying a pointer to the path
+	pPath = filepath;
+	if (strlen (filepath) == 0) pPath = NULL;
 
-     if (!mSymInitialize (GetCurrentProcess(), pPath, TRUE))
+	 if (!mSymInitialize (GetCurrentProcess(), pPath, TRUE))
 		return false;
 
-    return true;
+	return true;
 }
 
 void SEHCatcher::UnloadImageHelp()
@@ -171,7 +172,7 @@ void SEHCatcher::UnloadImageHelp()
 }
 
 static bool StrToLongHex(const std::string& aString, DWORD* theValue)
-{	
+{
 	*theValue = 0;
 
 	for (int i = 0; i < (int)aString.length(); i++)
@@ -196,7 +197,7 @@ static bool StrToLongHex(const std::string& aString, DWORD* theValue)
 
 void SEHCatcher::GetSymbolsFromMapFile(std::string &theDebugDump)
 {
-	DWORD aTick = GetTickCount();
+	// DWORD aTick = GetTickCount(); // unused
 	WIN32_FIND_DATAA aFindData;
 	HANDLE aFindHandle = FindFirstFileA("*.map",&aFindData);
 	if (aFindHandle==INVALID_HANDLE_VALUE)
@@ -248,14 +249,14 @@ void SEHCatcher::GetSymbolsFromMapFile(std::string &theDebugDump)
 			if (aSegmentPos == -1)
 				aSegmentPos = aString.length();
 
-			int aPreLen = strlen("Line numbers for ");
+			// int aPreLen = strlen("Line numbers for "); // unused
 
 			int aStartPos = aString.find('(');
 
 			aCurLinesFile = aString.substr(aStartPos + 1, aSegmentPos - aStartPos - 1);
 		}
 		else if ((aCurLinesFile.length() > 0) && (aString.length() == 80))
-		{	
+		{   
 			// Line number stuff
 
 			for (int i = 0; i < 4; i++)
@@ -323,7 +324,7 @@ void SEHCatcher::GetSymbolsFromMapFile(std::string &theDebugDump)
 						--aLineNumItr;
 
 					if (aLineNumItr!=aLineNumMap.end() && aLineNumItr->first.first==aFindPreVal)
-					{							
+					{                           
 						std::string &aBestFile = aLineNumItr->second.first;
 						int aBestLine = aLineNumItr->second.second;
 						int aBestLineDist =  aFindPostVal - aLineNumItr->first.second;
@@ -340,7 +341,7 @@ void SEHCatcher::GetSymbolsFromMapFile(std::string &theDebugDump)
 		}
 	}
 
-//	MessageBox(NULL,StrFormat("%d",GetTickCount()-aTick).c_str(),"Time",MB_OK);
+//  MessageBox(NULL,StrFormat("%d",GetTickCount()-aTick).c_str(),"Time",MB_OK);
 }
 
 void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
@@ -353,45 +354,45 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 	char aBuffer[2048];
    
 		///////////////////////////
-	// first name the exception	
+	// first name the exception 
 	char  *szName = NULL;
-    for (int i=0; gMsgTable[i].dwExceptionCode != 0xFFFFFFFF; i++) 
+	for (int i=0; gMsgTable[i].dwExceptionCode != 0xFFFFFFFF; i++) 
 	{
-        if (gMsgTable[i].dwExceptionCode == lpEP->ExceptionRecord->ExceptionCode) 
+		if (gMsgTable[i].dwExceptionCode == lpEP->ExceptionRecord->ExceptionCode) 
 		{
-            szName = gMsgTable[i].szMessage;
-            break;
-        }
-    }	
+			szName = gMsgTable[i].szMessage;
+			break;
+		}
+	}   
 
-    if (szName != NULL)
-	{		
-		sprintf(aBuffer,"Exception: %s (code 0x%x) at address %08X in thread %X\r\n",
+	if (szName != NULL)
+	{       
+		sprintf(aBuffer,"Exception: %s (code 0x%lx) at address %p in thread %lX\r\n",
 				szName, lpEP->ExceptionRecord->ExceptionCode, 
 				lpEP->ExceptionRecord->ExceptionAddress, GetCurrentThreadId());
 	}
 	else
 	{
-		sprintf(aBuffer,"Unknown exception: (code 0x%x) at address %08X in thread %X\r\n",
+		sprintf(aBuffer,"Unknown exception: (code 0x%lx) at address %p in thread %lX\r\n",
 				lpEP->ExceptionRecord->ExceptionCode, 
 				lpEP->ExceptionRecord->ExceptionAddress, GetCurrentThreadId());
 	}
 
-	aDebugDump += aBuffer;	
+	aDebugDump += aBuffer;  
 
 	///////////////////////////////////////////////////////////
 	// Get logical address of the module where exception occurs
 	DWORD section, offset;
 	GetLogicalAddress(lpEP->ExceptionRecord->ExceptionAddress, aBuffer, sizeof(aBuffer), section, offset);
-	aDebugDump += "Module: " + GetFilename(aBuffer) + "\r\n";		
-	sprintf(aBuffer, "Logical Address: %04X:%08X\r\n", section, offset);
-	aDebugDump += aBuffer;	
+	aDebugDump += "Module: " + GetFilename(aBuffer) + "\r\n";       
+	sprintf(aBuffer, "Logical Address: %04lX:%08lX\r\n", section, offset);
+	aDebugDump += aBuffer;  
 	
-	aDebugDump += "\r\n";	
+	aDebugDump += "\r\n";   
 
 	anErrorTitle = StrFormat("Exception at %04X:%08X", section, offset);
 
-	std::string aWalkString;	
+	std::string aWalkString;    
 
 	if (hasImageHelp)
 		aWalkString = ImageHelpWalk(lpEP->ContextRecord, 0);
@@ -402,18 +403,22 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 	aDebugDump += aWalkString;
 
 	aDebugDump += "\r\n";
-	sprintf(aBuffer, ("EAX:%08X EBX:%08X ECX:%08X EDX:%08X ESI:%08X EDI:%08X\r\n"),
-            lpEP->ContextRecord->Eax, lpEP->ContextRecord->Ebx, lpEP->ContextRecord->Ecx, lpEP->ContextRecord->Edx, lpEP->ContextRecord->Esi, lpEP->ContextRecord->Edi);
+
+	sprintf(aBuffer, ("RAX:%016llX RBX:%016llX RCX:%016llX RDX:%016llX RSI:%016llX RDI:%016llX\r\n"),
+			lpEP->ContextRecord->Rax, lpEP->ContextRecord->Rbx, lpEP->ContextRecord->Rcx, lpEP->ContextRecord->Rdx, lpEP->ContextRecord->Rsi, lpEP->ContextRecord->Rdi);
 	aDebugDump += aBuffer;
-    sprintf(aBuffer, "EIP:%08X ESP:%08X  EBP:%08X\r\n", lpEP->ContextRecord->Eip, lpEP->ContextRecord->Esp, lpEP->ContextRecord->Ebp);	
+	sprintf(aBuffer, ("R8:%016llX R9:%016llX R10:%016llX R11:%016llX R12:%016llX R13:%016llX R14:%016llX R15:%016llX\r\n"),
+			lpEP->ContextRecord->R8, lpEP->ContextRecord->R9, lpEP->ContextRecord->R10, lpEP->ContextRecord->R11, lpEP->ContextRecord->R12, lpEP->ContextRecord->R13, lpEP->ContextRecord->R14, lpEP->ContextRecord->R15);
 	aDebugDump += aBuffer;
-    sprintf(aBuffer, "CS:%04X SS:%04X DS:%04X ES:%04X FS:%04X GS:%04X\r\n", lpEP->ContextRecord->SegCs, lpEP->ContextRecord->SegSs, lpEP->ContextRecord->SegDs, lpEP->ContextRecord->SegEs, lpEP->ContextRecord->SegFs, lpEP->ContextRecord->SegGs );
+	sprintf(aBuffer, "RIP:%016llX RSP:%016llX  RBP:%016llX\r\n", lpEP->ContextRecord->Rip, lpEP->ContextRecord->Rsp, lpEP->ContextRecord->Rbp); 
 	aDebugDump += aBuffer;
-    sprintf(aBuffer, "Flags:%08X\r\n", lpEP->ContextRecord->EFlags );
+	sprintf(aBuffer, "CS:%04X SS:%04X DS:%04X ES:%04X FS:%04X GS:%04X\r\n", lpEP->ContextRecord->SegCs, lpEP->ContextRecord->SegSs, lpEP->ContextRecord->SegDs, lpEP->ContextRecord->SegEs, lpEP->ContextRecord->SegFs, lpEP->ContextRecord->SegGs );
+	aDebugDump += aBuffer;
+	sprintf(aBuffer, "Flags:%08lX\r\n", lpEP->ContextRecord->EFlags );
 	aDebugDump += aBuffer;
 
 	aDebugDump += "\r\n";
-	aDebugDump += GetSysInfo();	
+	aDebugDump += GetSysInfo(); 
 
 	if (mApp != NULL)
 	{
@@ -425,7 +430,7 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 		}
 
 		mApp->CopyToClipboard(aDebugDump);
-	}		
+	}       
 
 	if (hasImageHelp)
 		GetSymbolsFromMapFile(aDebugDump);
@@ -444,9 +449,9 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 			mApp->WriteDemoTimingBlock();
 			mApp->mDemoBuffer.WriteNumBits(0, 1);
 			mApp->mDemoBuffer.WriteNumBits(DEMO_IDLE, 5);
-			mApp->WriteDemoBuffer();		
+			mApp->WriteDemoBuffer();        
 			mUploadFileName = mApp->mDemoFileName;
-		}	
+		}   
 
 		mHasDemoFile = mApp->mRecordingDemoBuffer;
 		std::string anUploadFile = mApp->NotifyCrashHook();
@@ -464,9 +469,9 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 		ShowErrorDialog(anErrorTitle, aDebugDump);
 #endif
 
-	//::MessageBox(NULL, aDebugDump.c_str(), "ERROR", MB_ICONERROR);	
+	//::MessageBox(NULL, aDebugDump.c_str(), "ERROR", MB_ICONERROR);    
 
-	UnloadImageHelp();	
+	UnloadImageHelp();  
 }
 
 std::string SEHCatcher::IntelWalk(PCONTEXT theContext, int theSkipCount)
@@ -474,38 +479,38 @@ std::string SEHCatcher::IntelWalk(PCONTEXT theContext, int theSkipCount)
 	std::string aDebugDump;
 	char aBuffer[2048];
 
-	DWORD pc = theContext->Eip;
-    PDWORD pFrame, pPrevFrame;
-    
-    pFrame = (PDWORD)theContext->Ebp;
+	intptr_t pc = theContext->Rip;
+	intptr_t *pFrame, *pPrevFrame;
+	
+	pFrame = (intptr_t*)theContext->Rbp;
 
-    for (;;)
-    {
-        char szModule[MAX_PATH] = "";
-        DWORD section = 0, offset = 0;
+	for (;;)
+	{
+		char szModule[MAX_PATH] = "";
+		DWORD section = 0, offset = 0;
 
-        GetLogicalAddress((PVOID)pc, szModule, sizeof(szModule), section, offset);
+		GetLogicalAddress((PVOID)pc, szModule, sizeof(szModule), section, offset);
 
-        sprintf(aBuffer, "%08X  %08X  %04X:%08X %s\r\n",
-                  pc, pFrame, section, offset, GetFilename(szModule).c_str());
+		sprintf(aBuffer, "%016llX  %p  %04lX:%08lX %s\r\n",
+				  pc, pFrame, section, offset, GetFilename(szModule).c_str());
 		aDebugDump += aBuffer;
 
-        pc = pFrame[1];
+		pc = pFrame[1];
 
-        pPrevFrame = pFrame;
+		pPrevFrame = pFrame;
 
-        pFrame = (PDWORD)pFrame[0]; // proceed to next higher frame on stack
+		pFrame = (intptr_t*)(pFrame[0]); // proceed to next higher frame on stack
 
-        if ((DWORD)pFrame & 3)    // Frame pointer must be aligned on a
-            break;                  // DWORD boundary.  Bail if not so.
+		if ((intptr_t)pFrame & 3)    // Frame pointer must be aligned on a
+			break;                  // DWORD boundary.  Bail if not so.
 
-        if (pFrame <= pPrevFrame)
-            break;
+		if (pFrame <= pPrevFrame)
+			break;
 
-        // Can two DWORDs be read from the supposed frame address?          
-        if (IsBadWritePtr(pFrame, sizeof(PVOID)*2))
-            break;
-    };
+		// Can two DWORDs be read from the supposed frame address?          
+		if (IsBadWritePtr(pFrame, sizeof(PVOID)*2))
+			break;
+	};
 
 	return aDebugDump;
 }
@@ -516,18 +521,19 @@ std::string SEHCatcher::ImageHelpWalk(PCONTEXT theContext, int theSkipCount)
 	std::string aDebugDump;
 
 	STACKFRAME sf;
-	memset( &sf, 0, sizeof(sf) );	
+	memset( &sf, 0, sizeof(sf) );   
 
 	// Initialize the STACKFRAME structure for the first call.  This is only
 	// necessary for Intel CPUs, and isn't mentioned in the documentation.
-	sf.AddrPC.Offset       = theContext->Eip;
+	sf.AddrPC.Offset       = theContext->Rip;
 	sf.AddrPC.Mode         = AddrModeFlat;
-	sf.AddrStack.Offset    = theContext->Esp;
+	sf.AddrStack.Offset    = theContext->Rsp;
 	sf.AddrStack.Mode      = AddrModeFlat;
-	sf.AddrFrame.Offset    = theContext->Ebp;
+	sf.AddrFrame.Offset    = theContext->Rbp;
 	sf.AddrFrame.Mode      = AddrModeFlat;
 	
 	int aLevelCount = 0;
+	(void)aLevelCount; // Unused
 
 	for (;;)
 	{
@@ -535,7 +541,7 @@ std::string SEHCatcher::ImageHelpWalk(PCONTEXT theContext, int theSkipCount)
 						&sf, NULL  /*theContext*/, NULL, mSymFunctionTableAccess, mSymGetModuleBase, 0))
 		{
 			DWORD lastErr = GetLastError();
-			sprintf(aBuffer, "StackWalk failed (error %d)\r\n", lastErr);
+			sprintf(aBuffer, "StackWalk failed (error %ld)\r\n", lastErr);
 			aDebugDump += aBuffer;
 			break;
 		}
@@ -567,7 +573,7 @@ std::string SEHCatcher::ImageHelpWalk(PCONTEXT theContext, int theSkipCount)
 								 UNDNAME_NO_RETURN_UDT_MODEL | UNDNAME_NO_THROW_SIGNATURES |
 								 UNDNAME_NO_SPECIAL_SYMS);
 				
-			sprintf(aBuffer, "%08X %08X %hs+%X\r\n", 
+			sprintf(aBuffer, "%016llX %016llX %s+%lX\r\n", 
 					sf.AddrFrame.Offset, sf.AddrPC.Offset, aUDName, symDisplacement);
 		}
 		else // No symbol found.  Print out the logical address instead.
@@ -575,13 +581,13 @@ std::string SEHCatcher::ImageHelpWalk(PCONTEXT theContext, int theSkipCount)
 			char szModule[MAX_PATH];            
 			DWORD section = 0, offset = 0;
 
-			GetLogicalAddress((PVOID)sf.AddrPC.Offset, szModule, sizeof(szModule), section, offset);				
-			sprintf(aBuffer, "%08X %08X %04X:%08X %s\r\n", sf.AddrFrame.Offset, sf.AddrPC.Offset, section, offset, GetFilename(szModule).c_str());
+			GetLogicalAddress((PVOID)sf.AddrPC.Offset, szModule, sizeof(szModule), section, offset);                
+			sprintf(aBuffer, "%016llX %016llX %08lX:%08lX %s\r\n", sf.AddrFrame.Offset, sf.AddrPC.Offset, section, offset, GetFilename(szModule).c_str());
 		}
 		aDebugDump += aBuffer;
 		
-		sprintf(aBuffer, "Params: %08X %08X %08X %08X\r\n", sf.Params[0], sf.Params[1], sf.Params[2], sf.Params[3]);
-		aDebugDump += aBuffer;		
+		sprintf(aBuffer, "Params: %016llX %016llX %016llX %016llX\r\n", sf.Params[0], sf.Params[1], sf.Params[2], sf.Params[3]);
+		aDebugDump += aBuffer;      
 		aDebugDump += "\r\n";
 
 		aLevelCount++;
@@ -592,51 +598,51 @@ std::string SEHCatcher::ImageHelpWalk(PCONTEXT theContext, int theSkipCount)
 
 bool SEHCatcher::GetLogicalAddress(void* addr, char* szModule, DWORD len, DWORD& section, DWORD& offset)
 {
-    MEMORY_BASIC_INFORMATION mbi;
+	MEMORY_BASIC_INFORMATION mbi;
 
-    if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
-        return false;
+	if (!VirtualQuery(addr, &mbi, sizeof(mbi)))
+		return false;
 
-    DWORD hMod = (DWORD)mbi.AllocationBase;
+	intptr_t hMod = (intptr_t)mbi.AllocationBase;
 
-    if (!GetModuleFileNameA((HMODULE) hMod, szModule, len))
-        return false;
+	if (!GetModuleFileNameA((HMODULE) hMod, szModule, len))
+		return false;
 
-    // Point to the DOS header in memory
-    PIMAGE_DOS_HEADER pDosHdr = (PIMAGE_DOS_HEADER) hMod;
+	// Point to the DOS header in memory
+	PIMAGE_DOS_HEADER pDosHdr = (PIMAGE_DOS_HEADER) hMod;
 
-    // From the DOS header, find the NT (PE) header
-    PIMAGE_NT_HEADERS pNtHdr = (PIMAGE_NT_HEADERS) (hMod + pDosHdr->e_lfanew);
+	// From the DOS header, find the NT (PE) header
+	PIMAGE_NT_HEADERS pNtHdr = (PIMAGE_NT_HEADERS) (hMod + pDosHdr->e_lfanew);
 
-    PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHdr);
+	PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHdr);
 
-    DWORD rva = (DWORD) addr - hMod; // RVA is offset from module load address
+	intptr_t rva = (intptr_t) addr - hMod; // RVA is offset from module load address
 
-    // Iterate through the section table, looking for the one that encompasses
-    // the linear address.
-    for (unsigned i = 0; i < pNtHdr->FileHeader.NumberOfSections; i++, pSection++)
-    {
-        DWORD sectionStart = pSection->VirtualAddress;
-        DWORD sectionEnd = sectionStart + max(pSection->SizeOfRawData, pSection->Misc.VirtualSize);
+	// Iterate through the section table, looking for the one that encompasses
+	// the linear address.
+	for (unsigned i = 0; i < pNtHdr->FileHeader.NumberOfSections; i++, pSection++)
+	{
+		DWORD sectionStart = pSection->VirtualAddress;
+		DWORD sectionEnd = sectionStart + std::max(pSection->SizeOfRawData, pSection->Misc.VirtualSize);
 
-        // Is the address in this section???
-        if ((rva >= sectionStart) && (rva <= sectionEnd))
-        {
-            // Yes, address is in the section.  Calculate section and offset,
-            // and store in the "section" & "offset" params, which were
-            // passed by reference.
-            section = i+1;
-            offset = rva - sectionStart;
-            return true;
-        }
-    }
+		// Is the address in this section???
+		if ((rva >= sectionStart) && (rva <= sectionEnd))
+		{
+			// Yes, address is in the section.  Calculate section and offset,
+			// and store in the "section" & "offset" params, which were
+			// passed by reference.
+			section = i+1;
+			offset = rva - sectionStart;
+			return true;
+		}
+	}
 
-    return false; // Should never get here!
+	return false; // Should never get here!
 }
 
 std::string SEHCatcher::GetFilename(const std::string& thePath)
 {
-	int aLastSlash = max((int) thePath.rfind('\\'), (int) thePath.rfind('/'));	
+	int aLastSlash = std::max((int) thePath.rfind('\\'), (int) thePath.rfind('/')); 
 
 	if (aLastSlash >= 0)
 	{
@@ -652,7 +658,7 @@ int aCount = 0;
 static LRESULT CALLBACK SEHProgressWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
-	{		
+	{       
 	case WM_COMMAND:
 		{
 			HWND hwndCtl = (HWND) lParam;
@@ -721,7 +727,7 @@ static void CreateProgressWindow()
 	wc.hInstance = gHInstance;
 	wc.lpfnWndProc = SEHProgressWindowProc;
 	wc.lpszClassName = "SEHProgressWindow";
-	wc.lpszMenuName = NULL;	
+	wc.lpszMenuName = NULL; 
 	RegisterClassA(&wc);
 
 	RECT aRect;
@@ -733,6 +739,7 @@ static void CreateProgressWindow()
 	DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	BOOL worked = AdjustWindowRect(&aRect, aWindowStyle, FALSE);
+	(void)worked; // unused, naughty naughty
 
 	HWND aHWnd = CreateWindowA("SEHProgressWindow", "Submitting Report",
 		aWindowStyle,
@@ -760,7 +767,7 @@ static void CreateProgressWindow()
 		aHWnd,
 		NULL,
 		gHInstance,
-		0);	
+		0); 
 	if (!gUseDefaultFonts)
 		SendMessage(gEditWindow, WM_SETFONT, (WPARAM) SEHCatcher::mBoldFont, 0);
 
@@ -792,7 +799,7 @@ LRESULT CALLBACK SEHCatcher::SEHWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 				ShowWindow(hWnd, SW_HIDE);
 
 				ShowSubmitInfoDialog();
-			}			
+			}           
 			else if (hwndCtl == mNoButtonWindow)
 			{
 				mExiting = true;
@@ -815,7 +822,7 @@ LRESULT CALLBACK SEHCatcher::SEHWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 LRESULT CALLBACK SEHCatcher::SubmitInfoWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
-	{		
+	{       
 	case WM_COMMAND:
 		{
 			HWND hwndCtl = (HWND) lParam;
@@ -865,7 +872,7 @@ void SEHCatcher::SubmitReportThread(void *theArg)
 	while (anItr != aSEHWebParams.end())
 	{
 		aContent += "--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"" + anItr->first + "\"\r\n" +		
+		"Content-Disposition: form-data; name=\"" + anItr->first + "\"\r\n" +       
 		"\r\n" +
 		anItr->second + "\r\n";
 		
@@ -875,32 +882,32 @@ void SEHCatcher::SubmitReportThread(void *theArg)
 	aContent += 
 		
 		/*"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"username\"\r\n" +		
+		"Content-Disposition: form-data; name=\"username\"\r\n" +       
 		"\r\n" +
-		mApp->mUserName + "\r\n" +	*/
+		mApp->mUserName + "\r\n" +  */
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"prod\"\r\n" +		
+		"Content-Disposition: form-data; name=\"prod\"\r\n" +       
 		"\r\n" +
-		mApp->mProdName + "\r\n" +	
+		mApp->mProdName + "\r\n" +  
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"version\"\r\n" +		
+		"Content-Disposition: form-data; name=\"version\"\r\n" +        
 		"\r\n" +
 		mApp->mProductVersion + "\r\n" +
 
 		/*"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"buildnum\"\r\n" +		
+		"Content-Disposition: form-data; name=\"buildnum\"\r\n" +       
 		"\r\n" +
 		StrFormat("%d", mApp->mBuildNum) + "\r\n" +
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"builddate\"\r\n" +		
+		"Content-Disposition: form-data; name=\"builddate\"\r\n" +      
 		"\r\n" +
 		mApp->mBuildDate + "\r\n" +
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"referid\"\r\n" +		
+		"Content-Disposition: form-data; name=\"referid\"\r\n" +        
 		"\r\n" +
 		mApp->mReferId + "\r\n" +*/
 
@@ -910,12 +917,12 @@ void SEHCatcher::SubmitReportThread(void *theArg)
 		mUserText + "\r\n" +
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"errortitle\"\r\n" +		
+		"Content-Disposition: form-data; name=\"errortitle\"\r\n" +     
 		"\r\n" +
 		mErrorTitle + "\r\n" +
 
 		"--" + aSeperator + "\r\n"
-		"Content-Disposition: form-data; name=\"errortext\"\r\n" +		
+		"Content-Disposition: form-data; name=\"errortext\"\r\n" +      
 		"\r\n" +
 		mErrorText + "\r\n";
 
@@ -928,9 +935,9 @@ void SEHCatcher::SubmitReportThread(void *theArg)
 			"--" + aSeperator + "\r\n"
 			"Content-Disposition: form-data; name=\"demofile\"; filename=\"popcap.dmo\"\r\n" +
 			"Content-Type: application/octet-stream\r\n" +
-			"\r\n";		
+			"\r\n";     
 
-		aContent.insert(aContent.end(), (char*) aBuffer.GetDataPtr(), (char*) aBuffer.GetDataPtr() + aBuffer.GetDataLen());			
+		aContent.insert(aContent.end(), (char*) aBuffer.GetDataPtr(), (char*) aBuffer.GetDataPtr() + aBuffer.GetDataLen());         
 				
 		aContent += "\r\n";
 	}
@@ -962,7 +969,7 @@ void SEHCatcher::ShowSubmitInfoDialog()
 	wc.hInstance = gHInstance;
 	wc.lpfnWndProc = SubmitInfoWindowProc;
 	wc.lpszClassName = "SubmitInfoWindow";
-	wc.lpszMenuName = NULL;	
+	wc.lpszMenuName = NULL; 
 	RegisterClassA(&wc);
 
 	RECT aRect;
@@ -974,6 +981,7 @@ void SEHCatcher::ShowSubmitInfoDialog()
 	DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	BOOL worked = AdjustWindowRect(&aRect, aWindowStyle, FALSE);
+	(void)worked; // unused, naughty naughty
 
 	HWND aHWnd = CreateWindowA("SubmitInfoWindow", "Error Details",
 		aWindowStyle,
@@ -1014,7 +1022,7 @@ void SEHCatcher::ShowSubmitInfoDialog()
 		aHWnd,
 		NULL,
 		gHInstance,
-		0);	
+		0); 
 
 	aDC = ::GetDC(mEditWindow);
 	aFontHeight = -MulDiv(8, 96, 72);
@@ -1022,6 +1030,7 @@ void SEHCatcher::ShowSubmitInfoDialog()
 	HFONT aCourierNewFont = CreateFontA(aFontHeight, 0, 0, 0, FW_NORMAL, 0, 0,
 			false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_DONTCARE, "Courier New");
+	(void)aCourierNewFont; // Unused, TODO work out if can be removed
 	if (!gUseDefaultFonts)
 		SendMessage(mEditWindow, WM_SETFONT, (WPARAM) mDialogFont, 0);
 	SetFocus(mEditWindow);
@@ -1070,7 +1079,7 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	GetVersionEx(&aVersionInfo);
 
 	// Setting fonts on 98 causes weirdo crash things in GDI upon the second crash.
-	//  That's no good.	
+	//  That's no good. 
 	gUseDefaultFonts = aVersionInfo.dwPlatformId != VER_PLATFORM_WIN32_NT;
 
 	int aHeight = -MulDiv(8, 96, 72);
@@ -1081,12 +1090,12 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	aHeight = -MulDiv(10, 96, 72);
 	mBoldFont = ::CreateFontA(aHeight, 0, 0, 0, FW_BOLD, FALSE, FALSE,
 			false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-			DEFAULT_PITCH | FF_DONTCARE, "Tahoma");	
+			DEFAULT_PITCH | FF_DONTCARE, "Tahoma"); 
 
 	::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 
 	mErrorTitle = theErrorTitle;
-	mErrorText = theErrorText;	
+	mErrorText = theErrorText;  
 
 
 	WNDCLASSA wc;
@@ -1099,7 +1108,7 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	wc.hInstance = gHInstance;
 	wc.lpfnWndProc = SEHWindowProc;
 	wc.lpszClassName = "SEHWindow";
-	wc.lpszMenuName = NULL;	
+	wc.lpszMenuName = NULL; 
 	RegisterClassA(&wc);
 
 	RECT aRect;
@@ -1111,6 +1120,7 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	BOOL worked = AdjustWindowRect(&aRect, aWindowStyle, FALSE);
+	(void)worked; // unused, naughty naughty
 
 	HWND aHWnd = CreateWindowW(L"SEHWindow", L"Fatal Error!",
 		aWindowStyle,
@@ -1133,13 +1143,13 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 		gHInstance,
 		0);
 	
-	int aFontHeight = -MulDiv(9, 96, 72);	
+	int aFontHeight = -MulDiv(9, 96, 72);   
 	HFONT aBoldArialFont = CreateFontA(aFontHeight, 0, 0, 0, FW_BOLD, 0, 0,
 			false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_DONTCARE, "Arial");
 
 	if (!gUseDefaultFonts)
-		SendMessage(aLabelWindow, WM_SETFONT, (WPARAM) aBoldArialFont, 0);		
+		SendMessage(aLabelWindow, WM_SETFONT, (WPARAM) aBoldArialFont, 0);      
 
 	HWND anEditWindow = CreateWindowA("EDIT", theErrorText.c_str(), 
 		WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | WS_VSCROLL | ES_READONLY, 
@@ -1149,9 +1159,9 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 		aHWnd,
 		NULL,
 		gHInstance,
-		0);	
+		0); 
 	
-	aFontHeight = -MulDiv(8, 96, 72);	
+	aFontHeight = -MulDiv(8, 96, 72);   
 	HFONT aCourierNewFont = CreateFontA(aFontHeight, 0, 0, 0, FW_NORMAL, 0, 0,
 			false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_DONTCARE, "Courier New");
@@ -1169,10 +1179,10 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	bool doDebugButton = false;
 #endif
 
-	bool canSubmit = mAllowSubmit && !mSubmitHost.empty();	
+	bool canSubmit = mAllowSubmit && !mSubmitHost.empty();  
 	int aNumButtons = 1 + (doDebugButton ? 1 : 0) + (canSubmit ? 1 : 0);
 	
-	int aButtonWidth = (400 - 8 - 8 - (aNumButtons - 1)*8) / aNumButtons;		
+	int aButtonWidth = (400 - 8 - 8 - (aNumButtons - 1)*8) / aNumButtons;       
 		
 	int aCurX = 8;
 
@@ -1190,7 +1200,7 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 		if (!gUseDefaultFonts)
 			SendMessage(mYesButtonWindow, WM_SETFONT, (WPARAM) aBoldArialFont, 0);
 
-		aCurX += aButtonWidth + 8;	
+		aCurX += aButtonWidth + 8;  
 	}
 
 	if (doDebugButton)
@@ -1203,9 +1213,9 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 			aHWnd,
 			NULL,
 			gHInstance,
-			0);		
+			0);     
 		if (!gUseDefaultFonts)
-			SendMessage(mDebugButtonWindow, WM_SETFONT, (WPARAM) aBoldArialFont, 0);		
+			SendMessage(mDebugButtonWindow, WM_SETFONT, (WPARAM) aBoldArialFont, 0);        
 
 		aCurX += aButtonWidth + 8;
 	}
@@ -1230,7 +1240,7 @@ void SEHCatcher::ShowErrorDialog(const std::string& theErrorTitle, const std::st
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-	}	
+	}   
 
 	DestroyWindow(aHWnd);
 
@@ -1255,12 +1265,12 @@ std::string SEHCatcher::GetSysInfo()
 		aDebugDump += "9x ";
 
 	char aVersionStr[20];
-	sprintf(aVersionStr, "%d.%d", aVersionInfo.dwMajorVersion, aVersionInfo.dwMinorVersion);
+	sprintf(aVersionStr, "%ld.%ld", aVersionInfo.dwMajorVersion, aVersionInfo.dwMinorVersion);
 	aDebugDump += aVersionStr;
 	aDebugDump += " ";
 	aDebugDump += aVersionInfo.szCSDVersion;
 	aDebugDump += " ";
-	sprintf(aVersionStr, "%d", aVersionInfo.dwBuildNumber);
+	sprintf(aVersionStr, "%ld", aVersionInfo.dwBuildNumber);
 	aDebugDump += "Build ";
 	aDebugDump += aVersionStr;
 	aDebugDump += "\r\n";
@@ -1273,7 +1283,7 @@ std::string SEHCatcher::GetSysInfo()
 		aMod = LoadLibraryA("ddraw.dll");
 		if (aMod != NULL)
 		{
-			GetModuleFileNameA(aMod, aPath, 256);			
+			GetModuleFileNameA(aMod, aPath, 256);           
 			aDebugDump += "DDraw Ver: " + mApp->GetProductVersion(aPath) + "\r\n";
 			FreeLibrary(aMod);
 		}
@@ -1281,12 +1291,12 @@ std::string SEHCatcher::GetSysInfo()
 		aMod = LoadLibraryA("dsound.dll");
 		if (aMod != NULL)
 		{
-			GetModuleFileNameA(aMod, aPath, 256);			
+			GetModuleFileNameA(aMod, aPath, 256);           
 			aDebugDump += "DSound Ver: " + mApp->GetProductVersion(aPath) + "\r\n";
 			FreeLibrary(aMod);
 		}
-	}	
+	}   
 
 	return aDebugDump;
-}	
+}   
 

@@ -1252,7 +1252,7 @@ void LawnApp::Init()
 	//	gSexyCache->Disconnect();
 	//}
 
-	mSessionID = _time32(nullptr);
+	mSessionID = _time64(nullptr);
 	mPlayTimeActiveSession = 0;
 	mPlayTimeInactiveSession = 0;
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
@@ -1720,7 +1720,7 @@ void LawnApp::LoadGroup(const char* theGroupName, int theGroupAveMsToLoad)
 	}
 
 	int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
-	int aGroupTime = max(aTimer.GetDuration(), 0);
+	int aGroupTime = max(aTimer.GetDuration(), 0.0);
 	TraceLoadGroup(theGroupName, aGroupTime, aTotalGroupWeight, theGroupAveMsToLoad);
 }
 
@@ -1763,7 +1763,8 @@ void LawnApp::LoadingThreadProc()
 	TodTrace("loading '%s' %d ms", "resources", (int)aTimer.GetDuration());
 
 	mMusic->MusicInit();
-	int aDuration = max(aTimer.GetDuration(), 0);
+	// aDuration goes unused
+	//int aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	mPoolEffect = new PoolEffect();
@@ -1782,14 +1783,14 @@ void LawnApp::LoadingThreadProc()
 	TodHesitationTrace("trail");
 	
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray));
-	aDuration = max(aTimer.GetDuration(), 0);
+	//aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	PreloadForUser();
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
 
-	aDuration = max(aTimer.GetDuration(), 0);
+	//aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	GetNumPreloadingTasks();
@@ -1918,7 +1919,7 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
-			SendMessage(mHWnd, WM_CLOSE, NULL, NULL);
+			SendMessage(mHWnd, WM_CLOSE, 0, 0);
 			return;
 
 		case Dialogs::DIALOG_NAG:
@@ -2380,7 +2381,7 @@ int LawnApp::GetSeedsAvailable()
 	}
 
 	SeedType aSeedTypeMax = GetAwardSeedForLevel(aLevel);
-	return min(49, aSeedTypeMax);
+	return min(NUM_SEEDS_IN_CHOOSER, aSeedTypeMax);
 }
 
 //0x453B20

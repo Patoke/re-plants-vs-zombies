@@ -12,5 +12,5 @@
 #include "ButtonWidget.cpp"
 #include "Dialog.cpp"
 #include "DialogButton.cpp"
-#include "FlashWidget.cpp"
+//#include "FlashWidget.cpp"
 #include "WidgetContainer.cpp"

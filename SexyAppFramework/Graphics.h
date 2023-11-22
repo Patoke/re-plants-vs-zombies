@@ -10,7 +10,7 @@
 namespace Sexy
 {
 
-class Font;
+class _Font;
 class SexyMatrix3;
 class Transform;
 
@@ -39,7 +39,7 @@ public:
 	float					mScaleOrigY;
 	Rect					mClipRect;
 	Color					mColor;
-	Font*					mFont;
+	_Font*					mFont;
 	int						mDrawMode;
 	bool					mColorizeImages;
 	bool					mFastStretch;
@@ -87,8 +87,8 @@ public:
 
 	Graphics*				Create();
 	
-	void					SetFont(Font* theFont);
-	Font*					GetFont();
+	void					SetFont(_Font* theFont);
+	_Font*					GetFont();
 
 	void					SetColor(const Color& theColor);
 	const Color&			GetColor();

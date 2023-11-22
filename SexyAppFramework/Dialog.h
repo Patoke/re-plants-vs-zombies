@@ -10,7 +10,7 @@ namespace Sexy
 class DialogListener;
 class ButtonWidget;
 class DialogButton;
-class Font;
+class _Font;
 
 extern SexyString DIALOG_YES_STRING;
 extern SexyString DIALOG_NO_STRING;
@@ -62,8 +62,8 @@ public:
 	SexyString				mDialogLines;
 
 	int						mButtonMode;
-	Font*					mHeaderFont;
-	Font*					mLinesFont;	
+	_Font*					mHeaderFont;
+	_Font*					mLinesFont;	
 	int						mTextAlign;
 	int						mLineSpacingOffset;
 	int						mButtonHeight;
@@ -90,9 +90,9 @@ public:
 
 	virtual ~Dialog();
 
-	virtual void			SetButtonFont(Font* theFont);
-	virtual void			SetHeaderFont(Font* theFont);
-	virtual void			SetLinesFont(Font* theFont);
+	virtual void			SetButtonFont(_Font* theFont);
+	virtual void			SetHeaderFont(_Font* theFont);
+	virtual void			SetLinesFont(_Font* theFont);
 
 	virtual void			SetColor(int theIdx, const Color& theColor);
 	virtual int				GetPreferredHeight(int theWidth);

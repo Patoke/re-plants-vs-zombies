@@ -324,42 +324,42 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	TOD_ASSERT(mEmitterDef->mParticleFieldCount <= MAX_PARTICLE_FIELDS);
 	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)
 	{
-		aParticle->mParticleFieldInterp[i][0] = Sexy::Rand(1.0f);  // ³õÊ¼»¯Ã¿¸öÁ£×Ó³¡µÄºáÏò²åÖµ
-		aParticle->mParticleFieldInterp[i][1] = Sexy::Rand(1.0f);  // ³õÊ¼»¯Ã¿¸öÁ£×Ó³¡µÄ×İÏò²åÖµ
+		aParticle->mParticleFieldInterp[i][0] = Sexy::Rand(1.0f);  // åˆå§‹åŒ–æ¯ä¸ªç²’å­åœºçš„æ¨ªå‘æ’å€¼
+		aParticle->mParticleFieldInterp[i][1] = Sexy::Rand(1.0f);  // åˆå§‹åŒ–æ¯ä¸ªç²’å­åœºçš„çºµå‘æ’å€¼
 	}
 	for (int i = 0; i < (int)ParticleTracks::NUM_PARTICLE_TRACKS; i++)
-		aParticle->mParticleInterp[i] = Sexy::Rand(1.0f);  // ³õÊ¼»¯Ã¿ÌõÍ¨µÀµÄ²åÖµ
+		aParticle->mParticleInterp[i] = Sexy::Rand(1.0f);  // åˆå§‹åŒ–æ¯æ¡é€šé“çš„æ’å€¼
 
 	float aParticleDurationInterp = Sexy::Rand(1.0f);
 	float aLaunchSpeedInterp = Sexy::Rand(1.0f);
 	float aEmitterOffsetXInterp = Sexy::Rand(1.0f);
 	float aEmitterOffsetYInterp = Sexy::Rand(1.0f);
 	aParticle->mParticleDuration = FloatTrackEvaluate(mEmitterDef->mParticleDuration, mSystemTimeValue, aParticleDurationInterp);
-	aParticle->mParticleDuration = max(1, aParticle->mParticleDuration);  // ³õÊ¼»¯Á£×Ó³ÖĞøÊ±¼ä£¨ÖÁÉÙÎª 1£©
+	aParticle->mParticleDuration = max(1, aParticle->mParticleDuration);  // åˆå§‹åŒ–ç²’å­æŒç»­æ—¶é—´ï¼ˆè‡³å°‘ä¸º 1ï¼‰
 	aParticle->mParticleAge = 0;
 	aParticle->mParticleEmitter = this;
 	aParticle->mParticleTimeValue = -1.0f;
 	aParticle->mParticleLastTimeValue = -1.0f;
 	if (TestBit(mEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_RANDOM_START_TIME))
-		aParticle->mParticleAge = Sexy::Rand(aParticle->mParticleDuration);  // ¶ÔÓÚ¡°Ëæ»ú³õÊ¼Ê±¼ä¡±µÄÁ£×Ó
+		aParticle->mParticleAge = Sexy::Rand(aParticle->mParticleDuration);  // å¯¹äºâ€œéšæœºåˆå§‹æ—¶é—´â€çš„ç²’å­
 	float aLaunchSpeed = FloatTrackEvaluate(mEmitterDef->mLaunchSpeed, mSystemTimeValue, aLaunchSpeedInterp) * 0.01f;
 	float aLaunchAngleInterp = Sexy::Rand(1.0f);
 
 	float aLaunchAngle;
 	if (mEmitterDef->mEmitterType == EmitterType::EMITTER_CIRCLE_PATH)
 	{
-		// ·¢Éä½Ç¶È = ¸ù¾İÂ·¾¶¶¨Òå¼ÆËãµÄÔ²ÖÜÉÏµÄ»ù´¡½Ç¶È + ¸ù¾İ·¢Éä½Ç¶È¶¨Òå¼ÆËãµÄ¶îÍâÆ«ÒÆµÄ½Ç¶È
+		// å‘å°„è§’åº¦ = æ ¹æ®è·¯å¾„å®šä¹‰è®¡ç®—çš„åœ†å‘¨ä¸Šçš„åŸºç¡€è§’åº¦ + æ ¹æ®å‘å°„è§’åº¦å®šä¹‰è®¡ç®—çš„é¢å¤–åç§»çš„è§’åº¦
 		aLaunchAngle = FloatTrackEvaluate(mEmitterDef->mEmitterPath, mSystemTimeValue, mTrackInterp[ParticleSystemTracks::TRACK_EMITTER_PATH]) * 2 * PI;
 		aLaunchAngle += DEG_TO_RAD(FloatTrackEvaluate(mEmitterDef->mLaunchAngle, mSystemTimeValue, aLaunchAngleInterp));
 	}
 	else if (mEmitterDef->mEmitterType == EmitterType::EMITTER_CIRCLE_EVEN_SPACING)
-		// »ù´¡·¢Éä½Ç¶ÈÒªÊ¹ theSpawnCount ¸öÁ£×ÓÆ½¾ù²¼ÂúÔ²ÖÜ
+		// åŸºç¡€å‘å°„è§’åº¦è¦ä½¿ theSpawnCount ä¸ªç²’å­å¹³å‡å¸ƒæ»¡åœ†å‘¨
 		aLaunchAngle = 2 * PI * theIndex / theSpawnCount + DEG_TO_RAD(FloatTrackEvaluate(mEmitterDef->mLaunchAngle, mSystemTimeValue, aLaunchAngleInterp));
 	else if (FloatTrackIsConstantZero(mEmitterDef->mLaunchAngle))
-		// Î´¶¨ÒåµÄ¹ìµÀ£¬·¢Éä½Ç¶ÈÖ±½ÓÈ¡ [0, 2¦Ğ] µÄËæ»úÖµ
+		// æœªå®šä¹‰çš„è½¨é“ï¼Œå‘å°„è§’åº¦ç›´æ¥å– [0, 2Ï€] çš„éšæœºå€¼
 		aLaunchAngle = Sexy::Rand((float)(2 * PI));
 	else
-		// ÆäËûÇé¿öÏÂ£¬¸ù¾İ·¢Éä½Ç¶ÈµÄ¶¨ÒåÖµ¼ÆËã
+		// å…¶ä»–æƒ…å†µä¸‹ï¼Œæ ¹æ®å‘å°„è§’åº¦çš„å®šä¹‰å€¼è®¡ç®—
 		aLaunchAngle = DEG_TO_RAD(FloatTrackEvaluate(mEmitterDef->mLaunchAngle, mSystemTimeValue, aLaunchAngleInterp));
 
 	float aPosX, aPosY;
@@ -371,7 +371,7 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	{
 		float aEmitterRadiusInterp = Sexy::Rand(1.0f);
 		float aRadius = FloatTrackEvaluate(mEmitterDef->mEmitterRadius, mSystemTimeValue, aEmitterRadiusInterp);
-		// ¡ï ÒÔÊúÖ±ÏòÏÂµÄ·½ÏòÎª 0 ½Ç¶È
+		// â˜… ä»¥ç«–ç›´å‘ä¸‹çš„æ–¹å‘ä¸º 0 è§’åº¦
 		aPosX = sin(aLaunchAngle) * aRadius;
 		aPosY = cos(aLaunchAngle) * aRadius;
 		break;
@@ -391,29 +391,29 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 		float aMaxX = FloatTrackEvaluate(mEmitterDef->mEmitterBoxX, mSystemTimeValue, 1.0f);
 		float aMinY = FloatTrackEvaluate(mEmitterDef->mEmitterBoxY, mSystemTimeValue, 0.0f);
 		float aMaxY = FloatTrackEvaluate(mEmitterDef->mEmitterBoxY, mSystemTimeValue, 1.0f);
-		float aDistanceX = aMaxX - aMinX;  // Â·¾¶¾ØĞÎµÄºáÏò¿í¶È
-		float aDistanceY = aMaxY - aMinY;  // Â·¾¶¾ØĞÎµÄ×İÏò¸ß¶È
-		float aPathPos = aEmitterPathPosition * (aDistanceY + aDistanceX + aDistanceY + aDistanceX);  // ·¢ÉäµãÎ»ÓÚ¾ØĞÎ±ßÉÏµÄÎ»ÖÃ
-		// ¡ï ×¢ÊÍ¹æ¶¨£ºÒÔ¾ØĞÎ×óÉÏµÄ¶¥µã¿ªÊ¼£¬°´ÄæÊ±Õë·½ÏòÒÀ´Î½«¾ØĞÎµÄËÄ¸ö¶¥µã±ê¼ÇÎª A¡¢B¡¢C¡¢D£¬²¢±ê¼Ç·¢ÉäµãÎª P
-		// ¡ï           Èç´Ë£¬aPathPos ¼´Îª P µãÓë A µãÔÚ¾ØĞÎÂ·¾¶ÉÏµÄ¾àÀë¡£×¢Òâ£¬ÓÎÏ·ÖĞÈ¡ºáÏòË®Æ½ÏòÓÒºÍ×İÏòÊúÖ±ÏòÏÂÎªÕı·½Ïò¡£
-		if (aPathPos < aDistanceY)  // ·¢ÉäµãÂäÔÚ¾ØĞÎ AB ±ß£¨×ó±ß£©ÉÏ
+		float aDistanceX = aMaxX - aMinX;  // è·¯å¾„çŸ©å½¢çš„æ¨ªå‘å®½åº¦
+		float aDistanceY = aMaxY - aMinY;  // è·¯å¾„çŸ©å½¢çš„çºµå‘é«˜åº¦
+		float aPathPos = aEmitterPathPosition * (aDistanceY + aDistanceX + aDistanceY + aDistanceX);  // å‘å°„ç‚¹ä½äºçŸ©å½¢è¾¹ä¸Šçš„ä½ç½®
+		// â˜… æ³¨é‡Šè§„å®šï¼šä»¥çŸ©å½¢å·¦ä¸Šçš„é¡¶ç‚¹å¼€å§‹ï¼ŒæŒ‰é€†æ—¶é’ˆæ–¹å‘ä¾æ¬¡å°†çŸ©å½¢çš„å››ä¸ªé¡¶ç‚¹æ ‡è®°ä¸º Aã€Bã€Cã€Dï¼Œå¹¶æ ‡è®°å‘å°„ç‚¹ä¸º P
+		// â˜…           å¦‚æ­¤ï¼ŒaPathPos å³ä¸º P ç‚¹ä¸ A ç‚¹åœ¨çŸ©å½¢è·¯å¾„ä¸Šçš„è·ç¦»ã€‚æ³¨æ„ï¼Œæ¸¸æˆä¸­å–æ¨ªå‘æ°´å¹³å‘å³å’Œçºµå‘ç«–ç›´å‘ä¸‹ä¸ºæ­£æ–¹å‘ã€‚
+		if (aPathPos < aDistanceY)  // å‘å°„ç‚¹è½åœ¨çŸ©å½¢ AB è¾¹ï¼ˆå·¦è¾¹ï¼‰ä¸Š
 		{
-			aPosX = aMinX;  // ºá×ø±ê = ¾ØĞÎ×ó¶Ëºá×ø±ê
-			aPosY = aMinY + aPathPos;  // ×İ×ø±ê = ¾ØĞÎµ×¶Ë×ø±ê + |PA|
+			aPosX = aMinX;  // æ¨ªåæ ‡ = çŸ©å½¢å·¦ç«¯æ¨ªåæ ‡
+			aPosY = aMinY + aPathPos;  // çºµåæ ‡ = çŸ©å½¢åº•ç«¯åæ ‡ + |PA|
 		}
-		else if (aPathPos < aDistanceY + aDistanceX)  // ·¢ÉäµãÂäÔÚ¾ØĞÎ BC ±ß£¨¶¥±ß£©ÉÏ
+		else if (aPathPos < aDistanceY + aDistanceX)  // å‘å°„ç‚¹è½åœ¨çŸ©å½¢ BC è¾¹ï¼ˆé¡¶è¾¹ï¼‰ä¸Š
 		{
-			aPosX = aMinX + (aPathPos - aDistanceY);  // ºá×ø±ê = ¾ØĞÎ×ó¶Ëºá×ø±ê + |PB|
+			aPosX = aMinX + (aPathPos - aDistanceY);  // æ¨ªåæ ‡ = çŸ©å½¢å·¦ç«¯æ¨ªåæ ‡ + |PB|
 			aPosY = aMaxY;
 		}
-		else if (aPathPos < aDistanceY + aDistanceX + aDistanceY)  // ·¢ÉäµãÂäÔÚ¾ØĞÎ CD ±ß£¨ÓÒ±ß£©ÉÏ
+		else if (aPathPos < aDistanceY + aDistanceX + aDistanceY)  // å‘å°„ç‚¹è½åœ¨çŸ©å½¢ CD è¾¹ï¼ˆå³è¾¹ï¼‰ä¸Š
 		{
 			aPosX = aMaxX;
-			aPosY = aMaxY - (aPathPos - aDistanceY - aDistanceX);  // ×İ×ø±ê = ¾ØĞÎ¶¥¶Ë×İ×ø±ê - |PC|
+			aPosY = aMaxY - (aPathPos - aDistanceY - aDistanceX);  // çºµåæ ‡ = çŸ©å½¢é¡¶ç«¯çºµåæ ‡ - |PC|
 		}
-		else  // ·¢ÉäµãÂäÔÚ¾ØĞÎ AD ±ß£¨µ×±ß£©ÉÏ
+		else  // å‘å°„ç‚¹è½åœ¨çŸ©å½¢ AD è¾¹ï¼ˆåº•è¾¹ï¼‰ä¸Š
 		{
-			aPosX = aMaxX - (aPathPos - aDistanceY - aDistanceX - aDistanceY);  // ºá×ø±ê = ¾ØĞÎÓÒ¶Ëºá×ø±ê - |PD|
+			aPosX = aMaxX - (aPathPos - aDistanceY - aDistanceX - aDistanceY);  // æ¨ªåæ ‡ = çŸ©å½¢å³ç«¯æ¨ªåæ ‡ - |PD|
 			aPosY = aMinY;
 		}
 		break;
@@ -426,25 +426,25 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	float aEmitterSkewYInterp = Sexy::Rand(1.0f);
 	float aSkewX = FloatTrackEvaluate(mEmitterDef->mEmitterSkewX, mSystemTimeValue, aEmitterSkewXInterp);
 	float aSkewY = FloatTrackEvaluate(mEmitterDef->mEmitterSkewY, mSystemTimeValue, aEmitterSkewYInterp);
-	aParticle->mPosition.x = mSystemCenter.x + aPosX + aPosY * aSkewX;  // ºáÏò£¨×óÓÒ£©ÇãĞ±µÄ·ù¶ÈÊÜ×İ×ø±êÓ°Ïì
-	aParticle->mPosition.y = mSystemCenter.y + aPosY + aPosX * aSkewY;  // ×İÏò£¨ÉÏÏÂ£©ÇãĞ±µÄ·ù¶ÈÊÜºá×ø±êÓ°Ïì
+	aParticle->mPosition.x = mSystemCenter.x + aPosX + aPosY * aSkewX;  // æ¨ªå‘ï¼ˆå·¦å³ï¼‰å€¾æ–œçš„å¹…åº¦å—çºµåæ ‡å½±å“
+	aParticle->mPosition.y = mSystemCenter.y + aPosY + aPosX * aSkewY;  // çºµå‘ï¼ˆä¸Šä¸‹ï¼‰å€¾æ–œçš„å¹…åº¦å—æ¨ªåæ ‡å½±å“
 	aParticle->mVelocity.x = sin(aLaunchAngle) * aLaunchSpeed;
 	aParticle->mVelocity.y = cos(aLaunchAngle) * aLaunchSpeed;
-	aParticle->mPosition.x += FloatTrackEvaluate(mEmitterDef->mEmitterOffsetX, mSystemTimeValue, aEmitterOffsetXInterp);  // ºá×ø±ê¼ÓÉÏºáÏòÆ«ÒÆÖµ
-	aParticle->mPosition.y += FloatTrackEvaluate(mEmitterDef->mEmitterOffsetY, mSystemTimeValue, aEmitterOffsetYInterp);  // ×İ×ø±ê¼ÓÉÏ×İÏòÆ«ÒÆÖµ
+	aParticle->mPosition.x += FloatTrackEvaluate(mEmitterDef->mEmitterOffsetX, mSystemTimeValue, aEmitterOffsetXInterp);  // æ¨ªåæ ‡åŠ ä¸Šæ¨ªå‘åç§»å€¼
+	aParticle->mPosition.y += FloatTrackEvaluate(mEmitterDef->mEmitterOffsetY, mSystemTimeValue, aEmitterOffsetYInterp);  // çºµåæ ‡åŠ ä¸Šçºµå‘åç§»å€¼
 	
 	aParticle->mAnimationTimeValue = 0.0f;
 	if (mEmitterDef->mAnimated || FloatTrackIsSet(mEmitterDef->mAnimationRate))
-		aParticle->mImageFrame = 0;  // Èç¹û¶¨ÒåÁËÁ£×Ó¶¯Ì¬»ò¶¯»­ËÙÂÊ£¬ÔòÁ£×ÓµÄµ±Ç°Ö¡½«ÔÚºóĞø¸ù¾İÁ£×ÓÊ±¼äÖµ»ò¶¯»­Ñ­»·ÂÊÊµÊ±¼ÆËã£¬´Ë´¦ÏÈ³õÊ¼»¯Îª 0
+		aParticle->mImageFrame = 0;  // å¦‚æœå®šä¹‰äº†ç²’å­åŠ¨æ€æˆ–åŠ¨ç”»é€Ÿç‡ï¼Œåˆ™ç²’å­çš„å½“å‰å¸§å°†åœ¨åç»­æ ¹æ®ç²’å­æ—¶é—´å€¼æˆ–åŠ¨ç”»å¾ªç¯ç‡å®æ—¶è®¡ç®—ï¼Œæ­¤å¤„å…ˆåˆå§‹åŒ–ä¸º 0
 	else
-		aParticle->mImageFrame = Sexy::Rand(mEmitterDef->mImageFrames);  // ¶ÔÓÚÖ¡¹Ì¶¨µÄÁ£×Ó£¬ÔÚÌùÍ¼µÄËùÓĞÖ¡ÖĞËæ»úÈ¡µÃÒ»Ö¡£¬ºóĞøÒ»°ã²»ÔÙ±ä»¯
+		aParticle->mImageFrame = Sexy::Rand(mEmitterDef->mImageFrames);  // å¯¹äºå¸§å›ºå®šçš„ç²’å­ï¼Œåœ¨è´´å›¾çš„æ‰€æœ‰å¸§ä¸­éšæœºå–å¾—ä¸€å¸§ï¼Œåç»­ä¸€èˆ¬ä¸å†å˜åŒ–
 
 	if (TestBit(mEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_RANDOM_LAUNCH_SPIN))
-		aParticle->mSpinPosition = Sexy::Rand((float)(2 * PI));  // ÔÚ [0, 2¦Ğ] Ö®¼äËæ»úÈ¡µÃÒ»¸ö³õÊ¼Ğı×ª½Ç¶È
+		aParticle->mSpinPosition = Sexy::Rand((float)(2 * PI));  // åœ¨ [0, 2Ï€] ä¹‹é—´éšæœºå–å¾—ä¸€ä¸ªåˆå§‹æ—‹è½¬è§’åº¦
 	else if (TestBit(mEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ALIGN_LAUNCH_SPIN))
-		aParticle->mSpinPosition = aLaunchAngle;  // Á£×ÓĞı×ª½Ç¶È¶ÔÆë·¢Éä½Ç¶È
+		aParticle->mSpinPosition = aLaunchAngle;  // ç²’å­æ—‹è½¬è§’åº¦å¯¹é½å‘å°„è§’åº¦
 	else
-		aParticle->mSpinPosition = 0.0f;  // Ä¬ÈÏÎŞ³õÊ¼Ğı×ª
+		aParticle->mSpinPosition = 0.0f;  // é»˜è®¤æ— åˆå§‹æ—‹è½¬
 	aParticle->mSpinVelocity = 0.0f;
 	aParticle->mCrossFadeDuration = 0;
 	aParticle->mCrossFadeParticleID = ParticleID::PARTICLEID_NULL;
@@ -474,32 +474,32 @@ void TodParticleEmitter::UpdateParticleField(TodParticle* theParticle, ParticleF
 	{
 	case ParticleFieldType::FIELD_INVALID:
 		break;
-	case ParticleFieldType::FIELD_FRICTION:  // Ä¦²ÁÁ¦³¡
+	case ParticleFieldType::FIELD_FRICTION:  // æ‘©æ“¦åŠ›åœº
 		theParticle->mVelocity.x *= 1 - x;
 		theParticle->mVelocity.y *= 1 - y;
 		break;
-	case ParticleFieldType::FIELD_ACCELERATION:  // ¼ÓËÙ¶È³¡
+	case ParticleFieldType::FIELD_ACCELERATION:  // åŠ é€Ÿåº¦åœº
 		theParticle->mVelocity.x += 0.01f * x;
 		theParticle->mVelocity.y += 0.01f * y;
 		break;
-	case ParticleFieldType::FIELD_ATTRACTOR:  // µ¯ĞÔÁ¦³¡
+	case ParticleFieldType::FIELD_ATTRACTOR:  // å¼¹æ€§åŠ›åœº
 	{
 		float aDiffX = x - (theParticle->mPosition.x - mSystemCenter.x);
 		float aDiffY = y - (theParticle->mPosition.y - mSystemCenter.y);
-		// ¼ÓËÙ¶ÈµÄ·½ÏòÊ¼ÖÕ´ÓÁ£×ÓËùÔÚÎ»ÖÃÖ¸Ïò¡°±ê×¼Î»ÖÃ¡±
+		// åŠ é€Ÿåº¦çš„æ–¹å‘å§‹ç»ˆä»ç²’å­æ‰€åœ¨ä½ç½®æŒ‡å‘â€œæ ‡å‡†ä½ç½®â€
 		theParticle->mVelocity.x += 0.01f * aDiffX;
 		theParticle->mVelocity.y += 0.01f * aDiffY;
 		break;
 	}
-	case ParticleFieldType::FIELD_MAX_VELOCITY:  // ÏŞËÙ³¡
+	case ParticleFieldType::FIELD_MAX_VELOCITY:  // é™é€Ÿåœº
 		theParticle->mVelocity.x = ClampFloat(theParticle->mVelocity.x, -x, x);
 		theParticle->mVelocity.y = ClampFloat(theParticle->mVelocity.y, -y, y);
 		break;
-	case ParticleFieldType::FIELD_VELOCITY:  // ÔÈËÙ³¡
+	case ParticleFieldType::FIELD_VELOCITY:  // åŒ€é€Ÿåœº
 		theParticle->mPosition.x += 0.01 * x;
 		theParticle->mPosition.y += 0.01 * y;
 		break;
-	case ParticleFieldType::FIELD_POSITION:  // ¶¨Î»³¡
+	case ParticleFieldType::FIELD_POSITION:  // å®šä½åœº
 	{
 		float aLastX = FloatTrackEvaluateFromLastTime(theParticleField->mX, theParticle->mParticleLastTimeValue, aInterpX);
 		float aLastY = FloatTrackEvaluateFromLastTime(theParticleField->mY, theParticle->mParticleLastTimeValue, aInterpY);
@@ -508,9 +508,9 @@ void TodParticleEmitter::UpdateParticleField(TodParticle* theParticle, ParticleF
 		break;
 	}
 	case ParticleFieldType::FIELD_GROUND_CONSTRAINT:
-		if (theParticle->mPosition.y > mSystemCenter.y + y)  // ÅĞ¶ÏÊÇ·ñ´¥¼°µØÃæ
+		if (theParticle->mPosition.y > mSystemCenter.y + y)  // åˆ¤æ–­æ˜¯å¦è§¦åŠåœ°é¢
 		{
-			theParticle->mPosition.y = mSystemCenter.y + y;  // ½«×ø±êÖØÖÃÖÁµØÃæ
+			theParticle->mPosition.y = mSystemCenter.y + y;  // å°†åæ ‡é‡ç½®è‡³åœ°é¢
 			float aCollisionReflect = FloatTrackEvaluate(
 				mEmitterDef->mCollisionReflect, theParticleTimeValue, theParticle->mParticleInterp[ParticleTracks::TRACK_PARTICLE_COLLISION_REFLECT]
 			);
@@ -522,36 +522,36 @@ void TodParticleEmitter::UpdateParticleField(TodParticle* theParticle, ParticleF
 			theParticle->mVelocity.y *= -aCollisionReflect;
 		}
 		break;
-	case ParticleFieldType::FIELD_SHAKE:  // Õğ¶¯
+	case ParticleFieldType::FIELD_SHAKE:  // éœ‡åŠ¨
 	{
 		float aLastX = FloatTrackEvaluateFromLastTime(theParticleField->mX, theParticle->mParticleLastTimeValue, aInterpX);
 		float aLastY = FloatTrackEvaluateFromLastTime(theParticleField->mY, theParticle->mParticleLastTimeValue, aInterpY);
-		// ÏÈ»Ö¸´ÉÏÒ»´ÎÕğ¶¯Ğ§¹ûµÄÓ°Ïì
+		// å…ˆæ¢å¤ä¸Šä¸€æ¬¡éœ‡åŠ¨æ•ˆæœçš„å½±å“
 		int aLastRandSeed = theParticle->mParticleAge - 1;
 		if (aLastRandSeed == -1)
 			aLastRandSeed = theParticle->mParticleDuration - 1;
 		srand(aLastRandSeed * (int)theParticle);
 		theParticle->mPosition.x -= aLastX * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y -= aLastY * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
-		// ÔÙËæ»úÈ¡µÃµ±Ç°Ö¡µÄÕğ¶¯Ğ§¹û
+		// å†éšæœºå–å¾—å½“å‰å¸§çš„éœ‡åŠ¨æ•ˆæœ
 		srand(theParticle->mParticleAge * (int)theParticle);
 		theParticle->mPosition.x += x * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y += y * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		break;
 	}
-	case ParticleFieldType::FIELD_CIRCLE:  // Ô²ÖÜ
+	case ParticleFieldType::FIELD_CIRCLE:  // åœ†å‘¨
 	{
 		SexyVector2 aToCenter = theParticle->mPosition - mSystemCenter;
-		SexyVector2 aMotion = aToCenter.Perp().Normalize();  // ±ê×¼»¯µÄ·¨ÏòÁ¿
+		SexyVector2 aMotion = aToCenter.Perp().Normalize();  // æ ‡å‡†åŒ–çš„æ³•å‘é‡
 		float aRadius = aToCenter.Magnitude();
 		aMotion *= 0.01 * (x + aRadius * y);
 		theParticle->mPosition += aMotion;
 		break;
 	}
-	case ParticleFieldType::FIELD_AWAY:  // Ô¶Àë
+	case ParticleFieldType::FIELD_AWAY:  // è¿œç¦»
 	{
 		SexyVector2 aToCenter = theParticle->mPosition - mSystemCenter;
-		SexyVector2 aMotion = aToCenter.Normalize();  // ±ê×¼»¯µÄ·½ÏòÏòÁ¿
+		SexyVector2 aMotion = aToCenter.Normalize();  // æ ‡å‡†åŒ–çš„æ–¹å‘å‘é‡
 		float aRadius = aToCenter.Magnitude();
 		aMotion *= 0.01 * (x + aRadius * y);
 		theParticle->mPosition += aMotion;
@@ -618,33 +618,33 @@ bool TodParticleEmitter::CrossFadeParticleToName(TodParticle* theParticle, const
 //0x516F00
 bool TodParticleEmitter::UpdateParticle(TodParticle* theParticle)
 {
-	if (theParticle->mParticleAge >= theParticle->mParticleDuration)  // Á£×ÓµÄÉúÃüÖÜÆÚ½áÊøÊ±
+	if (theParticle->mParticleAge >= theParticle->mParticleDuration)  // ç²’å­çš„ç”Ÿå‘½å‘¨æœŸç»“æŸæ—¶
 	{
-		if (TestBit(mEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_PARTICLE_LOOPS))  // ÅĞ¶ÏÁ£×ÓÊÇ·ñÑ­»·
-			theParticle->mParticleAge = 0;  // ÖØÖÃÁ£×Óµ±Ç°Ö¡
-		else if (theParticle->mCrossFadeDuration > 0)  // ÅĞ¶ÏÁ£×ÓÊÇ·ñ´¦ÓÚ½»²æ»ìºÏ¹ı³ÌÖĞ
-			theParticle->mParticleAge = theParticle->mParticleDuration - 1;  // ½«Á£×ÓÖÍÁôÔÚ×îºóÒ»Ö¡
-		else if (*mEmitterDef->mOnDuration == '\0' || !CrossFadeParticleToName(theParticle, mEmitterDef->mOnDuration))  // ³¢ÊÔ½øĞĞ½»²æ»ìºÏ
+		if (TestBit(mEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_PARTICLE_LOOPS))  // åˆ¤æ–­ç²’å­æ˜¯å¦å¾ªç¯
+			theParticle->mParticleAge = 0;  // é‡ç½®ç²’å­å½“å‰å¸§
+		else if (theParticle->mCrossFadeDuration > 0)  // åˆ¤æ–­ç²’å­æ˜¯å¦å¤„äºäº¤å‰æ··åˆè¿‡ç¨‹ä¸­
+			theParticle->mParticleAge = theParticle->mParticleDuration - 1;  // å°†ç²’å­æ»ç•™åœ¨æœ€åä¸€å¸§
+		else if (*mEmitterDef->mOnDuration == '\0' || !CrossFadeParticleToName(theParticle, mEmitterDef->mOnDuration))  // å°è¯•è¿›è¡Œäº¤å‰æ··åˆ
 			return false;
 	}
 	if (theParticle->mCrossFadeParticleID != ParticleID::PARTICLEID_NULL &&
 		mParticleSystem->mParticleHolder->mParticles.DataArrayTryToGet(theParticle->mCrossFadeParticleID) == nullptr)
-		return false;  // µ±Á£×Ó²»´æÔÚ½»²æ»ìºÏÊ±£¬¿ÉÒÔÉ¾³ıÁ£×Ó
+		return false;  // å½“ç²’å­ä¸å­˜åœ¨äº¤å‰æ··åˆæ—¶ï¼Œå¯ä»¥åˆ é™¤ç²’å­
 
 	theParticle->mParticleTimeValue = theParticle->mParticleAge / ((float)theParticle->mParticleDuration - 1);
-	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)  // ¸üĞÂÁ£×ÓÊÜµ½Ã¿¸öÁ£×Ó³¡µÄ×÷ÓÃ
+	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)  // æ›´æ–°ç²’å­å—åˆ°æ¯ä¸ªç²’å­åœºçš„ä½œç”¨
 		UpdateParticleField(theParticle, &mEmitterDef->mParticleFields[i], theParticle->mParticleTimeValue, i);
 	theParticle->mPosition += theParticle->mVelocity;
 	float aSpinSpeed = ParticleTrackEvaluate(mEmitterDef->mParticleSpinSpeed, theParticle, ParticleTracks::TRACK_PARTICLE_SPIN_SPEED) * 0.01;
 	float aSpinAngle = ParticleTrackEvaluate(mEmitterDef->mParticleSpinAngle, theParticle, ParticleTracks::TRACK_PARTICLE_SPIN_ANGLE);
 	float aLastSpinAngle = FloatTrackEvaluateFromLastTime(
 		mEmitterDef->mParticleSpinAngle, theParticle->mParticleLastTimeValue, theParticle->mParticleInterp[ParticleTracks::TRACK_PARTICLE_SPIN_ANGLE]);
-	theParticle->mSpinPosition += DEG_TO_RAD(aSpinSpeed + aSpinAngle - aLastSpinAngle) + theParticle->mSpinVelocity;  // ¸üĞÂÁ£×ÓĞı×ª½Ç¶È
+	theParticle->mSpinPosition += DEG_TO_RAD(aSpinSpeed + aSpinAngle - aLastSpinAngle) + theParticle->mSpinVelocity;  // æ›´æ–°ç²’å­æ—‹è½¬è§’åº¦
 
-	if (FloatTrackIsSet(mEmitterDef->mAnimationRate))  // Èç¹û¶¨ÒåÁË¶¯»­ËÙÂÊ
+	if (FloatTrackIsSet(mEmitterDef->mAnimationRate))  // å¦‚æœå®šä¹‰äº†åŠ¨ç”»é€Ÿç‡
 	{
 		float aAnimTime = ParticleTrackEvaluate(mEmitterDef->mAnimationRate, theParticle, ParticleTracks::TRACK_PARTICLE_ANIMATION_RATE) * 0.01;
-		theParticle->mAnimationTimeValue += aAnimTime;  // ¸üĞÂ¶¯»­Ê±¼äÖµ£¨¶¯»­Ñ­»·ÂÊ£©
+		theParticle->mAnimationTimeValue += aAnimTime;  // æ›´æ–°åŠ¨ç”»æ—¶é—´å€¼ï¼ˆåŠ¨ç”»å¾ªç¯ç‡ï¼‰
 		while (theParticle->mAnimationTimeValue >= 1.0f)
 			theParticle->mAnimationTimeValue -= 1.0f;
 		while (theParticle->mAnimationTimeValue < 0.0f)
@@ -660,22 +660,22 @@ bool TodParticleEmitter::UpdateParticle(TodParticle* theParticle)
 void TodParticleEmitter::UpdateSpawning()
 {
 	TodParticleEmitter* aCrossFadeEmitter = mParticleSystem->mParticleHolder->mEmitters.DataArrayTryToGet((unsigned int)mCrossFadeEmitterID);
-	TodParticleEmitter* aSpawningEmitter = !aCrossFadeEmitter ? this : aCrossFadeEmitter;  // ¸÷ÏîÊı¾İµÄ¼ÆËã¾ùÒÔ´Ë¡°Ö÷·¢ÉäÆ÷¡±Îª×¼
+	TodParticleEmitter* aSpawningEmitter = !aCrossFadeEmitter ? this : aCrossFadeEmitter;  // å„é¡¹æ•°æ®çš„è®¡ç®—å‡ä»¥æ­¤â€œä¸»å‘å°„å™¨â€ä¸ºå‡†
 	mSpawnAccum += aSpawningEmitter->SystemTrackEvaluate(aSpawningEmitter->mEmitterDef->mSpawnRate, ParticleSystemTracks::TRACK_SPAWN_RATE) * 0.01;
 	int aSpawnCount = (int)mSpawnAccum;
 	mSpawnAccum -= aSpawnCount;
 
 	int aSpawnMinActive = (int)aSpawningEmitter->SystemTrackEvaluate(aSpawningEmitter->mEmitterDef->mSpawnMinActive, ParticleSystemTracks::TRACK_SPAWN_MIN_ACTIVE);
 	if (aSpawnMinActive >= 0 && aSpawnCount < aSpawnMinActive - mParticleList.mSize)
-		aSpawnCount = aSpawnMinActive - mParticleList.mSize;  // ÖÁÉÙÈ·±£½«Á£×ÓÊıÁ¿Ôö¼ÓÖÁ aSpawnMinActive ¸ö
+		aSpawnCount = aSpawnMinActive - mParticleList.mSize;  // è‡³å°‘ç¡®ä¿å°†ç²’å­æ•°é‡å¢åŠ è‡³ aSpawnMinActive ä¸ª
 	int aSpawnMaxActive = (int)aSpawningEmitter->SystemTrackEvaluate(aSpawningEmitter->mEmitterDef->mSpawnMaxActive, ParticleSystemTracks::TRACK_SPAWN_MAX_ACTIVE);
 	if (aSpawnMaxActive >= 0 && aSpawnCount > aSpawnMaxActive - mParticleList.mSize)
-		aSpawnCount = aSpawnMaxActive - mParticleList.mSize;  // ÖÁ¶à±£Ö¤Á£×ÓÊıÁ¿²»»á³¬¹ı aSpawnMaxActive ¸ö
+		aSpawnCount = aSpawnMaxActive - mParticleList.mSize;  // è‡³å¤šä¿è¯ç²’å­æ•°é‡ä¸ä¼šè¶…è¿‡ aSpawnMaxActive ä¸ª
 	if (FloatTrackIsSet(aSpawningEmitter->mEmitterDef->mSpawnMaxLaunched))
 	{
 		int aSpawnMaxLaunched = aSpawningEmitter->SystemTrackEvaluate(aSpawningEmitter->mEmitterDef->mSpawnMaxLaunched, ParticleSystemTracks::TRACK_SPAWN_MAX_LAUNCHED);
 		if (aSpawnCount > aSpawnMaxLaunched - mParticlesSpawned)
-			aSpawnCount = aSpawnMaxLaunched - mParticlesSpawned;  // È·±£·¢ÉäÊıÁ¿²»³¬¹ı·¢ÉäÆ÷×Ü¹²ÄÜ·¢ÉäµÄ×î´óÊıÁ¿
+			aSpawnCount = aSpawnMaxLaunched - mParticlesSpawned;  // ç¡®ä¿å‘å°„æ•°é‡ä¸è¶…è¿‡å‘å°„å™¨æ€»å…±èƒ½å‘å°„çš„æœ€å¤§æ•°é‡
 	}
 
 	for (int i = 0; i < aSpawnCount; i++)
@@ -692,7 +692,7 @@ void TodParticleEmitter::DeleteNonCrossFading()
 	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticle* aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayGet((unsigned int)aNode->mValue);
-		if (aParticle->mCrossFadeDuration <= 0)  // µ±Á£×Ó²»´¦ÓÚ½»²æ»ìºÏ×´Ì¬£¬ÔòÉ¾³ı¸ÃÁ£×Ó
+		if (aParticle->mCrossFadeDuration <= 0)  // å½“ç²’å­ä¸å¤„äºäº¤å‰æ··åˆçŠ¶æ€ï¼Œåˆ™åˆ é™¤è¯¥ç²’å­
 			DeleteParticle(aParticle);
 	}
 }
@@ -730,32 +730,32 @@ void TodParticleSystem::Update()
 //0x5173E0
 bool TodParticleEmitter::CrossFadeParticle(TodParticle* theParticle, TodParticleEmitter* theToEmitter)
 {
-	if (theParticle->mCrossFadeDuration > 0)  // Á£×ÓÒÑ´¦ÓÚ½»²æ»ìºÏµÄ¹ı³ÌÖĞ
+	if (theParticle->mCrossFadeDuration > 0)  // ç²’å­å·²å¤„äºäº¤å‰æ··åˆçš„è¿‡ç¨‹ä¸­
 	{
 		TodTrace("We don't support cross fading more than one at a time\n");
 		return false;
 	}
-	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mCrossFadeDuration))  // Ä¿±ê·¢ÉäÆ÷Î´Éè¶¨½»²æ»ìºÏÊ±³¤¹ìµÀ
+	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mCrossFadeDuration))  // ç›®æ ‡å‘å°„å™¨æœªè®¾å®šäº¤å‰æ··åˆæ—¶é•¿è½¨é“
 	{
 		TodTrace("Can't cross fade to emitter that doesn't have CrossFadeDuration");
 		return false;
 	}
-	TOD_ASSERT(theToEmitter != this);  // ²»ÄÜ½»²æ»ìºÏÖÁ×ÔÉí
+	TOD_ASSERT(theToEmitter != this);  // ä¸èƒ½äº¤å‰æ··åˆè‡³è‡ªèº«
 
 	TodParticle* aToParticle = theToEmitter->SpawnParticle(0, 1);
 	if (aToParticle == nullptr)
 		return false;
-	if (mEmitterCrossFadeCountDown > 0)  // Èç¹ûÔ´·¢ÉäÆ÷Õı´¦ÓÚ½»²æ»ìºÏ¹ı³ÌÖĞ
-		theParticle->mCrossFadeDuration = mEmitterCrossFadeCountDown;  // Ô´Á£×ÓµÄ½»²æ»ìºÏµÄÊ±³¤¼´ÎªÔ´·¢ÉäÆ÷½»²æ»ìºÏµÄÊ£ÓàÊ±³¤
+	if (mEmitterCrossFadeCountDown > 0)  // å¦‚æœæºå‘å°„å™¨æ­£å¤„äºäº¤å‰æ··åˆè¿‡ç¨‹ä¸­
+		theParticle->mCrossFadeDuration = mEmitterCrossFadeCountDown;  // æºç²’å­çš„äº¤å‰æ··åˆçš„æ—¶é•¿å³ä¸ºæºå‘å°„å™¨äº¤å‰æ··åˆçš„å‰©ä½™æ—¶é•¿
 	else
 	{
 		float aCrossFadeDurationInterp = Sexy::Rand(1);
 		int aCrossFadeDuration = FloatTrackEvaluate(theToEmitter->mEmitterDef->mCrossFadeDuration, mSystemTimeValue, aCrossFadeDurationInterp);
-		theParticle->mCrossFadeDuration = max(1, aCrossFadeDuration);  // Ëæ»úÈ¡µÃ½»²æ»ìºÏµÄÊ±³¤£¨ÖÁÉÙ 1 Ö¡£©
+		theParticle->mCrossFadeDuration = max(1, aCrossFadeDuration);  // éšæœºå–å¾—äº¤å‰æ··åˆçš„æ—¶é•¿ï¼ˆè‡³å°‘ 1 å¸§ï¼‰
 	}
-	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mParticleDuration))  // Èç¹ûÄ¿±ê·¢ÉäÆ÷Î´¶¨ÒåÁ£×Ó³ÖĞøÊ±¼ä
-		aToParticle->mParticleDuration = theParticle->mCrossFadeDuration;  // Ä¿±êÁ£×ÓµÄ³ÖĞøÊ±¼äµÈÓÚ½»²æ»ìºÏµÄÊ±¼ä
-	aToParticle->mCrossFadeParticleID = (ParticleID)mParticleSystem->mParticleHolder->mParticles.DataArrayGetID(theParticle);  // ¸³Öµ½»²æ»ìºÏÀ´Ô´µÄÁ£×Ó±àºÅ
+	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mParticleDuration))  // å¦‚æœç›®æ ‡å‘å°„å™¨æœªå®šä¹‰ç²’å­æŒç»­æ—¶é—´
+		aToParticle->mParticleDuration = theParticle->mCrossFadeDuration;  // ç›®æ ‡ç²’å­çš„æŒç»­æ—¶é—´ç­‰äºäº¤å‰æ··åˆçš„æ—¶é—´
+	aToParticle->mCrossFadeParticleID = (ParticleID)mParticleSystem->mParticleHolder->mParticles.DataArrayGetID(theParticle);  // èµ‹å€¼äº¤å‰æ··åˆæ¥æºçš„ç²’å­ç¼–å·
 	return true;
 }
 
@@ -765,7 +765,7 @@ void TodParticleEmitter::DeleteParticle(TodParticle* theParticle)
 	TodParticle* aCrossFadeParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayTryToGet((unsigned int)theParticle->mCrossFadeParticleID);
 	if (aCrossFadeParticle != nullptr)
 	{
-		aCrossFadeParticle->mParticleEmitter->DeleteParticle(aCrossFadeParticle);  // Í¬Ê±É¾³ı½»²æ»ìºÏµÄÔ´Á£×Ó
+		aCrossFadeParticle->mParticleEmitter->DeleteParticle(aCrossFadeParticle);  // åŒæ—¶åˆ é™¤äº¤å‰æ··åˆçš„æºç²’å­
 		theParticle->mCrossFadeParticleID = ParticleID::PARTICLEID_NULL;
 	}
 	
@@ -782,20 +782,20 @@ void TodParticleEmitter::Update()
 
 	mSystemAge++;
 	bool aDie = false;
-	if (mSystemAge >= mSystemDuration)  // ·¢ÉäÆ÷µÄÉúÃüÖÜÆÚ½áÊøÊ±
+	if (mSystemAge >= mSystemDuration)  // å‘å°„å™¨çš„ç”Ÿå‘½å‘¨æœŸç»“æŸæ—¶
 	{
-		if (TestBit(mEmitterDef->mParticleFlags, (unsigned int)ParticleFlags::PARTICLE_SYSTEM_LOOPS))  // ÅĞ¶Ï·¢ÉäÆ÷ÊÇ·ñÑ­»·
-			mSystemAge = 0;  // ÖØÖÃ·¢ÉäÆ÷µ±Ç°Ö¡
+		if (TestBit(mEmitterDef->mParticleFlags, (unsigned int)ParticleFlags::PARTICLE_SYSTEM_LOOPS))  // åˆ¤æ–­å‘å°„å™¨æ˜¯å¦å¾ªç¯
+			mSystemAge = 0;  // é‡ç½®å‘å°„å™¨å½“å‰å¸§
 		else
 		{
-			mSystemAge = mSystemDuration - 1;  // ½«·¢ÉäÆ÷ÖÍÁôÔÚ×îºóÒ»Ö¡
+			mSystemAge = mSystemDuration - 1;  // å°†å‘å°„å™¨æ»ç•™åœ¨æœ€åä¸€å¸§
 			aDie = true;
 		}
 	}
 
 	if (mEmitterCrossFadeCountDown > 0)
 	{
-		mEmitterCrossFadeCountDown--;  // ¸üĞÂ·¢ÉäÆ÷µÄ½»²æ»ìºÏ
+		mEmitterCrossFadeCountDown--;  // æ›´æ–°å‘å°„å™¨çš„äº¤å‰æ··åˆ
 		if (mEmitterCrossFadeCountDown == 0)
 			aDie = true;
 	}
@@ -808,14 +808,14 @@ void TodParticleEmitter::Update()
 
 	mSystemTimeValue = mSystemAge / (float)(mSystemDuration - 1);
 	for (int i = 0; i < mEmitterDef->mSystemFieldCount; i++)
-		UpdateSystemField(&mEmitterDef->mSystemFields[i], mSystemTimeValue, i);  // ¸üĞÂ·¢ÉäÆ÷ÊÜµ½Ã¿¸öÏµÍ³³¡µÄ×÷ÓÃ
+		UpdateSystemField(&mEmitterDef->mSystemFields[i], mSystemTimeValue, i);  // æ›´æ–°å‘å°„å™¨å—åˆ°æ¯ä¸ªç³»ç»Ÿåœºçš„ä½œç”¨
 	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticle* aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayGet((unsigned int)aNode->mValue);
-		if (!UpdateParticle(aParticle))  // ¸üĞÂ·¢ÉäÆ÷ÖĞµÄÃ¿¸öÁ£×Ó
+		if (!UpdateParticle(aParticle))  // æ›´æ–°å‘å°„å™¨ä¸­çš„æ¯ä¸ªç²’å­
 			DeleteParticle(aParticle);
 	}
-	UpdateSpawning();  // ¸üĞÂÁ£×Ó·¢Éä
+	UpdateSpawning();  // æ›´æ–°ç²’å­å‘å°„
 
 	if (aDie)
 	{
@@ -844,7 +844,7 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 	register TodParticleEmitter* aEmitter = theParticle->mParticleEmitter;
 	register TodEmitterDefinition* aDef = aEmitter->mEmitterDef;
 
-	// ÑÕÉ«¡£¶ÔÓÚÃ¿Ò»É«²ÊÍ¨µÀ£¬µ±ÏµÍ³¶ÔÓ¦¹ìµÀ¡¢Á£×Ó¶ÔÓ¦¹ìµÀºÍ¶ÔÓ¦¸²Ğ´ÖĞÈÎÒ»ÓĞ¶¨ÒåÊ±£¬ÈÏÎª¸ÃÍ¨µÀÒÑÉè¶¨¡£
+	// é¢œè‰²ã€‚å¯¹äºæ¯ä¸€è‰²å½©é€šé“ï¼Œå½“ç³»ç»Ÿå¯¹åº”è½¨é“ã€ç²’å­å¯¹åº”è½¨é“å’Œå¯¹åº”è¦†å†™ä¸­ä»»ä¸€æœ‰å®šä¹‰æ—¶ï¼Œè®¤ä¸ºè¯¥é€šé“å·²è®¾å®šã€‚
 	theParams->mRedIsSet = false;
 	theParams->mRedIsSet |= FloatTrackIsSet(aDef->mSystemRed);
 	theParams->mRedIsSet |= FloatTrackIsSet(aDef->mParticleRed);
@@ -861,19 +861,19 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 	theParams->mAlphaIsSet |= FloatTrackIsSet(aDef->mSystemAlpha);
 	theParams->mAlphaIsSet |= FloatTrackIsSet(aDef->mParticleAlpha);
 	theParams->mAlphaIsSet |= aEmitter->mColorOverride.mAlpha != 1.0f;
-	// Ëõ·Å
+	// ç¼©æ”¾
 	theParams->mParticleScaleIsSet = false;
 	theParams->mParticleScaleIsSet |= FloatTrackIsSet(aDef->mParticleScale);
 	theParams->mParticleScaleIsSet |= (aEmitter->mScaleOverride != 1.0f);
-	// À­Éì
+	// æ‹‰ä¼¸
 	theParams->mParticleStretchIsSet = FloatTrackIsSet(aDef->mParticleStretch);
-	// Ğı×ª½Ç¶È¡£µ±Á£×ÓÊ¹ÓÃËæ»ú³õÊ¼Ğı×ª½Ç¶È»ò¶ÔÆë·¢Éä·½Ïò½Ç¶ÈÊ±£¬Ò²¿ÉÈÏÎªĞı×ª½Ç¶ÈÒÑÉè¶¨¡£
+	// æ—‹è½¬è§’åº¦ã€‚å½“ç²’å­ä½¿ç”¨éšæœºåˆå§‹æ—‹è½¬è§’åº¦æˆ–å¯¹é½å‘å°„æ–¹å‘è§’åº¦æ—¶ï¼Œä¹Ÿå¯è®¤ä¸ºæ—‹è½¬è§’åº¦å·²è®¾å®šã€‚
 	theParams->mSpinPositionIsSet = false;
 	theParams->mSpinPositionIsSet |= FloatTrackIsSet(aDef->mParticleSpinSpeed);
 	theParams->mSpinPositionIsSet |= FloatTrackIsSet(aDef->mParticleSpinAngle);
 	theParams->mSpinPositionIsSet |= TestBit(aDef->mParticleFlags, (int)ParticleFlags::PARTICLE_RANDOM_LAUNCH_SPIN);
 	theParams->mSpinPositionIsSet |= TestBit(aDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ALIGN_LAUNCH_SPIN);
-	// Î»ÖÃ
+	// ä½ç½®
 	theParams->mPositionIsSet = false;
 	theParams->mPositionIsSet |= (aDef->mParticleFieldCount > 0.0f);
 	theParams->mPositionIsSet |= FloatTrackIsSet(aDef->mEmitterRadius);
@@ -893,7 +893,7 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 	float aParticleAlpha = aEmitter->ParticleTrackEvaluate(aDef->mParticleAlpha, theParticle, ParticleTracks::TRACK_PARTICLE_ALPHA);
 	float aParticleBrightness = aEmitter->ParticleTrackEvaluate(aDef->mParticleBrightness, theParticle, ParticleTracks::TRACK_PARTICLE_BRIGHTNESS);
 	float aBrightness = aParticleBrightness * aSystemBrightness;
-	// Êµ¼ÊÑÕÉ« = Á£×ÓÑÕÉ« * ÏµÍ³ÑÕÉ« * ¸²Ğ´ÑÕÉ« * ÁÁ¶È
+	// å®é™…é¢œè‰² = ç²’å­é¢œè‰² * ç³»ç»Ÿé¢œè‰² * è¦†å†™é¢œè‰² * äº®åº¦
 	theParams->mRed = aParticleRed * aSystemRed * aEmitter->mColorOverride.mRed * aBrightness;
 	theParams->mGreen = aParticleGreen * aSystemGreen * aEmitter->mColorOverride.mGreen * aBrightness;
 	theParams->mBlue = aParticleBlue * aSystemBlue * aEmitter->mColorOverride.mBlue * aBrightness;
@@ -906,13 +906,13 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 	theParams->mSpinPosition = theParticle->mSpinPosition;
 
 	TodParticle* aCrossFadeParticle = aEmitter->mParticleSystem->mParticleHolder->mParticles.DataArrayTryToGet((unsigned int)theParticle->mCrossFadeParticleID);
-	if (aCrossFadeParticle != nullptr)  // µ±´æÔÚ½»²æ»ìºÏµÄÁ£×ÓÊ±£¬½«¶şÕßµÄäÖÈ¾²ÎÊı½øĞĞ»ìºÏ£¨´Ó aCrossFadeParticle ÖÁ theParticle µÄ½»²æ»ìºÏ£©
+	if (aCrossFadeParticle != nullptr)  // å½“å­˜åœ¨äº¤å‰æ··åˆçš„ç²’å­æ—¶ï¼Œå°†äºŒè€…çš„æ¸²æŸ“å‚æ•°è¿›è¡Œæ··åˆï¼ˆä» aCrossFadeParticle è‡³ theParticle çš„äº¤å‰æ··åˆï¼‰
 	{
 		ParticleRenderParams aCrossFadeParams;
 		if (TodParticleEmitter::GetRenderParams(aCrossFadeParticle, &aCrossFadeParams))
 		{
 			float aFraction = theParticle->mParticleAge / (float)(aCrossFadeParticle->mCrossFadeDuration - 1);
-			// ¸÷ÏîÊıÖµ°´ÕÕ aFraction ±ÈÀı»ìºÏ
+			// å„é¡¹æ•°å€¼æŒ‰ç…§ aFraction æ¯”ä¾‹æ··åˆ
 			theParams->mRed = CrossFadeLerp(aCrossFadeParams.mRed, theParams->mRed, aCrossFadeParams.mRedIsSet, theParams->mRedIsSet, aFraction);
 			theParams->mGreen = CrossFadeLerp(aCrossFadeParams.mGreen, theParams->mGreen, aCrossFadeParams.mGreenIsSet, theParams->mGreenIsSet, aFraction);
 			theParams->mBlue = CrossFadeLerp(aCrossFadeParams.mBlue, theParams->mBlue, aCrossFadeParams.mBlueIsSet, theParams->mBlueIsSet, aFraction);
@@ -925,7 +925,7 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 				aCrossFadeParams.mSpinPosition, theParams->mSpinPosition, aCrossFadeParams.mSpinPositionIsSet, theParams->mSpinPositionIsSet, aFraction);
 			theParams->mPosX = CrossFadeLerp(aCrossFadeParams.mPosX, theParams->mPosX, aCrossFadeParams.mPositionIsSet, theParams->mPositionIsSet, aFraction);
 			theParams->mPosY = CrossFadeLerp(aCrossFadeParams.mPosY, theParams->mPosY, aCrossFadeParams.mPositionIsSet, theParams->mPositionIsSet, aFraction);
-			// µ±½»²æ»ìºÏÀ´Ô´µÄÄ³ÏîÒÑÉè¶¨Ê±£¬¿ÉÒÔÈÏÎª¸ÃÁ£×ÓµÄ¶ÔÓ¦ÏîÒ²ÒÑÉè¶¨
+			// å½“äº¤å‰æ··åˆæ¥æºçš„æŸé¡¹å·²è®¾å®šæ—¶ï¼Œå¯ä»¥è®¤ä¸ºè¯¥ç²’å­çš„å¯¹åº”é¡¹ä¹Ÿå·²è®¾å®š
 			theParams->mRedIsSet |= aCrossFadeParams.mRedIsSet;
 			theParams->mGreenIsSet |= aCrossFadeParams.mGreenIsSet;
 			theParams->mBlueIsSet |= aCrossFadeParams.mBlueIsSet;
@@ -944,23 +944,23 @@ void RenderParticle(Graphics* g, TodParticle* theParticle, const Color& theColor
 {
 	TodParticleEmitter* aEmitter = theParticle->mParticleEmitter;
 	register TodEmitterDefinition* aEmitterDef = aEmitter->mEmitterDef;
-	Image* aImage = aEmitter->mImageOverride != nullptr ? aEmitter->mImageOverride : aEmitterDef->mImage;  // ÓÅÏÈÊ¹ÓÃ¸²Ğ´ÌùÍ¼£¬ÎŞ¸²Ğ´ÌùÍ¼ÔòÊ¹ÓÃ¶¨ÒåµÄÌùÍ¼
+	Image* aImage = aEmitter->mImageOverride != nullptr ? aEmitter->mImageOverride : aEmitterDef->mImage;  // ä¼˜å…ˆä½¿ç”¨è¦†å†™è´´å›¾ï¼Œæ— è¦†å†™è´´å›¾åˆ™ä½¿ç”¨å®šä¹‰çš„è´´å›¾
 	if (aImage == nullptr)
-		return;  // ²»´æÔÚÌùÍ¼Ê±£¬È¡Ïû»æÖÆ
+		return;  // ä¸å­˜åœ¨è´´å›¾æ—¶ï¼Œå–æ¶ˆç»˜åˆ¶
 
 	int aCelWidth = aImage->GetCelWidth();
 	int aCelHeight = aImage->GetCelHeight();
 	int aFrame = aEmitter->mFrameOverride;
-	if (aFrame == -1)  // Èç¹ûÎ´¶¨Òå¸²Ğ´Ö¡
+	if (aFrame == -1)  // å¦‚æœæœªå®šä¹‰è¦†å†™å¸§
 	{
-		if (FloatTrackIsSet(aEmitterDef->mAnimationRate))  // Èç¹û¶¨ÒåÁË¶¯»­ËÙÂÊ
-			aFrame = ClampInt(theParticle->mAnimationTimeValue * aEmitterDef->mImageFrames, 0, aEmitterDef->mImageFrames - 1);  // ¶¯»­Ê±¼äÖµ£¨Ñ­»·ÂÊ£© * ×ÜÖ¡ÊıµÃµ½µ±Ç°Ö¡
+		if (FloatTrackIsSet(aEmitterDef->mAnimationRate))  // å¦‚æœå®šä¹‰äº†åŠ¨ç”»é€Ÿç‡
+			aFrame = ClampInt(theParticle->mAnimationTimeValue * aEmitterDef->mImageFrames, 0, aEmitterDef->mImageFrames - 1);  // åŠ¨ç”»æ—¶é—´å€¼ï¼ˆå¾ªç¯ç‡ï¼‰ * æ€»å¸§æ•°å¾—åˆ°å½“å‰å¸§
 		else if (aEmitterDef->mAnimated)
-			aFrame = ClampInt(theParticle->mParticleTimeValue * aEmitterDef->mImageFrames, 0, aEmitterDef->mImageFrames - 1);  // Á£×ÓÊ±¼äÖµ * ×ÜÖ¡ÊıµÃµ½µ±Ç°Ö¡
+			aFrame = ClampInt(theParticle->mParticleTimeValue * aEmitterDef->mImageFrames, 0, aEmitterDef->mImageFrames - 1);  // ç²’å­æ—¶é—´å€¼ * æ€»å¸§æ•°å¾—åˆ°å½“å‰å¸§
 		else
-			aFrame = theParticle->mImageFrame;  // Ö¡¹Ì¶¨µÄÁ£×Ó£¬Ö±½ÓÈ¡ÆäÌùÍ¼Ö¡
+			aFrame = theParticle->mImageFrame;  // å¸§å›ºå®šçš„ç²’å­ï¼Œç›´æ¥å–å…¶è´´å›¾å¸§
 	}
-	aFrame += aEmitterDef->mImageCol;  // µ±Ç°Ö¡¼ÓÉÏ¶¨ÒåÖĞµÄÍ¼ÏñÆğÊ¼ÁĞ£¬µÃµ½µ±Ç°Ö¡ÔÚÌùÍ¼ÖĞµÄÁĞÊı
+	aFrame += aEmitterDef->mImageCol;  // å½“å‰å¸§åŠ ä¸Šå®šä¹‰ä¸­çš„å›¾åƒèµ·å§‹åˆ—ï¼Œå¾—åˆ°å½“å‰å¸§åœ¨è´´å›¾ä¸­çš„åˆ—æ•°
 	if (aFrame >= aImage->mNumCols)
 		aFrame = aImage->mNumCols - 1;
 
@@ -978,21 +978,21 @@ void RenderParticle(Graphics* g, TodParticle* theParticle, const Color& theColor
 	aSrcRect.mX += FloatRoundToInt(aClipLeft * aCelWidth);
 	aSrcRect.mY += FloatRoundToInt(aClipTop * aCelHeight);
 	aSrcRect.mWidth -= FloatRoundToInt(aCelWidth * (aClipLeft + aClipRight));
-	aSrcRect.mHeight -= FloatRoundToInt(aCelHeight * (aClipBottom + aClipTop));  // ÒÔÉÏ¸ù¾İ²Ã¼ô¸÷·½ÏòµÄ±ÈÀıµ÷ÕûÔ´¾ØĞÎ
+	aSrcRect.mHeight -= FloatRoundToInt(aCelHeight * (aClipBottom + aClipTop));  // ä»¥ä¸Šæ ¹æ®è£å‰ªå„æ–¹å‘çš„æ¯”ä¾‹è°ƒæ•´æºçŸ©å½¢
 	TOD_ASSERT(aSrcRect.mX == aCelWidth * aFrame + FloatRoundToInt(aClipLeft * aCelWidth));
 	TOD_ASSERT(aSrcRect.mY == aCelHeight * aEmitterDef->mImageRow + FloatRoundToInt(aClipTop * aCelHeight));
 	TOD_ASSERT(aSrcRect.mX >= 0 && aSrcRect.mX < 10000);
 	TOD_ASSERT(aSrcRect.mY >= 0 && aSrcRect.mY < 10000);
 
-	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ALIGN_TO_PIXELS))  // ×ø±ê¶ÔÆëÖÁÕûÊıÏñËØµã
+	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ALIGN_TO_PIXELS))  // åæ ‡å¯¹é½è‡³æ•´æ•°åƒç´ ç‚¹
 	{
 		theParams->mPosX = FloatRoundToInt(theParams->mPosX);
 		theParams->mPosY = FloatRoundToInt(theParams->mPosY);
 	}
 	int aDrawMode = g->mDrawMode;
-	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ADDITIVE))  // Ê¹ÓÃµş¼ÓÄ£Ê½
+	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ADDITIVE))  // ä½¿ç”¨å åŠ æ¨¡å¼
 		aDrawMode = Graphics::DRAWMODE_ADDITIVE;
-	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_FULLSCREEN))  // È«ÆÁÄ£Ê½
+	if (TestBit(aEmitterDef->mParticleFlags, (int)ParticleFlags::PARTICLE_FULLSCREEN))  // å…¨å±æ¨¡å¼
 	{
 		theTriangleGroup->DrawGroup(g);
 		Color anOldColor = g->GetColor();
@@ -1022,7 +1022,7 @@ void RenderParticle(Graphics* g, TodParticle* theParticle, const Color& theColor
 //0x518210
 void TodParticleEmitter::DrawParticle(Graphics* g, TodParticle* theParticle, TodTriangleGroup* theTriangleGroup)
 {
-	if (theParticle->mCrossFadeDuration > 0)  // ½»²æ»ìºÏµÄÔ´Á£×Ó£¬²»»æÖÆ
+	if (theParticle->mCrossFadeDuration > 0)  // äº¤å‰æ··åˆçš„æºç²’å­ï¼Œä¸ç»˜åˆ¶
 		return;
 
 	ParticleRenderParams aParams;
@@ -1034,15 +1034,15 @@ void TodParticleEmitter::DrawParticle(Graphics* g, TodParticle* theParticle, Tod
 			ClampInt(FloatRoundToInt(aParams.mBlue), 0, 255), 
 			ClampInt(FloatRoundToInt(aParams.mAlpha), 0, 255)
 		);
-		if (aColor.mAlpha > 0)  // ²»Í¸Ã÷¶ÈÎª 0 Ê±£¬²»»æÖÆ
+		if (aColor.mAlpha > 0)  // ä¸é€æ˜åº¦ä¸º 0 æ—¶ï¼Œä¸ç»˜åˆ¶
 		{
 			aParams.mPosX += g->mTransX;
 			aParams.mPosY += g->mTransY;
 
 			TodParticle* aParticle;
-			if (mImageOverride || mEmitterDef->mImage)  // Á£×ÓÓĞÌùÍ¼Ê±£¬äÖÈ¾¸ÃÁ£×Ó
+			if (mImageOverride || mEmitterDef->mImage)  // ç²’å­æœ‰è´´å›¾æ—¶ï¼Œæ¸²æŸ“è¯¥ç²’å­
 				aParticle = theParticle;
-			else  // Á£×ÓÃ»ÓĞÌùÍ¼Ê±£¬³¢ÊÔäÖÈ¾½»²æ»ìºÏÀ´Ô´µÄÁ£×Ó
+			else  // ç²’å­æ²¡æœ‰è´´å›¾æ—¶ï¼Œå°è¯•æ¸²æŸ“äº¤å‰æ··åˆæ¥æºçš„ç²’å­
 				aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayTryToGet((unsigned int)theParticle->mCrossFadeParticleID);
 			if (aParticle != nullptr)
 				RenderParticle(g, aParticle, aColor, &aParams, theTriangleGroup);
@@ -1083,7 +1083,7 @@ void TodParticleEmitter::SystemMove(float theX, float theY)
 {
 	float aDeltaX = theX - mSystemCenter.x;
 	float aDeltaY = theY - mSystemCenter.y;
-	if (FloatApproxEqual(aDeltaX, 0.0f) && FloatApproxEqual(aDeltaY, 0.0f))  // ÒÆ¶¯Ç°ºóµÄ×ø±ê¼¸ºõÏàµÈÊ±£¬ÎŞĞè²Ù×÷
+	if (FloatApproxEqual(aDeltaX, 0.0f) && FloatApproxEqual(aDeltaY, 0.0f))  // ç§»åŠ¨å‰åçš„åæ ‡å‡ ä¹ç›¸ç­‰æ—¶ï¼Œæ— éœ€æ“ä½œ
 		return;
 	
 	mSystemCenter.x = theX;
@@ -1227,7 +1227,7 @@ void TodParticleSystem::CrossFade(const char* theEmitterName)
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (aEmitter->mEmitterDef != aEmitterDef)  // ²»ÄÜ½»²æ»ìºÏÖÁÍ¬ÖÖÀàµÄ·¢ÉäÆ÷
+		if (aEmitter->mEmitterDef != aEmitterDef)  // ä¸èƒ½äº¤å‰æ··åˆè‡³åŒç§ç±»çš„å‘å°„å™¨
 		{
 			TodParticleEmitter* aCrossFadeEmitter = mParticleHolder->mEmitters.DataArrayAlloc();
 			aCrossFadeEmitter->TodEmitterInitialize(aEmitter->mSystemCenter.x, aEmitter->mSystemCenter.y, this, aEmitterDef);

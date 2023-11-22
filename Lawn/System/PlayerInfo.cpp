@@ -200,14 +200,14 @@ void PottedPlant::InitializePottedPlant(SeedType theSeedType)
 	memset(this, 0, sizeof(PottedPlant));
 	mSeedType = theSeedType;
 	mDrawVariation = DrawVariation::VARIATION_NORMAL;
-	mLastWateredTime = 0i64;
+	mLastWateredTime = 0;
 	mFacing = (FacingDirection)RandRangeInt((int)FacingDirection::FACING_RIGHT, (int)FacingDirection::FACING_LEFT);
 	mPlantAge = PottedPlantAge::PLANTAGE_SPROUT;
 	mTimesFed = 0;
 	mWhichZenGarden = GardenType::GARDEN_MAIN;
 	mFeedingsPerGrow = RandRangeInt(3, 5);
 	mPlantNeed = PottedPlantNeed::PLANTNEED_NONE;
-	mLastNeedFulfilledTime = 0i64;
-	mLastFertilizedTime = 0i64;
-	mLastChocolateTime = 0i64;
+	mLastNeedFulfilledTime = 0;
+	mLastFertilizedTime = 0;
+	mLastChocolateTime = 0;
 }

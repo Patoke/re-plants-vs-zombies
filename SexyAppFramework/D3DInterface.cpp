@@ -26,6 +26,8 @@ static const int gVertexType = D3DFVF_TLVERTEX;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+/*
+[[maybe_unused]]
 static void DisplayError(HRESULT theError, const char *theMsg)
 {
 	static bool hadError = false;
@@ -42,9 +44,10 @@ static void DisplayError(HRESULT theError, const char *theMsg)
 		if (aResult==IDABORT)
 			exit(0);
 		else if (aResult==IDRETRY)
-			_asm int 3;
+			__debugbreak();
 	}
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,6 +151,9 @@ void D3DInterface::MakeDDPixelFormat(PixelFormat theFormatType, DDPIXELFORMAT* t
 			theFormat->dwFlags = DDPF_RGB | DDPF_PALETTEINDEXED8;
 			theFormat->dwRGBBitCount = 8;
 			break;
+
+		case PixelFormat_Unknown:
+			break;
 	}
 }
 
@@ -226,7 +232,8 @@ void D3DInterface::UpdateViewport()
 	aD3DViewport.dvMinZ = 0; //-2048.0f;
 	aD3DViewport.dvMaxZ = 1; //2048.0f;
 
-	hr = mD3DDevice->SetViewport(&mD3DViewport);	
+	hr = mD3DDevice->SetViewport(&mD3DViewport);
+	(void)hr; // unused
 }
 
 
@@ -397,7 +404,8 @@ bool D3DInterface::PreDraw()
 		mD3DDevice->SetRenderState(D3DRENDERSTATE_SPECULARENABLE, FALSE); 
 		mD3DDevice->SetRenderState(D3DRENDERSTATE_ZWRITEENABLE, FALSE); 
 		mD3DDevice->SetRenderState(D3DRENDERSTATE_ZENABLE, FALSE); 
-		hr = mD3DDevice->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_NONE); 				
+		hr = mD3DDevice->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_NONE);
+		(void)hr; // unused		
 
 		mSceneBegun = true;
 		gLinearFilter = false;
@@ -722,8 +730,8 @@ static void CopyImageToTexture(LPDIRECTDRAWSURFACE7 theTexture, MemoryImage *the
 	if (D3DInterface::CheckDXError(theTexture->Lock(NULL,&aDesc,DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT | DDLOCK_WRITEONLY,NULL),"Lock Texture"))
 		return;
 
-	int aWidth = min(texWidth,(theImage->GetWidth()-offx));
-	int aHeight = min(texHeight,(theImage->GetHeight()-offy));
+	int aWidth = std::min(texWidth,(theImage->GetWidth()-offx));
+	int aHeight = std::min(texHeight,(theImage->GetHeight()-offy));
 
 	bool rightPad = aWidth<texWidth;
 	bool bottomPad = aHeight<texHeight;
@@ -738,6 +746,7 @@ static void CopyImageToTexture(LPDIRECTDRAWSURFACE7 theTexture, MemoryImage *the
 			case PixelFormat_A4R4G4B4:	CopyImageToTexture4444(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight, rightPad); break;
 			case PixelFormat_R5G6B5:	CopyImageToTexture565(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight, rightPad); break;
 			case PixelFormat_Palette8:	CopyImageToTexturePalette8(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight, rightPad); break;
+			case PixelFormat_Unknown: break;
 		}
 
 		if (bottomPad)
@@ -1208,10 +1217,10 @@ void TextureData::Blt(LPDIRECT3DDEVICE7 theDevice, float theX, float theY, const
 
 			D3DTLVERTEX aVertex[4] = 
 			{
-				{ x,				y,				0,	1,	aColor,	0,	u1,		v1 },
-				{ x,				y+aHeight,		0,	1,	aColor,	0,	u1,		v2 },
-				{ x+aWidth,			y,				0,	1,	aColor,	0,	u2,		v1 },
-				{ x+aWidth,			y+aHeight,		0,	1,	aColor,	0,	u2,		v2 }
+				{ {x},				{y},			{0},{1},{aColor},{0},{u1},{v1} },
+				{ {x},				{y+aHeight},	{0},{1},{aColor},{0},{u1},{v2} },
+				{ {x+aWidth},		{y},			{0},{1},{aColor},{0},{u2},{v1} },
+				{ {x+aWidth},		{y+aHeight},	{0},{1},{aColor},{0},{u2},{v2} }
 			};
 
 			
@@ -1240,8 +1249,8 @@ struct VertexList
 
 	typedef int size_type;
 
-	VertexList() : mSize(0), mCapacity(MAX_STACK_VERTS), mVerts(mStackVerts) { }
-	VertexList(const VertexList &theList) : mSize(theList.mSize), mCapacity(MAX_STACK_VERTS), mVerts(mStackVerts)  
+	VertexList() : mVerts(mStackVerts), mSize(0), mCapacity(MAX_STACK_VERTS) { }
+	VertexList(const VertexList &theList) : mVerts(mStackVerts), mSize(theList.mSize), mCapacity(MAX_STACK_VERTS)
 	{ 
 		reserve(mSize);
 		memcpy(mVerts,theList.mVerts,mSize*sizeof(mVerts[0]));
@@ -1504,10 +1513,10 @@ void TextureData::BltTransformed(LPDIRECT3DDEVICE7 theDevice, const SexyMatrix3 
 
 			D3DTLVERTEX aVertex[4] = 
 			{
-				{ tp[0].x,				tp[0].y,			0,	1,	aColor,	0,	u1,		v1 },
-				{ tp[1].x,				tp[1].y,			0,	1,	aColor,	0,	u1,		v2 },
-				{ tp[2].x,				tp[2].y,			0,	1,	aColor,	0,	u2,		v1 },
-				{ tp[3].x,				tp[3].y,			0,	1,	aColor,	0,	u2,		v2 }
+				{ {tp[0].x},{tp[0].y},{0},{1},{aColor},{0},{u1},{v1} },
+				{ {tp[1].x},{tp[1].y},{0},{1},{aColor},{0},{u1},{v2} },
+				{ {tp[2].x},{tp[2].y},{0},{1},{aColor},{0},{u2},{v1} },
+				{ {tp[3].x},{tp[3].y},{0},{1},{aColor},{0},{u2},{v2} }
 			};
 
 			D3DInterface::CheckDXError(theDevice->SetTexture(0, aTexture),"SetTexture gTexture");
@@ -1600,9 +1609,9 @@ void TextureData::BltTriangles(LPDIRECT3DDEVICE7 theDevice, const TriVertex theV
 
 			D3DTLVERTEX aVertex[3] = 
 			{
-				{ aTriVerts[0].x + tx,	aTriVerts[0].y + ty,	0,	1,	GetColorFromTriVertex(aTriVerts[0],theColor),	0,	aTriVerts[0].u*mMaxTotalU,	aTriVerts[0].v*mMaxTotalV },
-				{ aTriVerts[1].x + tx,	aTriVerts[1].y + ty,	0,	1,	GetColorFromTriVertex(aTriVerts[1],theColor),	0,	aTriVerts[1].u*mMaxTotalU,	aTriVerts[1].v*mMaxTotalV },
-				{ aTriVerts[2].x + tx,	aTriVerts[2].y + ty,	0,	1,	GetColorFromTriVertex(aTriVerts[2],theColor),	0,	aTriVerts[2].u*mMaxTotalU,	aTriVerts[2].v*mMaxTotalV }
+				{ {aTriVerts[0].x + tx},{aTriVerts[0].y + ty},	{0},{1},{GetColorFromTriVertex(aTriVerts[0],theColor)},	{0},{aTriVerts[0].u*mMaxTotalU},{aTriVerts[0].v*mMaxTotalV} },
+				{ {aTriVerts[1].x + tx},{aTriVerts[1].y + ty},	{0},{1},{GetColorFromTriVertex(aTriVerts[1],theColor)},	{0},{aTriVerts[1].u*mMaxTotalU},{aTriVerts[1].v*mMaxTotalV} },
+				{ {aTriVerts[2].x + tx},{aTriVerts[2].y + ty},	{0},{1},{GetColorFromTriVertex(aTriVerts[2],theColor)},	{0},{aTriVerts[2].u*mMaxTotalU},{aTriVerts[2].v*mMaxTotalV} }
 			};
 
 			float aMinU = mMaxTotalU, aMinV = mMaxTotalV;
@@ -1731,8 +1740,8 @@ bool D3DInterface::RecoverBits(MemoryImage* theImage)
 
 			int offx = aPieceCol*aData->mTexPieceWidth;
 			int offy = aPieceRow*aData->mTexPieceHeight;
-			int aWidth = min(theImage->mWidth-offx, aPiece->mWidth);
-			int aHeight = min(theImage->mHeight-offy, aPiece->mHeight);
+			int aWidth = std::min(theImage->mWidth-offx, aPiece->mWidth);
+			int aHeight = std::min(theImage->mHeight-offy, aPiece->mHeight);
 
 			switch (aData->mPixelFormat)
 			{
@@ -1740,6 +1749,7 @@ bool D3DInterface::RecoverBits(MemoryImage* theImage)
 			case PixelFormat_A4R4G4B4:	CopyTexture4444ToImage(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight); break;
 			case PixelFormat_R5G6B5: CopyTexture565ToImage(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight); break;
 			case PixelFormat_Palette8:	CopyTexturePalette8ToImage(aDesc.lpSurface, aDesc.lPitch, theImage, offx, offy, aWidth, aHeight, aData->mPalette); break;
+			case PixelFormat_Unknown: break;
 			}
 
 			D3DInterface::CheckDXError(aPiece->mTexture->Unlock(NULL),"Texture Unlock");
@@ -2033,9 +2043,9 @@ void D3DInterface::DrawLine(double theStartX, double theStartY, double theEndX, 
 
 	D3DTLVERTEX aVertex[3] = 
 	{
-		{ x1,				y1,				0,	1,	aColor,	0,	0,		0 },
-		{ x2,				y2,				0,	1,	aColor,	0,	0,		0 },
-		{ x2+0.5f,			y2+0.5f,		0,	1,	aColor,	0,	0,		0 }
+		{ {x1},		{y1},		{0},{1},{aColor},{0},{0},{0} },
+		{ {x2},		{y2},		{0},{1},{aColor},{0},{0},{0} },
+		{ {x2+0.5f},{y2+0.5f},	{0},{1},{aColor},{0},{0},{0} }
 	};
 
 	D3DInterface::CheckDXError(mD3DDevice->SetTexture(0, NULL),"SetTexture NULL");
@@ -2059,10 +2069,10 @@ void D3DInterface::FillRect(const Rect& theRect, const Color& theColor, int theD
 
 	D3DTLVERTEX aVertex[4] = 
 	{
-		{ x,				y,				0,	1,	aColor,	0,	0,		0 },
-		{ x,				y+aHeight,		0,	1,	aColor,	0,	0,		0 },
-		{ x+aWidth,			y,				0,	1,	aColor,	0,	0,		0 },
-		{ x+aWidth,			y+aHeight,		0,	1,	aColor,	0,	0,		0 }
+		{ {x},			{y},		{0},{1},{aColor},{0},{0},{0} },
+		{ {x},			{y+aHeight},{0},{1},{aColor},{0},{0},{0} },
+		{ {x+aWidth},	{y},		{0},{1},{aColor},{0},{0},{0} },
+		{ {x+aWidth},	{y+aHeight},{0},{1},{aColor},{0},{0},{0} }
 	};
 
 
@@ -2097,9 +2107,9 @@ void D3DInterface::DrawTriangle(const TriVertex &p1, const TriVertex &p2, const 
 	DWORD aColor = RGBA_MAKE(theColor.mRed, theColor.mGreen, theColor.mBlue, theColor.mAlpha);			
 	D3DTLVERTEX aVertex[3] = 
 	{
-		{ p1.x,			p1.y,			0,	1,	GetColorFromTriVertex(p1, aColor),	0,	0,		0 },
-		{ p2.x,			p2.y,			0,	1,	GetColorFromTriVertex(p2, aColor),	0,	0,		0 },
-		{ p3.x,			p3.y,			0,	1,	GetColorFromTriVertex(p3, aColor),	0,	0,		0 }
+		{ {p1.x},{p1.y},{0},{1},{GetColorFromTriVertex(p1, aColor)},{0},{0},{0} },
+		{ {p2.x},{p2.y},{0},{1},{GetColorFromTriVertex(p2, aColor)},{0},{0},{0} },
+		{ {p3.x},{p3.y},{0},{1},{GetColorFromTriVertex(p3, aColor)},{0},{0},{0} }
 	};
 
 
@@ -2125,7 +2135,7 @@ void D3DInterface::FillPoly(const Point theVertices[], int theNumVertices, const
 	VertexList aList;
 	for (int i=0; i<theNumVertices; i++)
 	{
-		D3DTLVERTEX vert = 	{ theVertices[i].mX + tx, theVertices[i].mY + ty,	0,	1,	aColor,	0,	0,		0 };
+		D3DTLVERTEX vert = 	{ {theVertices[i].mX + (D3DVALUE)tx}, {theVertices[i].mY + (D3DVALUE)ty},	{0},	{1},	{aColor},	{0},	{0},		{0} };
 		if (!mTransformStack.empty())
 		{
 			SexyVector2 v(vert.sx,vert.sy);
@@ -2181,7 +2191,7 @@ void D3DInterface::DrawTrianglesTexStrip(const TriVertex theVertices[], int theN
 	int aTriNum = 0;
 	while (aTriNum < theNumTriangles)
 	{
-		int aMaxTriangles = min(100,theNumTriangles - aTriNum);
+		int aMaxTriangles = std::min(100,theNumTriangles - aTriNum);
 		for (int i=0; i<aMaxTriangles; i++)
 		{
 			aList[i][0] = theVertices[aTriNum];
