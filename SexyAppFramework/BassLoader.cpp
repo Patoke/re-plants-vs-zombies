@@ -43,8 +43,10 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 		exit(0);
 	}	
 
-	*((uintptr_t*) &BASS_SetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_SetConfig");
-	*((uintptr_t*) &BASS_GetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_GetConfig");
+	//*((uintptr_t*) &BASS_SetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_SetConfig");
+	//*((uintptr_t*) &BASS_GetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_GetConfig");
+	GETPROC(BASS_SetConfig);
+	GETPROC(BASS_GetConfig);
 
 	GETPROC(BASS_GetVolume);
 	GETPROC(BASS_GetInfo);
@@ -92,6 +94,14 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 
 	GETPROC(BASS_ErrorGetCode);
 
+	GETPROC(BASS_PluginLoad);
+	GETPROC(BASS_ChannelGetLength);
+
+	// The following are only supported in 2.2 and higher
+	//*((uintptr_t*) &BASS_PluginLoad) = (uintptr_t) GetProcAddress(mModule, "BASS_PluginLoad");
+	//*((uintptr_t*) &BASS_ChannelGetLength) = (uintptr_t) GetProcAddress(mModule, "BASS_ChannelGetLength");
+
+	/*
 	mVersion2 = BASS_SetConfig != NULL;
 	if (mVersion2)
 	{
@@ -102,9 +112,7 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 		*((uintptr_t*) &BASS_MusicLoad2) = (uintptr_t) BASS_MusicLoad;
 		BASS_MusicLoad = NULL;
 
-		// The following are only supported in 2.2 and higher
-		*((uintptr_t*) &BASS_PluginLoad) = (uintptr_t) GetProcAddress(mModule, "BASS_PluginLoad");
-		*((uintptr_t*) &BASS_ChannelGetLength) = (uintptr_t) GetProcAddress(mModule, "BASS_ChannelGetLength");
+		
 
 		// 2.1 and higher only
 		*((uintptr_t*) &BASS_ChannelPreBuf) = (uintptr_t) GetProcAddress(mModule, "BASS_ChannelPreBuf");
@@ -114,6 +122,7 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 		BASS_PluginLoad = NULL;
 		BASS_ChannelPreBuf = NULL;
 	}
+	*/
 
 #undef GETPROC
 }

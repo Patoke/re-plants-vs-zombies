@@ -309,7 +309,6 @@ SexyAppBase::SexyAppBase()
 	SetString("UP_TO_DATE_BODY",		L"There are no updates available for this product at this time.");
 	SetString("NEW_VERSION_TITLE",		L"New Version");
 	SetString("NEW_VERSION_BODY",		L"There is an update available for this product.  Would you like to visit the web site to download it?");
-	
 
 	mDemoPrefix = "sexyapp";
 	mDemoFileName = mDemoPrefix + ".dmo";
@@ -1834,6 +1833,7 @@ bool SexyAppBase::RegistryReadKey(const std::string& theValueName, ulong* theTyp
 	}
 }
 
+// aStr isn't initialised lmao
 bool SexyAppBase::RegistryReadString(const std::string& theKey, std::string* theString)
 {
 	char aStr[1024];
@@ -6072,7 +6072,7 @@ void SexyAppBase::Init()
 						GetString("YOU_NEED_DIRECTX", _S("You need DirectX")).c_str(), 
 						MB_OK | MB_ICONERROR);
 		DoExit(0);
-	}	
+	}
 
 	InitPropertiesHook();
 	ReadFromRegistry();	
@@ -6118,7 +6118,9 @@ void SexyAppBase::Init()
 	if (!ChangeDirHook(mChangeDirTo.c_str()))
 		chdir(mChangeDirTo.c_str());
 
+	/*
 	gPakInterface->AddPakFile("main.pak");
+	*/
 
 	// Create a message we can use to talk to ourselves inter-process
 	mNotifyGameMessage = RegisterWindowMessage((_S("Notify") + StringToSexyString(mProdName)).c_str());

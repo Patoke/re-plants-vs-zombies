@@ -345,7 +345,7 @@ float TodCurveInvCircle(float theTime)
 //0x5119B0
 float TodCurveEvaluate(float theTime, float thePositionStart, float thePositionEnd, TodCurves theCurve)
 {
-	float aWarpedTime;
+	float aWarpedTime = 0;
 	switch (theCurve)
 	{
 	case TodCurves::CURVE_CONSTANT:				aWarpedTime = 0;													break;

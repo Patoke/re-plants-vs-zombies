@@ -877,8 +877,8 @@ bool FontData::HandleCommand(const ListDataElement& theParams)
 		if (theParams.mElementVector.size() == 4)
 		{
 			FontLayer* aLayer;
-			StringVector aCharsVector;
-			ListDataElement aRectList;
+			StringVector aCharsVector = StringVector();
+			ListDataElement aRectList = ListDataElement();
 
 			if ((DataToLayer(theParams.mElementVector[1], &aLayer)) &&
 				(DataToStringVector(theParams.mElementVector[2], &aCharsVector)) &&
@@ -888,7 +888,7 @@ bool FontData::HandleCommand(const ListDataElement& theParams)
 				{
 					for (ulong i = 0; i < aCharsVector.size(); i++)
 					{
-						IntVector aRectElement;
+						IntVector aRectElement = IntVector();
 						std::wstring aWString = UTF8StringToWString(aCharsVector[i]);
 
 						if ((aWString.length() == 1) &&
@@ -898,8 +898,11 @@ bool FontData::HandleCommand(const ListDataElement& theParams)
 							//aLayer->mCharData[(uchar) aCharsVector[i][0]].mOffset = Point(aRectElement[0], aRectElement[1]);
 							aLayer->GetCharData(aWString[0])->mOffset = Point(aRectElement[0], aRectElement[1]);
 						}
-						else
+						else {
+							Error("Fucking Fuck");
+							return false;
 							invalidParamFormat = true;
+				 		}
 					}
 				}
 				else

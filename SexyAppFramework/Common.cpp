@@ -1337,7 +1337,7 @@ std::wstring Sexy::UTF8StringToWString(const std::string theString)
 void Sexy::SMemR(void*& _Src, void* _Dst, size_t _Size)
 {
 	memcpy(_Dst, _Src, _Size);
-	_Src = (void*)((uintptr_t)_Src + _Size);
+	_Src = (void*)((size_t)_Src + _Size);
 }
 
 void Sexy::SMemRStr(void*& _Src, std::string& theString)

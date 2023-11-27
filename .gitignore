@@ -403,3 +403,10 @@ FodyWeavers.xsd
 **/*.cbp
 **/CMakeScripts
 **/compile_commands.json
+
+gdb_run
+gdb_run-start
+main.pak
+main.unpak
+tools/res/
+tools/read-compiled/target

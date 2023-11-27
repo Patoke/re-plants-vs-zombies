@@ -1293,7 +1293,7 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform& theTransform, At
 		return;
 	const char* aTags = strstr(aReanimName + 2, "[");  // 动画名称之后，指向 TAG 前的中括号
 	const char* aTrackName = strstr(aReanimName + 2, "__");  // 动画名称之后，指向轨道名称前的双下划线
-	if (aTags && aTrackName && (unsigned int)aTags < (unsigned int)aTrackName)  // 如果“[”之后还有双下划线，则字符串非法
+	if (aTags && aTrackName && ((uintptr_t)aTags < (uintptr_t)aTrackName))  // 如果“[”之后还有双下划线，则字符串非法
 		return;
 
 	if (aTrackName)  // 如果有定义轨道名称

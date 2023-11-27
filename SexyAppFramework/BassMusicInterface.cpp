@@ -109,10 +109,7 @@ bool BassMusicInterface::LoadMusic(int theSongId, const std::string& theFileName
 		p_fread(aData, 1, aSize, aFP);
 		p_fclose(aFP);
 
-		if (gBass->mVersion2)
-			aHMusic = gBass->BASS_MusicLoad2(FALSE, (void*) theFileName.c_str(), 0, 0, BASS_MUSIC_LOOP | BASS2_MUSIC_RAMP, 0);
-		else
-			aHMusic = gBass->BASS_MusicLoad(FALSE, (void*) theFileName.c_str(), 0, 0, BASS_MUSIC_LOOP);
+		aHMusic = gBass->BASS_MusicLoad(FALSE, (void*) theFileName.c_str(), 0, 0, BASS_MUSIC_LOOP | BASS2_MUSIC_RAMP, 0);
 
 		delete[] aData;
 	}
@@ -319,15 +316,9 @@ void BassMusicInterface::FadeOutAll(bool stopSong, double theSpeed)
 
 void BassMusicInterface::SetVolume(double theVolume)
 {
-	int aVolume = (int) (theVolume * mMaxMusicVolume);
-	
-	if (gBass->mVersion2)
-	{
-		gBass->BASS_SetConfig(/*BASS_CONFIG_GVOL_MUSIC*/6, (int) (theVolume * 100));
-		gBass->BASS_SetConfig(/*BASS_CONFIG_GVOL_STREAM*/5, (int) (theVolume * 100));
-	}
-	else
-		gBass->BASS_SetGlobalVolumes(aVolume, aVolume, aVolume);		
+	// int aVolume = (int) (theVolume * mMaxMusicVolume); // unused
+	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, (int) (theVolume * 100));
+	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int) (theVolume * 100));
 }
 
 void BassMusicInterface::SetSongVolume(int theSongId, double theVolume)

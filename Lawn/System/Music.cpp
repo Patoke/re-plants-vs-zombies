@@ -56,15 +56,12 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 		p_fseek(pFile, 0, SEEK_END);  // 指针调整至文件末尾
 		int aSize = p_ftell(pFile);  // 当前位置即为文件长度
 		p_fseek(pFile, 0, SEEK_SET);  // 指针调回文件开头
-		void* aData = malloc(aSize);
+		void* aData = operator new[](aSize);
 		p_fread(aData, sizeof(char), aSize, pFile);  // 按字节读取数据
 		p_fclose(pFile);  // 关闭文件流
 
-		if (gBass->mVersion2)
-			aHMusic = gBass->BASS_MusicLoad2(true, aData, 0, 0, aBass->mMusicLoadFlags, 0);
-		else
-			aHMusic = gBass->BASS_MusicLoad(true, aData, 0, 0, aBass->mMusicLoadFlags);
-		free(aData);
+		aHMusic = gBass->BASS_MusicLoad(true, aData, 0, aSize, aBass->mMusicLoadFlags, 0);
+		delete[] (char *)aData;
 
 		if (aHMusic == 0)
 			return false;

@@ -320,7 +320,7 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 		return nullptr;
 	}
 
-	register TodParticle* aParticle = aDataArray.DataArrayAlloc();
+	TodParticle* aParticle = aDataArray.DataArrayAlloc();
 	TOD_ASSERT(mEmitterDef->mParticleFieldCount <= MAX_PARTICLE_FIELDS);
 	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)
 	{
@@ -530,11 +530,11 @@ void TodParticleEmitter::UpdateParticleField(TodParticle* theParticle, ParticleF
 		int aLastRandSeed = theParticle->mParticleAge - 1;
 		if (aLastRandSeed == -1)
 			aLastRandSeed = theParticle->mParticleDuration - 1;
-		srand(aLastRandSeed * (int)theParticle);
+		srand(aLastRandSeed * (uintptr_t)theParticle);
 		theParticle->mPosition.x -= aLastX * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y -= aLastY * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		// 再随机取得当前帧的震动效果
-		srand(theParticle->mParticleAge * (int)theParticle);
+		srand(theParticle->mParticleAge * (uintptr_t)theParticle);
 		theParticle->mPosition.x += x * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y += y * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		break;
@@ -841,8 +841,8 @@ float CrossFadeLerp(float theFrom, float theTo, bool theFromIsSet, bool theToIsS
 //0x5176A0
 bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRenderParams* theParams)
 {
-	register TodParticleEmitter* aEmitter = theParticle->mParticleEmitter;
-	register TodEmitterDefinition* aDef = aEmitter->mEmitterDef;
+	TodParticleEmitter* aEmitter = theParticle->mParticleEmitter;
+	TodEmitterDefinition* aDef = aEmitter->mEmitterDef;
 
 	// 颜色。对于每一色彩通道，当系统对应轨道、粒子对应轨道和对应覆写中任一有定义时，认为该通道已设定。
 	theParams->mRedIsSet = false;
@@ -943,7 +943,7 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 void RenderParticle(Graphics* g, TodParticle* theParticle, const Color& theColor, ParticleRenderParams* theParams, TodTriangleGroup* theTriangleGroup)
 {
 	TodParticleEmitter* aEmitter = theParticle->mParticleEmitter;
-	register TodEmitterDefinition* aEmitterDef = aEmitter->mEmitterDef;
+	TodEmitterDefinition* aEmitterDef = aEmitter->mEmitterDef;
 	Image* aImage = aEmitter->mImageOverride != nullptr ? aEmitter->mImageOverride : aEmitterDef->mImage;  // 优先使用覆写贴图，无覆写贴图则使用定义的贴图
 	if (aImage == nullptr)
 		return;  // 不存在贴图时，取消绘制

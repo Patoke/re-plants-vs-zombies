@@ -228,20 +228,21 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 		return;
 
 	if (theApp->HasFinishedAdventure()) {
-		GiveAchievement(theApp, HomeSecurity, true);
+		GiveAchievement(theApp, AchievementId::HomeSecurity, true);
 	}
 
 	if (theApp->EarnedGoldTrophy()) {
-		GiveAchievement(theApp, NovelPeasPrize, true);
+		GiveAchievement(theApp, AchievementId::NovelPeasPrize, true);
 	}
 
 	if (theApp->CanSpawnYetis()) {
-		GiveAchievement(theApp, Zombologist, true);
+		GiveAchievement(theApp, AchievementId::Zombologist, true);
 	}
 
 	int aTreeSize = theApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];
-	if (aTreeSize >= 100) {
-		GiveAchievement(theApp, ToweringWisdom, true);
+	// TODO Change this back!!!
+	if (aTreeSize > 100) {
+		GiveAchievement(theApp, AchievementId::ToweringWisdom, true);
 	}
 
 	bool aGiveAchievement = true;
@@ -251,6 +252,6 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 	}
 
 	if (aGiveAchievement) {
-		GiveAchievement(theApp, Morticulturalist, aGiveAchievement);
+		GiveAchievement(theApp, AchievementId::Morticulturalist, aGiveAchievement);
 	}
 }

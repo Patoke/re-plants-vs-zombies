@@ -12,14 +12,14 @@ DefSymbol gTrailFlagDefSymbols[] = {  //0x69E150
 };
 DefField gTrailDefFields[] = {  //0x69E160
     { "Image",              0x0,        DefFieldType::DT_IMAGE,         nullptr },
-    { "MaxPoints",          0x4,        DefFieldType::DT_INT,           nullptr },
-    { "MinPointDistance",   0x8,        DefFieldType::DT_FLOAT,         nullptr },
-    { "TrailFlags",         0xC,        DefFieldType::DT_FLAGS,         gTrailFlagDefSymbols },
-    { "WidthOverLength",    0x18,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "MaxPoints",          0x8,        DefFieldType::DT_INT,           nullptr },
+    { "MinPointDistance",   0xC,        DefFieldType::DT_FLOAT,         nullptr },
+    { "TrailFlags",         0x10,       DefFieldType::DT_FLAGS,         gTrailFlagDefSymbols },
+    { "WidthOverLength",    0x14,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
     { "WidthOverTime",      0x20,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "AlphaOverLength",    0x28,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "AlphaOverTime",      0x30,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "TrailDuration",      0x10,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "AlphaOverLength",    0x2C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "AlphaOverTime",      0x38,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "TrailDuration",      0x44,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr }
 };
 DefMap gTrailDefMap = { gTrailDefFields, sizeof(TrailDefinition), TrailDefinitionConstructor };  //0x69D98C
@@ -42,61 +42,61 @@ DefSymbol gParticleTypeSymbols[] = {  //0x69E200
 DefField gParticleFieldDefFields[] = {  //0x69E2F8
     { "FieldType",          0x0,        DefFieldType::DT_ENUM,          gParticleTypeSymbols },
     { "x",                  0x4,        DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "y",                  0xC,        DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "y",                  0x10,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr },
 };
 DefMap gParticleFieldDefMap = { gParticleFieldDefFields, sizeof(ParticleField), ParticleFieldConstructor };  //0x69E338
 
 DefField gEmitterDefFields[] = {  //0x69E350
     { "Image",              0x0,        DefFieldType::DT_IMAGE,         nullptr },
-    { "ImageRow",           0x8,        DefFieldType::DT_INT,           nullptr },
-    { "ImageCol",           0x4,        DefFieldType::DT_INT,           nullptr },
-    { "ImageFrames",        0xC,        DefFieldType::DT_INT,           nullptr },
-    { "Animated",           0x10,       DefFieldType::DT_INT,           nullptr },
-    { "ParticleFlags",      0x14,       DefFieldType::DT_FLAGS,         gParticleFlagSymbols },
-    { "EmitterType",        0x18,       DefFieldType::DT_ENUM,          gEmitterTypeSymbols },
-    { "Name",               0x1C,       DefFieldType::DT_STRING,        nullptr },
-    { "SystemDuration",     0x24,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "OnDuration",         0x20,       DefFieldType::DT_STRING,        nullptr },
-    { "CrossFadeDuration",  0x2C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SpawnRate",          0x34,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SpawnMinActive",     0x3C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SpawnMaxActive",     0x44,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SpawnMaxLaunched",   0x4C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterRadius",      0x54,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterOffsetX",     0x5C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterOffsetY",     0x64,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterBoxX",        0x6C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterBoxY",        0x74,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterPath",        0x8C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterSkewX",       0x7C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "EmitterSkewY",       0x84,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleDuration",   0x94,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SystemRed",          0xAC,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SystemGreen",        0xB4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SystemBlue",         0xBC,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SystemAlpha",        0xC4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "SystemBrightness",   0xCC,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "LaunchSpeed",        0x9C,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "LaunchAngle",        0xA4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "Field",              0xD4,       DefFieldType::DT_ARRAY,         &gParticleFieldDefMap },
-    { "SystemField",        0xDC,       DefFieldType::DT_ARRAY,         &gParticleFieldDefMap },
-    { "ParticleRed",        0xE4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleGreen",      0xEC,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleBlue",       0xF4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleAlpha",      0xFC,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleBrightness", 0x104,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleSpinAngle",  0x10C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleSpinSpeed",  0x114,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleScale",      0x11C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ParticleStretch",    0x124,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "CollisionReflect",   0x12C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "CollisionSpin",      0x134,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ClipTop",            0x13C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ClipBottom",         0x144,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ClipLeft",           0x14C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "ClipRight",          0x154,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
-    { "AnimationRate",      0x15C,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ImageRow",           0xc,        DefFieldType::DT_INT,           nullptr },
+    { "ImageCol",           0x8,        DefFieldType::DT_INT,           nullptr },
+    { "ImageFrames",        0x10,       DefFieldType::DT_INT,           nullptr },
+    { "Animated",           0x14,       DefFieldType::DT_INT,           nullptr },
+    { "ParticleFlags",      0x18,       DefFieldType::DT_FLAGS,         gParticleFlagSymbols },
+    { "EmitterType",        0x1C,       DefFieldType::DT_ENUM,          gEmitterTypeSymbols },
+    { "Name",               0x20,       DefFieldType::DT_STRING,        nullptr },
+    { "SystemDuration",     0x28,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "OnDuration",         0x2C,       DefFieldType::DT_STRING,        nullptr },
+    { "CrossFadeDuration",  0x34,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SpawnRate",          0x40,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SpawnMinActive",     0x4c,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SpawnMaxActive",     0x58,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SpawnMaxLaunched",   0x64,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterRadius",      0x70,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterOffsetX",     0x7c,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterOffsetY",     0x88,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterBoxX",        0x94,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterBoxY",        0xa0,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterPath",        0xac,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterSkewX",       0xb8,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "EmitterSkewY",       0xc4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleDuration",   0xd0,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SystemRed",          0xdc,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SystemGreen",        0xe8,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SystemBlue",         0xf4,       DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SystemAlpha",        0x100,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "SystemBrightness",   0x10c,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "LaunchSpeed",        0x118,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "LaunchAngle",        0x124,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "Field",              0x130,      DefFieldType::DT_ARRAY,         &gParticleFieldDefMap },
+    { "SystemField",        0x13c,      DefFieldType::DT_ARRAY,         &gParticleFieldDefMap },
+    { "ParticleRed",        0x148,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleGreen",      0x154,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleBlue",       0x160,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleAlpha",      0x16c,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleBrightness", 0x178,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleSpinAngle",  0x184,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleSpinSpeed",  0x190,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleScale",      0x19c,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ParticleStretch",    0x1a8,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "CollisionReflect",   0x1b4,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "CollisionSpin",      0x1c0,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ClipTop",            0x1cc,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ClipBottom",         0x1d8,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ClipLeft",           0x1e4,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "ClipRight",          0x1f0,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
+    { "AnimationRate",      0x1fc,      DefFieldType::DT_TRACK_FLOAT,   nullptr },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr },
 };
 DefMap gEmitterDefMap = { gEmitterDefFields, sizeof(TodEmitterDefinition), TodEmitterDefinitionConstructor };  //0x69E344
@@ -111,28 +111,28 @@ DefField gReanimatorTransformDefFields[] = {  //0x69F088
     { "x",                  0x0,        DefFieldType::DT_FLOAT,         nullptr },
     { "y",                  0x4,        DefFieldType::DT_FLOAT,         nullptr },
     { "kx",                 0x8,        DefFieldType::DT_FLOAT,         nullptr },
-    { "kx",                 0xC,        DefFieldType::DT_FLOAT,         nullptr },
+    { "ky",                 0xC,        DefFieldType::DT_FLOAT,         nullptr },
     { "sx",                 0x10,       DefFieldType::DT_FLOAT,         nullptr },
-    { "sx",                 0x14,       DefFieldType::DT_FLOAT,         nullptr },
+    { "sy",                 0x14,       DefFieldType::DT_FLOAT,         nullptr },
     { "f",                  0x18,       DefFieldType::DT_FLOAT,         nullptr },
     { "a",                  0x1C,       DefFieldType::DT_FLOAT,         nullptr },
     { "i",                  0x20,       DefFieldType::DT_IMAGE,         nullptr },
-    { "font",               0x24,       DefFieldType::DT_FONT,          nullptr },
-    { "text",               0x28,       DefFieldType::DT_STRING,        nullptr },
+    { "font",               0x28,       DefFieldType::DT_FONT,          nullptr },
+    { "text",               0x30,       DefFieldType::DT_STRING,        nullptr },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr }
 };
 DefMap gReanimatorTransformDefMap = { gReanimatorTransformDefFields, sizeof(ReanimatorTransform), };  //0x69F07C
 
 DefField gReanimatorTrackDefFields[] = {  //0x69F148
     { "name",               0x0,        DefFieldType::DT_STRING,        nullptr },
-    { "t",                  0x4,        DefFieldType::DT_ARRAY,         &gReanimatorTransformDefMap },
+    { "t",                  0x8,        DefFieldType::DT_ARRAY,         &gReanimatorTransformDefMap },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr }
 };
 DefMap gReanimatorTrackDefMap = { gReanimatorTrackDefFields, sizeof(ReanimatorTrack), ReanimatorTrackConstructor };  //0x69F178
 
 DefField gReanimatorDefFields[] = {
     { "track",              0x0,        DefFieldType::DT_ARRAY,         &gReanimatorTrackDefMap },
-    { "fps",                0x8,        DefFieldType::DT_FLOAT,         nullptr },
+    { "fps",                0xc,        DefFieldType::DT_FLOAT,         nullptr },
     { "",                   0x0,        DefFieldType::DT_INVALID,       nullptr }
 };  //0x69F184
 DefMap gReanimatorDefMap = { gReanimatorDefFields, sizeof(ReanimatorDefinition), ReanimatorDefinitionConstructor };  //0x69F1B4
@@ -462,9 +462,11 @@ uint DefinitionCalcHashDefMap(int aSchemaHash, DefMap* theDefMap, TodList<DefMap
 //0x444490
 uint DefinitionCalcHash(DefMap* theDefMap)
 {
-    TodList<DefMap*> aProgressMaps;
+    // Uninitialised!!
+    TodList<DefMap*> aProgressMaps = TodList<DefMap*>();
     uint aResult = DefinitionCalcHashDefMap(crc32(0L, (Bytef*)Z_NULL, NULL) + 1, theDefMap, aProgressMaps);
-    aProgressMaps.RemoveAll();
+
+    // TodList destructor is called upon it going out of scope.
     return aResult;
 }
 
@@ -487,7 +489,8 @@ void* DefinitionUncompressCompiledBuffer(void* theCompressedBuffer, size_t theCo
     
     Bytef* aUncompressedBuffer = (Bytef*)DefinitionAlloc(aHeader->mUncompressedSize);
     Bytef* aSrc = (Bytef*)((intptr_t)theCompressedBuffer + sizeof(CompressedDefinitionHeader));  // 实际解压数据从第 3 个四字节开始
-    ulong aUncompressedSizeResult;  // 用作出参的未压缩数据实际长度
+    // BuGFIXX!!
+    ulong aUncompressedSizeResult = aHeader->mUncompressedSize;  // 用作出参的未压缩数据实际长度
     int aResult = uncompress(aUncompressedBuffer, &aUncompressedSizeResult, aSrc, theCompressedBufferSize - sizeof(CompressedDefinitionHeader));
     (void)aResult; // Compiler can't work out that this is used in the Debug build
     TOD_ASSERT(aResult == Z_OK);
@@ -534,6 +537,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
                     SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // 读取记录的 CRC 校验值
                     if (aCashHash != aDefHash)  // 判断校验值是否一致，若不一致则说明数据发生错误
                         TodTrace(_S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
+                    
                     else
                     {
                         // ☆ 正式开始读取定义数据 ☆
@@ -760,20 +764,144 @@ bool DefinitionReadArrayField(XMLParser* theXmlParser, DefinitionArrayDef* theAr
     return false;
 }
 
+/*
+Float Track Field EBNF:
+    <test>     ::= <trackdef> ("\n"+ <trackdef>?)*
+    <trackdef> ::= <node> (" " <node>)*
+    <node>     ::= <norange> | <range>
+    <norange>  ::= <float> ("," <float>)? (" " <curve>)?
+    <range>    ::= "[" (<float> | <float> (" " <curve>)? " " <float>) "]" ("," <float>)?
+    <curve>    ::= "Bounce" | "EaseIn" | "EaseInOutWeak" | "EaseOut" | "FastInOutWeak"
+    <float>    ::= "-"? (<natural> ("." <natural>?)? | ("." <natural>))
+    <natural>  ::= <digit>+
+    <digit>    ::= [0-9]
+*/
+
+struct TodCurveStringMap {
+    char *mString;
+    TodCurves mCurveType;
+};
+
+const TodCurveStringMap TodCurveStrings[] = {
+    {(char *)"Bounce",        TodCurves::CURVE_BOUNCE},
+    {(char *)"FastInOutWeak", TodCurves::CURVE_FAST_IN_OUT_WEAK},
+    {(char *)"EaseInOutWeak", TodCurves::CURVE_EASE_IN_OUT_WEAK},
+    {(char *)"EaseOut",       TodCurves::CURVE_EASE_OUT},
+    {(char *)"EaseIn",        TodCurves::CURVE_EASE_IN},
+};
+
 bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack* theTrack)
 {
-    /*
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    */
+    SexyString aStringValue;
+
+    if (!DefinitionReadXMLString(theXmlParser, aStringValue)) return false;
+    
+    float aValue = 0;
+    int aLen = 0;
+
+    const char *aStringChars = aStringValue.c_str();
+    size_t anIdx = 0;
+
+    theTrack->mCountNodes = 0;
+
+    std::vector<FloatParameterTrackNode> aFloatTrackVec = std::vector<FloatParameterTrackNode>();
+    FloatParameterTrackNode aTrackNode = FloatParameterTrackNode();
+    while(anIdx <= aStringValue.length()) {
+        if (aStringChars[anIdx] == '\0') goto _m_break; // No empty strings allowed
+
+        aTrackNode.mTime = 0.0f;
+        aTrackNode.mCurveType = TodCurves::CURVE_CONSTANT;
+        aTrackNode.mDistribution = TodCurves::CURVE_LINEAR;
+
+        if (aStringChars[anIdx] == '[') {
+            // <range>
+            anIdx++;
+            if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mLowValue
+            anIdx += aLen;
+            aTrackNode.mLowValue = aValue;
+            aTrackNode.mHighValue = aValue;
+            if (aStringChars[anIdx] != ']') {
+                anIdx++; // space (' ')
+                // <curve>
+                for (int i = 0; i < sizeof(TodCurveStrings)/sizeof(TodCurveStrings[0]); ++i) {
+                    size_t aStrLen = strlen(TodCurveStrings[i].mString);
+                    if (strncmp(TodCurveStrings[i].mString, aStringChars + anIdx, aStrLen) == 0) // could be the distribution?
+                    {
+                        aTrackNode.mDistribution = TodCurveStrings[i].mCurveType;
+                        anIdx += aStrLen + 1; // Accounts for space (' '), expressions never end with a curve
+                        break;
+                    }
+                }
+                switch(sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen)) // mHighValue
+                { 
+                case 1: // Float read successfully
+                    anIdx += aLen; 
+                    aTrackNode.mHighValue = aValue;
+                    break;
+                case 0: // No float to read just continue
+                    break;
+                default: // Something bad happened, panic!
+                    return false;
+                }
+            }
+            if (aStringChars[anIdx] != ']') return false; // Invalid format
+            anIdx++;
+            if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
+
+            if (aStringChars[anIdx] == ',') {
+                anIdx++;
+                if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
+                anIdx += aLen;
+                aTrackNode.mTime = aValue;
+            }
+            if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
+            anIdx++;
+        } else { 
+            // <norange>
+            if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mLow/HighValue
+            anIdx += aLen;
+            aTrackNode.mLowValue = aValue;
+            aTrackNode.mHighValue = aValue;
+
+            if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
+    
+            if (aStringChars[anIdx] == ',') {
+                anIdx++;
+                if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
+                anIdx += aLen;
+                aTrackNode.mTime = aValue;
+            }
+            if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
+            anIdx++;
+            // <curve>
+            for (int i = 0; i < sizeof(TodCurveStrings)/sizeof(TodCurveStrings[0]); ++i) {
+                size_t aStrLen = strlen(TodCurveStrings[i].mString);
+                if (strncmp(TodCurveStrings[i].mString, aStringChars + anIdx, aStrLen) == 0) // mCurveType
+                {
+                    aTrackNode.mCurveType = TodCurveStrings[i].mCurveType;
+                    anIdx += aStrLen;
+                    if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
+                    anIdx++;
+                    break;
+                }
+            }
+        }
+        
+        aFloatTrackVec.push_back(aTrackNode);
+    }
+    _m_break:
+    aFloatTrackVec.push_back(aTrackNode);
+    
+
+    size_t alloc_size = aFloatTrackVec.size() * sizeof(FloatParameterTrackNode);
+    theTrack->mNodes = (FloatParameterTrackNode*)DefinitionAlloc(alloc_size);
+
+    if (!theTrack->mNodes) return false;
+
+    ::memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
+    
+    //TodTraceAndLog("My Name Jeff: %s", aStringChars);
+
     return true;
 }
 
@@ -794,14 +922,17 @@ bool DefinitionReadFlagField(XMLParser* theXmlParser, const SexyString& theEleme
         return false;
     }
 
-    if (aFlag)
-    {
-        *theResultValue |= 1 << aValue;
+    if (theResultValue) {
+        if (aFlag)
+        {
+            *theResultValue |= 1 << aValue;
+        }
+        else
+        {
+            *theResultValue &= ~(1 << aValue);
+        }
     }
-    else
-    {
-        *theResultValue &= ~(1 << aValue);
-    }
+    
     return true;
 }
 
@@ -840,7 +971,7 @@ bool DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDe
     if (theXmlParser->HasFailed())
         return false;
 
-    XMLElement aXMLElement;
+    XMLElement aXMLElement = XMLElement();
     if (!theXmlParser->NextElement(&aXMLElement) || aXMLElement.mType == XMLElement::TYPE_END)  // 读取下一个 XML 元素
     {
         *theDone = true;  // 没有下一个元素则表示读取完成
@@ -939,7 +1070,7 @@ bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* 
 
 bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition)
 {
-    XMLParser aXMLParser;
+    XMLParser aXMLParser = XMLParser();
     if (!aXMLParser.OpenFile(theXMLFilePath))
     {
         TodTrace(_S("XML file not found: %s\n"), theXMLFilePath.c_str());

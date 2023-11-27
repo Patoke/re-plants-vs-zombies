@@ -105,7 +105,6 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 		FRead(&aNameWidth, 1, 1, aFP);
 		FRead(aName, 1, aNameWidth, aFP);
 		aName[aNameWidth] = 0;
-
 		int aSrcSize = 0;
 		FRead(&aSrcSize, sizeof(int), 1, aFP);
 		FILETIME aFileTime;
@@ -200,7 +199,7 @@ PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 		
 		PakRecordMap::iterator anItr = mPakRecordMap.find(anUpperName);
 		if (anItr != mPakRecordMap.end())
-		{			
+		{
 			PFILE* aPFP = new PFILE;
 			aPFP->mRecord = &anItr->second;
 			aPFP->mPos = 0;
