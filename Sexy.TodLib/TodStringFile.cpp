@@ -82,7 +82,7 @@ bool TodStringListReadName(const char*& thePtr, std::string& theName)
 //0x518F60
 void TodStringRemoveReturnChars(std::string& theString)
 {
-	for (int i = 0; i < theString.size(); )
+	for (size_t i = 0; i < theString.size(); )
 	{
 		if (theString[i] == '\r')
 			theString.replace(i, 1, "", 0);  // 原版中此处的“1”和“""”已内联至函数内部
@@ -265,7 +265,7 @@ int TodWriteString(Graphics* g, const SexyString& theString, int theX, int theY,
 		}
 	}
 
-	if (theLength < 0 || theOffset + theLength > theString.size())
+	if (theLength < 0 || theOffset + theLength > (int)theString.size())
 		theLength = theString.size();
 	else
 		theLength = theOffset + theLength;  // 将 theLength 更改为子串结束位置
@@ -340,8 +340,8 @@ int TodDrawStringWrappedHelper(Graphics* g, const SexyString& theText, const Rec
 	int aYOffset = theFont->GetAscent() - theFont->GetAscentPadding();
 	int aLineSpacing = theFont->GetLineSpacing() + aCurrentFormat.mLineSpacingOffset;
 	SexyString aCurString;
-	int aLineFeedPos = 0;
-	int aCurPos = 0;
+	size_t aLineFeedPos = 0;
+	size_t aCurPos = 0;
 	int aCurWidth = 0;
 	SexyChar aCurChar = '\0';
 	SexyChar aPrevChar = '\0';

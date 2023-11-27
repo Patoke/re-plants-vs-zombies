@@ -19,11 +19,13 @@ public:
 	{
 	}
 
+	/*
 	TPoint(const TPoint<_T>& theTPoint) :
 		mX(theTPoint.mX),
 		mY(theTPoint.mY)
 	{
 	}
+	*/
 
 	TPoint() :
 		mX(0),

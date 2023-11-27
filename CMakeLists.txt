@@ -87,10 +87,13 @@ endif()
 
 set(CMAKE_C_STANDARD "11")
 set(CMAKE_CXX_STANDARD "11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -gdwarf-2 -O3")
-set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -gdwarf-2 -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
 # -Wl,--as-needed,-lwinmm
 set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set(CMAKE_C_COMPILER_TARGET x86_64-w64-mingw32)
+set(CMAKE_CXX_COMPILER_TARGET x86_64-w64-mingw32)
 #set(CMAKE_EXE_LINKER_FLAGS="-Wl,-O1,--as-needed")
 
 #set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS}" )

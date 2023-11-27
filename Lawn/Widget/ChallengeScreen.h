@@ -48,9 +48,13 @@ public:
     virtual void                AddedToManager(WidgetManager* theWidgetManager);
     virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
     virtual void                ButtonPress(int theId);
+    virtual void                ButtonDownTick(int){}
+    virtual void                ButtonMouseEnter(int){}
+    virtual void                ButtonMouseLeave(int){}
+    virtual void                ButtonMouseMove(int, int, int){}
     virtual void                ButtonDepress(int theId);
     void                        UpdateToolTip();
-    virtual void                KeyChar(char theChar) { ; }
+//  virtual void                KeyChar(char theChar);
 
     /*inline*/ bool             IsScaryPotterLevel(GameMode theGameMode);
     /*inline*/ bool             IsIZombieLevel(GameMode theGameMode);

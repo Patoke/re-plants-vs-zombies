@@ -97,7 +97,7 @@ public:
 	std::string				mErrorString;
 
 public:
-	bool					CopyBitmap(LPDIRECTDRAWSURFACE theSurface, HBITMAP TheBitmap, int theX, int theY, int theWidth, int theHeight);
+	bool					CopyBitmap(LPDIRECTDRAWSURFACE theSurface, HBITMAP TheBitmap, int theX, int theY, unsigned int theWidth, unsigned int theHeight);
 	ulong					GetColorRef(ulong theRGB);
 	void					AddDDImage(DDImage* theDDImage);
 	void					RemoveDDImage(DDImage* theDDImage);

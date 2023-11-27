@@ -257,7 +257,7 @@ PottedPlant* ZenGarden::PottedPlantFromIndex(intptr_t thePottedPlantIndex)
 }
 
 //0x51D630
-void ZenGarden::ZenGardenInitLevel(bool theJustSwitchingGardens)
+void ZenGarden::ZenGardenInitLevel()
 {
     mBoard = mApp->mBoard;
     for (int i = 0; i < mApp->mPlayerInfo->mNumPottedPlants; i++)
@@ -1902,7 +1902,7 @@ void ZenGarden::GotoNextGarden()
         }
     }
 
-    ZenGardenInitLevel(true);
+    ZenGardenInitLevel();
 }
 
 //0x5210F0

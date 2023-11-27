@@ -45,7 +45,7 @@ void SeedPacket::PickNextSlotMachineSeed()
 
 	int aSeedsCount = 0;
 	TodWeightedArray aSeedWeightArray[(int)SeedType::NUM_SEED_TYPES];
-	for (int i = 0; i < LENGTH(SLOT_SEED_TYPES); i++)
+	for (size_t i = 0; i < LENGTH(SLOT_SEED_TYPES); i++)
 	{
 		SeedType aSeedType = SLOT_SEED_TYPES[i];
 
@@ -704,6 +704,7 @@ bool SeedPacket::CanPickUp()
 // GOTY @Patoke: 0x4931C0
 void SeedPacket::MouseDown(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;(void)theClickCount;
 	if (mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mPacketType == SeedType::SEED_NONE)
 	{
 		return;

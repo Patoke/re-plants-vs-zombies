@@ -33,7 +33,7 @@ public:
 	virtual void			SetMasterVolume(double theVolume);
 
 	virtual void			Flush();
-	virtual void			SetCooperativeWindow(HWND theHWnd, bool isWindowed);
+	virtual void			SetCooperativeWindow(HWND theHWnd);
 };
 
 }

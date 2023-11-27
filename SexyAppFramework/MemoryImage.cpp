@@ -774,9 +774,11 @@ void MemoryImage::NormalDrawLineAA(double theStartX, double theStartY, double th
 	BitsChanged();
 }
 
+/*
 void MemoryImage::AdditiveDrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor)
 {
 }
+*/
 
 void MemoryImage::DrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
 {
@@ -797,15 +799,7 @@ void MemoryImage::DrawLineAA(double theStartX, double theStartY, double theEndX,
 		return;
 	}
 
-	switch (theDrawMode)
-	{
-	case Graphics::DRAWMODE_NORMAL:
-		NormalDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
-		break;
-	case Graphics::DRAWMODE_ADDITIVE:
-		AdditiveDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
-		break;
-	}
+	NormalDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
 
 	BitsChanged();
 }
@@ -1298,6 +1292,7 @@ ulong* MemoryImage::GetBits()
 
 void MemoryImage::FillRect(const Rect& theRect, const Color& theColor, int theDrawMode)
 {
+	(void)theDrawMode;
 	ulong src = theColor.ToInt();
 
 	ulong* aBits = GetBits();
@@ -1633,6 +1628,7 @@ void MemoryImage::BltRotated(Image* theImage, float theX, float theY, const Rect
 
 void MemoryImage::SlowStretchBlt(Image* theImage, const Rect& theDestRect, const FRect& theSrcRect, const Color& theColor, int theDrawMode)
 {
+	(void)theColor;(void)theDrawMode;
 	theImage->mDrawn = true;
 
 	// This thing was a pain to write.  I bet i could have gotten something just as good
@@ -1677,6 +1673,7 @@ void MemoryImage::SlowStretchBlt(Image* theImage, const Rect& theDestRect, const
 //TODO: Make the special version
 void MemoryImage::FastStretchBlt(Image* theImage, const Rect& theDestRect, const FRect& theSrcRect, const Color& theColor, int theDrawMode)
 {
+	(void)theDrawMode;
 	theImage->mDrawn = true;
 
 	MemoryImage* aSrcMemoryImage = dynamic_cast<MemoryImage*>(theImage);
@@ -1834,6 +1831,7 @@ void MemoryImage::BltTrianglesTexHelper(Image *theTexture, const TriVertex theVe
 
 void MemoryImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const Color& theColor, int theDrawMode, const BYTE* theCoverage, int theCoverX, int theCoverY, int theCoverWidth, int theCoverHeight)
 {
+	(void)theDrawMode;(void)theCoverHeight;
 	ulong* theBits = GetBits();
 	ulong src = theColor.ToInt();
 	for (int i = 0; i < theSpanCount; ++i)

@@ -693,7 +693,7 @@ LPDIRECTDRAWSURFACE DDImage::GetSurface()
 	return mSurface;
 }
 
-bool DDImage::PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty, bool convex)
+bool DDImage::PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty)
 {
 	if (Check3D(this))
 	{
@@ -1929,9 +1929,11 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 	UnlockSurface();
 }
 
+/*
 void DDImage::AdditiveDrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor)
 {
 }
+*/
 
 void DDImage::DrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
 {
@@ -1966,15 +1968,7 @@ void DDImage::DrawLineAA(double theStartX, double theStartY, double theEndX, dou
 
 	CommitBits();	
 
-	switch (theDrawMode)
-	{
-	case Graphics::DRAWMODE_NORMAL:
-		NormalDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
-		break;
-	case Graphics::DRAWMODE_ADDITIVE:
-		AdditiveDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
-		break;
-	}
+	NormalDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
 
 	DeleteAllNonSurfaceData();
 }

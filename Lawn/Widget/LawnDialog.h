@@ -63,7 +63,7 @@ public:
 	virtual void			Update();
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
-	virtual void			CheckboxChecked(int theId, bool theChecked);
+	virtual void			CheckboxChecked();
 	virtual void			KeyDown(KeyCode theKey);
 	virtual void			AddedToManager(WidgetManager* theWidgetManager);
 	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);

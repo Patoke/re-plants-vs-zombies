@@ -235,7 +235,7 @@ public:
 	void							ClearCursor();
 	/*inline*/ bool					AreEnemyZombiesOnScreen();
 	LawnMower*						FindLawnMowerInRow(int theRow);
-	inline bool						SyncState(DataSync& theDataSync) { /* Œ¥∑¢œ÷ */return true; }
+//  inline bool						SyncState(DataSync& theDataSync) { /* Êú™ÂèëÁé∞ */return true; }
 	/*inline*/ void					SaveGame(const std::string& theFileName);
 	bool							LoadGame(const std::string& theFileName);
 	void							InitLevel();
@@ -245,7 +245,7 @@ public:
 	Projectile*						AddProjectile(int theX, int theY, int theRenderOrder, int theRow, ProjectileType theProjectileType);
 	Coin*							AddCoin(int theX, int theY, CoinType theCoinType, CoinMotion theCoinMotion);
 	void							RefreshSeedPacketFromCursor();
-	ZombieType						PickGraveRisingZombieType(int theZombiePoints);
+	ZombieType						PickGraveRisingZombieType();
 	ZombieType						PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePicker* theZombiePicker);
 	int								PickRowForNewZombie(ZombieType theZombieType);
 	/*inline*/ Zombie*				AddZombie(ZombieType theZombieType, int theFromWave);
@@ -259,20 +259,23 @@ public:
 	virtual void					MouseDown(int x, int y, int theClickCount);
 	virtual void					MouseUp(int x, int y, int theClickCount);
 	virtual void					KeyChar(SexyChar theChar);
-	virtual void					KeyUp(KeyCode theKey) { ; }
+	virtual void					KeyUp(KeyCode) {}
 	virtual void					KeyDown(KeyCode theKey);
 	virtual void					Update();
 	void							UpdateLayers();
 	virtual void					Draw(Graphics* g);
 	void							DrawBackdrop(Graphics* g);
-	virtual void					ButtonMouseEnter(int theId) { ; }
-	virtual void					ButtonMouseLeave(int theId) { ; }
-	virtual void					ButtonPress(int theId) { ; }
+	virtual void					ButtonPress  	(int){}
+	virtual void					ButtonDepress	(int){}
+	virtual void					ButtonDownTick	(int){}
+	virtual void					ButtonMouseEnter(int){}
+	virtual void					ButtonMouseLeave(int){}
+	virtual void					ButtonMouseMove(int, int, int){}
 	/*inline*/ void					AddSunMoney(int theAmount);
 	bool							TakeSunMoney(int theAmount);
 	/*inline*/ bool					CanTakeSunMoney(int theAmount);
 	/*inline*/ void					Pause(bool thePause);
-	inline bool						MakeEasyZombieType() { /* Œ¥∑¢œ÷ */return false; }
+	inline bool						MakeEasyZombieType() { /* Êú™ÂèëÁé∞ */return false; }
 	void							TryToSaveGame();
 	/*inline*/ bool					NeedSaveGame();
 	/*inline*/ bool					RowCanHaveZombies(int theRow);
@@ -296,7 +299,7 @@ public:
 	bool							MouseHitTest(int x, int y, HitResult* theHitResult);
 	void							MouseDownWithPlant(int x, int y, int theClickCount);
 	void							MouseDownWithTool(int x, int y, int theClickCount, CursorType theCursorType);
-	inline void						MouseDownNormal(int x, int y, int theClickCount) { /* Œ¥∑¢œ÷ */; }
+//	inline void						MouseDownNormal(int x, int y, int theClickCount) { /* Êú™ÂèëÁé∞ */; }
 	bool							CanInteractWithBoardButtons();
 	void							DrawProgressMeter(Graphics* g);
 	void							UpdateToolTip();

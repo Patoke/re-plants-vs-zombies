@@ -1508,7 +1508,7 @@ static RenderCommand gRenderCommandPool[POOL_SIZE];
 static RenderCommand* gRenderTail[256];
 static RenderCommand* gRenderHead[256];
 
-void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect* theClipRect, RectList* theDrawnAreas, int* theWidth)
+void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, RectList* theDrawnAreas, int* theWidth)
 {
 	AutoCrit anAutoCrit(gRenderCritSec);
 
@@ -1757,7 +1757,8 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 
 void ImageFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect)
 {
-	DrawStringEx(g, theX, theY, theString, theColor, &theClipRect, NULL, NULL);
+	(void)theClipRect;
+	DrawStringEx(g, theX, theY, theString, theColor, NULL, NULL);
 }
 
 _Font* ImageFont::Duplicate()

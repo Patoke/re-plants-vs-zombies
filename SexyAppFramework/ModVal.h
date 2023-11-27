@@ -60,10 +60,10 @@ namespace Sexy
 #define M9(val) M(val)
 #endif
 
-int				ModVal(int theAreaNum, const char* theFileName, int theInt);
-double			ModVal(int theAreaNum, const char* theFileName, double theDouble);
-float			ModVal(int theAreaNum, const char* theFileName, float theFloat);
-const char*		ModVal(int theAreaNum, const char* theFileName, const char *theStr);
+int				ModVal(const char* theFileName, int theInt);
+double			ModVal(const char* theFileName, double theDouble);
+float			ModVal(const char* theFileName, float theFloat);
+const char*		ModVal(const char* theFileName, const char *theStr);
 bool			ReparseModValues();
 void			AddModValEnum(const std::string &theEnumName, int theVal);
 

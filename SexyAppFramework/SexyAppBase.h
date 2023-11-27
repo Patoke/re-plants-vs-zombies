@@ -381,7 +381,7 @@ public:
 	virtual ~SexyAppBase();
 
 	// Common overrides:
-	virtual MusicInterface*	CreateMusicInterface(HWND theHWnd);
+	virtual MusicInterface*	CreateMusicInterface();
 	virtual void			InitHook();
 	virtual void			ShutdownHook();	
 	virtual void			PreTerminate();
@@ -414,7 +414,7 @@ public:
 	virtual void			DoParseCmdLine();
 	virtual void			ParseCmdLine(const std::string& theCmdLine);
 	virtual void			HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue);
-	virtual void			HandleNotifyGameMessage(int theType, int theParam); // for HWND_BROADCAST of mNotifyGameMessage (0-1000 are reserved for SexyAppBase for theType)
+	virtual void			HandleNotifyGameMessage(int theType); // for HWND_BROADCAST of mNotifyGameMessage (0-1000 are reserved for SexyAppBase for theType)
 	virtual void			HandleGameAlreadyRunning(); 
 
 	virtual void			Start();	
@@ -493,7 +493,7 @@ public:
 	virtual void			LostFocus();	
 	virtual bool			IsAltKeyUsed(WPARAM wParam);
 	virtual bool			DebugKeyDown(int theKey);	
-	virtual bool			DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
+//	virtual bool			DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
 	virtual void			CloseRequestAsync();
 	bool					Is3DAccelerated();
 	bool					Is3DAccelerationSupported();
@@ -503,7 +503,7 @@ public:
 	virtual void			Done3dTesting();
 	virtual std::string		NotifyCrashHook(); // return file name that you want to upload
 	
-	virtual bool			CheckSignature(const Buffer& theBuffer, const std::string& theFileName);
+//	virtual bool			CheckSignature(const Buffer& theBuffer, const std::string& theFileName);
 	virtual bool			DrawDirtyStuff();
 	virtual void			Redraw(Rect* theClipRect);
 

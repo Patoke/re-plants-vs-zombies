@@ -7,9 +7,10 @@ using namespace Sexy;
 ///////////////////////////////////////////////////////////////////////////////
 inline int QueryCounters(__int64 *lpPerformanceCount)
 {
+	(void)lpPerformanceCount;
 	// Argh fuck it just hope it never happens
 	__builtin_unreachable();
-	/* returns TSC only */
+	// returns TSC only
 	/*
 	asm (
 		"mov ebx, dword ptr [lpPerformanceCount]"
@@ -25,6 +26,7 @@ inline int QueryCounters(__int64 *lpPerformanceCount)
 ///////////////////////////////////////////////////////////////////////////////
 inline int DeltaCounters(__int64 *lpPerformanceCount)
 {
+	(void)lpPerformanceCount;
 	// Argh fuck it just hope it never happens
 	__builtin_unreachable();
 	/*

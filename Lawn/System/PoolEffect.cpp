@@ -65,7 +65,7 @@ unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int u, unsigned int v
 }
 
 //0x469CA0
-void PoolEffect::UpdateWaterEffect(Sexy::Graphics* g)
+void PoolEffect::UpdateWaterEffect()
 {
     int idx = 0;
     for (int y = 0; y < CAUSTIC_IMAGE_HEIGHT; y++)
@@ -226,7 +226,7 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
         g->DrawTrianglesTex(IMAGE_POOL_SHADING, aVertArray[1], 150);
     }
 
-    UpdateWaterEffect(g);
+    UpdateWaterEffect();
     D3DInterface* anInterface = ((DDImage*)g->mDestImage)->mDDInterface->mD3DInterface;
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSU, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP), "DrawPool");
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSV, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP), "DrawPool");

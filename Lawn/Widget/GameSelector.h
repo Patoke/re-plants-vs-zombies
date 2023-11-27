@@ -5,6 +5,7 @@
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/ButtonListener.h"
 #include "AchievementsScreen.h"
+#include "GameButton.h"
 
 class LawnApp;
 class ToolTipWidget;
@@ -102,8 +103,11 @@ public:
     virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
     virtual void                OrderInManagerChanged();
     virtual void                ButtonMouseEnter(int theId);
-    virtual void                ButtonPress(int theId, int theClickCount);
+    virtual void                ButtonPress(int theId);
     virtual void                ButtonDepress(int theId);
+    virtual void                ButtonDownTick(int){}
+    virtual void                ButtonMouseLeave(int){}
+    virtual void                ButtonMouseMove(int, int, int){}
     virtual void                KeyDown(KeyCode theKey);
     virtual void                KeyChar(char theChar);
     virtual void                MouseDown(int x, int y, int theClickCount);

@@ -59,7 +59,7 @@ class PakInterfaceBase
 {
 public:
 	virtual PFILE*			FOpen(const char* theFileName, const char* theAccess) = 0;
-	virtual PFILE*			FOpen(const wchar_t* theFileName, const wchar_t* theAccess) { return NULL; }
+//	virtual PFILE*			FOpen(const wchar_t* theFileName, const wchar_t* theAccess) { return NULL; }
 	virtual int				FClose(PFILE* theFile) = 0;
 	virtual int				FSeek(PFILE* theFile, long theOffset, int theOrigin) = 0;
 	virtual int				FTell(PFILE* theFile) = 0;
@@ -67,7 +67,7 @@ public:
 	virtual int				FGetC(PFILE* theFile) = 0;
 	virtual int				UnGetC(int theChar, PFILE* theFile) = 0;
 	virtual char*			FGetS(char* thePtr, int theSize, PFILE* theFile) = 0;
-	virtual wchar_t*		FGetS(wchar_t* thePtr, int theSize, PFILE* theFile) { return thePtr; }
+//	virtual wchar_t*		FGetS(wchar_t* thePtr, int theSize, PFILE* theFile) { return thePtr; }
 	virtual int				FEof(PFILE* theFile) = 0;
 
 	virtual HANDLE			FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) = 0;	
@@ -137,6 +137,7 @@ static PFILE* p_fopen(const char* theFileName, const char* theAccess)
 	return aPFile;
 }
 
+/*
 [[maybe_unused]]
 static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess) 
 {
@@ -151,6 +152,7 @@ static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess)
 	aPFile->mFP = aFP;
 	return aPFile;
 }
+*/
 
 [[maybe_unused]]
 static int p_fclose(PFILE* theFile)
@@ -218,6 +220,7 @@ static char* p_fgets(char* thePtr, int theSize, PFILE* theFile)
 	return fgets(thePtr, theSize, theFile->mFP);
 }
 
+/*
 [[maybe_unused]]
 static wchar_t* p_fgets(wchar_t* thePtr, int theSize, PFILE* theFile)
 {
@@ -225,6 +228,7 @@ static wchar_t* p_fgets(wchar_t* thePtr, int theSize, PFILE* theFile)
 		return (*gPakInterfaceP)->FGetS(thePtr, theSize, theFile);
 	return fgetws(thePtr, theSize, theFile->mFP);
 }
+*/
 
 [[maybe_unused]]
 static int p_feof(PFILE* theFile)

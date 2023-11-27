@@ -115,7 +115,10 @@ public:
 
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
-	virtual void			ButtonDownTick(int theId);
+	virtual void			ButtonDownTick(int){}
+	virtual void			ButtonMouseEnter(int){}
+	virtual void			ButtonMouseLeave(int){}
+	virtual void			ButtonMouseMove(int, int, int){}
 };
 
 }

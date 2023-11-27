@@ -89,7 +89,7 @@ bool BassMusicInterface::LoadMusic(int theSongId, const std::string& theFileName
 	HSTREAM aStream = 0;
 	
 	std::string anExt;
-	int aDotPos = theFileName.find_last_of('.');
+	size_t aDotPos = theFileName.find_last_of('.');
 	if (aDotPos!=std::string::npos)
 		anExt = StringToLower(theFileName.substr(aDotPos+1));
 

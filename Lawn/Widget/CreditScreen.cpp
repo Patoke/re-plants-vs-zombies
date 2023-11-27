@@ -1717,6 +1717,4 @@ void CreditScreen::ButtonDepress(int theId)
     }
 }
 
-void CreditScreen::MouseUp(int x, int y, int theClickCount)
-{
-}
+void CreditScreen::MouseUp(int, int, int){}

@@ -19,6 +19,8 @@ Insets::Insets(int theLeft, int theTop, int theRight, int theBottom) :
 {
 }
 
+// Constructor seems largely useless and deprecated.
+/*
 Insets::Insets(const Insets& theInsets) :
 	mLeft(theInsets.mLeft),
 	mTop(theInsets.mTop),
@@ -26,4 +28,4 @@ Insets::Insets(const Insets& theInsets) :
 	mBottom(theInsets.mBottom)
 {
 }
-
+*/

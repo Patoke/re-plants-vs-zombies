@@ -148,6 +148,7 @@ void UserDialog::Draw(Graphics* g)
 //0x51CF60
 void UserDialog::ListClicked(int theId, int theIdx, int theClickCount)
 {
+    (void)theId;
     if (theIdx == mNumUsers)
     {
         mApp->DoCreateUserDialog();
@@ -186,11 +187,13 @@ void UserDialog::ButtonDepress(int theId)
 //0x51D060
 void UserDialog::EditWidgetText(int theId, const SexyString& theString)
 {
+    (void)theId;(void)theString;
     mApp->ButtonDepress(mId + 2000);
 }
 
 //0x51D080
 bool UserDialog::AllowChar(int theId, SexyChar theChar)
 {
+    (void)theId;
     return sexyisdigit(theChar);
 }

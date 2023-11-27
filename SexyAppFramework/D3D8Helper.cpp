@@ -193,7 +193,7 @@ typedef struct _D3DPRESENT_PARAMETERS_
 #define D3DADAPTER_DEFAULT                     0
 #define D3DENUM_NO_WHQL_LEVEL                   0x00000002L
 
-#include "d3d8caps.h"
+#include <d3d8caps.h>
 
 DECLARE_INTERFACE_(IDirect3D8, IUnknown)
 {

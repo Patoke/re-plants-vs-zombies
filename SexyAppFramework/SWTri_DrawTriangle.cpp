@@ -2,7 +2,7 @@
 
 #pragma warning(disable:4101)
 
-#if (TRI0==0) 
+#if (TRI0==0)
 	#define PTYPE unsigned long
 	#define PIXEL_INCLUDE "SWTri_Pixel8888.cpp"
 	#define NAME0 8888
@@ -61,6 +61,7 @@
 #define funcname funcname1(NAME0,NAME1,NAME2,NAME3,NAME4,NAME5)
 void	Sexy::funcname(SWHelper::SWVertex * pVerts, void * pFrameBuffer, const unsigned int bytepitch, const SWHelper::SWTextureInfo * textureInfo, SWHelper::SWDiffuse & globalDiffuse)
 {
+	(void)globalDiffuse;
 	const int pitch = bytepitch/sizeof(PTYPE);
 	const int tex_pitch = textureInfo->pitch; (void)tex_pitch;
 	const int tex_height = textureInfo->height; (void)tex_height;

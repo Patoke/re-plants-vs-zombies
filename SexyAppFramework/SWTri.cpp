@@ -292,6 +292,7 @@ static inline int	clipShape(SWHelper::XYZStruct ** dst, SWHelper::XYZStruct ** s
 
 void SWHelper::SWDrawShape(XYZStruct *theVerts, int theNumVerts, MemoryImage *theImage, const Color &theColor, int theDrawMode, const Rect &theClipRect, void *theSurface, int thePitch, int thePixelFormat, bool blend, bool vertexColor)
 {
+   (void)theDrawMode;
 	float	tclx0 = theClipRect.mX;
 	float	tcly0 = theClipRect.mY;
 	float	tclx1 = theClipRect.mX + theClipRect.mWidth - 1;

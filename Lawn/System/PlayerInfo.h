@@ -4,7 +4,9 @@
 #define MAX_POTTED_PLANTS 200
 #define PURCHASE_COUNT_OFFSET 1000
 
+#include <ctime>
 #include "../../ConstEnums.h"
+#include "../../SexyAppFramework/Common.h"
 
 class PottedPlant
 {

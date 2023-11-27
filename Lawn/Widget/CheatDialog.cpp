@@ -70,11 +70,13 @@ void CheatDialog::Draw(Graphics* g)
 
 void CheatDialog::EditWidgetText(int theId, const SexyString& theString)
 {
+	(void)theId;(void)theString;
 	mApp->ButtonDepress(mId + 2000);
 }
 
 bool CheatDialog::AllowChar(int theId, SexyChar theChar)
 {
+	(void)theId;
 	return sexyisdigit(theChar) || theChar == _S('-') || theChar == _S('c') || theChar == _S('C') || theChar == _S('f') || theChar == _S('F');
 }
 

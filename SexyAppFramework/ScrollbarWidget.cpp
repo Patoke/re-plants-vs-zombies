@@ -229,11 +229,9 @@ void ScrollbarWidget::ButtonPress(int theId)
 	else 
 		SetValue(mValue+1);
 }
-	
-void ScrollbarWidget::ButtonDepress(int theId)
-{
-}
-	
+
+void ScrollbarWidget::ButtonDepress(int){}
+
 void ScrollbarWidget::ButtonDownTick(int theId)
 {
 	if (theId == 0) 

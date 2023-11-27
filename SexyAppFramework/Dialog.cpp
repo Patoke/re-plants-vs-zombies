@@ -402,6 +402,8 @@ void Dialog::ButtonDepress(int theId)
 	}
 }
 
+/*
 void Dialog::ButtonDownTick(int theId)
 {	
 }
+*/

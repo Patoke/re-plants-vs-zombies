@@ -657,7 +657,7 @@ bool DSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& theFil
 
 	uchar* aSrcBuffer = new uchar[aDataSize];
 	
-	int aReadSize = p_fread(aSrcBuffer, 1, aDataSize, fp);
+	ulong aReadSize = p_fread(aSrcBuffer, 1, aDataSize, fp);
 	p_fclose(fp);
 
 	if (ulaw)
@@ -1087,11 +1087,11 @@ void DSoundManager::Flush()
 {
 }
 
-void DSoundManager::SetCooperativeWindow(HWND theHWnd, bool isWindowed)
+void DSoundManager::SetCooperativeWindow(HWND theHWnd)
 {
 	if (mDirectSound != NULL)
 		mDirectSound->SetCooperativeLevel(theHWnd,DSSCL_NORMAL);
-/*
+	/*
 	if (isWindowed==true) mDirectSound->SetCooperativeLevel(theHWnd,DSSCL_NORMAL);
 	else mDirectSound->SetCooperativeLevel(theHWnd,DSSCL_EXCLUSIVE);
 	*/

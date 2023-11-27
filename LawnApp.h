@@ -200,6 +200,10 @@ public:
 	virtual void					UpdateRegisterInfo();
 	virtual void					ButtonPress(int theId);
 	virtual void					ButtonDepress(int theId);
+	virtual void					ButtonDownTick(int theId);
+	virtual void					ButtonMouseEnter(int theId);
+	virtual void					ButtonMouseLeave(int theId);
+	virtual void					ButtonMouseMove(int theId, int theX, int theY);
 	virtual void					UpdateFrames();
 	virtual bool					UpdateApp();
 	/*inline*/ bool					IsAdventureMode();
@@ -289,8 +293,6 @@ public:
 	static SexyString				GetMoneyString(int theAmount);
 	bool							AdvanceCrazyDaveText();
 	/*inline*/ bool					IsWhackAZombieLevel();
-	void							BetaSubmit(bool theAskForComments);
-	void							BetaRecordLevelStats();
 	void							UpdatePlayTimeStats();
 	void							BetaAddFile(std::list<std::string>& theUploadFileList, std::string theFileName, std::string theShortName);
 	bool							CanPauseNow();
@@ -302,7 +304,7 @@ public:
 	/*inline*/ int					TrophiesNeedForGoldSunflower();
 	/*inline*/ int					GetCurrentChallengeIndex();
 	void							LoadGroup(const char* theGroupName, int theGroupAveMsToLoad);
-	void							TraceLoadGroup(const char* theGroupName, int theGroupTime, int theTotalGroupWeigth, int theTaskWeight);
+//	void							TraceLoadGroup(const char* theGroupName, int theGroupTime, int theTotalGroupWeigth, int theTaskWeight);
 	void							CrazyDaveStopSound();
 	/*inline*/ bool					IsTrialStageLocked();
 	/*inline*/ void					FinishZenGardenToturial();

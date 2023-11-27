@@ -37,7 +37,7 @@ public:
 	virtual void			SetMasterVolume(double theVolume) = 0;
 
 	virtual void			Flush() = 0;
-	virtual void			SetCooperativeWindow(HWND theHWnd, bool isWindowed) = 0;
+	virtual void			SetCooperativeWindow(HWND theHWnd) = 0;
 	virtual void			StopAllSounds() = 0;
 	virtual int				GetFreeSoundId() = 0;
 	virtual int				GetNumSounds() = 0;

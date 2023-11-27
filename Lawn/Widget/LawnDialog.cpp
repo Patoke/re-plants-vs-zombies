@@ -83,14 +83,14 @@ int LawnDialog::GetTop()
 //0x456F30
 void LawnDialog::CalcSize(int theExtraX, int theExtraY)
 {
-    // ¸ù¾İ±ß¾à¼ÆËãÒ»¸ö×îĞ¡¿í¶È
+    // æ ¹æ®è¾¹è·è®¡ç®—ä¸€ä¸ªæœ€å°å®½åº¦
     int aWidth = mBackgroundInsets.mLeft + mBackgroundInsets.mRight + mContentInsets.mLeft + mContentInsets.mRight + theExtraX;
-    // ×îĞ¡¿í¶ÈĞèÒª¶îÍâ¿¼ÂÇµ½±êÌâ×Ö·û´®µÄ¿í¶È
+    // æœ€å°å®½åº¦éœ€è¦é¢å¤–è€ƒè™‘åˆ°æ ‡é¢˜å­—ç¬¦ä¸²çš„å®½åº¦
     if (mDialogHeader.size() > 0) aWidth += mHeaderFont->StringWidth(mDialogHeader);
-    // ¶Ô»°¿òÌùÍ¼µÄ×îĞ¡¿í¶È
+    // å¯¹è¯æ¡†è´´å›¾çš„æœ€å°å®½åº¦
     int aTopMidWidth = Sexy::IMAGE_DIALOG_TOPMIDDLE->mWidth;
     int aImageWidth = Sexy::IMAGE_DIALOG_TOPLEFT->mWidth + Sexy::IMAGE_DIALOG_TOPRIGHT->mWidth + aTopMidWidth;
-    // ¼ÆËã×îÖÕµÄ¿í¶È
+    // è®¡ç®—æœ€ç»ˆçš„å®½åº¦
     if (aWidth <= aImageWidth)
     {
         aWidth = aImageWidth;
@@ -104,14 +104,14 @@ void LawnDialog::CalcSize(int theExtraX, int theExtraY)
         }
     }
 
-    // ¸ù¾İ±ß¾à¼ÆËãÒ»¸ö×îĞ¡¸ß¶È
+    // æ ¹æ®è¾¹è·è®¡ç®—ä¸€ä¸ªæœ€å°é«˜åº¦
     int aHeight = mBackgroundInsets.mTop + mBackgroundInsets.mBottom + mContentInsets.mTop + mContentInsets.mBottom + theExtraY + DIALOG_HEADER_OFFSET;
-    // ¶îÍâ¿¼ÂÇµ½±êÌâ×Ö·û´®µÄ¸ß¶È
+    // é¢å¤–è€ƒè™‘åˆ°æ ‡é¢˜å­—ç¬¦ä¸²çš„é«˜åº¦
     if (mDialogHeader.size() > 0)
     {
         aHeight += -mHeaderFont->GetAscentPadding() + mHeaderFont->GetHeight() + mSpaceAfterHeader;
     }
-    // ¶Ô»°¿ò¿í¶ÈºÍ¸ß¶È¶îÍâ¿¼ÂÇÕıÎÄÎÄ±¾
+    // å¯¹è¯æ¡†å®½åº¦å’Œé«˜åº¦é¢å¤–è€ƒè™‘æ­£æ–‡æ–‡æœ¬
     if (mDialogLines.size() > 0)
     {
         aWidth += aTopMidWidth;
@@ -121,10 +121,10 @@ void LawnDialog::CalcSize(int theExtraX, int theExtraY)
         aHeight += GetWordWrappedHeight(&g, aBasicWidth, mDialogLines, mLinesFont->GetLineSpacing() + mLineSpacingOffset) + 30;
     }
     aHeight += mButtonHeight;
-    // ¶Ô»°¿òÌùÍ¼µÄ×îĞ¡¸ß¶È
+    // å¯¹è¯æ¡†è´´å›¾çš„æœ€å°é«˜åº¦
     int aBottomHeight = (mTallBottom ? Sexy::IMAGE_DIALOG_BIGBOTTOMLEFT : Sexy::IMAGE_DIALOG_BOTTOMLEFT)->mHeight;
     int aImageHeight = Sexy::IMAGE_DIALOG_TOPLEFT->mHeight + aBottomHeight + DIALOG_HEADER_OFFSET;
-    // ¼ÆËã×îÖÕµÄ¸ß¶È
+    // è®¡ç®—æœ€ç»ˆçš„é«˜åº¦
     if (aHeight < aImageHeight)
     {
         aHeight = aImageHeight;
@@ -186,6 +186,7 @@ void LawnDialog::Update()
 //0x4572E0
 void LawnDialog::ButtonPress(int theId)
 {
+    (void)theId;
     mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 }
 
@@ -199,7 +200,7 @@ void LawnDialog::ButtonDepress(int theId)
 }
 
 //0x457320
-void LawnDialog::CheckboxChecked(int theId, bool theChecked)
+void LawnDialog::CheckboxChecked()
 {
     mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
 }
@@ -233,12 +234,12 @@ void LawnDialog::Resize(int theX, int theY, int theWidth, int theHeight)
     int aButtonAreaX = mContentInsets.mLeft + mBackgroundInsets.mLeft - 5;
     int aButtonAreaY = mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - IMAGE_BUTTON_LEFT->mHeight + 2;
     int aButtonAreaWidth = mWidth - mContentInsets.mRight - mBackgroundInsets.mRight - mBackgroundInsets.mLeft - mContentInsets.mLeft + 8;
-    // °´Å¥ÌùÍ¼ÏŞÖÆÏÂ£¬°´Å¥µÄ×îĞ¡¿í¶È
+    // æŒ‰é’®è´´å›¾é™åˆ¶ä¸‹ï¼ŒæŒ‰é’®çš„æœ€å°å®½åº¦
     int aButtonMinWidth = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
-    // °´Å¥ÇøÓò¶îÍâ¿ÕÓàµÄ¿í¶È
+    // æŒ‰é’®åŒºåŸŸé¢å¤–ç©ºä½™çš„å®½åº¦
     int aBtnMidWidth = IMAGE_BUTTON_MIDDLE->mWidth;
     int aButtonExtraWidth = (aButtonAreaWidth - 10) / 2 - aBtnMidWidth - aButtonMinWidth + 1;
-    // ¼ÆËã°´Å¥¿ÉÒÔÍØÕ¹µÄ¶îÍâ¿í¶È
+    // è®¡ç®—æŒ‰é’®å¯ä»¥æ‹“å±•çš„é¢å¤–å®½åº¦
     if (aButtonExtraWidth <= 0)
     {
         aButtonExtraWidth = 0;
@@ -248,11 +249,11 @@ void LawnDialog::Resize(int theX, int theY, int theWidth, int theHeight)
         int anExtraWidth = aButtonExtraWidth % aBtnMidWidth;
         if (anExtraWidth)
         {
-            // ²»×ãÖĞ²¿ÌùÍ¼¿í¶ÈµÄ²¿·Ö²¹³äÖÁÖĞ²¿ÌùÍ¼¿í¶È
+            // ä¸è¶³ä¸­éƒ¨è´´å›¾å®½åº¦çš„éƒ¨åˆ†è¡¥å……è‡³ä¸­éƒ¨è´´å›¾å®½åº¦
             aButtonExtraWidth += aBtnMidWidth - anExtraWidth;
         }
     }
-    // ×îÖÕ¿í¶È
+    // æœ€ç»ˆå®½åº¦
     int aButtonWidth = aButtonMinWidth + aButtonExtraWidth;
 
     if (mTallBottom)
@@ -390,7 +391,7 @@ ReanimationWidget::ReanimationWidget()
     mHasAlpha = true;
 }
 
-//0x4579F0¡¢0x457A10
+//0x4579F0ã€0x457A10
 ReanimationWidget::~ReanimationWidget()
 {
     Dispose();

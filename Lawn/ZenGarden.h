@@ -2,6 +2,7 @@
 #define __ZENGARDEN_H__
 
 #include "../ConstEnums.h"
+#include <corecrt.h>
 
 #define ZEN_MAX_GRIDSIZE_X 8
 #define ZEN_MAX_GRIDSIZE_Y 4
@@ -39,7 +40,7 @@ public:
 public:
     ZenGarden();
 
-    void                    ZenGardenInitLevel(bool theJustSwitchingGardens);
+    void                    ZenGardenInitLevel();
     /*inline*/ void         DrawPottedPlantIcon(Graphics* g, float x, float y, PottedPlant* thePottedPlant);
     void                    DrawPottedPlant(Graphics* g, float x, float y, PottedPlant* thePottedPlant, float theScale, bool theDrawPot);
     bool                    IsZenGardenFull(bool theIncludeDroppedPresents);

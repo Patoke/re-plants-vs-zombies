@@ -204,6 +204,7 @@ PixelFormat D3DInterface::GetDDPixelFormat(LPDDPIXELFORMAT theFormat)
 ///////////////////////////////////////////////////////////////////////////////
 HRESULT CALLBACK D3DInterface::PixelFormatsCallback(LPDDPIXELFORMAT theFormat, LPVOID lpContext)
 {
+	(void)lpContext;
 	gSupportedPixelFormats |= D3DInterface::GetDDPixelFormat(theFormat);
 	
 	return D3DENUMRET_OK; 
@@ -1856,6 +1857,7 @@ void D3DInterface::Cleanup()
 ///////////////////////////////////////////////////////////////////////////////
 void D3DInterface::SetupDrawMode(int theDrawMode, const Color &theColor, Image *theImage)
 {
+	(void)theColor;(void)theImage;
 	if (theDrawMode == Graphics::DRAWMODE_NORMAL)
 	{
 /*		if (theImage != NULL)

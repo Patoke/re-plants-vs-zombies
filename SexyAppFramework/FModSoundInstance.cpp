@@ -17,17 +17,13 @@ FModSoundInstance::~FModSoundInstance()
 void FModSoundInstance::Release()
 {	
 }
-	
-void FModSoundInstance::SetVolume(double theVolume)
-{
-}
 
-void FModSoundInstance::SetPan(int thePosition)
-{
-}
+void FModSoundInstance::SetVolume(double){}
+void FModSoundInstance::SetPan(int){}
 
 bool FModSoundInstance::Play(bool looping, bool autoRelease)
 {
+	(void)looping;(void)autoRelease;
 	if (mStream == NULL)
 		return false;
 

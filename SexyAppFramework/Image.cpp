@@ -213,13 +213,11 @@ Graphics* Image::GetGraphics()
 	return g;
 }
 
-void Image::FillRect(const Rect& theRect, const Color& theColor, int theDrawMode)
-{
-}
 
-void Image::ClearRect(const Rect& theRect)
-{
-}
+void Image::FillRect(const Rect&, const Color&, int){}
+
+void Image::ClearRect(const Rect&){}
+
 
 void Image::DrawRect(const Rect& theRect, const Color& theColor, int theDrawMode)
 {
@@ -229,13 +227,8 @@ void Image::DrawRect(const Rect& theRect, const Color& theColor, int theDrawMode
 	FillRect(Rect(theRect.mX + theRect.mWidth, theRect.mY + 1, 1, theRect.mHeight - 1), theColor, theDrawMode);
 }
 
-void Image::DrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
-{
-}
-
-void Image::DrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
-{
-}
+void Image::DrawLine(double, double, double, double, const Color&, int){}
+void Image::DrawLineAA(double, double, double, double, const Color&, int){}
 
 void Image::FillScanLines(Span* theSpans, int theSpanCount, const Color& theColor, int theDrawMode)
 {
@@ -246,45 +239,17 @@ void Image::FillScanLines(Span* theSpans, int theSpanCount, const Color& theColo
 	}
 }
 
-void Image::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const Color& theColor, int theDrawMode, const BYTE* theCoverage, int theCoverX, int theCoverY, int theCoverWidth, int theCoverHeight)
-{
-}
 
-bool Image::PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty, bool convex)
+void Image::FillScanLinesWithCoverage(Span*, int, const Color&, int, const BYTE*, int, int, int, int){}
+bool Image::PolyFill3D(const Point*, int, const Rect*, const Color&,int ,int, int)
 {
 	return false;
 }
-
-void Image::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode)
-{
-}
-
-void Image::BltF(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect &theClipRect, const Color& theColor, int theDrawMode)
-{
-}
-
-void Image::BltRotated(Image* theImage, float theX, float theY, const Rect &theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, double theRot, float theRotCenterX, float theRotCenterY)
-{
-}
-
-void Image::StretchBlt(Image* theImage, const Rect& theDestRect, const Rect& theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, bool fastStretch)
-{
-}
-
-void Image::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3 &theMatrix, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect &theSrcRect, bool blend)
-{
-}
-
-void Image::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3], int theNumTriangles, const Rect& theClipRect, const Color &theColor, int theDrawMode, float tx, float ty, bool blend)
-{
-}
-
-
-void Image::BltMirror(Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode)
-{
-}
-
-void Image::StretchBltMirror(Image* theImage, const Rect& theDestRect, const Rect& theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, bool fastStretch)
-{
-}
-
+void Image::Blt(Image*, int, int, const Rect&, const Color&, int){}
+void Image::BltF(Image*, float, float, const Rect&, const Rect&, const Color&, int){}
+void Image::BltRotated(Image*, float, float, const Rect &, const Rect&, const Color&, int, double, float, float){}
+void Image::StretchBlt(Image*, const Rect&, const Rect&, const Rect&, const Color&, int, bool){}
+void Image::BltMatrix(Image*, float, float, const SexyMatrix3&, const Rect&, const Color&, int, const Rect&, bool){}
+void Image::BltTrianglesTex(Image*, const TriVertex (*)[3], int, const Rect&, const Color &, int, float, float, bool){}
+void Image::BltMirror(Image*, int, int, const Rect&, const Color&, int){}
+void Image::StretchBltMirror(Image*, const Rect&, const Rect&, const Rect&, const Color&, int, bool){}

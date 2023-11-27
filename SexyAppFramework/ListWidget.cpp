@@ -311,7 +311,7 @@ int ListWidget::GetOptimalWidth()
 	int aMaxWidth = 0;
 	
 	for (ulong i = 0; i < mLines.size(); i++) 
-		aMaxWidth = max(aMaxWidth, mFont->StringWidth(mLines[i]));
+		aMaxWidth = std::max(aMaxWidth, mFont->StringWidth(mLines[i]));
 
 	return aMaxWidth + 16;
 }
@@ -347,7 +347,7 @@ void ListWidget::Draw(Graphics *g)
 	aClipG.SetFont(mFont);
 		
 	int aFirstLine = (int) mPosition;
-	int aLastLine = min((int) mLines.size()-1, (int) mPosition + (int) mPageSize + 1);
+	int aLastLine = std::min((int) mLines.size()-1, (int) mPosition + (int) mPageSize + 1);
 		
 	int anItemHeight, anItemOffset;
 	if (mItemHeight != -1)
@@ -423,6 +423,7 @@ void ListWidget::SetHilite(int theHiliteIdx, bool notifyListener)
 	
 void ListWidget::MouseMove(int x, int y) 
 {
+	(void)x;
 	int anItemHeight = (mItemHeight != -1) ? mItemHeight : mFont->GetHeight();
 		
 	int aNewHilite = (int) (((y - 4) / (double) anItemHeight) + mPosition);
@@ -452,6 +453,7 @@ void ListWidget::MouseMove(int x, int y)
 	
 void ListWidget::MouseDown(int x, int y, int theBtnNum, int theClickCount) 
 {
+	(void)x;(void)y;(void)theBtnNum;
 	if ((mHiliteIdx != -1) && (mListListener != NULL))
 		mListListener->ListClicked(mId, mHiliteIdx, theClickCount);
 }

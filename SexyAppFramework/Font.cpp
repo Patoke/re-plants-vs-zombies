@@ -53,10 +53,12 @@ int _Font::GetLineSpacing()
 	return mHeight + mLineSpacingOffset;
 }
 
-int _Font::StringWidth(const SexyString& theString)
+
+int _Font::StringWidth(const SexyString&)
 {
 	return 0;
 }
+
 
 int _Font::CharWidth(SexyChar theChar)
 {
@@ -64,11 +66,10 @@ int _Font::CharWidth(SexyChar theChar)
 	return StringWidth(aString);
 }
 
-int _Font::CharWidthKern(SexyChar theChar, SexyChar thePrevChar)
+int _Font::CharWidthKern(SexyChar theChar, SexyChar)
 {
 	return CharWidth(theChar);
 }
 
-void _Font::DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect)
-{
-}
+void _Font::DrawString(Graphics*, int, int, const SexyString&, const Color&, const Rect&){}
+

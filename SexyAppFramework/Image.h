@@ -79,7 +79,7 @@ public:
 	void					CopyAttributes(Image *from);
 	Graphics*				GetGraphics();
 
-	virtual bool			PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty, bool convex);
+	virtual bool			PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty);
 
 	virtual void			FillRect(const Rect& theRect, const Color& theColor, int theDrawMode);	
 	virtual void			DrawRect(const Rect& theRect, const Color& theColor, int theDrawMode);

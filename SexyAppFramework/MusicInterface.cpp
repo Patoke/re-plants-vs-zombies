@@ -13,78 +13,31 @@ MusicInterface::~MusicInterface()
 
 bool MusicInterface::LoadMusic(int theSongId, const std::string& theFileName)
 {
+	(void)theSongId;(void)theFileName;
 	return false;
 }
 
-void MusicInterface::PlayMusic(int theSongId, int theOffset, bool noLoop)	
-{
-}
-
-void MusicInterface::StopMusic(int theSongId)
-{
-}
-
-void MusicInterface::PauseMusic(int theSongId)
-{
-}
-
-void MusicInterface::ResumeMusic(int theSongId)
-{
-}
-
-void MusicInterface::StopAllMusic()		
-{
-}
-
-void MusicInterface::UnloadMusic(int theSongId)
-{
-}
-
-void MusicInterface::UnloadAllMusic()
-{
-}
-
-void MusicInterface::PauseAllMusic()
-{
-}
-
-void MusicInterface::ResumeAllMusic()
-{
-}
-
-void MusicInterface::FadeIn(int theSongId, int theOffset, double theSpeed, bool noLoop)
-{
-}
-
-void MusicInterface::FadeOut(int theSongId, bool stopSong, double theSpeed)
-{
-}
-
-void MusicInterface::FadeOutAll(bool stopSong, double theSpeed)
-{
-}
-
-void MusicInterface::SetSongVolume(int theSongId, double theVolume)
-{
-}
-
-void MusicInterface::SetSongMaxVolume(int theSongId, double theMaxVolume)
-{
-}
+void MusicInterface::PlayMusic(int, int, bool){}
+void MusicInterface::StopMusic(int){}
+void MusicInterface::PauseMusic(int){}
+void MusicInterface::ResumeMusic(int){}
+void MusicInterface::StopAllMusic(){}
+void MusicInterface::UnloadMusic(int){}
+void MusicInterface::UnloadAllMusic(){}
+void MusicInterface::PauseAllMusic(){}
+void MusicInterface::ResumeAllMusic(){}
+void MusicInterface::FadeIn(int, int, double, bool){}
+void MusicInterface::FadeOut(int, bool, double){}
+void MusicInterface::FadeOutAll(bool, double){}
+void MusicInterface::SetSongVolume(int, double){}
+void MusicInterface::SetSongMaxVolume(int, double){}
 
 bool MusicInterface::IsPlaying(int theSongId)
 {
+	(void)theSongId;
 	return false;
 }
 
-void MusicInterface::SetVolume(double theVolume)
-{
-}
-
-void MusicInterface::SetMusicAmplify(int theSongId, double theAmp)
-{
-}
-
-void MusicInterface::Update()
-{
-}
+void MusicInterface::SetVolume(double){}
+void MusicInterface::SetMusicAmplify(int, double){}
+void MusicInterface::Update(){}

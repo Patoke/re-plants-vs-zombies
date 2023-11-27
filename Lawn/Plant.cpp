@@ -1465,7 +1465,7 @@ Zombie* Plant::FindSquashTarget()
                     if (aZombie->IsWalkingBackwards() || aZombieRect.mX + aZombieRect.mWidth >= aPlantX)
                     {
                         if (mBoard->ZombieGetID(aZombie) == mTargetZombieID)
-                            return aZombie;  // ÊÇËø¶¨µÄÄ¿±ê½©Ê¬£¬ÔòÖ±½Ó·µ»Ø¸Ã½©Ê¬
+                            return aZombie;  // æ˜¯é”å®šçš„ç›®æ ‡åƒµå°¸ï¼Œåˆ™ç›´æ¥è¿”å›è¯¥åƒµå°¸
 
                         if (aClosestZombie == nullptr || aRange < aClosestRange)
                         {
@@ -4311,13 +4311,13 @@ void Plant::BurnRow(int theRow)
     Zombie* aBossZombie = mBoard->GetBossZombie();
     if (aBossZombie && aBossZombie->mFireballRow == theRow)
     {
-        // ×¢£ºÔ­°æÖĞ½« Zombie::BossDestroyIceballInRow(int) º¯Êı¸ÄÎªÁË Zombie::BossDestroyIceball()£¬±ùÇòÊÇ·ñÎ»ÓÚÄ¿±êĞĞµÄÅĞ¶ÏÔòÒÆ¶¯ÖÁ´Ë´¦½øĞĞ
-        aBossZombie->BossDestroyIceballInRow(theRow);
+        // æ³¨ï¼šåŸç‰ˆä¸­å°† Zombie::BossDestroyIceballInRow(int) å‡½æ•°æ”¹ä¸ºäº† Zombie::BossDestroyIceball()ï¼Œå†°çƒæ˜¯å¦ä½äºç›®æ ‡è¡Œçš„åˆ¤æ–­åˆ™ç§»åŠ¨è‡³æ­¤å¤„è¿›è¡Œ
+        aBossZombie->BossDestroyIceballInRow();
     }
 }
 
 //0x4665B0
-void Plant::BlowAwayFliers(int theX, int theRow)
+void Plant::BlowAwayFliers()
 {
     Zombie* aZombie = nullptr;
     while (mBoard->IterateZombies(aZombie))
@@ -4365,7 +4365,7 @@ void Plant::DoSpecial()
         if (mState != PlantState::STATE_DOINGSPECIAL)
         {
             mState = PlantState::STATE_DOINGSPECIAL;
-            BlowAwayFliers(mX, mRow);
+            BlowAwayFliers();
         }
         break;
     }
@@ -4925,7 +4925,7 @@ Zombie* Plant::FindTargetZombie(int theRow, PlantWeapon thePlantWeapon)
                 if (aZombie->mZombieType == ZombieType::ZOMBIE_POLEVAULTER)
                 {
                     aAttackRect.mX += 40;
-                    aAttackRect.mWidth -= 40;  // Ô­°æ¾­µäÍÁ¶¹µØÀ× Bug ¼°¡°ËÄ³Å¸ËÒıÀ×¡±µÄÔ­Àí
+                    aAttackRect.mWidth -= 40;  // åŸç‰ˆç»å…¸åœŸè±†åœ°é›· Bug åŠâ€œå››æ’‘æ†å¼•é›·â€çš„åŸç†
                 }
 
                 if (aZombie->mZombieType == ZombieType::ZOMBIE_BUNGEE && aZombie->mTargetCol != mPlantCol)
@@ -4959,7 +4959,7 @@ Zombie* Plant::FindTargetZombie(int theRow, PlantWeapon thePlantWeapon)
                 aWeight = -Distance2D(mX + 40.0f, mY + 40.0f, aZombieRect.mX + aZombieRect.mWidth / 2, aZombieRect.mY + aZombieRect.mHeight / 2);
                 if (aZombie->IsFlying())
                 {
-                    aWeight += 10000;  // ÓÅÏÈ¹¥»÷·ÉĞĞµ¥Î»
+                    aWeight += 10000;  // ä¼˜å…ˆæ”»å‡»é£è¡Œå•ä½
                 }
             }
 

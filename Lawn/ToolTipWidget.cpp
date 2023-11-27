@@ -73,7 +73,7 @@ void ToolTipWidget::CalculateSize()
 	mGetsLinesWidth = max(aMaxWidth - 30, 100);
 	GetLines(aLines);
 
-	for (int i = 0; i < aLines.size(); i++)
+	for (size_t i = 0; i < aLines.size(); i++)
 	{
 		int aLineWidth = FONT_PICO129->StringWidth(aLines[i]);
 		aMaxWidth = max(aMaxWidth, aLineWidth);
@@ -181,7 +181,7 @@ void ToolTipWidget::Draw(Graphics* g)
 	GetLines(aLines);
 
 	g->SetFont(FONT_PICO129);
-	for (int i = 0; i < aLines.size(); i++)
+	for (size_t i = 0; i < aLines.size(); i++)
 	{
 		SexyString aLine = aLines[i];
 		g->DrawString(aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());

@@ -125,6 +125,7 @@ static int icomp(const void *a,const void *b){
 
 static vorbis_look_floor *floor1_look(vorbis_dsp_state *vd,vorbis_info_mode *mi,
                               vorbis_info_floor *in){
+  (void)vd;(void)mi;
 
   int *sortpointer[VIF_POSIT+2];
   vorbis_info_floor1 *info=(vorbis_info_floor1 *)in;

@@ -1194,6 +1194,7 @@ void GameSelector::KeyChar(char theChar)
 // GOTY @Patoke: 0x44F040
 void GameSelector::MouseDown(int x, int y, int theClickCount)
 {
+	(void)theClickCount;
 	for (int i = 0; i < 3; i++)
 	{
 		Reanimation* aFlowerReanim = mApp->ReanimationGet(mFlowerReanimID[i]);
@@ -1222,7 +1223,7 @@ void GameSelector::ButtonMouseEnter(int theId)
 
 //0x44C540
 // GOTY @Patoke: 0x44F220
-void GameSelector::ButtonPress(int theId, int theClickCount)
+void GameSelector::ButtonPress(int theId)
 {
 	if (theId == GameSelector::GameSelector_Adventure || theId == GameSelector::GameSelector_Minigame ||
 		theId == GameSelector::GameSelector_Puzzle || theId == GameSelector::GameSelector_Survival ||

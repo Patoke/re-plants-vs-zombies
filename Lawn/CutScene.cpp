@@ -1700,6 +1700,7 @@ void CutScene::AdvanceCrazyDaveDialog(bool theJustSkipping)
 //0x43CE00
 void CutScene::MouseDown(int theX, int theY)
 {
+	(void)theX;(void)theY;
 	if (mApp->mTodCheatKeys && mApp->mGameMode == GameMode::GAMEMODE_UPSELL)
 	{
 		if (mCrazyDaveCountDown > 1)
@@ -1770,7 +1771,7 @@ void CutScene::KeyDown(KeyCode theKey)
 int CutScene::ParseDelayTimeFromMessage()
 {
 	SexyString aCrazyDaveText = mApp->GetCrazyDaveText(mCrazyDaveLastTalkIndex);
-	int anIndex = aCrazyDaveText.find(_S("{DELAY_"));
+	size_t anIndex = aCrazyDaveText.find(_S("{DELAY_"));
 	if (anIndex != SexyString::npos)
 	{
 		SexyString aDelayTimeStr = aCrazyDaveText.substr(anIndex + 7, aCrazyDaveText.find(_S("}")) - anIndex - 7);

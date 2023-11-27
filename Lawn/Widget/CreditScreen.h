@@ -108,6 +108,10 @@ public:
 	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
+	virtual void			ButtonDownTick(int){}
+	virtual void			ButtonMouseEnter(int){}
+	virtual void			ButtonMouseLeave(int){}
+	virtual void			ButtonMouseMove(int, int, int){}
 	Reanimation*			PlayReanim(int aIndex);
 	void					JumpToFrame(CreditsPhase thePhase, float theFrame);
 	void					GetTiming(CreditsTiming** theBeforeTiming, CreditsTiming** theAfterTiming, float* theFraction);

@@ -91,7 +91,7 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector) :
     }
 }
 
-//0x45C760¡¢0x45C780
+//0x45C760ã€0x45C780
 NewOptionsDialog::~NewOptionsDialog()
 {
     delete mMusicVolumeSlider;
@@ -107,6 +107,7 @@ NewOptionsDialog::~NewOptionsDialog()
 //0x45C880
 int NewOptionsDialog::GetPreferredHeight(int theWidth)
 {
+    (void)theWidth;
     return IMAGE_OPTIONS_MENUBACK->mWidth;
 }
 
@@ -289,6 +290,7 @@ void NewOptionsDialog::KeyDown(Sexy::KeyCode theKey)
 //0x45D2F0
 void NewOptionsDialog::ButtonPress(int theId)
 {
+    (void)theId;
     mApp->PlaySample(SOUND_GRAVEBUTTON);
 }
 

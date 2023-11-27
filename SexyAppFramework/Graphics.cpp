@@ -265,7 +265,7 @@ void Graphics::PFInsert(int i, int y) // append edge i to end of active list
 
 void Graphics::PolyFill(const Point *theVertexList, int theNumVertices, bool convex)
 {
-	if (convex && mDestImage->PolyFill3D(theVertexList,theNumVertices,&mClipRect,mColor,mDrawMode,mTransX,mTransY,convex))
+	if (convex && mDestImage->PolyFill3D(theVertexList,theNumVertices,&mClipRect,mColor,mDrawMode,mTransX,mTransY))
 		return;
 
 	Span aSpans[MAX_TEMP_SPANS];
@@ -359,7 +359,7 @@ void Graphics::PolyFill(const Point *theVertexList, int theNumVertices, bool con
 
 void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool convex)
 {
-	if (convex && mDestImage->PolyFill3D(theVertexList,theNumVertices,&mClipRect,mColor,mDrawMode,mTransX,mTransY,convex))
+	if (convex && mDestImage->PolyFill3D(theVertexList,theNumVertices,&mClipRect,mColor,mDrawMode,mTransX,mTransY))
 		return;
 
 	int i;

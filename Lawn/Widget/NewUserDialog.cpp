@@ -66,6 +66,7 @@ void NewUserDialog::Draw(Graphics* g)
 //0x45D9D0
 void NewUserDialog::EditWidgetText(int theId, const SexyString& theString)
 {
+	(void)theId;(void)theString;
 	mApp->ButtonDepress(mId + 2000);
 }
 
@@ -81,7 +82,7 @@ SexyString NewUserDialog::GetName()
 	SexyString aString;
 	SexyChar aLastChar = _S(' ');
 
-	for (int i = 0; i < mNameEditWidget->mString.size(); i++)
+	for (size_t i = 0; i < mNameEditWidget->mString.size(); i++)
 	{
 		SexyChar aChar = mNameEditWidget->mString[i];
 		if (aChar != _S(' '))

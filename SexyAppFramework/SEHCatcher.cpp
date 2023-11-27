@@ -3,11 +3,6 @@
 #include <fstream>
 #include <process.h>
 
-#ifdef ZYLOM
-#include "zylomso.h"
-using namespace zylom::zylomso;
-#endif
-
 using namespace Sexy;
 
 LPTOP_LEVEL_EXCEPTION_FILTER SEHCatcher::mPreviousFilter;
@@ -398,7 +393,7 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 		aWalkString = ImageHelpWalk(lpEP->ContextRecord, 0);
 
 	if (aWalkString.length() == 0)
-		aWalkString = IntelWalk(lpEP->ContextRecord, 0);
+		aWalkString = IntelWalk(lpEP->ContextRecord);
 
 	aDebugDump += aWalkString;
 
@@ -474,7 +469,7 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 	UnloadImageHelp();  
 }
 
-std::string SEHCatcher::IntelWalk(PCONTEXT theContext, int theSkipCount)
+std::string SEHCatcher::IntelWalk(PCONTEXT theContext)
 {
 	std::string aDebugDump;
 	char aBuffer[2048];
@@ -860,6 +855,7 @@ void SEHCatcher::WriteToFile(const std::string& theErrorText)
 
 void SEHCatcher::SubmitReportThread(void *theArg)
 {
+	(void)theArg;
 	std::string aSeperator = "---------------------------7d3e1f30eec";
 	
 	DefinesMap aSEHWebParams;

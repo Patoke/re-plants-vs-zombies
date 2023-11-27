@@ -63,6 +63,7 @@
 #endif
 void	funcname(SWHelper::SWVertex* pVerts, void* pFrameBuffer, const unsigned int bytepitch, const SWHelper::SWTextureInfo* textureInfo, SWHelper::SWDiffuse& globalDiffuse)
 {
+	(void)globalDiffuse;
 #if !defined(NAME_ADDITIVE)
 	if (gTodTriangleDrawAdditive)
 	{

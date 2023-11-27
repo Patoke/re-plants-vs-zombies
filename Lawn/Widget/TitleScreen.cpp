@@ -429,7 +429,7 @@ void TitleScreen::Update()
 		mTotalBarWidth * 0.91f 
 	};
 
-	for (int i = 0; i < LENGTH(aTriggerPoint); i++)
+	for (size_t i = 0; i < LENGTH(aTriggerPoint); i++)
 	{
 		if (aPrevWidth < aTriggerPoint[i] && mCurBarWidth >= aTriggerPoint[i])
 		{
@@ -493,6 +493,7 @@ void TitleScreen::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
 //0x48E600
 void TitleScreen::ButtonPress(int theId)
 {
+	(void)theId;
 	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
 }
 
@@ -514,6 +515,7 @@ void TitleScreen::ButtonDepress(int theId)
 //0x48E650
 void TitleScreen::MouseDown(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;(void)theClickCount;
 	if (mLoadingThreadComplete)
 	{
 		mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);

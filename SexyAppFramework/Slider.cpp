@@ -78,6 +78,7 @@ void Slider::Draw(Graphics* g)
 
 void Slider::MouseDown(int x, int y, int theClickCount)
 {
+	(void)theClickCount;
 	if (mHorizontal)
 	{
 		int aThumbX = (int) (mVal * (mWidth - mThumbImage->GetWidth()));
@@ -162,6 +163,7 @@ void Slider::MouseDrag(int x, int y)
 
 void Slider::MouseUp(int x, int y)
 {
+	(void)x;(void)y;
 	mDragging = false;
 	mWidgetManager->mApp->SetCursor(CURSOR_POINTER);
 	mListener->SliderVal(mId, mVal);

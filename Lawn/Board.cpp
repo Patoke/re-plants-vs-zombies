@@ -2474,7 +2474,7 @@ ZombieType Board::GetIntroducedZombieType()
 }
 
 //0x40D770
-ZombieType Board::PickGraveRisingZombieType(int theZombiePoints)
+ZombieType Board::PickGraveRisingZombieType()
 {
 	TodWeightedArray aZombieWeightArray[(int)ZombieType::NUM_ZOMBIE_TYPES];
 	int aCount = 2;
@@ -4941,7 +4941,7 @@ void Board::SpawnZombiesFromPool()
 		TodWeightedGridArray* aGrid = TodPickFromWeightedGridArray(aGridArray, aGridArrayCount);
 		aGrid->mWeight = 0;
 
-		ZombieType aZombieType = PickGraveRisingZombieType(aZombiePoints);
+		ZombieType aZombieType = PickGraveRisingZombieType();
 		Zombie* aZombie = AddZombieInRow(aZombieType, aGrid->mY, mCurrentWave);
 		if (aZombie == nullptr)
 		{
@@ -4970,7 +4970,7 @@ void Board::SetupBungeeDrop(BungeeDropGrid* theBungeeDropGrid)
 			theBungeeDropGrid->mGridArray[aCount].mY = aGridY;
 			theBungeeDropGrid->mGridArray[aCount].mWeight = 10000;
 			theBungeeDropGrid->mGridArrayCount++;
-			TOD_ASSERT(theBungeeDropGrid->mGridArrayCount <= LENGTH(theBungeeDropGrid->mGridArray));
+			TOD_ASSERT((size_t)theBungeeDropGrid->mGridArrayCount <= LENGTH(theBungeeDropGrid->mGridArray));
 		}
 	}
 }
@@ -5023,7 +5023,7 @@ void Board::SpawnZombiesFromSky()
 
 	for (int i = 0; i < aCount; i++)
 	{
-		ZombieType aZombieType = PickGraveRisingZombieType(aZombiePoints);
+		ZombieType aZombieType = PickGraveRisingZombieType();
 		BungeeDropZombie(&aBungeeDropGrid, aZombieType);
 		aZombiePoints -= GetZombieDefinition(aZombieType).mZombieValue;
 		if (aZombiePoints < 1)
@@ -5049,7 +5049,7 @@ void Board::SpawnZombiesFromGraves()
 		return;
 	}
 	
-	int aZombiePoints = GetGraveStonesCount();
+//	int aZombiePoints = GetGraveStonesCount();
 	GridItem* aGridItem = nullptr;
 	while (IterateGridItems(aGridItem))
 	{
@@ -5062,7 +5062,7 @@ void Board::SpawnZombiesFromGraves()
 			continue;
 		}
 		
-		ZombieType aZombieType = PickGraveRisingZombieType(aZombiePoints);
+		ZombieType aZombieType = PickGraveRisingZombieType();
 		Zombie* aZombie = AddZombie(aZombieType, mCurrentWave);
 		if (aZombie == nullptr)
 		{
@@ -5070,11 +5070,13 @@ void Board::SpawnZombiesFromGraves()
 		}
 
 		aZombie->RiseFromGrave(aGridItem->mGridX, aGridItem->mGridY);
+		/*
 		aZombiePoints -= GetZombieDefinition(aZombieType).mZombieValue;
 		if (aZombieType < 1)
 		{
 			aZombiePoints = 1;
 		}
+		*/
 	}
 }
 
@@ -7814,7 +7816,7 @@ void Board::SetDanceMode(bool theEnableDance)
 	{
 		if (!aZombie->mDead)
 		{
-			aZombie->EnableDance(theEnableDance);
+			aZombie->EnableDance();
 		}
 	}
 }
@@ -8647,7 +8649,7 @@ void Board::KeyChar(SexyChar theChar)
 		if (aPlant)
 		{
 			aPlant->Die();
-			mChallenge->ZombieAtePlant(nullptr, aPlant);
+			mChallenge->ZombieAtePlant(aPlant);
 			return;
 		}
 	}

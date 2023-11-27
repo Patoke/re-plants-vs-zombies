@@ -416,7 +416,7 @@ void SyncBoard(SaveGameContext& theContext, Board* theBoard)
 			theContext.mFailed = true;
 		}
 
-		if (theContext.mFailed || theContext.mBuffer.ReadLong() != SAVE_FILE_MAGIC_NUMBER)
+		if (theContext.mFailed || (unsigned int)theContext.mBuffer.ReadLong() != SAVE_FILE_MAGIC_NUMBER)
 		{
 			theContext.mFailed = true;
 		}

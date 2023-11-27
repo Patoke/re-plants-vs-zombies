@@ -179,10 +179,6 @@ __dont__ include it again
  * stdlib.h like it should (I think).  Or perhaps this is a C++
  * "feature"?
  */
-#ifdef __TURBOC__
-#include <mem.h>
-#include "alloc.h"
-#endif
 
 #ifdef _MSC_VER
 #include <malloc.h>

@@ -19,7 +19,7 @@ int gLawnEditWidgetColors[][4] = {
     { 0,   0,   0,   255 },
 };
 
-// ÅÐ¶ÏÔÚ [theNumber - theRange, theNumber + theRange] Çø¼äÄÚÊÇ·ñ´æÔÚ theMod µÄÕûÊý±¶Êý
+// åˆ¤æ–­åœ¨ [theNumber - theRange, theNumber + theRange] åŒºé—´å†…æ˜¯å¦å­˜åœ¨ theMod çš„æ•´æ•°å€æ•°
 bool ModInRange(int theNumber, int theMod, int theRange)
 {
 	theRange = abs(theRange);
@@ -28,7 +28,7 @@ bool ModInRange(int theNumber, int theMod, int theRange)
 	return false;
 }
 
-// ÅÐ¶Ïµã (x1, y1) ÊÇ·ñÎ»ÓÚµã (x2, y2) ÖÜÎ§µÄ (theRangeX, theRangeY) ·¶Î§ÄÚ
+// åˆ¤æ–­ç‚¹ (x1, y1) æ˜¯å¦ä½äºŽç‚¹ (x2, y2) å‘¨å›´çš„ (theRangeX, theRangeY) èŒƒå›´å†…
 bool GridInRange(int x1, int y1, int x2, int y2, int theRangeX, int theRangeY)
 {
 	return x1 >= x2 - theRangeX && x1 <= x2 + theRangeX && y1 >= y2 - theRangeY && y1 <= y2 + theRangeY;

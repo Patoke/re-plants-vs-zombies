@@ -818,7 +818,7 @@ void DDInterface::Cleanup()
 	}
 }
 
-bool DDInterface::CopyBitmap(LPDIRECTDRAWSURFACE theSurface, HBITMAP theBitmap, int theX, int theY, int theWidth, int theHeight)
+bool DDInterface::CopyBitmap(LPDIRECTDRAWSURFACE theSurface, HBITMAP theBitmap, int theX, int theY, unsigned int theWidth, unsigned int theHeight)
 {
 	AutoCrit anAutoCrit(mCritSect);
 

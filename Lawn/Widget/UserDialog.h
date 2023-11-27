@@ -33,7 +33,9 @@ public:
 	virtual int			GetPreferredHeight(int theWidth);
 	virtual void		AddedToManager(WidgetManager* theWidgetManager);
 	virtual void		RemovedFromManager(WidgetManager* theWidgetManager);
-	virtual void		ListClicked(int theId, int theIdx, int theClickCount);
+	virtual void 		ListClicked(int theId, int theIdx, int theClickCount);
+	virtual void 		ListClosed(int){}
+	virtual void 		ListHiliteChanged(int, int, int){}
 	virtual void		ButtonDepress(int theId);
 	virtual void		EditWidgetText(int theId, const SexyString& theString);
 	virtual bool		AllowChar(int theId, SexyChar theChar);

@@ -23,10 +23,12 @@ public:
 	{
 	}
 	
+	/*
 	TRect(const TRect<_T>& theTRect) :
 	  mX(theTRect.mX), mY(theTRect.mY), mWidth(theTRect.mWidth), mHeight(theTRect.mHeight)
 	{
 	}
+	*/
 
 	TRect() :
 	  mX(0), mY(0), mWidth(0), mHeight(0)

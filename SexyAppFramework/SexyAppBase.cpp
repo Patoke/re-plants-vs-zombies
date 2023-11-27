@@ -1040,11 +1040,13 @@ void SexyAppBase::LostFocus()
 
 void SexyAppBase::URLOpenFailed(const std::string& theURL)
 {
+	(void)theURL;
 	mIsOpeningURL = false;
 }
 
 void SexyAppBase::URLOpenSucceeded(const std::string& theURL)
 {	
+	(void)theURL;
 	mIsOpeningURL = false;
 
 	if (mShutdownOnURLOpen)
@@ -2141,9 +2143,8 @@ std::string SexyAppBase::GetGameSEHInfo()
 	return anInfoString;						
 }
 
-void SexyAppBase::GetSEHWebParams(DefinesMap* theDefinesMap)
-{
-}
+
+void SexyAppBase::GetSEHWebParams(DefinesMap*){}
 
 void SexyAppBase::ShutdownHook()
 {
@@ -2852,6 +2853,7 @@ BOOL CALLBACK EnumCloseThing(HWND hwnd, LPARAM lParam)
 
 static INT_PTR CALLBACK MarkerListDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	(void)lParam;
 	switch (msg)
 	{
 		case WM_INITDIALOG:
@@ -2994,6 +2996,7 @@ static int ListDemoMarkers()
 
 static INT_PTR CALLBACK JumpToTimeDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	(void)lParam;
 	switch (msg)
 	{
 		case WM_INITDIALOG:
@@ -3474,8 +3477,10 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 						aSexyApp->mAltDown = keyDown;
 				}
 
+				/*
 				if ((keyDown) && (aSexyApp->DebugKeyDownAsync(wParam, aSexyApp->mCtrlDown, aSexyApp->mAltDown)))
 					return 0;
+				*/
 				
 				if (aSexyApp->mPlayingDemoBuffer)
 				{
@@ -3712,7 +3717,7 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	{
 		// Oh, we are trying to open another instance of ourselves.
 		// Bring up the original window instead
-		aSexyApp->HandleNotifyGameMessage(wParam,lParam);		
+		aSexyApp->HandleNotifyGameMessage(wParam);		
 		return 0;
 	}
 
@@ -3722,7 +3727,7 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		return DefWindowProcA(hWnd, uMsg, wParam, lParam);
 }
 
-void SexyAppBase::HandleNotifyGameMessage(int theType, int theParam)
+void SexyAppBase::HandleNotifyGameMessage(int theType)
 {
 	if (theType==0) // bring to front message
 	{
@@ -4149,10 +4154,12 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 	return false;
 }
 
+/*
 bool SexyAppBase::DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown)
 {
 	return false;
 }
+*/
 
 void SexyAppBase::CloseRequestAsync()
 {
@@ -5044,7 +5051,7 @@ void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 
 	if (mSoundManager!=NULL)
 	{
-		mSoundManager->SetCooperativeWindow(mHWnd,mIsWindowed);
+		mSoundManager->SetCooperativeWindow(mHWnd);
 	}	
 
 	mLastTime = timeGetTime();
@@ -5677,11 +5684,14 @@ void SexyAppBase::Start()
 	WriteToRegistry();
 }
 
+/*
 bool SexyAppBase::CheckSignature(const Buffer& theBuffer, const std::string& theFileName)
 {
+	(void)theBuffer;(void)theFileName;
 	// Add your own signature checking code here
 	return false;
 }
+*/
 
 bool SexyAppBase::LoadProperties(const std::string& theFileName, bool required, bool checkSig)
 {
@@ -5698,11 +5708,11 @@ bool SexyAppBase::LoadProperties(const std::string& theFileName, bool required, 
 	}
 	if (checkSig)
 	{
-		if (!CheckSignature(aBuffer, theFileName))
-		{
+		//if (!CheckSignature(aBuffer, theFileName))
+		//{
 			Popup(GetString("PROPERTIES_SIG_FAILED", _S("Signature check failed on ")) + StringToSexyString(theFileName + "'"));
 			return false;
-		}
+		//}
 	}
 
 	PropertiesParser aPropertiesParser(this);
@@ -5892,7 +5902,7 @@ void SexyAppBase::ParseCmdLine(const std::string& theCmdLine)
 	bool inQuote = false;
 	bool onValue = false;
 
-	for (int i = 0; i < (int) theCmdLine.length(); i++)
+	for (size_t i = 0; i < theCmdLine.length(); i++)
 	{
 		char c = theCmdLine[i];
 		bool atEnd = false;
@@ -6037,15 +6047,16 @@ void SexyAppBase::PostDDInterfaceInitHook()
 
 bool SexyAppBase::ChangeDirHook(const char *theIntendedPath)
 {
+	(void)theIntendedPath;
 	return false;
 }
 
-MusicInterface* SexyAppBase::CreateMusicInterface(HWND theWindow)
+MusicInterface* SexyAppBase::CreateMusicInterface()
 {
 	if (mNoSoundNeeded)
 		return new MusicInterface;
 	else if (mWantFMod)
-		return new FModMusicInterface(mInvisHWnd);
+		return new FModMusicInterface();
 	else 
 		return new BassMusicInterface(mInvisHWnd);
 }
@@ -6271,7 +6282,7 @@ void SexyAppBase::Init()
 		EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &dm );
 
 		// Switch resolutions
-		if (dm.dmPelsWidth!=mWidth || dm.dmPelsHeight!=mHeight || (dm.dmBitsPerPel!=16 && dm.dmBitsPerPel!=32))
+		if (dm.dmPelsWidth!=(unsigned int)mWidth || dm.dmPelsHeight!=(unsigned int)mHeight || (dm.dmBitsPerPel!=16 && dm.dmBitsPerPel!=32))
 		{
 			dm.dmPelsWidth = mWidth;
 			dm.dmPelsHeight = mHeight;
@@ -6312,7 +6323,7 @@ void SexyAppBase::Init()
 
 	SetSfxVolume(mSfxVolume);
 	
-	mMusicInterface = CreateMusicInterface(mInvisHWnd);	
+	mMusicInterface = CreateMusicInterface();	
 
 	SetMusicVolume(mMusicVolume);	
 

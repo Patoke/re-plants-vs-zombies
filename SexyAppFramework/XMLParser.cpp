@@ -63,6 +63,7 @@ bool XMLParser::AddAttribute(XMLElement* theElement, const SexyString& theAttrib
 
 bool XMLParser::GetAsciiChar(wchar_t* theChar, bool* error)
 {
+	(void)error;
 	wchar_t aChar = 0;
 	if (p_fread(&aChar, 1, 1, mFile) != 1)
 		return false;
@@ -200,6 +201,7 @@ bool XMLParser::GetUTF16Char(wchar_t* theChar, bool* error)
 
 bool XMLParser::GetUTF16LEChar(wchar_t* theChar, bool* error)
 {
+	(void)error;
 	wchar_t aTempChar = 0;
 	if (p_fread(&aTempChar, 2, 1, mFile) != 1)
 		return false;
@@ -225,6 +227,7 @@ bool XMLParser::GetUTF16LEChar(wchar_t* theChar, bool* error)
 
 bool XMLParser::GetUTF16BEChar(wchar_t* theChar, bool* error)
 {
+	(void)error;
 	wchar_t aTempChar = 0;
 	if (p_fread(&aTempChar, 2, 1, mFile) != 1)
 		return false;

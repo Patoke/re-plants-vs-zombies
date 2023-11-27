@@ -61,7 +61,7 @@ public:
 	virtual void			DrawOverlay(Graphics* g);
 	virtual void			DrawOverlay(Graphics* g, int thePriority);
 	virtual void			Update();
-	virtual void			UpdateF(float theFrac);
+//	virtual void			UpdateF(float theFrac);
 	virtual void			GotFocus();
 	virtual void			LostFocus();	
 	virtual void			KeyChar(SexyChar theChar);

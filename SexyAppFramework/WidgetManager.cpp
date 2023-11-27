@@ -732,7 +732,8 @@ bool WidgetManager::MouseDrag(int x, int y)
 }
 
 bool WidgetManager::MouseExit(int x, int y)
-{	
+{
+	(void)x;(void)y;
 	mLastInputUpdateCnt = mUpdateCnt;
 
 	mMouseIn = false;

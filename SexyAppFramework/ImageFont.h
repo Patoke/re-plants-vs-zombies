@@ -148,7 +148,7 @@ public:
 
 public:
 	virtual void			GenerateActiveFontLayers();
-	virtual void			DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect* theClipRect, RectList* theDrawnAreas, int* theWidth);
+	virtual void			DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, RectList* theDrawnAreas, int* theWidth);
 
 public:
 	ImageFont(SexyAppBase* theSexyApp, const std::string& theFontDescFileName);

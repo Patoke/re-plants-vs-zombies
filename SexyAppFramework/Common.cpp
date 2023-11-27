@@ -538,7 +538,7 @@ std::string Sexy::GetPathFrom(const std::string& theRelPath, const std::string& 
 
 	char aSlashChar = '/';
 
-	if ((theRelPath.find('\\') != -1) || (theDir.find('\\') != -1))
+	if ((theRelPath.find('\\') != (size_t)-1) || (theDir.find('\\') != (size_t)-1))
 		aSlashChar = '\\';	
 
 	if ((aNewPath.length() >= 2) && (aNewPath[1] == ':'))
@@ -1012,12 +1012,12 @@ std::string Sexy::Evaluate(const std::string& theString, const DefinesMap& theDe
 
 	for (;;)
 	{
-		int aPercentPos = anEvaluatedString.find('%');
+		size_t aPercentPos = anEvaluatedString.find('%');
 
 		if (aPercentPos == std::string::npos)
 			break;
 		
-		int aSecondPercentPos = anEvaluatedString.find('%', aPercentPos + 1);
+		size_t aSecondPercentPos = anEvaluatedString.find('%', aPercentPos + 1);
 		if (aSecondPercentPos == std::string::npos)
 			break;
 

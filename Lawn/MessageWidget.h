@@ -3,6 +3,7 @@
 
 #include "../ConstEnums.h"
 #include "../SexyAppFramework/Common.h"
+#include "../LawnApp.h"
 
 #define MAX_MESSAGE_LENGTH 128
 #define MAX_REANIM_LINES 5

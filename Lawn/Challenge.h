@@ -98,7 +98,7 @@ public:
     int                    UpdateBeghouledPlant(Plant* thePlant);
     void                    BeghouledFallIntoSquare(int theGridX, int theGridY, BeghouledBoardState* theBoardState);
     void                    BeghouledMakePlantsFall(BeghouledBoardState* theBoardState);
-    void                    ZombieAtePlant(Zombie* theZombie, Plant* thePlant);
+    void                    ZombieAtePlant(/*Zombie* theZombie,*/ Plant* thePlant);
     void                    DrawBackdrop(Graphics* g);
     void                    DrawArtChallenge(Graphics* g);
     void                    CheckForCompleteArtChallenge(int theGridX, int theGridY);

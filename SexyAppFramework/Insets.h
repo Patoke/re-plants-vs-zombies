@@ -15,7 +15,7 @@ public:
 public:
 	Insets();
 	Insets(int theLeft, int theTop, int theRight, int theBottom);
-	Insets(const Insets& theInsets);			
+	// Insets(const Insets& theInsets);			
 };
 
 }

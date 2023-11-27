@@ -157,7 +157,7 @@ BOOL BASS_INSTANCE::BASS_MusicPlayEx(HMUSIC handle, DWORD pos, int flags, BOOL r
 	BASS_ChannelSetPosition(handle, MAKELONG(pos,0), BASS_POS_MUSIC_ORDER);
 	BASS_ChannelFlags(handle, flags, -1);
 
-	return BASS_ChannelPlay(handle, false/*reset*/);
+	return BASS_ChannelPlay(handle, reset); // What's wrong with actually using the reset flag?
 }
 
 

@@ -968,6 +968,7 @@ void SeedChooserScreen::CancelLawnView()
 //0x486630
 void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;
 	if (theClickCount == 1)
 	{
 		if (mMenuButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);

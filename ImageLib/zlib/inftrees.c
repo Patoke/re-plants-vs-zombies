@@ -376,6 +376,7 @@ local inflate_huft *fixed_td;
 
 int inflate_trees_fixed(uIntf *bl, uIntf *bd, inflate_huft * FAR *tl, inflate_huft * FAR *td, z_streamp z)
 {
+  (void)z; // z is used in other codepaths but the compiler will bitch anyway.
 #ifdef BUILDFIXED
   /* build fixed tables if not already */
   if (!fixed_built)

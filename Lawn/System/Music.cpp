@@ -43,22 +43,22 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
 	std::string anExt;
 
-	int aDot = theFileName.rfind('.');
-	if (aDot != std::string::npos)  // ÎÄ¼şÃûÖĞ²»º¬¡°.¡±£¨ÎÄ¼şÎŞÀ©Õ¹Ãû£©
-		anExt = StringToLower(theFileName.substr(aDot + 1));  // È¡µÃĞ¡Ğ´µÄÎÄ¼şÀ©Õ¹Ãû
+	size_t aDot = theFileName.rfind('.');
+	if (aDot != std::string::npos)  // æ–‡ä»¶åä¸­ä¸å«â€œ.â€ï¼ˆæ–‡ä»¶æ— æ‰©å±•åï¼‰
+		anExt = StringToLower(theFileName.substr(aDot + 1));  // å–å¾—å°å†™çš„æ–‡ä»¶æ‰©å±•å
 
-	if (anExt.compare("wav") && anExt.compare("ogg") && anExt.compare("mp3"))  // Èç¹û²»ÊÇÕâÈıÖÖÍØÕ¹Ãû
+	if (anExt.compare("wav") && anExt.compare("ogg") && anExt.compare("mp3"))  // å¦‚æœä¸æ˜¯è¿™ä¸‰ç§æ‹“å±•å
 	{
 		PFILE* pFile = p_fopen(theFileName.c_str(), "rb");
 		if (pFile == nullptr)
 			return false;
 
-		p_fseek(pFile, 0, SEEK_END);  // Ö¸Õëµ÷ÕûÖÁÎÄ¼şÄ©Î²
-		int aSize = p_ftell(pFile);  // µ±Ç°Î»ÖÃ¼´ÎªÎÄ¼ş³¤¶È
-		p_fseek(pFile, 0, SEEK_SET);  // Ö¸Õëµ÷»ØÎÄ¼ş¿ªÍ·
+		p_fseek(pFile, 0, SEEK_END);  // æŒ‡é’ˆè°ƒæ•´è‡³æ–‡ä»¶æœ«å°¾
+		int aSize = p_ftell(pFile);  // å½“å‰ä½ç½®å³ä¸ºæ–‡ä»¶é•¿åº¦
+		p_fseek(pFile, 0, SEEK_SET);  // æŒ‡é’ˆè°ƒå›æ–‡ä»¶å¼€å¤´
 		void* aData = operator new[](aSize);
-		p_fread(aData, sizeof(char), aSize, pFile);  // °´×Ö½Ú¶ÁÈ¡Êı¾İ
-		p_fclose(pFile);  // ¹Ø±ÕÎÄ¼şÁ÷
+		p_fread(aData, sizeof(char), aSize, pFile);  // æŒ‰å­—èŠ‚è¯»å–æ•°æ®
+		p_fclose(pFile);  // å…³é—­æ–‡ä»¶æµ
 
 		aHMusic = gBass->BASS_MusicLoad(true, aData, 0, aSize, aBass->mMusicLoadFlags, 0);
 		delete[] (char *)aData;
@@ -72,12 +72,12 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 		if (pFile == nullptr)
 			return false;
 
-		p_fseek(pFile, 0, SEEK_END);  // Ö¸Õëµ÷ÕûÖÁÎÄ¼şÄ©Î²
-		int aSize = p_ftell(pFile);  // µ±Ç°Î»ÖÃ¼´ÎªÎÄ¼ş³¤¶È
-		p_fseek(pFile, 0, SEEK_SET);  // Ö¸Õëµ÷»ØÎÄ¼ş¿ªÍ·
+		p_fseek(pFile, 0, SEEK_END);  // æŒ‡é’ˆè°ƒæ•´è‡³æ–‡ä»¶æœ«å°¾
+		int aSize = p_ftell(pFile);  // å½“å‰ä½ç½®å³ä¸ºæ–‡ä»¶é•¿åº¦
+		p_fseek(pFile, 0, SEEK_SET);  // æŒ‡é’ˆè°ƒå›æ–‡ä»¶å¼€å¤´
 		void* aData = operator new[](aSize);
-		p_fread(aData, sizeof(char), aSize, pFile);  // °´×Ö½Ú¶ÁÈ¡Êı¾İ
-		p_fclose(pFile);  // ¹Ø±ÕÎÄ¼şÁ÷
+		p_fread(aData, sizeof(char), aSize, pFile);  // æŒ‰å­—èŠ‚è¯»å–æ•°æ®
+		p_fclose(pFile);  // å…³é—­æ–‡ä»¶æµ
 		
 		aStream = gBass->BASS_StreamCreateFile(true, aData, 0, aSize, 0);
 		TOD_ASSERT(gMusicFileData[theMusicFile].mFileData == nullptr);
@@ -90,7 +90,7 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 	BassMusicInfo aMusicInfo;
 	aMusicInfo.mHStream = aStream;
 	aMusicInfo.mHMusic = aHMusic;
-	aBass->mMusicMap.insert(BassMusicMap::value_type(theMusicFile, aMusicInfo));  // ½«Ä¿±êÒôÀÖÎÄ¼ş±àºÅºÍÒôÀÖĞÅÏ¢µÄ¶Ô×é¼ÓÈëÒôÀÖÊı¾İÈİÆ÷
+	aBass->mMusicMap.insert(BassMusicMap::value_type(theMusicFile, aMusicInfo));  // å°†ç›®æ ‡éŸ³ä¹æ–‡ä»¶ç¼–å·å’ŒéŸ³ä¹ä¿¡æ¯çš„å¯¹ç»„åŠ å…¥éŸ³ä¹æ•°æ®å®¹å™¨
 	return true;
 }
 
@@ -151,7 +151,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 		else
 			aVolume = 0;
 
-		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, aVolume);  // ÉèÖÃÒôÀÖÃ¿Ìõ¹ìµÀµÄÒôÁ¿ÊôĞÔ£¨¾²ÒôÓë·ñ£©
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, aVolume);  // è®¾ç½®éŸ³ä¹æ¯æ¡è½¨é“çš„éŸ³é‡å±æ€§ï¼ˆé™éŸ³ä¸å¦ï¼‰
 	}
 }
 
@@ -165,7 +165,7 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string& theFileName)
 	}
 	else
 	{
-		gBass->BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);  // ÉèÖÃÒôÀÖ¶¨Î»¾«È·¶ÈÊôĞÔ
+		gBass->BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);  // è®¾ç½®éŸ³ä¹å®šä½ç²¾ç¡®åº¦å±æ€§
 		TodHesitationTrace("song '%s'", theFileName.c_str());
 	}
 }
@@ -185,13 +185,13 @@ void Music::MusicInit()
 #endif
 
 	LoadSong(MusicFile::MUSIC_FILE_DRUMS, "sounds\\mainmusic.mo3");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds\\mainmusic_hihats.mo3");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 
 #ifdef _DEBUG
 	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds\\ZombiesOnYourLawn.ogg");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 	if (mApp->mCompletedLoadingThreadTasks != aNumLoadingTasks)
 		TodTrace("Didn't calculate loading task count correctly!!!!");
 #endif
@@ -202,7 +202,7 @@ void Music::MusicCreditScreenInit()
 {
 #ifndef _DEBUG
 	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
-	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) == aBass->mMusicMap.end())  // Èç¹ûÉĞÎ´¼ÓÔØ
+	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) == aBass->mMusicMap.end())  // å¦‚æœå°šæœªåŠ è½½
 		LoadSong(MusicFile::MUSIC_FILE_MAIN_MUSIC, "sounds\\ZombiesOnYourLawn.ogg");
 #endif
 }
@@ -252,21 +252,21 @@ void Music::PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolu
 
 	if (aMusicInfo->mHStream)
 	{
-		bool aNoLoop = theMusicFile == MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN;  // MV ÒôÀÖ²»Ñ­»·
+		bool aNoLoop = theMusicFile == MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN;  // MV éŸ³ä¹ä¸å¾ªç¯
 		mMusicInterface->PlayMusic(theMusicFile, theOffset, aNoLoop);
 	}
 	else
 	{
-		gBass->BASS_ChannelStop(aMusicInfo->mHMusic);  // ÏÈÍ£Ö¹ÕıÔÚ²¥·ÅµÄÒôÀÖ
-		SetupMusicFileForTune(theMusicFile, mCurMusicTune);  // µ÷ÕûÃ¿Ìõ¹ìµÀµÄ¾²ÒôÓë·ñ
+		gBass->BASS_ChannelStop(aMusicInfo->mHMusic);  // å…ˆåœæ­¢æ­£åœ¨æ’­æ”¾çš„éŸ³ä¹
+		SetupMusicFileForTune(theMusicFile, mCurMusicTune);  // è°ƒæ•´æ¯æ¡è½¨é“çš„é™éŸ³ä¸å¦
 		aMusicInfo->mStopOnFade = false;
 		aMusicInfo->mVolume = aMusicInfo->mVolumeCap * theVolume;
 		aMusicInfo->mVolumeAdd = 0.0;
-		//gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // µ÷ÕûÒôÀÖÒôÁ¿
+		//gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // è°ƒæ•´éŸ³ä¹éŸ³é‡
 		gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, BASS_ATTRIB_VOL, aMusicInfo->mVolume);
 		gBass->BASS_ChannelFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP, -1);
-		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset | 0x80000000,BASS_POS_BYTE);  // ÉèÖÃÆ«ÒÆÎ»ÖÃ
-		gBass->BASS_ChannelPlay(aMusicInfo->mHMusic, false);  // ÖØĞÂ¿ªÊ¼²¥·Å
+		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset | 0x80000000,BASS_POS_BYTE);  // è®¾ç½®åç§»ä½ç½®
+		gBass->BASS_ChannelPlay(aMusicInfo->mHMusic, false);  // é‡æ–°å¼€å§‹æ’­æ”¾
 	}
 }
 
@@ -441,8 +441,8 @@ void Music::MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusic
 {
 	unsigned int aPosToMatch = GetMusicOrder(theMusicFileToMatch);
 	unsigned int aPosToSync = GetMusicOrder(theMusicFileToSync);
-	int aDiff = (aPosToSync >> 16) - (aPosToMatch >> 16);  // ´ıÍ¬²½µÄÒôÀÖÓëÄ¿±êÒôÀÖµÄÀÖÇúĞòºÅÖ®²î
-	if (abs(aDiff) <= 128)  // µ±Ç°½øĞĞµÄÀÖÇúĞòºÅÖ®²î³¬¹ı 128 Ê±£¬¿ª°Ú£¨
+	int aDiff = (aPosToSync >> 16) - (aPosToMatch >> 16);  // å¾…åŒæ­¥çš„éŸ³ä¹ä¸ç›®æ ‡éŸ³ä¹çš„ä¹æ›²åºå·ä¹‹å·®
+	if (abs(aDiff) <= 128)  // å½“å‰è¿›è¡Œçš„ä¹æ›²åºå·ä¹‹å·®è¶…è¿‡ 128 æ—¶ï¼Œå¼€æ‘†ï¼ˆ
 	{
 		HMUSIC aHMusic = GetBassMusicHandle(theMusicFileToSync);
 
@@ -456,7 +456,7 @@ void Music::MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusic
 		else if (aDiff < 0)
 			aBPM -= 1;
 
-		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, aBPM);  // ÊÊµ±µ÷Õû´ıÍ¬²½ÒôÀÖµÄËÙÂÊÒÔËõĞ¡²î¾à
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, aBPM);  // é€‚å½“è°ƒæ•´å¾…åŒæ­¥éŸ³ä¹çš„é€Ÿç‡ä»¥ç¼©å°å·®è·
 	}
 }
 
@@ -766,6 +766,6 @@ void Music::GameMusicPause(bool thePause)
 
 int Music::GetNumLoadingTasks()
 {
-	//return 800 * 3;  // ÄÚ²â°æ
-	return 3500 * 2;  // Ô­°æ
+	//return 800 * 3;  // å†…æµ‹ç‰ˆ
+	return 3500 * 2;  // åŸç‰ˆ
 }

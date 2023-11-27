@@ -80,7 +80,7 @@ public:
 	static void				ShowErrorDialog(const std::string& theErrorTitle, const std::string& theErrorText);	
 	static bool				LoadImageHelp();
 	static void				UnloadImageHelp();
-	static std::string		IntelWalk(PCONTEXT theContext, int theSkipCount);
+	static std::string		IntelWalk(PCONTEXT theContext);
 	static std::string		ImageHelpWalk(PCONTEXT theContext, int theSkipCount);
 	static std::string		GetSysInfo();
 	static void				GetSymbolsFromMapFile(std::string &theDebugDump);

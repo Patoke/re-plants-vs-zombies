@@ -25,7 +25,7 @@ bool Sexy::ExtractResourcesByName(ResourceManager* theResourceManager, const cha
 	if (!strcmp(theName, "DelayLoad_GreenHouseOverlay")) return ExtractDelayLoad_GreenHouseOverlayResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_MushroomGarden")) return ExtractDelayLoad_MushroomGardenResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_Store")) return ExtractDelayLoad_StoreResources(theResourceManager);
-	if (!strcmp(theName, "DelayLoad_TreeOfWisdom")) return ExtractDelayLoad_TreeOfWisdomResources(theResourceManager);
+	if (!strcmp(theName, "DelayLoad_TreeOfWisdom")) return ExtractDelayLoad_TreeOfWisdomResources(/*theResourceManager*/);
 	if (!strcmp(theName, "DelayLoad_Zombatar")) return ExtractDelayLoad_ZombatarResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_ZombieFinalNote")) return ExtractDelayLoad_ZombieFinalNoteResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_ZombieNote")) return ExtractDelayLoad_ZombieNoteResources(theResourceManager);
@@ -475,7 +475,7 @@ bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager* theManager)
 
 // DelayLoad_TreeOfWisdom Resources
 
-bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(/* ResourceManager* theManager */)
 {
 	gNeedRecalcVariableToIdMap = true;
 

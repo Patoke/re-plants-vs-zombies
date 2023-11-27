@@ -1097,7 +1097,7 @@ METHODDEF(void) skip_input_data (j_decompress_ptr cinfo, long num_bytes)
 	}
 }
 
-METHODDEF(void) term_source (j_decompress_ptr cinfo)
+METHODDEF(void) term_source (j_decompress_ptr /* cinfo */)
 {
 	/* no work necessary here */
 }
@@ -1426,7 +1426,7 @@ int __stdcall Pak_read(void *ptr, int size, void *data_source)
 	return p_fread(ptr, 1, size, (PFILE*) data_source);
 }
 
-void __stdcall Pak_close(void *data_source)
+void __stdcall Pak_close(void */* data_source */)
 {	
 }
 
