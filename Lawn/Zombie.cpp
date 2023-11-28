@@ -921,9 +921,9 @@ void Zombie::ReanimIgnoreClipRect(const char* theTrackName, bool theIgnoreClipRe
     if (aBodyReanim == nullptr)
         return;
 
-    for (int i = 0; i < aBodyReanim->mDefinition->mTrackCount; i++)
+    for (int i = 0; i < aBodyReanim->mDefinition->mTracks.count; i++)
     {
-        if (stricmp(aBodyReanim->mDefinition->mTracks[i].mName, theTrackName) == 0)
+        if (stricmp(aBodyReanim->mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
         {
             aBodyReanim->mTrackInstances[i].mIgnoreClipRect = theIgnoreClipRect;
         }
@@ -937,7 +937,7 @@ void Zombie::ReanimReenableClipping()
     if (aBodyReanim == nullptr)
         return;
 
-    for (int i = 0; i < aBodyReanim->mDefinition->mTrackCount; i++)
+    for (int i = 0; i < aBodyReanim->mDefinition->mTracks.count; i++)
     {
         aBodyReanim->mTrackInstances[i].mIgnoreClipRect = false;
     }
@@ -6667,8 +6667,8 @@ void Zombie::UpdateAnimSpeed()
         }
         else if (aBodyReanim->TrackExists("_ground"))
         {
-            ReanimatorTrack* aTrack = &aBodyReanim->mDefinition->mTracks[aBodyReanim->FindTrackIndex("_ground")];
-            float aDistance = aTrack->mTransforms[aBodyReanim->mFrameStart + aBodyReanim->mFrameCount - 1].mTransX - aTrack->mTransforms[aBodyReanim->mFrameStart].mTransX;
+            ReanimatorTrack* aTrack = &aBodyReanim->mDefinition->mTracks.tracks[aBodyReanim->FindTrackIndex("_ground")];
+            float aDistance = aTrack->mTransforms.mTransforms[aBodyReanim->mFrameStart + aBodyReanim->mFrameCount - 1].mTransX - aTrack->mTransforms.mTransforms[aBodyReanim->mFrameStart].mTransX;
             if (aDistance >= 1e-6f)
             {
                 float aOneOverSpeed = aBodyReanim->mFrameCount / aDistance;

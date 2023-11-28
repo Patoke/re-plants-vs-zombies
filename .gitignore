@@ -393,7 +393,7 @@ FodyWeavers.xsd
 *.out
 *.app
 
-**/cmake-build-debug
+**/build
 **/CMakeCache.txt
 **/cmake_install.cmake
 **/install_manifest.txt

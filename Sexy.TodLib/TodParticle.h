@@ -103,6 +103,13 @@ public:
     FloatParameterTrack         mY;                             // 场在竖直方向（纵向）上对粒子的影响
 };
 
+struct EmitterFieldArray
+{
+public:
+	ParticleField* Fields;
+	int count;
+};
+
 // ====================================================================================================
 // ★ 【发射器定义】
 // ----------------------------------------------------------------------------------------------------
@@ -142,10 +149,8 @@ public:
     FloatParameterTrack         mSystemBlue;
     FloatParameterTrack         mSystemAlpha;
     FloatParameterTrack         mSystemBrightness;
-    ParticleField*              mParticleFields;
-    int                         mParticleFieldCount;
-    ParticleField*              mSystemFields;
-    int                         mSystemFieldCount;
+    EmitterFieldArray           mParticleFields;
+    EmitterFieldArray           mSystemFields;
     FloatParameterTrack         mParticleRed;
     FloatParameterTrack         mParticleGreen;
     FloatParameterTrack         mParticleBlue;

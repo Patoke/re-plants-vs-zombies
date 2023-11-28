@@ -7,26 +7,91 @@ enum DefFieldType {
     Vector2,
     Array(&'static DefMap),
     TrackFloat,
-    Flags(DefSymbol),
+    Flags(&'static [DefSymbol]),
     Image,
     Font,
 }
 
 struct DefSymbol {
     symbol_value: u32,
-    symbol_name: &'static[u8],
+    symbol_name: &'static str,
 }
 
 struct DefField {
-    field_name: &'static[u8],
-    field_offset: u32,
+    field_name: &'static str,
     field_type: DefFieldType,
 }
 
 struct DefMap {
-    map_fields: &'static[DefField],
-    def_size: u32
+    map_fields: &'static [DefField],
 }
+
+const TRAIL_FLAG_DEF_SYMBOLS: &'static [DefSymbol] = {
+    &[DefSymbol {
+        symbol_value: 0,
+        symbol_name: "Loops",
+    }]
+};
+
+#[rustfmt::skip]
+const TRAIL_DEF_FIELDS: &'static[DefField]  = {
+    type T = DefFieldType;
+    &[
+        DefField{ field_name: "Image", field_type: T::Image },
+        DefField{ field_name: "MaxPoints", field_type: T::Int },
+        DefField{ field_name: "MinPointDistance", field_type: T::Float },
+        DefField{ field_name: "TrailFlags", field_type: T::Flags(TRAIL_FLAG_DEF_SYMBOLS) },
+        DefField{ field_name: "WidthOverLength", field_type: T::Image },
+        DefField{ field_name: "WidthOverTime", field_type: T::Image },
+        DefField{ field_name: "AlphaOverLength", field_type: T::Image },
+        DefField{ field_name: "AlphaOverTime", field_type: T::Image },
+        DefField{ field_name: "TrailDuration", field_type: T::Image },
+        DefField{ field_name: "", field_type: T::Invalid}
+    ]
+};
+
+#[rustfmt::skip]
+const PARTICLE_FLAG_SYMBOLS: &'static [DefSymbol] = {  //0x69E290
+    &[
+    DefSymbol{ symbol_value: 0, symbol_name:"RandomLaunchSpin" },
+    DefSymbol{ symbol_value: 1, symbol_name: "AlignLaunchSpin" },
+    DefSymbol{ symbol_value: 2, symbol_name: "AlignToPixel" },
+    DefSymbol{ symbol_value: 4, symbol_name: "ParticleLoops" },
+    DefSymbol{ symbol_value: 3, symbol_name: "SystemLoops" },
+    DefSymbol{ symbol_value: 5, symbol_name:"ParticlesDontFollow" },
+    DefSymbol{ symbol_value: 6, symbol_name: "RandomStartTime" },
+    DefSymbol{ symbol_value: 7, symbol_name: "DieIfOverloaded" },
+    DefSymbol{ symbol_value: 8, symbol_name: "Additive" },
+    DefSymbol{ symbol_value: 9, symbol_name: "FullScreen" },
+    DefSymbol{ symbol_value:10, symbol_name:"SoftwareOnly" },
+    DefSymbol{ symbol_value:11, symbol_name: "HardwareOnly" },
+    DefSymbol{ symbol_value:u32::MAX, symbol_name: "" }
+    ]
+};
+
+#[rustfmt::skip]
+const EMMITTER_TYPE_SYMBOLS: &'static [DefSymbol] = {  //0x69E290
+    &[
+    DefSymbol{ symbol_value: 0, symbol_name: "Circle" },
+    DefSymbol{ symbol_value: 1, symbol_name: "Box" },
+    DefSymbol{ symbol_value: 2, symbol_name: "BoxPath" },
+    DefSymbol{ symbol_value: 3, symbol_name: "CirclePath" },
+    DefSymbol{ symbol_value: 4, symbol_name: "CircleEvenSpacing" },
+    DefSymbol{ symbol_value:u32::MAX, symbol_name: "" }
+    ]
+};
+
+#[rustfmt::skip]
+const PARTICLE_TYPE_SYMBOLS: &'static [DefSymbol] = {  //0x69E290
+    &[
+    DefSymbol{ symbol_value: 0, symbol_name: "Circle" },
+    DefSymbol{ symbol_value: 1, symbol_name: "Box" },
+    DefSymbol{ symbol_value: 2, symbol_name: "BoxPath" },
+    DefSymbol{ symbol_value: 4, symbol_name: "CirclePath" },
+    DefSymbol{ symbol_value: 3, symbol_name: "CircleEvenSpacing" },
+    DefSymbol{ symbol_value:u32::MAX, symbol_name: "" }
+    ]
+};
 
 /*
 DefSymbol gParticleFlagSymbols[] = {  //0x69E290

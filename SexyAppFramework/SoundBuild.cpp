@@ -6,4 +6,3 @@
 #include "FModLoader.cpp"
 #include "FModMusicInterface.cpp"
 #include "FModSoundInstance.cpp"
-#include "MusicInterface.cpp"

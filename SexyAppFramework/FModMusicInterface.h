@@ -44,11 +44,17 @@ public:
 	virtual bool			LoadMusic(int theSongId, const std::string& theFileName);
 	virtual bool			LoadSample(int theSongId, const std::string& theFileName, bool repeat);
 	virtual bool			LoadSample(int theSongId, const std::string& theIntroFileName, const std::string& theRepeatFileName, bool repeat);
-	virtual void			PlayMusic(int theSongId, int theOffset = 0, bool noLoop = false);	
+	virtual void			PlayMusic(int theSongId, int theOffset = 0, bool noLoop = false);
 	virtual void			StopMusic(int theSongId);
 	virtual void			PauseMusic(int theSongId);
 	virtual void			ResumeMusic(int theSongId);
-	virtual void			StopAllMusic();		
+	virtual void			StopAllMusic();
+	virtual void 			UnloadMusic(int){}
+	virtual void 			UnloadAllMusic(){}
+	virtual void 			PauseAllMusic(){}
+	virtual void 			ResumeAllMusic(){}
+	virtual void 			SetSongMaxVolume(int, double){}
+	virtual void			SetMusicAmplify(int, double){}
 	virtual void			FadeIn(int theSongId, int theOffset = -1, double theSpeed = 0.002, bool noLoop = false);
 	virtual void			FadeOut(int theSongId, bool stopSong = true, double theSpeed = 0.004);
 	virtual void			FadeOutAll(bool stopSong = true, double theSpeed = 0.004);

@@ -56,13 +56,8 @@ BassMusicInterface::BassMusicInterface(HWND theHWnd)
 
 	BOOL success;(void)success;
 
-	if (gBass->mVersion2)
-	{
-		success = gBass->BASS_Init2(1, 44100, 0, theHWnd, NULL);
-		gBass->BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);
-	}
-	else
-		success = gBass->BASS_Init(-1, 44100, 0, theHWnd);
+	success = gBass->BASS_Init(1, 44100, 0, theHWnd, NULL);
+	gBass->BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
 
 	mixerSetControlDetails(phmx, &mcd, 0L);
 
@@ -267,10 +262,7 @@ void BassMusicInterface::FadeIn(int theSongId, int theOffset, double theSpeed, b
 				gBass->BASS_MusicPlay(aMusicInfo->mHMusic);
 			else
 			{
-				if (gBass->mVersion2)
-					gBass->BASS_MusicPlayEx(aMusicInfo->mHMusic, theOffset, BASS2_MUSIC_RAMP | (noLoop ? 0 : BASS_MUSIC_LOOP), TRUE);
-				else
-					gBass->BASS_MusicPlayEx(aMusicInfo->mHMusic, theOffset, noLoop ? 0 : BASS_MUSIC_LOOP, TRUE);
+				gBass->BASS_MusicPlayEx(aMusicInfo->mHMusic, theOffset, BASS2_MUSIC_RAMP | (noLoop ? 0 : BASS_MUSIC_LOOP), TRUE);
 			}
 		}
 		else
@@ -317,8 +309,8 @@ void BassMusicInterface::FadeOutAll(bool stopSong, double theSpeed)
 void BassMusicInterface::SetVolume(double theVolume)
 {
 	// int aVolume = (int) (theVolume * mMaxMusicVolume); // unused
-	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, (int) (theVolume * 100));
-	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int) (theVolume * 100));
+	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, (int) (theVolume * 10000));
+	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int) (theVolume * 10000));
 }
 
 void BassMusicInterface::SetSongVolume(int theSongId, double theVolume)

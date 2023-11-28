@@ -189,6 +189,8 @@ void TodParticleLoadDefinitions(ParticleParams* theParticleParamArray, int thePa
 	gParticleParamArray = theParticleParamArray;
 	gParticleDefCount = theParticleParamArraySize;
 	gParticleDefArray = new TodParticleDefinition[theParticleParamArraySize];
+	// This was uninitialised before!
+	// memset(gParticleDefArray, 0, theParticleParamArraySize*sizeof(TodParticleDefinition));
 
 	for (int i = 0; i < gParticleParamArraySize; i++)
 	{
@@ -286,7 +288,7 @@ void TodParticleEmitter::TodEmitterInitialize(float theX, float theY, TodParticl
 		mSystemDuration = FloatTrackEvaluate(mEmitterDef->mParticleDuration, 0.0f, 1.0f);
 	mSystemDuration = max(1, mSystemDuration);
 
-	for (int i = 0; i < mEmitterDef->mSystemFieldCount; i++)
+	for (int i = 0; i < mEmitterDef->mSystemFields.count; i++)
 	{
 		mSystemFieldInterp[i][0] = Sexy::Rand(1.0f);
 		mSystemFieldInterp[i][1] = Sexy::Rand(1.0f);
@@ -321,8 +323,8 @@ TodParticle* TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	}
 
 	TodParticle* aParticle = aDataArray.DataArrayAlloc();
-	TOD_ASSERT(mEmitterDef->mParticleFieldCount <= MAX_PARTICLE_FIELDS);
-	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)
+	TOD_ASSERT(mEmitterDef->mParticleFields.count <= MAX_PARTICLE_FIELDS);
+	for (int i = 0; i < mEmitterDef->mParticleFields.count; i++)
 	{
 		aParticle->mParticleFieldInterp[i][0] = Sexy::Rand(1.0f);  // 初始化每个粒子场的横向插值
 		aParticle->mParticleFieldInterp[i][1] = Sexy::Rand(1.0f);  // 初始化每个粒子场的纵向插值
@@ -632,8 +634,8 @@ bool TodParticleEmitter::UpdateParticle(TodParticle* theParticle)
 		return false;  // 当粒子不存在交叉混合时，可以删除粒子
 
 	theParticle->mParticleTimeValue = theParticle->mParticleAge / ((float)theParticle->mParticleDuration - 1);
-	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)  // 更新粒子受到每个粒子场的作用
-		UpdateParticleField(theParticle, &mEmitterDef->mParticleFields[i], theParticle->mParticleTimeValue, i);
+	for (int i = 0; i < mEmitterDef->mParticleFields.count; i++)  // 更新粒子受到每个粒子场的作用
+		UpdateParticleField(theParticle, &mEmitterDef->mParticleFields.Fields[i], theParticle->mParticleTimeValue, i);
 	theParticle->mPosition += theParticle->mVelocity;
 	float aSpinSpeed = ParticleTrackEvaluate(mEmitterDef->mParticleSpinSpeed, theParticle, ParticleTracks::TRACK_PARTICLE_SPIN_SPEED) * 0.01;
 	float aSpinAngle = ParticleTrackEvaluate(mEmitterDef->mParticleSpinAngle, theParticle, ParticleTracks::TRACK_PARTICLE_SPIN_ANGLE);
@@ -807,8 +809,8 @@ void TodParticleEmitter::Update()
 	}
 
 	mSystemTimeValue = mSystemAge / (float)(mSystemDuration - 1);
-	for (int i = 0; i < mEmitterDef->mSystemFieldCount; i++)
-		UpdateSystemField(&mEmitterDef->mSystemFields[i], mSystemTimeValue, i);  // 更新发射器受到每个系统场的作用
+	for (int i = 0; i < mEmitterDef->mSystemFields.count; i++)
+		UpdateSystemField(&mEmitterDef->mSystemFields.Fields[i], mSystemTimeValue, i);  // 更新发射器受到每个系统场的作用
 	for (TodListNode<ParticleID>* aNode = mParticleList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticle* aParticle = mParticleSystem->mParticleHolder->mParticles.DataArrayGet((unsigned int)aNode->mValue);
@@ -875,7 +877,7 @@ bool TodParticleEmitter::GetRenderParams(TodParticle* theParticle, ParticleRende
 	theParams->mSpinPositionIsSet |= TestBit(aDef->mParticleFlags, (int)ParticleFlags::PARTICLE_ALIGN_LAUNCH_SPIN);
 	// 位置
 	theParams->mPositionIsSet = false;
-	theParams->mPositionIsSet |= (aDef->mParticleFieldCount > 0.0f);
+	theParams->mPositionIsSet |= (aDef->mParticleFields.count > 0.0f);
 	theParams->mPositionIsSet |= FloatTrackIsSet(aDef->mEmitterRadius);
 	theParams->mPositionIsSet |= FloatTrackIsSet(aDef->mEmitterOffsetX);
 	theParams->mPositionIsSet |= FloatTrackIsSet(aDef->mEmitterOffsetY);

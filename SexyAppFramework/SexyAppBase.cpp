@@ -38,6 +38,7 @@
 #include "../PakLib/PakInterface.h"
 #include <string>
 #include <shlobj.h>
+#include "DummyMusicInterface.h"
 
 #include "memmgr.h"
 
@@ -6054,7 +6055,7 @@ bool SexyAppBase::ChangeDirHook(const char *theIntendedPath)
 MusicInterface* SexyAppBase::CreateMusicInterface()
 {
 	if (mNoSoundNeeded)
-		return new MusicInterface;
+		return new DummyMusicInterface();
 	else if (mWantFMod)
 		return new FModMusicInterface();
 	else 

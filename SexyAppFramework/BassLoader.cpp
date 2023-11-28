@@ -34,14 +34,14 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 	GETPROC(BASS_Stop);
 	GETPROC(BASS_Start);
 	
-	*((uintptr_t*) &BASS_SetGlobalVolumes) = (uintptr_t) GetProcAddress(mModule, "BASS_SetGlobalVolumes");
+	//*((uintptr_t*) &BASS_SetGlobalVolumes) = (uintptr_t) GetProcAddress(mModule, "BASS_SetGlobalVolumes");
 	*((uintptr_t*) &BASS_SetVolume) = (uintptr_t) GetProcAddress(mModule, "BASS_SetVolume");
 
-	if ((BASS_SetVolume == NULL) && (BASS_SetGlobalVolumes == NULL))
+	if (BASS_SetVolume == NULL /*&& (BASS_SetGlobalVolumes == NULL)*/)
 	{
-		MessageBoxA(NULL,"Neither BASS_SetGlobalVolumes or BASS_SetVolume found in bass.dll","Error",MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL,"Whoops! You forgot to put the CD in your computer.","Error",MB_OK | MB_ICONERROR);
 		exit(0);
-	}	
+	}
 
 	//*((uintptr_t*) &BASS_SetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_SetConfig");
 	//*((uintptr_t*) &BASS_GetConfig) = (uintptr_t) GetProcAddress(mModule, "BASS_GetConfig");
@@ -151,13 +151,14 @@ BOOL BASS_INSTANCE::BASS_MusicPlay(HMUSIC handle)
 
 BOOL BASS_INSTANCE::BASS_MusicPlayEx(HMUSIC handle, DWORD pos, int flags, BOOL reset)
 {
+	(void)reset;
 	//int anOffset = MAKEMUSICPOS(pos,0);
 
 	BASS_ChannelStop(handle);
 	BASS_ChannelSetPosition(handle, MAKELONG(pos,0), BASS_POS_MUSIC_ORDER);
 	BASS_ChannelFlags(handle, flags, -1);
 
-	return BASS_ChannelPlay(handle, reset); // What's wrong with actually using the reset flag?
+	return BASS_ChannelPlay(handle, false/*reset*/); // What's wrong with actually using the reset flag?
 }
 
 
@@ -181,7 +182,7 @@ void Sexy::LoadBassDLL()
 	if (gBass!=NULL)
 		return;
 
-	gBass = new BASS_INSTANCE("/home/aaron/.steam/steam/steamapps/common/Plants Vs Zombies/bass.dll");
+	gBass = new BASS_INSTANCE("bass.dll");
 	if (gBass->mModule==NULL)
 	{
 		MessageBoxA(NULL,"Can't find bass.dll." ,"Error",MB_OK | MB_ICONERROR);

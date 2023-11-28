@@ -188,7 +188,7 @@ void GridItem::DrawStinky(Graphics* g)
     Reanimation* aStinkyReanim = mApp->ReanimationGet(mGridItemReanimID);
     float aOriginalTime = aStinkyReanim->mAnimTime;
 
-    TOD_ASSERT(mMotionTrailCount < NUM_MOTION_TRAIL_FRAMES);
+    TOD_ASSERT(mMotionTrailCount <= NUM_MOTION_TRAIL_FRAMES);
     for (int i = mMotionTrailCount - 1; i >= 0; i--)
     {
         if (i % 2)

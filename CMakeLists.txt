@@ -87,8 +87,8 @@ endif()
 
 set(CMAKE_C_STANDARD "11")
 set(CMAKE_CXX_STANDARD "11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
-set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O0")
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O0")
 # -Wl,--as-needed,-lwinmm
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
