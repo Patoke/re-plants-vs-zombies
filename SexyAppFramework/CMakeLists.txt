@@ -11,6 +11,7 @@ set(no_group_source_files
     ".gitattributes"
     ".gitignore"
     "resource.h"
+    "LawnProject.rc"
 )
 source_group("" FILES ${no_group_source_files})
 
@@ -879,4 +880,3 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     ">"
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE -static -static-libgcc -static-libstdc++ "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
-

@@ -13,10 +13,10 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(简体，中国) resources
+// 涓枃(绠�浣擄紝涓浗) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+// LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
 
 #ifdef APSTUDIO_INVOKED
@@ -50,9 +50,9 @@ END
 // Cursor
 //
 
-IDC_CURSOR1             CURSOR                  "..\\Cursor13.cur"
+IDC_CURSOR1             CURSOR                  "../Cursor13.cur"
 
-#endif    // 中文(简体，中国) resources
+#endif    // 涓枃(绠�浣擄紝涓浗) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -66,4 +66,3 @@ IDC_CURSOR1             CURSOR                  "..\\Cursor13.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
