@@ -6,7 +6,7 @@
 #include "D3DInterface.h"
 #include "ImageFont.h"
 #include "SysFont.h"
-#include "../ImageLib/ImageLib.h"
+#include "ImageLib.h"
 
 //#define SEXY_PERF_ENABLED
 #include "PerfTimer.h"
@@ -349,7 +349,7 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 	aRes->mAnimInfo.mAnimType = anAnimType;
 	if (anAnimType != AnimType_None)
 	{
-		int aNumCels = max(aRes->mRows,aRes->mCols);
+		int aNumCels = std::max(aRes->mRows,aRes->mCols);
 		int aBeginDelay = 0, anEndDelay = 0;
 
 		anItr = theElement.mAttributes.find(_S("framedelay"));

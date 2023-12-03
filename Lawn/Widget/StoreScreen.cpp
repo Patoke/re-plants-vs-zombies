@@ -125,7 +125,7 @@ StoreScreen::StoreScreen(LawnApp* theApp) : Dialog(nullptr, nullptr, DIALOG_STOR
     mTrialLockedWhenStoreOpened = mApp->IsTrialStageLocked();
 }
 
-//0x48A610¡¢0x48A630
+//0x48A610ã€0x48A630
 StoreScreen::~StoreScreen()
 {
     mCoins.DataArrayDispose();
@@ -138,7 +138,7 @@ StoreScreen::~StoreScreen()
 //0x48A760
 StoreItem StoreScreen::GetStoreItemType(int theSpotIndex)
 {
-    // Õâ¸öº¯ÊıÔ­°æÊÇÇî¾ÙÅĞ¶ÏµÄ£¬ÕâÀïÓÅ»¯Ò»ÏÂ¡­¡­
+    // è¿™ä¸ªå‡½æ•°åŸç‰ˆæ˜¯ç©·ä¸¾åˆ¤æ–­çš„ï¼Œè¿™é‡Œä¼˜åŒ–ä¸€ä¸‹â€¦â€¦
 
     if (mPage < NUM_STORE_PAGES && theSpotIndex < MAX_PAGE_SPOTS)
     {
@@ -628,7 +628,7 @@ void StoreScreen::Update()
     mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME);
     mApp->UpdateCrazyDave();
 
-    // ¸üĞÂ DataArray<Coin> ÖĞµÄËùÓĞ Coin
+    // æ›´æ–° DataArray<Coin> ä¸­çš„æ‰€æœ‰ Coin
     Coin* aCoin = nullptr;
     while (mCoins.IterateNext(aCoin))
     {
@@ -763,7 +763,7 @@ void StoreScreen::Update()
     }
 
     UpdateMouse();
-    // Èç¹û½øÈëÉÌµêÊ±ÎªÊÔÍæ°æ£¬¶øµ±Ç°ÎªÍêÕû°æ£¬ÇÒ¿ÉÒÔÓë°´Å¥½øĞĞ½»»¥£¬Ôò¿ÉÒÔÅĞ¶ÏÍæ¼ÒÒÑ¹ºÂòÍêÕû°æ
+    // å¦‚æœè¿›å…¥å•†åº—æ—¶ä¸ºè¯•ç©ç‰ˆï¼Œè€Œå½“å‰ä¸ºå®Œæ•´ç‰ˆï¼Œä¸”å¯ä»¥ä¸æŒ‰é’®è¿›è¡Œäº¤äº’ï¼Œåˆ™å¯ä»¥åˆ¤æ–­ç©å®¶å·²è´­ä¹°å®Œæ•´ç‰ˆ
     if (CanInteractWithButtons() && mTrialLockedWhenStoreOpened && !mApp->IsTrialStageLocked())
     {
         mPurchasedFullVersion = true;
@@ -807,15 +807,15 @@ void StoreScreen::ButtonPress(int theId)
 //0x48C440
 bool StoreScreen::IsPageShown(StorePages thePage)
 {
-    // ÊÔÍæÄ£Ê½ÏÂ£¬½öÏÔÊ¾Ä¬ÈÏÒ³
+    // è¯•ç©æ¨¡å¼ä¸‹ï¼Œä»…æ˜¾ç¤ºé»˜è®¤é¡µ
     if (mApp->IsTrialStageLocked()) return thePage == STORE_PAGE_SLOT_UPGRADES;
-    // Ò»ÖÜÄ¿Íê³Éºó£¬ËùÓĞÒ³È«½âËø
+    // ä¸€å‘¨ç›®å®Œæˆåï¼Œæ‰€æœ‰é¡µå…¨è§£é”
     if (mApp->HasFinishedAdventure()) return true;
-    // µ½´ï»òÒÑÍ¨¹ıÃ°ÏÕÄ£Ê½ 5-2 ¹Ø¿¨Ê±£¬ÏÔÊ¾×Ï¿¨Ò³
+    // åˆ°è¾¾æˆ–å·²é€šè¿‡å†’é™©æ¨¡å¼ 5-2 å…³å¡æ—¶ï¼Œæ˜¾ç¤ºç´«å¡é¡µ
     if (thePage == STORE_PAGE_PLANT_UPGRADES) return mApp->mPlayerInfo->mLevel >= 42;
-    // µ½´ï»òÒÑÍ¨¹ıÃ°ÏÕÄ£Ê½ 5-5 ¹Ø¿¨Ê±£¬ÏÔÊ¾»¨Ô°¹¤¾ßÒ³
+    // åˆ°è¾¾æˆ–å·²é€šè¿‡å†’é™©æ¨¡å¼ 5-5 å…³å¡æ—¶ï¼Œæ˜¾ç¤ºèŠ±å›­å·¥å…·é¡µ
     if (thePage == STORE_PAGE_ZEN1) return mApp->mPlayerInfo->mLevel >= 45;
-    // Ã°ÏÕÄ£Ê½Î´Íê³ÉÊ±£¬²»ÏÔÊ¾ÖÇ»ÛÊ÷¹¤¾ßÒ³
+    // å†’é™©æ¨¡å¼æœªå®Œæˆæ—¶ï¼Œä¸æ˜¾ç¤ºæ™ºæ…§æ ‘å·¥å…·é¡µ
     return thePage != STORE_PAGE_ZEN2;
 }
 
@@ -1063,7 +1063,7 @@ void StoreScreen::AdvanceCrazyDaveDialog()
     if (!mBubbleClickToContinue)
         return;
 
-    // ¡°ºÙ£¬ÎÒµÄÁÚ¾Ó£¡ÎÒÓĞÒ»Ğ©ĞÂ¶«Î÷³öÊÛÀ²£¡¡±
+    // â€œå˜¿ï¼Œæˆ‘çš„é‚»å±…ï¼æˆ‘æœ‰ä¸€äº›æ–°ä¸œè¥¿å‡ºå”®å•¦ï¼â€
     if (mApp->mCrazyDaveMessageIndex == 3100)
     {
         mHatchTimer = 150;

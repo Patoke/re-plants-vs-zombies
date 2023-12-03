@@ -85,24 +85,17 @@ if(MSVC)
     set(CMAKE_STATIC_LINKER_FLAGS_RELEASEZYLOM "${CMAKE_STATIC_LINKER_FLAGS}")
 endif()
 
-set(CMAKE_C_STANDARD "11")
-set(CMAKE_CXX_STANDARD "11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
-set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -pthread -fuse-ld=lld -fms-extensions -fdiagnostics-color=always -Wall -Wextra -Werror -gdwarf-2 -O3")
-# -Wl,--as-needed,-lwinmm
+set(universal_compiler_flags "-fsanitize=undefined -fsanitize-trap -pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
+#set(universal_compiler_flags "-pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
+set(universal_cxxflags "${CMAKE_CXX_FLAGS} ${universal_compiler_flags}")
+set(universal_cflags   "${CMAKE_C_FLAGS} ${universal_compiler_flags}")
+set(warn_flags "-Wall -Wextra -Werror")
+
+set(CMAKE_CXX_FLAGS "${universal_cflags} ${warn_flags}")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${universal_cflags} ${warn_flags}")
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-set(CMAKE_C_COMPILER_TARGET x86_64-w64-mingw32)
-set(CMAKE_CXX_COMPILER_TARGET x86_64-w64-mingw32)
-#set(CMAKE_EXE_LINKER_FLAGS="-Wl,-O1,--as-needed")
 
-#set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS}" )
-SET(CMAKE_C_COMPILER     "x86_64-w64-mingw32-clang")
-SET(CMAKE_CXX_COMPILER   "x86_64-w64-mingw32-clang++")
-SET(CMAKE_FIND_ROOT_PATH "/usr/x86_64-w64-mingw32")
-#SET(CMAKE_LD_LIBRARY_PATH "${CMAKE_LD_LIBRARY_PATH}:.")
-
-set(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
 set(CMAKE_RC_COMPILER_INIT windres)
 ENABLE_LANGUAGE(RC)
   SET(CMAKE_RC_COMPILE_OBJECT

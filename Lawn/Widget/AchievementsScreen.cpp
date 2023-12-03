@@ -112,7 +112,10 @@ void AchievementsWidget::Draw(Graphics* g) {
 		g->DrawImage(IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, 128, 55);
 
 	for (int i = 0; i < MAX_ACHIEVEMENTS; i++) {
-		bool aHasAchievement = mApp->mPlayerInfo->mEarnedAchievements[i];
+		bool aHasAchievement;
+		if (mApp->mPlayerInfo) aHasAchievement = mApp->mPlayerInfo->mEarnedAchievements[i];
+		else aHasAchievement = false;
+
 		int aCurrAchievementOff = 57 * int(i / 2);
 		int aImageXPos = i % 2 == 0 ? 120 : 410;
 		int aImageYPos = 178 + aCurrAchievementOff;
@@ -242,8 +245,7 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 	}
 
 	int aTreeSize = theApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];
-	// TODO Change this back!!!
-	if (aTreeSize > 100) {
+	if (aTreeSize >= 100) {
 		GiveAchievement(theApp, AchievementId::ToweringWisdom, true);
 	}
 

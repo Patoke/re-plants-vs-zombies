@@ -1383,25 +1383,25 @@ int Challenge::UpdateBeghouledPlant(Plant* thePlant)
 
 	if (aDiffX > 0)
 	{
-		aDeltaX = min(aDelta, aDiffX);
+		aDeltaX = std::min(aDelta, aDiffX);
 		thePlant->mX += aDeltaX;
 		aMoving = true;
 	}
 	else if (aDiffX < 0)
 	{
-		aDeltaX = -min(aDelta, -aDiffX);
+		aDeltaX = -std::min(aDelta, -aDiffX);
 		thePlant->mX += aDeltaX;
 		aMoving = true;
 	}
 	if (aDiffY > 0)
 	{
-		aDeltaY = min(aDelta, aDiffY);
+		aDeltaY = std::min(aDelta, aDiffY);
 		thePlant->mY += aDeltaY;
 		aMoving = true;
 	}
 	else if (aDiffY < 0)
 	{
-		aDeltaY = -min(aDelta, -aDiffY);
+		aDeltaY = -std::min(aDelta, -aDiffY);
 		thePlant->mY += aDeltaY;
 		aMoving = true;
 	}
@@ -2523,7 +2523,7 @@ void Challenge::InitZombieWavesSurvival()
 		mBoard->mZombieAllowed[ZOMBIE_TRAFFIC_CONE] = true;
 	}
 
-	int aCapacity = min(mSurvivalStage + 1, 9);
+	int aCapacity = std::min(mSurvivalStage + 1, 9);
 	while (aCapacity > 0)
 	{
 		ZombieType aRandZombie = (ZombieType)aLevelRNG.Next((unsigned long)NUM_ZOMBIE_TYPES);
@@ -2807,7 +2807,7 @@ void Challenge::WhackAZombieSpawning()
 	if (mBoard->mZombieCountDown == 100 && mBoard->mCurrentWave > 0)
 	{
 		int aNumGraves = 5 - mBoard->GetGraveStonesCount();
-		WhackAZombiePlaceGraves(max(1, aNumGraves));
+		WhackAZombiePlaceGraves(std::max(1, aNumGraves));
 	}
 	if (mBoard->mZombieCountDown == 5)
 	{
@@ -5286,7 +5286,7 @@ void Challenge::LastStandCompletedStage()
 		if (aPlant->mState == STATE_CHOMPER_DIGESTING || aPlant->mState == STATE_COBCANNON_ARMING || 
 			aPlant->mState == STATE_MAGNETSHROOM_SUCKING || aPlant->mState == STATE_MAGNETSHROOM_CHARGING)
 		{
-			aPlant->mStateCountdown = min(aPlant->mStateCountdown, 200);
+			aPlant->mStateCountdown = std::min(aPlant->mStateCountdown, 200);
 		}
 	}
 
@@ -5421,7 +5421,7 @@ void Challenge::TreeOfWisdomInit()
 	ReanimatorEnsureDefinitionLoaded(REANIM_TREEOFWISDOM, true);
 	Reanimation* aReanimTree = mApp->AddReanimation(0.5f, 0.5f, 0, REANIM_TREEOFWISDOM);
 	aReanimTree->mIsAttachment = true;
-	aReanimTree->AssignRenderGroupToPrefix("bg", 1);
+	aReanimTree->AssignRenderGroupToPrefix("bg", 0);
 	aReanimTree->AssignRenderGroupToPrefix("tree", 2);
 	aReanimTree->AssignRenderGroupToPrefix("grass", 3);
 	aReanimTree->AssignRenderGroupToPrefix("overlay", 4);
@@ -5636,7 +5636,7 @@ void Challenge::TreeOfWisdomUpdate()
 		}
 	}
 
-	for (int i = 6; i > 0; i--)
+	for (int i = 5; i > 0; i--) // Off by one error!
 	{
 		Reanimation* aReanimCloud = mApp->ReanimationGet(mReanimClouds[i]);
 		if (mCloudsCounter[i] > 0)

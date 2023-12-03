@@ -535,7 +535,7 @@ std::string SexyApp::GetGameSEHInfo()
 	sprintf(aGamesPlayedStr, "%d", mTimesPlayed);
 
 	std::string anInfoString = SexyAppBase::GetGameSEHInfo() + 
-		"Times Played: " + std::string(aGamesPlayedStr) + "\r\n";
+		"Times Played: " + std::string(aGamesPlayedStr) + "\r\n" +
 		"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
 		"Build Date: " + mBuildDate + "\r\n";
 

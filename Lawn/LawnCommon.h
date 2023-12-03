@@ -6,7 +6,7 @@
 #include "../SexyAppFramework/EditWidget.h"
 
 using namespace Sexy;
-using namespace std;
+// using namespace std;
 
 class Board;
 class LawnStoneButton;

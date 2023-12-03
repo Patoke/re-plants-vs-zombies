@@ -11,9 +11,9 @@
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/MemoryImage.h"
 
-int gReanimatorDefCount;                     //[0x6A9EE4]
+unsigned int gReanimatorDefCount;                     //[0x6A9EE4]
 ReanimatorDefinition* gReanimatorDefArray;   //[0x6A9EE8]
-int gReanimationParamArraySize;              //[0x6A9EEC]
+unsigned int gReanimationParamArraySize;              //[0x6A9EEC]
 ReanimationParams* gReanimationParamArray;   //[0x6A9EF0]
 
 ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { //0x6A1340
@@ -353,7 +353,7 @@ void ReanimationCreateAtlas(ReanimatorDefinition* theDefinition, ReanimationType
 	aAtlas->ReanimAtlasCreate(theDefinition);
 
 	TodHesitationTrace("atlas '%s'", aParam.mReanimFileName);
-	int aDuration = max(aTimer.GetDuration(), 0.0);
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE)  //（仅内测版）创建时间过长的报告
 		TodTraceAndLog("LOADING:Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
@@ -1161,7 +1161,7 @@ void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int 
 	gReanimatorDefCount = theReanimationParamArraySize;
 	gReanimatorDefArray = new ReanimatorDefinition[theReanimationParamArraySize];
 
-	for (int i = 0; i < gReanimationParamArraySize; i++)
+	for (unsigned int i = 0; i < gReanimationParamArraySize; i++)
 	{
 		ReanimationParams* aReanimationParams = &theReanimationParamArray[i];
 		TOD_ASSERT(aReanimationParams->mReanimationType == i);
@@ -1173,7 +1173,7 @@ void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int 
 //0x473870
 void ReanimatorFreeDefinitions()
 {
-	for (int i = 0; i < gReanimatorDefCount; i++)
+	for (unsigned int i = 0; i < gReanimatorDefCount; i++)
 		ReanimationFreeDefinition(&gReanimatorDefArray[i]);
 
 	delete[] gReanimatorDefArray;
@@ -1396,7 +1396,7 @@ void Reanimation::UpdateAttacherTrack(int theTrackIndex)
 	if (aAttacherInfo.mReanimName.size() != 0)  // 如果附属轨道设定了当前的附属动画名称
 	{
 		std::string aReanimFileName = StrFormat("reanim\\%s.reanim", aAttacherInfo.mReanimName.c_str());
-		for (int i = 0; i < gReanimationParamArraySize; i++)  // 在动画参数数组中寻找动画文件名对应的动画类型
+		for (unsigned int i = 0; i < gReanimationParamArraySize; i++)  // 在动画参数数组中寻找动画文件名对应的动画类型
 		{
 			ReanimationParams* aParams = &gReanimationParamArray[i];
 			if (stricmp(aReanimFileName.c_str(), aParams->mReanimFileName) == 0)

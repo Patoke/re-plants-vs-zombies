@@ -293,7 +293,7 @@ void TitleScreen::Update()
 		float aLoadTime = aEstimatedTotalLoadTime * (1 - aCurrentProgress);
 		aLoadTime = ClampFloat(aLoadTime, 100, 3000);
 		mBarVel = mTotalBarWidth / aLoadTime;
-		mBarStartProgress = min(aCurrentProgress, 0.9f);
+		mBarStartProgress = std::min(aCurrentProgress, 0.9f);
 	}
 
 	float aLoadingPercent = (aCurrentProgress - mBarStartProgress) / (1 - mBarStartProgress);

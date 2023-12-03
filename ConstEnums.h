@@ -1,5 +1,6 @@
 #pragma once
 
+//#include "Sexy.TodLib/Attachment.h"
 enum AdviceType
 {
     ADVICE_NONE = -1,
@@ -791,10 +792,9 @@ enum ProjectileType
     PROJECTILE_ZOMBIE_PEA = 13,  // 僵尸豌豆
     NUM_PROJECTILES = 14
 };
-enum ReanimationType
-{
-    REANIM_NONE = -1,
-    REANIM_LOADBAR_SPROUT,
+enum ReanimationType : unsigned int {
+    REANIM_NONE = (unsigned int)-1,
+    REANIM_LOADBAR_SPROUT = 0,
     REANIM_LOADBAR_ZOMBIEHEAD,
     REANIM_SODROLL,
     REANIM_FINAL_WAVE,
@@ -1130,7 +1130,7 @@ enum StoreItem
     STORE_ITEM_PVZ,
     STORE_ITEM_INVALID = -1
 };
-enum StorePages
+enum StorePages : int
 {
     STORE_PAGE_SLOT_UPGRADES = 0,
     STORE_PAGE_PLANT_UPGRADES = 1,
@@ -1355,11 +1355,36 @@ enum ZombieType
 };
 
 //////////////////////////////
-enum AttachmentID { ATTACHMENTID_NULL };
-enum CoinID { COINID_NULL };
-enum ParticleID { PARTICLEID_NULL };
-enum ParticleEmitterID { PARTICLEEMITTERID_NULL };
-enum ParticleSystemID { PARTICLESYSTEMID_NULL };
-enum PlantID { PLANTID_NULL };
-enum ReanimationID { REANIMATIONID_NULL };
-enum ZombieID { ZOMBIEID_NULL };
+// Enums are not supposed to have invalid values, a typedef is much more appropriate
+//typedef unsigned int AttachmentID;
+//const AttachmentID ATTACHMENTID_NULL = 0;
+//
+//typedef unsigned int CoinID;
+//const CoinID COINID_NULL = 0;
+//
+//typedef unsigned int ParticleID;
+//const ParticleID PARTICLEID_NULL = 0;
+//
+//typedef unsigned int ParticleEmitterID;
+//const ParticleEmitterID PARTICLEEMITTERID_NULL = 0;
+//
+//typedef unsigned int ParticleSystemID;
+//const ParticleSystemID PARTICLESYSTEMID_NULL = 0;
+//
+//typedef unsigned int PlantID;
+//const PlantID PLANTID_NULL = 0;
+//
+//typedef unsigned int ReanimationID;
+//const ReanimationID REANIMATIONID_NULL = 0;
+//
+//typedef unsigned int ZombieID;
+//const ZombieID ZOMBIEID_NULL = 0;
+
+enum AttachmentID      : int { ATTACHMENTID_NULL };
+enum CoinID            : unsigned int { COINID_NULL };
+enum ParticleID        : unsigned int { PARTICLEID_NULL };
+enum ParticleEmitterID : unsigned int { PARTICLEEMITTERID_NULL };
+enum ParticleSystemID  : unsigned int { PARTICLESYSTEMID_NULL };
+enum PlantID           : unsigned int { PLANTID_NULL };
+enum ReanimationID     : unsigned int { REANIMATIONID_NULL };
+enum ZombieID          : unsigned int { ZOMBIEID_NULL };

@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "D3DInterface.h"
 #include "SexyAppBase.h"
+#include <cstdint>
 
 
 

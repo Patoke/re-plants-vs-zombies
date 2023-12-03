@@ -67,7 +67,7 @@ bool TodStringListReadName(const char*& thePtr, std::string& theName)
 		}
 
 		int aCount = aNameEnd - aNameStart - 1;
-		theName = Sexy::Trim(string(aNameStart + 1, aCount));  // 取得中括号之间的部分并去除字符串前后的空白字符
+		theName = Sexy::Trim(std::string(aNameStart + 1, aCount));  // 取得中括号之间的部分并去除字符串前后的空白字符
 		if (theName.size() == 0)
 		{
 			TodTrace("Name Too Short");
@@ -96,7 +96,7 @@ bool TodStringListReadValue(const char*& thePtr, std::string& theValue)
 {
 	const char* aValueEnd = strchr(thePtr, '[');
 	int aLen = aValueEnd ? aValueEnd - thePtr : strlen(thePtr);
-	theValue = Sexy::Trim(string(thePtr, aLen));  // 如果存在下一个“[”，则取到“[”前为止；否则，取剩下的全部
+	theValue = Sexy::Trim(std::string(thePtr, aLen));  // 如果存在下一个“[”，则取到“[”前为止；否则，取剩下的全部
 	TodStringRemoveReturnChars(theValue);  // 移除所有的换行符
 	thePtr += aLen;  // 移动读取指针至“[”处（或结尾处）
 	return true;

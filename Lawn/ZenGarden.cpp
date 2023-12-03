@@ -1633,7 +1633,7 @@ void ZenGarden::StinkyUpdate(GridItem* theStinky)
     if (aStinkyHighOnChocolate)
     {
         aSpeedY = 1.0f;
-        aSpeedX = max(aSpeedX, 0.5f);
+        aSpeedX = std::max(aSpeedX, 0.5f);
     }
     else if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_CHOCOLATE)
     {
@@ -2202,7 +2202,7 @@ void ZenGarden::SetPlantAnimSpeed(Plant* thePlant)
     if (aPlantHighOnChocolate)
     {
         aTargetRate *= 2.0f;
-        aTargetRate = max(25.0f, aTargetRate);
+        aTargetRate = std::max(25.0f, aTargetRate);
     }
 
     aBodyReanim->mAnimRate = aTargetRate;

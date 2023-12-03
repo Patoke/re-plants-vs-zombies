@@ -571,7 +571,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		mBlueMask = aDesc.ddpfPixelFormat.dwBBitMask;
 
 		int i;
-		for (i = 32; i >= 0; i--)
+		for (i = 31; i >= 0; i--) // @ Minerscale Fix UB shift by 32 bits
 		{
 			if (((mRedMask >> i) & 1) != 0)
 				mRedShift = i;

@@ -38,7 +38,7 @@ void TileImageHorizontally(Graphics* g, Image* theImage, int theX, int theY, int
 {
 	while (theWidth > 0)
 	{
-		int aImageWidth = min(theWidth, theImage->GetWidth());
+		int aImageWidth = std::min(theWidth, theImage->GetWidth());
 		g->DrawImage(theImage, theX, theY, Rect(0, 0, aImageWidth, theImage->GetHeight()));
 		theX += aImageWidth;
 		theWidth -= aImageWidth;
@@ -49,7 +49,7 @@ void TileImageVertically(Graphics* g, Image* theImage, int theX, int theY, int t
 {
 	while (theHeight > 0)
 	{
-		int aImageHeight = min(theHeight, theImage->GetHeight());
+		int aImageHeight = std::min(theHeight, theImage->GetHeight());
 		g->DrawImage(theImage, theX, theY, Rect(0, 0, theImage->GetWidth(), aImageHeight));
 		theY += aImageHeight;
 		theHeight -= aImageHeight;

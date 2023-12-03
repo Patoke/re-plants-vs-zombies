@@ -6,10 +6,10 @@
 //0x446B80
 void RGB_to_HSL(float r, float g, float b, float& h, float& s, float& l)
 {
-	float maxval = max(r, g);
-	maxval = max(maxval, b);
-	float minval = min(r, g);
-	minval = min(minval, b);
+	float maxval = std::max(r, g);
+	maxval = std::max(maxval, b);
+	float minval = std::min(r, g);
+	minval = std::min(minval, b);
 
 	l = (minval + maxval) / 2;  //luminosity
 	if (l <= 0.0f)

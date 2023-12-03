@@ -2659,7 +2659,7 @@ void Zombie::UpdateZombieBobsled()
         }
     }
 
-    mBoard->mIceTimer[mRow] = max(500, mBoard->mIceTimer[mRow]);
+    mBoard->mIceTimer[mRow] = std::max(500, mBoard->mIceTimer[mRow]);
     if (mPosX + 10.0f < mBoard->mIceMinX[mRow] && GetBobsledPosition() == 0)
     {
         TakeDamage(6, 8U);
@@ -3200,7 +3200,7 @@ void Zombie::UpdateZombiquarium()
     if (aIsOutOfBounds)
     {
         aMaxSpeed = mVelX * 0.3f;
-        mPhaseCounter = min(100, mPhaseCounter);
+        mPhaseCounter = std::min(100, mPhaseCounter);
     }
     else if (mZombiePhase == ZombiePhase::PHASE_ZOMBIQUARIUM_ACCEL)
     {
@@ -3225,7 +3225,7 @@ void Zombie::UpdateZombiquarium()
         aMaxSpeed = 0.05f;
     }
 
-    mVelX = min(aMaxSpeed, mVelX + 0.01f);
+    mVelX = std::min(aMaxSpeed, mVelX + 0.01f);
     aVelX *= mVelX;
     aVelY *= mVelX;
     mPosX += aVelX;
@@ -3963,11 +3963,11 @@ void Zombie::UpdateZamboni()
     int anIceX = mPosX + 118;
     if (mBoard->StageHasRoof())
     {
-        anIceX = max(anIceX, 500);
+        anIceX = std::max(anIceX, 500);
     }
     else
     {
-        anIceX = max(anIceX, 25);
+        anIceX = std::max(anIceX, 25);
     }
     if (anIceX < mBoard->mIceMinX[mRow])
     {
@@ -4207,11 +4207,11 @@ void Zombie::UpdateZombiePosition()
         float aDesiredY = GetPosYBasedOnRow(mRow);
         if (mPosY < aDesiredY)
         {
-            mPosY += min(aDesiredY - mPosY, 1.0f);
+            mPosY += std::min(aDesiredY - mPosY, 1.0f);
         }
         else if (mPosY > aDesiredY)
         {
-            mPosY -= min(mPosY - aDesiredY, 1.0f);
+            mPosY -= std::min(mPosY - aDesiredY, 1.0f);
         }
     }
 }
@@ -4833,7 +4833,7 @@ void Zombie::AnimateChewEffect()
         GridItem* aBrain = mBoard->mChallenge->IZombieGetBrainTarget(this);
         if (aBrain)
         {
-            aBrain->mTransparentCounter = max(aBrain->mTransparentCounter, 25);
+            aBrain->mTransparentCounter = std::max(aBrain->mTransparentCounter, 25);
             return;
         }
     }
@@ -4871,7 +4871,7 @@ void Zombie::AnimateChewEffect()
             mApp->AddTodParticle(aPosX, aPosY, aRenderOrder, ParticleEffect::PARTICLE_WALLNUT_EAT_SMALL);
         }
 
-        aPlant->mEatenFlashCountdown = max(aPlant->mEatenFlashCountdown, 25);
+        aPlant->mEatenFlashCountdown = std::max(aPlant->mEatenFlashCountdown, 25);
     }
 }
 
@@ -5974,7 +5974,7 @@ void Zombie::GetDrawPos(ZombieDrawPosition& theDrawPos)
         }
         else
         {
-            float aHeightLimit = min(mPhaseCounter, 40);
+            float aHeightLimit = std::min(mPhaseCounter, 40);
             theDrawPos.mClipHeight = theDrawPos.mBodyY + aHeightLimit;
         }
 
@@ -7538,7 +7538,7 @@ void Zombie::ApplyChill(bool theIsIceTrap)
     {
         aChillTime = 2000;
     }
-    mChilledCounter = max(aChillTime, mChilledCounter);
+    mChilledCounter = std::max(aChillTime, mChilledCounter);
 
     UpdateAnimSpeed();
 }
@@ -7627,7 +7627,7 @@ int Zombie::TakeShieldDamage(int theDamage, unsigned int theDamageFlags)
     }
 
     int aDamageIndexBeforeDamage = GetShieldDamageIndex();
-    int aDamageActual = min(mShieldHealth, theDamage);
+    int aDamageActual = std::min(mShieldHealth, theDamage);
     int aDamageRemaining = theDamage - aDamageActual;
     mShieldHealth -= aDamageActual;
     if (mShieldHealth == 0)
@@ -7736,7 +7736,7 @@ int Zombie::TakeHelmDamage(int theDamage, unsigned int theDamageFlags)
     }
 
     int aDamageIndexBeforeDamage = GetHelmDamageIndex();
-    int aDamageActual = min(mHelmHealth, theDamage);
+    int aDamageActual = std::min(mHelmHealth, theDamage);
     int aDamageRemaining = theDamage - aDamageActual;
     mHelmHealth -= aDamageActual;
     if (TestBit(theDamageFlags, (int)DamageFlags::DAMAGE_FREEZE))
@@ -7821,7 +7821,7 @@ int Zombie::TakeFlyingDamage(int theDamage, unsigned int theDamageFlags)
         mJustGotShotCounter = 25;
     }
 
-    int aDamageActual = min(mFlyingHealth, theDamage);
+    int aDamageActual = std::min(mFlyingHealth, theDamage);
     int aDamageRemaining = theDamage - aDamageActual;
     mFlyingHealth -= aDamageActual;
     if (mFlyingHealth == 0)

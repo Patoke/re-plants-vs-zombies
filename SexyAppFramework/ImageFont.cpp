@@ -125,7 +125,9 @@ FontLayer::FontLayer(const FontLayer& theFontLayer) :
 	mHeight(theFontLayer.mHeight),
 	mDefaultHeight(theFontLayer.mDefaultHeight),
 	mLineSpacingOffset(theFontLayer.mLineSpacingOffset),
-	mBaseOrder(theFontLayer.mBaseOrder)
+	mBaseOrder(theFontLayer.mBaseOrder),
+	// @Minerscale mUseAlphaCorrection wasn't initialised in the copy constructor causing UB
+	mUseAlphaCorrection(theFontLayer.mUseAlphaCorrection)
 {
 	//ulong i;
 	//
@@ -899,8 +901,6 @@ bool FontData::HandleCommand(const ListDataElement& theParams)
 							aLayer->GetCharData(aWString[0])->mOffset = Point(aRectElement[0], aRectElement[1]);
 						}
 						else {
-							Error("Fucking Fuck");
-							return false;
 							invalidParamFormat = true;
 				 		}
 					}
@@ -1555,6 +1555,7 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 		int aMaxXPos = aCurXPos;
 
 		ActiveFontLayerList::iterator anItr = mActiveLayerList.begin();
+		int layerOrderOffset = 0;
 		while (anItr != mActiveLayerList.end())
 		{
 			ActiveFontLayer* anActiveFontLayer = &*anItr;
@@ -1570,7 +1571,7 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 
 			double aScale = mScale;
 			if (aLayerPointSize != 0)
-				aScale *= mPointSize / aLayerPointSize;
+				aScale *= (float)mPointSize / (float)aLayerPointSize;
 
 			if (aScale == 1.0)
 			{
@@ -1618,7 +1619,7 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 			aColor.mAlpha = std::min((theColor.mAlpha * anActiveFontLayer->mBaseFontLayer->mColorMult.mAlpha / 255) + anActiveFontLayer->mBaseFontLayer->mColorAdd.mAlpha, 255);
 
 			//int anOrder = anActiveFontLayer->mBaseFontLayer->mBaseOrder + anActiveFontLayer->mBaseFontLayer->mCharData[(uchar) aChar].mOrder;
-			int anOrder = anActiveFontLayer->mBaseFontLayer->mBaseOrder + anActiveFontLayer->mBaseFontLayer->GetCharData(aChar)->mOrder;
+			int anOrder = layerOrderOffset + anActiveFontLayer->mBaseFontLayer->mBaseOrder + anActiveFontLayer->mBaseFontLayer->GetCharData(aChar)->mOrder;
 
 			if (aCurPoolIdx >= POOL_SIZE)
 				break;
@@ -1704,6 +1705,7 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 				aMaxXPos = aLayerXPos;
 
 			++anItr;
+			++layerOrderOffset;
 		}
 
 		aCurXPos = aMaxXPos;

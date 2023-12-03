@@ -16,221 +16,141 @@ set(no_group_source_files
 source_group("" FILES ${no_group_source_files})
 
 set(ImageLib
-    "../ImageLib/ImageLib.cpp"
-    "../ImageLib/ImageLib.h"
+    "ImageLib.cpp"
+    "ImageLib.h"
 )
 source_group("ImageLib" FILES ${ImageLib})
 
-set(ImageLib__JPEG
-    "../ImageLib/jpeg/cderror.h"
-    "../ImageLib/jpeg/cdjpeg.c"
-    "../ImageLib/jpeg/cdjpeg.h"
-    "../ImageLib/jpeg/jcapimin.c"
-    "../ImageLib/jpeg/jcapistd.c"
-    "../ImageLib/jpeg/jccoefct.c"
-    "../ImageLib/jpeg/jccolor.c"
-    "../ImageLib/jpeg/jcdctmgr.c"
-    "../ImageLib/jpeg/jchuff.c"
-    "../ImageLib/jpeg/jchuff.h"
-    "../ImageLib/jpeg/jcinit.c"
-    "../ImageLib/jpeg/jcmainct.c"
-    "../ImageLib/jpeg/jcmarker.c"
-    "../ImageLib/jpeg/jcmaster.c"
-    "../ImageLib/jpeg/jcomapi.c"
-    "../ImageLib/jpeg/jconfig.h"
-    "../ImageLib/jpeg/jcparam.c"
-    "../ImageLib/jpeg/jcphuff.c"
-    "../ImageLib/jpeg/jcprepct.c"
-    "../ImageLib/jpeg/jcsample.c"
-    "../ImageLib/jpeg/jctrans.c"
-    "../ImageLib/jpeg/jdapimin.c"
-    "../ImageLib/jpeg/jdapistd.c"
-    "../ImageLib/jpeg/jdatadst.c"
-    "../ImageLib/jpeg/jdatasrc.c"
-    "../ImageLib/jpeg/jdcoefct.c"
-    "../ImageLib/jpeg/jdcolor.c"
-    "../ImageLib/jpeg/jdct.h"
-    "../ImageLib/jpeg/jddctmgr.c"
-    "../ImageLib/jpeg/jdhuff.c"
-    "../ImageLib/jpeg/jdhuff.h"
-    "../ImageLib/jpeg/jdinput.c"
-    "../ImageLib/jpeg/jdmainct.c"
-    "../ImageLib/jpeg/jdmarker.c"
-    "../ImageLib/jpeg/jdmaster.c"
-    "../ImageLib/jpeg/jdmerge.c"
-    "../ImageLib/jpeg/jdphuff.c"
-    "../ImageLib/jpeg/jdpostct.c"
-    "../ImageLib/jpeg/jdsample.c"
-    "../ImageLib/jpeg/jdtrans.c"
-    "../ImageLib/jpeg/jerror.c"
-    "../ImageLib/jpeg/jerror.h"
-    "../ImageLib/jpeg/jfdctflt.c"
-    "../ImageLib/jpeg/jfdctfst.c"
-    "../ImageLib/jpeg/jfdctint.c"
-    "../ImageLib/jpeg/jidctflt.c"
-    "../ImageLib/jpeg/jidctfst.c"
-    "../ImageLib/jpeg/jidctint.c"
-    "../ImageLib/jpeg/jidctred.c"
-    "../ImageLib/jpeg/jinclude.h"
-    "../ImageLib/jpeg/jmemmgr.c"
-    "../ImageLib/jpeg/jmemnobs.c"
-    "../ImageLib/jpeg/jmemsys.h"
-    "../ImageLib/jpeg/jmorecfg.h"
-    "../ImageLib/jpeg/jpegint.h"
-    "../ImageLib/jpeg/jpeglib.h"
-    "../ImageLib/jpeg/jquant1.c"
-    "../ImageLib/jpeg/jquant2.c"
-    "../ImageLib/jpeg/jutils.c"
-    "../ImageLib/jpeg/jversion.h"
-    "../ImageLib/jpeg/rdbmp.c"
-    "../ImageLib/jpeg/rdcolmap.c"
-    "../ImageLib/jpeg/rdgif.c"
-    "../ImageLib/jpeg/rdppm.c"
-    "../ImageLib/jpeg/rdrle.c"
-    "../ImageLib/jpeg/rdswitch.c"
-    "../ImageLib/jpeg/rdtarga.c"
-    "../ImageLib/jpeg/transupp.c"
-    "../ImageLib/jpeg/transupp.h"
-    "../ImageLib/jpeg/wrbmp.c"
-    "../ImageLib/jpeg/wrgif.c"
-    "../ImageLib/jpeg/wrppm.c"
-    "../ImageLib/jpeg/wrrle.c"
-    "../ImageLib/jpeg/wrtarga.c"
-)
-source_group("ImageLib\\JPEG" FILES ${ImageLib__JPEG})
+set(ImageLib__JPEG_SOURCE_DIR ${CMAKE_BINARY_DIR}/libjpeg)
+set(ImageLib__JPEG_LIB_DIR ${CMAKE_BINARY_DIR}/libjpeg-build)
 
-set(ImageLib__JPEG2000
-#    "../ImageLib/jpeg2000/jas_cm.c"
-#    "../ImageLib/jpeg2000/jas_cm.h"
-#    "../ImageLib/jpeg2000/jas_config.h"
-#    "../ImageLib/jpeg2000/jas_config2.h"
-#    "../ImageLib/jpeg2000/jas_debug.c"
-#    "../ImageLib/jpeg2000/jas_debug.h"
-#    "../ImageLib/jpeg2000/jas_fix.h"
-#    "../ImageLib/jpeg2000/jas_getopt.c"
-#    "../ImageLib/jpeg2000/jas_getopt.h"
-#    "../ImageLib/jpeg2000/jas_icc.c"
-#    "../ImageLib/jpeg2000/jas_icc.h"
-#    "../ImageLib/jpeg2000/jas_iccdata.c"
-#    "../ImageLib/jpeg2000/jas_image.c"
-#    "../ImageLib/jpeg2000/jas_image.h"
-#    "../ImageLib/jpeg2000/jas_init.c"
-#    "../ImageLib/jpeg2000/jas_init.h"
-#    "../ImageLib/jpeg2000/jas_malloc.c"
-#    "../ImageLib/jpeg2000/jas_malloc.h"
-#    "../ImageLib/jpeg2000/jas_math.h"
-#    "../ImageLib/jpeg2000/jas_seq.c"
-#    "../ImageLib/jpeg2000/jas_seq.h"
-#    "../ImageLib/jpeg2000/jas_stream.c"
-#    "../ImageLib/jpeg2000/jas_stream.h"
-#    "../ImageLib/jpeg2000/jas_string.c"
-#    "../ImageLib/jpeg2000/jas_string.h"
-#    "../ImageLib/jpeg2000/jas_tvp.c"
-#    "../ImageLib/jpeg2000/jas_tvp.h"
-#    "../ImageLib/jpeg2000/jas_types.h"
-#    "../ImageLib/jpeg2000/jas_version.c"
-#    "../ImageLib/jpeg2000/jas_version.h"
-#    "../ImageLib/jpeg2000/jasper.h"
-#    "../ImageLib/jpeg2000/jp2_cod.c"
-#    "../ImageLib/jpeg2000/jp2_cod.h"
-#    "../ImageLib/jpeg2000/jp2_dec.c"
-#    "../ImageLib/jpeg2000/jp2_dec.h"
-#    "../ImageLib/jpeg2000/jp2_enc.c"
-#    "../ImageLib/jpeg2000/jpc_bs.c"
-#    "../ImageLib/jpeg2000/jpc_bs.h"
-#    "../ImageLib/jpeg2000/jpc_cod.h"
-#    "../ImageLib/jpeg2000/jpc_cs.c"
-#    "../ImageLib/jpeg2000/jpc_cs.h"
-#    "../ImageLib/jpeg2000/jpc_dec.c"
-#    "../ImageLib/jpeg2000/jpc_dec.h"
-#    "../ImageLib/jpeg2000/jpc_enc.c"
-#    "../ImageLib/jpeg2000/jpc_enc.h"
-#    "../ImageLib/jpeg2000/jpc_fix.h"
-#    "../ImageLib/jpeg2000/jpc_flt.h"
-#    "../ImageLib/jpeg2000/jpc_math.c"
-#    "../ImageLib/jpeg2000/jpc_math.h"
-#    "../ImageLib/jpeg2000/jpc_mct.c"
-#    "../ImageLib/jpeg2000/jpc_mct.h"
-#    "../ImageLib/jpeg2000/jpc_mqcod.c"
-#    "../ImageLib/jpeg2000/jpc_mqcod.h"
-#    "../ImageLib/jpeg2000/jpc_mqdec.c"
-#    "../ImageLib/jpeg2000/jpc_mqdec.h"
-#    "../ImageLib/jpeg2000/jpc_mqenc.c"
-#    "../ImageLib/jpeg2000/jpc_mqenc.h"
-#    "../ImageLib/jpeg2000/jpc_qmfb.c"
-#    "../ImageLib/jpeg2000/jpc_qmfb.h"
-#    "../ImageLib/jpeg2000/jpc_t1cod.c"
-#    "../ImageLib/jpeg2000/jpc_t1cod.h"
-#    "../ImageLib/jpeg2000/jpc_t1dec.c"
-#    "../ImageLib/jpeg2000/jpc_t1dec.h"
-#    "../ImageLib/jpeg2000/jpc_t1enc.c"
-#    "../ImageLib/jpeg2000/jpc_t1enc.h"
-#    "../ImageLib/jpeg2000/jpc_t2cod.c"
-#    "../ImageLib/jpeg2000/jpc_t2cod.h"
-#    "../ImageLib/jpeg2000/jpc_t2dec.c"
-#    "../ImageLib/jpeg2000/jpc_t2dec.h"
-#    "../ImageLib/jpeg2000/jpc_t2enc.c"
-#    "../ImageLib/jpeg2000/jpc_t2enc.h"
-#    "../ImageLib/jpeg2000/jpc_tagtree.c"
-#    "../ImageLib/jpeg2000/jpc_tagtree.h"
-#    "../ImageLib/jpeg2000/jpc_tsfb.c"
-#    "../ImageLib/jpeg2000/jpc_tsfb.h"
-#    "../ImageLib/jpeg2000/jpc_util.c"
-#    "../ImageLib/jpeg2000/jpc_util.h"
-)
-source_group("ImageLib\\JPEG2000" FILES ${ImageLib__JPEG2000})
+include(ExternalProject)
+ExternalProject_Add(libjpeg-src
+    GIT_REPOSITORY      https://github.com/libjpeg-turbo/libjpeg-turbo.git
+    GIT_TAG             3.0.1
+    SOURCE_DIR          "${ImageLib__JPEG_SOURCE_DIR}"
+    BINARY_DIR          "${ImageLib__JPEG_LIB_DIR}"
+    CMAKE_ARGS          "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
+                        "-DCMAKE_INSTALL_PREFIX=${ImageLib__JPEG_LIB_DIR}/install" # unused, have to specify
+                        "-DCMAKE_C_FLAGS=${universal_cflags}"
+                        "-DENABLE_SHARED=FALSE"
+                        "-DWITH_TURBOJPEG=FALSE"
+                        "-Wno-dev"
 
-set(ImageLib__PNG
-    "../ImageLib/png/png.c"
-    "../ImageLib/png/png.h"
-    "../ImageLib/png/pngasmrd.h"
-    "../ImageLib/png/pngconf.h"
-    "../ImageLib/png/pngerror.c"
-    "../ImageLib/png/pngget.c"
-    "../ImageLib/png/pngmem.c"
-    "../ImageLib/png/pngpread.c"
-    "../ImageLib/png/pngread.c"
-    "../ImageLib/png/pngrio.c"
-    "../ImageLib/png/pngrtran.c"
-    "../ImageLib/png/pngrutil.c"
-    "../ImageLib/png/pngset.c"
-    "../ImageLib/png/pngtrans.c"
-    "../ImageLib/png/pngvcrd.c"
-    "../ImageLib/png/pngwio.c"
-    "../ImageLib/png/pngwrite.c"
-    "../ImageLib/png/pngwtran.c"
-    "../ImageLib/png/pngwutil.c"
-)
-source_group("ImageLib\\PNG" FILES ${ImageLib__PNG})
+    INSTALL_COMMAND     ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/jpeg/;
+    COMMAND             ${CMAKE_COMMAND} -E copy ${ImageLib__JPEG_SOURCE_DIR}/jpeglib.h
+                                                 ${ImageLib__JPEG_SOURCE_DIR}/jerror.h
+                                                 ${ImageLib__JPEG_LIB_DIR}/jconfig.h
+                                                 ${ImageLib__JPEG_SOURCE_DIR}/jmorecfg.h
+                                                 ${ImageLib__JPEG_SOURCE_DIR}/jpegint.h
+                                            ${CMAKE_BINARY_DIR}/include/jpeg/
 
-set(ImageLib__ZLIB
-    "../ImageLib/zlib/adler32.c"
-    "../ImageLib/zlib/compress.c"
-    "../ImageLib/zlib/crc32.c"
-    "../ImageLib/zlib/deflate.c"
-    "../ImageLib/zlib/deflate.h"
-    "../ImageLib/zlib/gzio.c"
-    "../ImageLib/zlib/infblock.c"
-    "../ImageLib/zlib/infblock.h"
-    "../ImageLib/zlib/infcodes.c"
-    "../ImageLib/zlib/infcodes.h"
-    "../ImageLib/zlib/inffast.c"
-    "../ImageLib/zlib/inffast.h"
-    "../ImageLib/zlib/inffixed.h"
-    "../ImageLib/zlib/inflate.c"
-    "../ImageLib/zlib/inftrees.c"
-    "../ImageLib/zlib/inftrees.h"
-    "../ImageLib/zlib/infutil.c"
-    "../ImageLib/zlib/infutil.h"
-    "../ImageLib/zlib/trees.c"
-    "../ImageLib/zlib/trees.h"
-    "../ImageLib/zlib/uncompr.c"
-    "../ImageLib/zlib/zconf.h"
-    "../ImageLib/zlib/zlib.h"
-    "../ImageLib/zlib/zutil.c"
-    "../ImageLib/zlib/zutil.h"
+    BUILD_BYPRODUCTS    "${ImageLib__JPEG_LIB_DIR}/libjpeg.a"
+                        "${CMAKE_BINARY_DIR}/include/jpeg/jpeglib.h"
+                        "${CMAKE_BINARY_DIR}/include/jpeg/jerror.h"
+    USES_TERMINAL_DOWNLOAD TRUE
+    USES_TERMINAL_UPDATE TRUE
+    USES_TERMINAL_CONFIGURE TRUE
+    USES_TERMINAL_BUILD TRUE
+    UPDATE_DISCONNECTED TRUE
 )
-source_group("ImageLib\\ZLIB" FILES ${ImageLib__ZLIB})
+
+add_library(jpeg STATIC IMPORTED)
+add_dependencies(jpeg libjpeg-src)
+set_target_properties(jpeg
+    PROPERTIES IMPORTED_LOCATION ${ImageLib__JPEG_LIB_DIR}/libjpeg.a
+)
+
+set(ImageLib__JPEG_H
+    "${CMAKE_BINARY_DIR}/include/jpeg/jpeglib.h"
+    "${CMAKE_BINARY_DIR}/include/jpeg/jerror.h"
+)
+source_group("ImageLib\\JPEG" FILES ${ImageLib__JPEG_H})
+
+set(ImageLib__ZLIB_SOURCE_DIR ${CMAKE_BINARY_DIR}/zlib)
+set(ImageLib__ZLIB_LIB_DIR ${CMAKE_BINARY_DIR}/zlib-build)
+ExternalProject_Add(zlib-src
+    GIT_REPOSITORY          https://github.com/madler/zlib.git
+    GIT_TAG                 v1.3
+    SOURCE_DIR              "${ImageLib__ZLIB_SOURCE_DIR}"
+    CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
+                            "-DCMAKE_INSTALL_PREFIX=${ImageLib__ZLIB_LIB_DIR}"
+                            "-DCMAKE_C_FLAGS=${universal_cflags}"
+                            "-Wno-dev"
+    BUILD_COMMAND           "${CMAKE_COMMAND}"
+                            "--build" "${ImageLib__ZLIB_LIB_DIR}"
+                            "--target" "zlibstatic"
+    INSTALL_COMMAND         ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/zlib/;
+    COMMAND                 ${CMAKE_COMMAND} -E copy ${ImageLib__ZLIB_SOURCE_DIR}/zlib.h
+                                                     ${ImageLib__ZLIB_LIB_DIR}/zconf.h
+                                                ${CMAKE_BINARY_DIR}/include/zlib/
+
+    BINARY_DIR              ${ImageLib__ZLIB_LIB_DIR}
+    BUILD_BYPRODUCTS        "${ImageLib__ZLIB_LIB_DIR}/libzlibstatic.a"
+                            "${CMAKE_BINARY_DIR}/include/zlib/zlib.h" # Use a custom dir to avoid system headers
+    USES_TERMINAL_DOWNLOAD  TRUE
+    USES_TERMINAL_UPDATE    TRUE
+    USES_TERMINAL_CONFIGURE TRUE
+    USES_TERMINAL_BUILD     TRUE
+    USES_TERMINAL_INSTALL   TRUE
+    UPDATE_DISCONNECTED     TRUE
+)
+
+add_library(zlib STATIC IMPORTED)
+add_dependencies(zlib zlib-src)
+set_target_properties(zlib
+    PROPERTIES IMPORTED_LOCATION ${ImageLib__ZLIB_LIB_DIR}/libzlibstatic.a
+)
+
+set(ImageLib__ZLIB_H
+    "${CMAKE_BINARY_DIR}/include/zlib/zlib.h"
+)
+source_group("ImageLib\\ZLIB" FILES ${ImageLib__ZLIB_H})
+
+# =========================================================
+
+set(ImageLib__PNG_SOURCE_DIR ${CMAKE_BINARY_DIR}/libpng)
+set(ImageLib__PNG_LIB_DIR ${CMAKE_BINARY_DIR}/libpng-build)
+ExternalProject_Add(libpng-src
+    GIT_REPOSITORY          https://github.com/glennrp/libpng.git
+    GIT_TAG                 v1.6.40
+    SOURCE_DIR              "${ImageLib__PNG_SOURCE_DIR}"
+    CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
+                            "-DCMAKE_INSTALL_PREFIX=${ImageLib__PNG_LIB_DIR}"
+                            "-DCMAKE_C_FLAGS=${universal_cflags}"
+                            "-DPNG_SHARED=OFF"
+                            "-DPNG_EXECUTABLES=OFF"
+                            "-DPNG_TESTS=OFF"
+                            "-Wno-dev"
+
+    INSTALL_COMMAND         ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/png/
+    COMMAND                 ${CMAKE_COMMAND} -E copy ${ImageLib__PNG_SOURCE_DIR}/png.h
+                                                     ${ImageLib__PNG_SOURCE_DIR}/pngconf.h
+                                                     ${ImageLib__PNG_LIB_DIR}/pnglibconf.h
+                                                     ${CMAKE_BINARY_DIR}/include/png/                                            
+    BINARY_DIR              ${ImageLib__PNG_LIB_DIR}
+    BUILD_BYPRODUCTS        "${ImageLib__PNG_LIB_DIR}/libpng.a"
+                            "${CMAKE_BINARY_DIR}/include/png/png.h" # Use a custom dir to avoid system headers
+    USES_TERMINAL_DOWNLOAD  TRUE
+    USES_TERMINAL_UPDATE    TRUE
+    USES_TERMINAL_CONFIGURE TRUE
+    USES_TERMINAL_BUILD     TRUE
+    USES_TERMINAL_INSTALL   TRUE
+    UPDATE_DISCONNECTED     TRUE
+)
+
+add_library(libpng STATIC IMPORTED)
+add_dependencies(libpng libpng-src)
+set_target_properties(libpng
+    PROPERTIES IMPORTED_LOCATION ${ImageLib__PNG_LIB_DIR}/libpng.a
+)
+
+# =========================================================
+
+set(ImageLib__PNG_H
+    "${CMAKE_BINARY_DIR}/include/png/png.h"
+)
+source_group("ImageLib\\PNG" FILES ${ImageLib__PNG_H})
 
 set(Lawn__Board__Board_Include
     "../Lawn/Board.h"
@@ -630,10 +550,9 @@ source_group("TodLib\\Effect\\Effect Source" FILES ${TodLib__Effect__Effect_Sour
 set(ALL_FILES
     ${no_group_source_files}
     ${ImageLib}
-    ${ImageLib__JPEG}
-    ${ImageLib__JPEG2000}
-    ${ImageLib__PNG}
-    ${ImageLib__ZLIB}
+#   ${ImageLib__JPEG2000}
+    ${ImageLib__PNG_H}
+    ${ImageLib__ZLIB_H}
     ${Lawn__Board__Board_Include}
     ${Lawn__Board__Board_Source}
     ${Lawn__Common__Common_Include}
@@ -826,23 +745,6 @@ endif()
 # Dependencies
 ################################################################################
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "$<$<CONFIG:DebugIncremental>:"
-        "kernel32;"
-        "user32;"
-        "gdi32;"
-        "winspool;"
-        "comdlg32;"
-        "advapi32;"
-        "shell32;"
-        "ole32;"
-        "oleaut32;"
-        "uuid;"
-        "odbc32;"
-        "odbccp32;"
-        "winmm;"
-        "ws2_32;"
-        "ddraw;"
-    ">"
     "$<$<CONFIG:Debug>:"
         "kernel32;"
         "user32;"
@@ -859,6 +761,9 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "winmm;"
         "ws2_32;"
         "ddraw;"
+        "jpeg;"
+        "zlib;"
+        "libpng;"
     ">"
     "$<$<CONFIG:Release>:"
         "kernel32;"
@@ -876,7 +781,16 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "winmm;"
         "ws2_32;"
 	    "ddraw;"
+        "jpeg;"
+        "zlib;"
+        "libpng;"
 	#"ucrt;"
     ">"
 )
+
+#${ImageLib__JPEG_LIB_DIR}/libjpeg.a
+#add_dependencies(libjpeg ImageLib__JPEG)
+#add_dependencies(${PROJECT_NAME} ImageLib__JPEG)
+
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 target_link_libraries(${PROJECT_NAME} PRIVATE -static -static-libgcc -static-libstdc++ "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

@@ -538,13 +538,13 @@ bool DescParser::LoadDescriptor(const std::string& theFileName)
 
 			//Apparently VC6 doesn't have a clear() function for basic_strings
 			//mCurrentLine.clear();
-			mCurrentLine.erase();
+			mCurrentLine.clear();
 		}
 	}
 
 	//Apparently VC6 doesn't have a clear() function for basic_strings
-	//mCurrentLine.clear();
-	mCurrentLine.erase();
+	mCurrentLine.clear();
+	//mCurrentLine.erase();
 	mCurrentLineNum = 0;
 
 	p_fclose(aStream);

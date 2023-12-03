@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "TodDebug.h"
 #include "Definition.h"
-#include "../ImageLib/zlib/zlib.h"
+#include "zlib/zlib.h"
 #include "../PakLib/PakInterface.h"
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/XMLParser.h"
@@ -778,6 +778,7 @@ Float Track Field EBNF:
     <digit>    ::= [0-9]
 */
 
+/*
 struct TodCurveStringMap {
     char *mString;
     TodCurves mCurveType;
@@ -789,6 +790,22 @@ const TodCurveStringMap TodCurveStrings[] = {
     {(char *)"EaseInOutWeak", TodCurves::CURVE_EASE_IN_OUT_WEAK},
     {(char *)"EaseOut",       TodCurves::CURVE_EASE_OUT},
     {(char *)"EaseIn",        TodCurves::CURVE_EASE_IN},
+};
+*/
+
+DefSymbol gDefTrackEaseSymbols[] = {
+    {TodCurves::CURVE_EASE_IN_OUT_WEAK,   "EaseInOutWeak"},
+    {TodCurves::CURVE_FAST_IN_OUT_WEAK,   "FastInOutWeak"},
+    {TodCurves::CURVE_EASE_IN_OUT,        "EaseInOut"},
+    {TodCurves::CURVE_FAST_IN_OUT,        "FastInOut"},
+    {TodCurves::CURVE_EASE_IN,            "EaseIn"},
+    {TodCurves::CURVE_EASE_OUT,           "EaseOut"},
+    {TodCurves::CURVE_EASE_SIN_WAVE,      "EaseSinWave"},
+    {TodCurves::CURVE_BOUNCE_FAST_MIDDLE, "BounceFastMiddle"},
+    {TodCurves::CURVE_BOUNCE_SLOW_MIDDLE, "BounceSlowMiddle"},
+    {TodCurves::CURVE_BOUNCE,             "Bounce"},
+    {TodCurves::CURVE_SIN_WAVE,           "SinWave"},
+    {TodCurves::CURVE_LINEAR,             "Linear"},
 };
 
 bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack* theTrack)
@@ -813,8 +830,8 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
         }
         if (aStringChars[anIdx] == '\0') goto _m_break; // No empty strings allowed
 
-        aTrackNode.mTime = 0.0f;
-        aTrackNode.mCurveType = TodCurves::CURVE_CONSTANT;
+        aTrackNode.mTime = -1;
+        aTrackNode.mCurveType = TodCurves::CURVE_LINEAR;
         aTrackNode.mDistribution = TodCurves::CURVE_LINEAR;
 
         if (aStringChars[anIdx] == '[') {
@@ -827,11 +844,11 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
             if (aStringChars[anIdx] != ']') {
                 anIdx++; // space (' ')
                 // <curve>
-                for (size_t i = 0; i < sizeof(TodCurveStrings)/sizeof(TodCurveStrings[0]); ++i) {
-                    size_t aStrLen = strlen(TodCurveStrings[i].mString);
-                    if (strncmp(TodCurveStrings[i].mString, aStringChars + anIdx, aStrLen) == 0) // could be the distribution?
+                for (size_t i = 0; i < sizeof(gDefTrackEaseSymbols)/sizeof(gDefTrackEaseSymbols[0]); ++i) {
+                    size_t aStrLen = strlen(gDefTrackEaseSymbols[i].mSymbolName);
+                    if (strncmp(gDefTrackEaseSymbols[i].mSymbolName, aStringChars + anIdx, aStrLen) == 0) // could be the distribution?
                     {
-                        aTrackNode.mDistribution = TodCurveStrings[i].mCurveType;
+                        aTrackNode.mDistribution = (TodCurves)gDefTrackEaseSymbols[i].mSymbolValue;
                         anIdx += aStrLen + 1; // Accounts for space (' '), expressions never end with a curve
                         break;
                     }
@@ -856,11 +873,11 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
                 anIdx++;
                 if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
                 anIdx += aLen;
-                aTrackNode.mTime = aValue;
+                aTrackNode.mTime = aValue * 0.01;
             }
             if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
             anIdx++;
-        } else { 
+        } else {
             // <norange>
             if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mLow/HighValue
             anIdx += aLen;
@@ -873,16 +890,16 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
                 anIdx++;
                 if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1) return false; // mTime
                 anIdx += aLen;
-                aTrackNode.mTime = aValue;
+                aTrackNode.mTime = aValue * 0.01;
             }
             if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
             anIdx++;
             // <curve>
-            for (size_t i = 0; i < sizeof(TodCurveStrings)/sizeof(TodCurveStrings[0]); ++i) {
-                size_t aStrLen = strlen(TodCurveStrings[i].mString);
-                if (strncmp(TodCurveStrings[i].mString, aStringChars + anIdx, aStrLen) == 0) // mCurveType
+            for (size_t i = 0; i < sizeof(gDefTrackEaseSymbols)/sizeof(gDefTrackEaseSymbols[0]); ++i) {
+                size_t aStrLen = strlen(gDefTrackEaseSymbols[i].mSymbolName);
+                if (strncmp(gDefTrackEaseSymbols[i].mSymbolName, aStringChars + anIdx, aStrLen) == 0) // mCurveType
                 {
-                    aTrackNode.mCurveType = TodCurveStrings[i].mCurveType;
+                    aTrackNode.mCurveType = (TodCurves)gDefTrackEaseSymbols[i].mSymbolValue;
                     anIdx += aStrLen;
                     if (aStringChars[anIdx] == '\0') goto _m_break; // Done!
                     anIdx++;
@@ -896,15 +913,50 @@ bool DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack*
     _m_break:
     aFloatTrackVec.push_back(aTrackNode);
     
+    // Search forward for a timestamp:
+    size_t aBaseIdx = 0;
+    anIdx = 0;
+    float high = 0.0;
+    float low = 0.0;
+    do {
+        for(anIdx = aBaseIdx; anIdx < aFloatTrackVec.size(); ++anIdx) {
+            if (aFloatTrackVec[anIdx].mTime >= 0.0){
+                // Found a timestamp!
+                high = aFloatTrackVec[anIdx].mTime;
+                goto _m_found; // Since we break out anIdx isn't incremented.
+            }
+        }
+        // Didn't find another value, we're finished.
+        // Since we did break, anIdx == aFloatTrackVec.size(), which means final value is set
+        high = 1.0;
+    _m_found:
+        // Going backwards set previous timestamps
+        for(size_t i = aBaseIdx; i < anIdx; ++i) { // Iterate up to anIdx - 1
+            float interp;
+            if (((anIdx - 1) - aBaseIdx) != 0) interp = ((float)(i - aBaseIdx))/((float)((anIdx - 1) - aBaseIdx));
+            else if (aBaseIdx == 0) interp = 0.0;
+            else interp = 1.0;
+            aFloatTrackVec[i].mTime = high*interp + low*(1 - interp);
+        }
+        // Start again
+        aBaseIdx = anIdx + 1;
+        low = high;
+    } while (aBaseIdx < aFloatTrackVec.size());
+
+    
+    /*
+    TodTraceAndLog("%s | %d", aStringChars, aFloatTrackVec.size());
+    for (auto &i : aFloatTrackVec) {
+        TodTraceAndLog("%f", i.mTime);
+    }
+    */
 
     size_t alloc_size = aFloatTrackVec.size() * sizeof(FloatParameterTrackNode);
     theTrack->mNodes = (FloatParameterTrackNode*)DefinitionAlloc(alloc_size);
-
     if (!theTrack->mNodes) return false;
 
     ::memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
     theTrack->mCountNodes = aFloatTrackVec.size();
-    //TodTraceAndLog("My Name Jeff: %d", aFloatTrackVec.size());
 
     return true;
 }
@@ -1166,9 +1218,8 @@ void FloatTrackSetDefault(FloatParameterTrack& theTrack, float theValue)
         aNode->mHighValue = theValue;
         aNode->mCurveType = TodCurves::CURVE_CONSTANT;
         aNode->mDistribution = TodCurves::CURVE_LINEAR;
-    } else {
+    } else if (theTrack.mNodes == nullptr) {
         theTrack.mCountNodes = 0;
-        theTrack.mNodes = nullptr;
     }
 }
 

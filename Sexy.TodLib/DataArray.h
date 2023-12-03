@@ -153,7 +153,7 @@ public:
 			return nullptr;
 
 		DataArrayItem* aBlock = &mBlock[theId & DATA_ARRAY_INDEX_MASK];
-		return aBlock->mID == theId ? &aBlock->mItem : nullptr;
+		return (aBlock->mID == theId) ? &aBlock->mItem : nullptr;
 	}
 
 	T* DataArrayGet(unsigned int theId)

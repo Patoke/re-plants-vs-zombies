@@ -353,7 +353,7 @@ bool Board::NeedSaveGame()
 		mApp->mGameScene == GameScenes::SCENE_PLAYING;
 }
 
-void Board::SaveGame(const string& theFileName)
+void Board::SaveGame(const std::string& theFileName)
 { 
 	LawnSaveGame(this, theFileName);
 }
@@ -370,7 +370,7 @@ void Board::ResetFPSStats()
 
 //0x408DE0
 // GOTY @Patoke: 0x40B710
-bool Board::LoadGame(const string& theFileName)
+bool Board::LoadGame(const std::string& theFileName)
 {
 	if (!LawnLoadGame(this, theFileName))
 		return false;
@@ -519,7 +519,7 @@ void Board::AddGraveStones(int theGridX, int theCount, MTRand& theLevelRNG)
 			aGridAllowGraveStonesCount++;
 		}
 	}
-	theCount = min(theCount, aGridAllowGraveStonesCount);
+	theCount = std::min(theCount, aGridAllowGraveStonesCount);
 
 	int i = 0;
 	while (i < theCount)
@@ -694,7 +694,7 @@ void Board::PickZombieWaves()
 		// 旗帜波的特殊调整
 		if (aIsFlagWave)
 		{
-			int aPlainZombiesNum = min(aZombiePoints, 8);
+			int aPlainZombiesNum = std::min(aZombiePoints, 8);
 			aZombiePoints *= 2.5f;
 
 			if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2)
@@ -1352,16 +1352,21 @@ void Board::GetZenButtonRect(GameObjectType theObjectType, Rect& theRect)
 	// Rect aButtonRect = GetShovelButtonRect();
 	// GetZenButtonRect(xxx, aButtonRect);
 
+	// @ Minerscale Zen Garden button locations
 	if (mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
+		theRect.mX = 30;
+		/*
 		if (theObjectType == GameObjectType::OBJECT_TYPE_NEXT_GARDEN)
 		{
 			theRect.mX = 30;
 		}
 		//return theRect;
+		*/
+	} else {
+		theRect.mX = 0;
 	}
-
-	theRect.mX = 30;
+	
 	bool usable = true;
 	for (int anObject = GameObjectType::OBJECT_TYPE_WATERING_CAN; anObject <= GameObjectType::OBJECT_TYPE_NEXT_GARDEN; anObject++)
 	{
@@ -1657,7 +1662,7 @@ void Board::PlaceRake()
 	aRake->mPosX = GridToPixelX(aGridX, aGridY);
 	aRake->mPosY = GridToPixelY(aGridX, aGridY);
 	aRake->mRenderOrder = MakeRenderOrder(RenderLayer::RENDER_LAYER_GRAVE_STONE, aGridY, 9);
-	aRake->mGridItemReanimID = mApp->ReanimationGetID(CreateRakeReanim(aGridX, aGridY, 0));
+	aRake->mGridItemReanimID = mApp->ReanimationGetID(CreateRakeReanim(aRake->mPosX, aRake->mPosY, 0)); // Lmao gotta pass in the right coords
 	aRake->mGridItemState = GridItemState::GRIDITEM_STATE_RAKE_ATTRACTING;
 }
 
@@ -2535,7 +2540,7 @@ ZombieType Board::PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePi
 			{
 				int aFlags = GetSurvivalFlagsCompleted();
 				int aAllowedWave = aFirstAllowedWave - TodAnimateCurve(18, 50, aFlags, 0, 15, TodCurves::CURVE_LINEAR);
-				aFirstAllowedWave = max(aAllowedWave, 1);
+				aFirstAllowedWave = std::max(aAllowedWave, 1);
 			}
 			if (theWaveIndex + 1 < aFirstAllowedWave || theZombiePoints < aZombieDef.mZombieValue)
 			{
@@ -5416,7 +5421,7 @@ void Board::UpdateSunSpawning()
 		return;
 
 	mNumSunsFallen++;
-	mSunCountDown = min(SUN_COUNTDOWN_MAX, SUN_COUNTDOWN + mNumSunsFallen * 10) + Rand(SUN_COUNTDOWN_RANGE);
+	mSunCountDown = std::min(SUN_COUNTDOWN_MAX, SUN_COUNTDOWN + mNumSunsFallen * 10) + Rand(SUN_COUNTDOWN_RANGE);
 	CoinType aSunType = mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_SUNNY_DAY ? CoinType::COIN_LARGESUN : CoinType::COIN_SUN;
 	AddCoin(RandRangeInt(100, 649), 60, aSunType, CoinMotion::COIN_MOTION_FROM_SKY);
 }
@@ -5684,7 +5689,7 @@ void Board::UpdateProgressMeter()
 			// 血量比例 = [目标伤害 - (当前血量 - 刷新血量)] / 目标伤害 = (目标伤害 - 仍需造成的伤害) / 目标伤害 = 当前伤害 / 目标伤害
 			float aHealthFraction = (aDamageTarget - aHealthCurrent + mZombieHealthToNextWave) / (float)aDamageTarget;
 			// 最终比例取上述二者的较大值
-			aFraction = max(aHealthFraction, aFraction);
+			aFraction = std::max(aHealthFraction, aFraction);
 		}
 
 		// 计算当前应当的进度条长度，并将长度的范围限定在 [1, 150] 之间
@@ -6891,7 +6896,7 @@ void Board::DrawLevel(Graphics* g)
 	SexyString aLevelStr;
 	if (mApp->IsAdventureMode())
 	{
-		aLevelStr = TodStringTranslate(_S("[LEVEL]")) + _S("") + mApp->GetStageString(mLevel);
+		aLevelStr = TodStringTranslate(_S("[LEVEL]")) + _S(" ") + mApp->GetStageString(mLevel);
 	}
 	else
 	{
@@ -7097,7 +7102,7 @@ void Board::DrawZenButtons(Graphics* g)
 					g->SetColorizeImages(true);
 					g->SetColor(Color(128, 128, 128));
 				}
-				g->DrawImage(Sexy::IMAGE_CHOCOLATE, aButtonRect.mX - 6, aButtonRect.mY + aOffsetY - 7);
+				g->DrawImage(Sexy::IMAGE_TREEFOOD, aButtonRect.mX - 6, aButtonRect.mY + aOffsetY - 7);
 				g->SetColorizeImages(false);
 
 				SexyString aChargeString = StrFormat(_S("x%d"), aCharges);
@@ -7159,7 +7164,7 @@ void Board::DrawDebugText(Graphics* g)
 		if (mZombieHealthToNextWave != -1)
 		{
 			int aTotalHealth = TotalZombiesHealthInWave(mCurrentWave - 1);
-			int aHealthRange = max(mZombieHealthWaveStart - mZombieHealthToNextWave, 1);
+			int aHealthRange = std::max(mZombieHealthWaveStart - mZombieHealthToNextWave, 1);
 			float aHealthFraction = (float)(mZombieHealthToNextWave - aTotalHealth + aHealthRange) / (float)aHealthRange;
 			aText += StrFormat(_S("ZombieHealth: CurZombieHealth %d trigger %d (%.0f%%)\n"), aTotalHealth, mZombieHealthToNextWave, aHealthFraction * 100);
 		}
@@ -7532,13 +7537,13 @@ void Board::ClearFogAroundPlant(Plant* thePlant, int theSize)
 	int aFogOffsetX = (mFogOffset + 50) / 100;
 	int aStartX = thePlant->mPlantCol - theSize - aFogOffsetX;
 	int aEndX = thePlant->mPlantCol + theSize - aFogOffsetX;
-	aStartX = max(aStartX, aLeft);
-	aEndX = min(aEndX, MAX_GRID_SIZE_X - 1);
+	aStartX = std::max(aStartX, aLeft);
+	aEndX = std::min(aEndX, MAX_GRID_SIZE_X - 1);
 
 	int aStartY = thePlant->mRow - theSize;
 	int aEndY = thePlant->mRow + theSize;
-	aStartY = max(aStartY, 0);
-	aEndY = min(aEndY, MAX_GRID_SIZE_Y);
+	aStartY = std::max(aStartY, 0);
+	aEndY = std::min(aEndY, MAX_GRID_SIZE_Y);
 
 	for (int x = aStartX; x <= aEndX; x++)
 	{
@@ -7562,7 +7567,7 @@ void Board::ClearFogAroundPlant(Plant* thePlant, int theSize)
 				continue;
 			}
 
-			mGridCelFog[x][y] = max(mGridCelFog[x][y] - aFogFadeOutSpeed, 0);
+			mGridCelFog[x][y] = std::max(mGridCelFog[x][y] - aFogFadeOutSpeed, 0);
 		}
 	}
 }
@@ -7590,7 +7595,7 @@ void Board::UpdateFog()
 		for (int y = 0; y < MAX_GRID_SIZE_Y + 1; y++)
 		{
 			int aFogMax = x == aLeft ? 200 : 255;
-			mGridCelFog[x][y] = min(mGridCelFog[x][y] + aFogFadeInSpeed, aFogMax);
+			mGridCelFog[x][y] = std::min(mGridCelFog[x][y] + aFogFadeInSpeed, aFogMax);
 		}
 	}
 
@@ -8471,7 +8476,7 @@ void Board::KeyChar(SexyChar theChar)
 
 			if (!mChallenge->UpdateZombieSpawning())
 			{
-				int aWavesRemaining = min(mNumWaves - mCurrentWave, 20);
+				int aWavesRemaining = std::min(mNumWaves - mCurrentWave, 20);
 				while (aWavesRemaining)
 				{
 					SpawnZombieWave();
@@ -8943,7 +8948,7 @@ int Board::GetNumSeedsInBank()
 
 	int aNumSeeds = mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_PACKET_UPGRADE] + 6;
 	int aSeedsAvailable = mApp->GetSeedsAvailable();
-	return min(aNumSeeds, aSeedsAvailable);
+	return std::min(aNumSeeds, aSeedsAvailable);
 }
 
 //0x41C010
@@ -9140,7 +9145,7 @@ int Board::PixelToGridX(int theX, int theY)
 int Board::PixelToGridXKeepOnBoard(int theX, int theY)
 {
 	int aGridX = PixelToGridX(theX, theY);
-	return max(aGridX, 0);
+	return std::max(aGridX, 0);
 }
 
 //0x41C550
@@ -9181,8 +9186,8 @@ int Board::PixelToGridY(int theX, int theY)
 //0x41C650
 int Board::PixelToGridYKeepOnBoard(int theX, int theY)
 {
-	int aGridY = PixelToGridY(max(theX, 80), theY);
-	return max(aGridY, 0);
+	int aGridY = PixelToGridY(std::max(theX, 80), theY);
+	return std::max(aGridY, 0);
 }
 
 //0x41C680
@@ -9920,7 +9925,7 @@ bool Board::CanUseGameObject(GameObjectType theGameObject)
 {
 	if (mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
-		return theGameObject == GameObjectType::OBJECT_TYPE_TREE_FOOD || theGameObject == GameObjectType::OBJECT_TYPE_NEXT_GARDEN;
+		return (theGameObject == GameObjectType::OBJECT_TYPE_TREE_FOOD) || (theGameObject == GameObjectType::OBJECT_TYPE_NEXT_GARDEN);
 	}
 	if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{

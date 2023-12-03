@@ -44,16 +44,18 @@ void TodAssertFailed(const char* theCondition, const char* theFile, int theLine,
 	int aCount = TodVsnprintf(aFormattedMsg, sizeof(aFormattedMsg), theMsg, argList);
 	va_end(argList);
 
-	if (aFormattedMsg[aCount - 1] != '\n')
-	{
-		if (aCount + 1 < 1024)
+	if (aCount != 0) {
+		if (aFormattedMsg[aCount - 1] != '\n')
 		{
-			aFormattedMsg[aCount] = '\n';
-			aFormattedMsg[aCount + 1] = '\0';
-		}
-		else
-		{
-			aFormattedMsg[aCount - 1] = '\n';
+			if (aCount + 1 < 1024)
+			{
+				aFormattedMsg[aCount] = '\n';
+				aFormattedMsg[aCount + 1] = '\0';
+			}
+			else
+			{
+				aFormattedMsg[aCount - 1] = '\n';
+			}
 		}
 	}
 

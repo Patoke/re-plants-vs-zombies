@@ -7,7 +7,7 @@ static BOOL 	     bCrcTableGenerated = FALSE;
 static unsigned long crc_table[256];
 
 using namespace Sexy;
-using namespace std;
+//using namespace std;
 
 static char* gWebEncodeMap = (char *)".-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -243,7 +243,7 @@ void Buffer::FromWebString(const std::string& theString)
 	{
 		uchar aChar = theString[aCharIdx++];
 		int aVal = gWebDecodeMap[aChar];
-		int aNumBits = min(aNumBitsLeft, 6);
+		int aNumBits = std::min(aNumBitsLeft, 6);
 		WriteNumBits(aVal, aNumBits);
 		aNumBitsLeft -= aNumBits;		
 	}

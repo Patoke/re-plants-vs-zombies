@@ -716,7 +716,7 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 		{
 			mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_PULL]"), MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST, AdviceType::ADVICE_NONE);
 		}
-		mBoard->mChallenge->mSlotMachineRollCount = min(mBoard->mChallenge->mSlotMachineRollCount, 2);
+		mBoard->mChallenge->mSlotMachineRollCount = std::min(mBoard->mChallenge->mSlotMachineRollCount, 2);
 		return;
 	}
 
@@ -965,7 +965,7 @@ void SeedBank::Draw(Graphics* g)
 
 	if (!mBoard->HasConveyorBeltSeedBank())
 	{
-		SexyString aMoneyLabel = StrFormat(_S("%d"), max(mBoard->mSunMoney, 0));
+		SexyString aMoneyLabel = StrFormat(_S("%d"), std::max(mBoard->mSunMoney, 0));
 		Color aMoneyColor(0, 0, 0);
 		if (mBoard->mOutOfMoneyCounter > 0 && mBoard->mOutOfMoneyCounter % 20 < 10)
 		{
@@ -1151,7 +1151,7 @@ void SeedBank::UpdateConveyorBelt()
 			SeedPacket* aSeedPacket = &mSeedPackets[i];
 			if (aSeedPacket->mOffsetX > 0)
 			{
-				aSeedPacket->mOffsetX = max(aSeedPacket->mOffsetX - 1, 0);
+				aSeedPacket->mOffsetX = std::max(aSeedPacket->mOffsetX - 1, 0);
 			}
 		}
 

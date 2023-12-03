@@ -68,15 +68,15 @@ void ToolTipWidget::CalculateSize()
 
 	int aTitleWidth = FONT_TINYBOLD->StringWidth(mTitle);
 	int aWarningWidth = FONT_PICO129->StringWidth(mWarningText);
-	int aMaxWidth = max(aTitleWidth, aWarningWidth);
+	int aMaxWidth = std::max(aTitleWidth, aWarningWidth);
 
-	mGetsLinesWidth = max(aMaxWidth - 30, 100);
+	mGetsLinesWidth = std::max(aMaxWidth - 30, 100);
 	GetLines(aLines);
 
 	for (size_t i = 0; i < aLines.size(); i++)
 	{
 		int aLineWidth = FONT_PICO129->StringWidth(aLines[i]);
-		aMaxWidth = max(aMaxWidth, aLineWidth);
+		aMaxWidth = std::max(aMaxWidth, aLineWidth);
 	}
 
 	int aHeight = 6;

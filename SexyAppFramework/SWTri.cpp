@@ -460,10 +460,10 @@ void SWHelper::SWDrawShape(XYZStruct *theVerts, int theNumVerts, MemoryImage *th
 			{
 				for (unsigned int i = 0; i < vCount; ++i)
 				{
-					pVerts[i].a = (clipped[i]->mDiffuse >>  8) & 0xff0000;
-					pVerts[i].r = (clipped[i]->mDiffuse >>  0) & 0xff0000;
-					pVerts[i].g = (clipped[i]->mDiffuse <<  8) & 0xff0000;
-					pVerts[i].b = (clipped[i]->mDiffuse << 16) & 0xff0000;
+					pVerts[i].a = ((unsigned int)clipped[i]->mDiffuse >>  8) & 0xff0000;
+					pVerts[i].r = ((unsigned int)clipped[i]->mDiffuse >>  0) & 0xff0000;
+					pVerts[i].g = ((unsigned int)clipped[i]->mDiffuse <<  8) & 0xff0000;
+					pVerts[i].b = ((unsigned int)clipped[i]->mDiffuse << 16) & 0xff0000;
 				}
 			}
 

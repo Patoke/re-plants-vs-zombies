@@ -2390,7 +2390,7 @@ int LawnApp::GetSeedsAvailable()
 	}
 
 	SeedType aSeedTypeMax = GetAwardSeedForLevel(aLevel);
-	return min(NUM_SEEDS_IN_CHOOSER, aSeedTypeMax);
+	return std::min(NUM_SEEDS_IN_CHOOSER, aSeedTypeMax);
 }
 
 //0x453B20

@@ -9,7 +9,7 @@ namespace Sexy
 	class Image;
 	class Graphics;
 };
-using namespace std;
+//using namespace std;
 using namespace Sexy;
 
 #define MAX_PARTICLES_SIZE 900

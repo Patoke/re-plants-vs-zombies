@@ -1,5 +1,3 @@
-#pragma warning(disable:4244 4305 4309)
-
 #include "Trail.h"
 #include "TodDebug.h"
 #include "Attachment.h"
@@ -42,7 +40,7 @@ void EffectSystem::EffectSystemDispose()
 	}
 	if (mTrailHolder)
 	{
-		mTrailHolder->DisposeHolder();
+		mTrailHolder->DisposeHolder(); // DisposeHolder is called from the destructor!
 		delete mTrailHolder;
 		mTrailHolder = nullptr;
 	}

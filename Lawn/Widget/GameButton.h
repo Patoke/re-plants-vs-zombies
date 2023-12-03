@@ -4,7 +4,7 @@
 #include "../../SexyAppFramework/SexyVector.h"
 #include "../../SexyAppFramework/DialogButton.h"
 
-using namespace std;
+//using namespace std;
 using namespace Sexy;
 
 class LawnApp;
