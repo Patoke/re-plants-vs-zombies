@@ -1,8 +1,8 @@
 #ifndef __TITLESCREEN_H__
 #define __TITLESCREEN_H__
 
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/ButtonListener.h"
+#include "widget/Widget.h"
+#include "widget/ButtonListener.h"
 
 using namespace Sexy;
 

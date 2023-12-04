@@ -2,7 +2,7 @@
 #define __LAWNDIALOG_H__
 
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include "widget/Dialog.h"
 
 constexpr const int DIALOG_HEADER_OFFSET = 45;
 

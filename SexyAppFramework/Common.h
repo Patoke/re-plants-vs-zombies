@@ -20,10 +20,11 @@
 #include <algorithm>
 #include <cstdlib>
 
+#define NOMINMAX 1
 #include <windows.h>
 #include <shellapi.h> 
 #include <mmsystem.h>
-#include "ModVal.h"
+#include "misc/ModVal.h"
 
 // Removed wide string support
 typedef std::string			SexyString;

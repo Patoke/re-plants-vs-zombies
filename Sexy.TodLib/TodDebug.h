@@ -1,6 +1,7 @@
 #ifndef __TODDEBUG_H__
 #define __TODDEBUG_H__
 
+#define NOMINMAX 1
 #include <windows.h>
 
 class TodHesitationBracket

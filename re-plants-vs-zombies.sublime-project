@@ -1,8 +1,69 @@
 {
-	"folders":
-	[
+    "folders":
+    [
+        {
+            "path": ".",
+        }
+    ],
+    "settings":
+    {
+        "cmake":
+        {
+            "build_folder": "$folder/build",
+            "generator": "Ninja",
+            "command_line_overrides":
+            {
+                "CMAKE_TOOLCHAIN_FILE": "toolchain.cmake",
+            },
+        },
+    },
+    "build_systems":
+    [
 		{
-			"path": "."
+			"config": "Debug",
+			"env":
+			{
+			},
+			"generator": "Ninja",
+			"name": "Debug",
+			"target": "cmake_build",
+			"variants":
+			[
+				{
+					"build_target": "LawnProject",
+					"name": "LawnProject"
+				},
+				{
+					"artifact": "/home/aaron/programming/re-plants-vs-zombies/SexyAppFramework/Debug/SexyAppFramework.exe",
+					"build_target": "LawnProject",
+					"name": "Run: LawnProject",
+					"target": "cmake_run"
+				},
+				{
+					"artifact": "/home/aaron/programming/re-plants-vs-zombies/SexyAppFramework/Debug/SexyAppFramework.exe",
+					"build_target": "LawnProject",
+					"debug": true,
+					"name": "Run under GDB: LawnProject",
+					"target": "cmake_run"
+				},
+				{
+					"build_target": "libjpeg-src",
+					"name": "libjpeg-src"
+				},
+				{
+					"build_target": "libpng-src",
+					"name": "libpng-src"
+				},
+				{
+					"build_target": "zlib-src",
+					"name": "zlib-src"
+				},
+				{
+					"name": "ctest",
+					"target": "ctest_run"
+				}
+			],
+			"working_dir": "$folder/build"
 		}
-	]
+	],
 }

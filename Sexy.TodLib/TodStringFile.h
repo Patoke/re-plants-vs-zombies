@@ -1,7 +1,7 @@
 #ifndef __TODSTRINGFILE_H__
 #define __TODSTRINGFILE_H__
 
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 #include "../ConstEnums.h"
 using namespace Sexy;
 

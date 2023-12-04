@@ -1,7 +1,7 @@
 #include "NewUserDialog.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x45D610
 // GOTY @Patoke: 0x460F20

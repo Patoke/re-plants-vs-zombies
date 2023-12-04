@@ -2,14 +2,14 @@
 #define __SEXYAPPBASE_H__
 
 #include "Common.h"
-#include "Rect.h"
-#include "Color.h"
-#include "ButtonListener.h"
-#include "DialogListener.h"
-#include "Buffer.h"
-#include "CritSect.h"
-#include "SharedImage.h"
-#include "Ratio.h"
+#include "misc/Rect.h"
+#include "graphics/Color.h"
+#include "widget/ButtonListener.h"
+#include "widget/DialogListener.h"
+#include "misc/Buffer.h"
+#include "misc/CritSect.h"
+#include "graphics/SharedImage.h"
+#include "misc/Ratio.h"
 
 extern HMODULE gDDrawDLL;
 extern HMODULE gDSoundDLL;

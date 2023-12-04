@@ -5,7 +5,7 @@
 #include "../../Resources.h"
 #include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 CheatDialog::CheatDialog(LawnApp* theApp) : LawnDialog(theApp, Dialogs::DIALOG_CHEAT, true, _S("CHEAT"), _S("Enter New Level:"), _S(""), Dialog::BUTTONS_OK_CANCEL)
 {

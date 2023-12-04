@@ -8,9 +8,9 @@
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Debug.h"
+#include "misc/Debug.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  _S("[SURVIVAL_DAY_NORMAL]") },

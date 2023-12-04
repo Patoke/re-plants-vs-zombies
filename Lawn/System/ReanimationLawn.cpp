@@ -3,9 +3,9 @@
 #include "../../LawnApp.h"
 #include "ReanimationLawn.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Color.h"
+#include "graphics/Color.h"
 #include "../../Sexy.TodLib/Reanimator.h"
-#include "../../SexyAppFramework/MemoryImage.h"
+#include "graphics/MemoryImage.h"
 
 //0x46EF00
 void ReanimatorCache::UpdateReanimationForVariation(Reanimation* theReanim, DrawVariation theDrawVariation)

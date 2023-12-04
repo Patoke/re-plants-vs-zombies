@@ -2,8 +2,8 @@
 #define __GAMESELECTOR_H__
 
 #include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/ButtonListener.h"
+#include "widget/Widget.h"
+#include "widget/ButtonListener.h"
 #include "AchievementsScreen.h"
 #include "GameButton.h"
 

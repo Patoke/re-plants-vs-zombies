@@ -4,7 +4,7 @@
 #include "../ConstEnums.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/FilterEffect.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 
 #define BEGHOULED_MAX_GRIDSIZEX 8
 #define BEGHOULED_MAX_GRIDSIZEY 5

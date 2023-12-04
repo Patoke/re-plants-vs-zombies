@@ -1,8 +1,8 @@
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "TodStringFile.h"
-#include "../PakLib/PakInterface.h"
-#include "../SexyAppFramework/Font.h"
+#include "paklib/PakInterface.h"
+#include "graphics/Font.h"
 
 int gTodStringFormatCount;               //[0x69DE4C]
 TodStringListFormat* gTodStringFormats;  //[0x69DA34]

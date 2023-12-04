@@ -12,7 +12,7 @@
 #include "../System/PoolEffect.h"
 #include "../System/ReanimationLawn.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 bool gZombieDefeated[NUM_ZOMBIE_TYPES] = { false };
 

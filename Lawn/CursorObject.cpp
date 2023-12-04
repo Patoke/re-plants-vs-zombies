@@ -5,7 +5,7 @@
 #include "CursorObject.h"
 #include "../Resources.h"
 #include "../Sexy.TodLib/Reanimator.h"
-#include "../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x438640
 CursorObject::CursorObject()

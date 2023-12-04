@@ -6,10 +6,10 @@
 #include "../Resources.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/TodCommon.h"
-#include "../SexyAppFramework/Font.h"
-#include "../SexyAppFramework/Dialog.h"
-#include "../SexyAppFramework/SexyMatrix.h"
-#include "../SexyAppFramework/Checkbox.h"
+#include "graphics/Font.h"
+#include "widget/Dialog.h"
+#include "misc/SexyMatrix.h"
+#include "widget/Checkbox.h"
 
 int gLawnEditWidgetColors[][4] = {
     { 0,   0,   0,   0 },

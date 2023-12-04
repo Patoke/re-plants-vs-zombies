@@ -2,7 +2,7 @@
 #include "ToolTipWidget.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/TodCommon.h"
-#include "../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;

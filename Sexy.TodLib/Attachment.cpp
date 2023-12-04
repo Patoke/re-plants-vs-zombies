@@ -4,7 +4,7 @@
 #include "Reanimator.h"
 #include "TodParticle.h"
 #include "EffectSystem.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 
 Attachment::Attachment()
 {

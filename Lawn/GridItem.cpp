@@ -11,7 +11,7 @@
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/TodParticle.h"
-#include "../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 using namespace Sexy;
 

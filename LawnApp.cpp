@@ -31,7 +31,7 @@
 #include "Lawn/Widget/CreditScreen.h"
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Sexy.TodLib/FilterEffect.h"
-#include "SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 #include "Sexy.TodLib/TodStringFile.h"
 #include "Lawn/Widget/AlmanacDialog.h"
 #include "Lawn/Widget/NewUserDialog.h"
@@ -40,12 +40,12 @@
 #include "Lawn/Widget/ChallengeScreen.h"
 #include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
-#include "SexyAppFramework/WidgetManager.h"
-#include "SexyAppFramework/ResourceManager.h"
+#include "widget/WidgetManager.h"
+#include "misc/ResourceManager.h"
 
-#include "SexyAppFramework/Checkbox.h"
-#include "SexyAppFramework/BassMusicInterface.h"
-#include "SexyAppFramework/Dialog.h"
+#include "widget/Checkbox.h"
+#include "sound/BassMusicInterface.h"
+#include "widget/Dialog.h"
 #include "SexyAppFramework/resource.h"
 
 bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659

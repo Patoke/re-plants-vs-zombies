@@ -3,7 +3,7 @@
 
 #include "TodList.h"
 #include "DataArray.h"
-#include "../SexyAppFramework/SexyVector.h"
+#include "misc/SexyVector.h"
 namespace Sexy
 {
 	class Image;

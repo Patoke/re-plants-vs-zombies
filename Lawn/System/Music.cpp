@@ -2,11 +2,11 @@
 #include "../Board.h"
 #include "PlayerInfo.h"
 #include "../../LawnApp.h"
-#include "../../PakLib/PakInterface.h"
+#include "paklib/PakInterface.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/BassLoader.h"
-#include "../../SexyAppFramework/BassMusicInterface.h"
+#include "sound/BassLoader.h"
+#include "sound/BassMusicInterface.h"
 
 using namespace Sexy;
 

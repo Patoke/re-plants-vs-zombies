@@ -15,11 +15,11 @@
 #include "../System/TypingCheck.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/Dialog.h"
+#include "widget/WidgetManager.h"
 
 static float gFlowerCenter[3][2] = { { 765.0f, 483.0f }, { 663.0f, 455.0f }, { 701.0f, 439.0f } };  //0x665430
 

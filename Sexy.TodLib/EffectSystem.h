@@ -3,8 +3,8 @@
 
 #include "DataArray.h"
 #include "../ConstEnums.h"
-#include "../SexyAppFramework/SWTri.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/SWTri.h"
+#include "graphics/Graphics.h"
 using namespace Sexy;
 
 #define MAX_TRIANGLES 256

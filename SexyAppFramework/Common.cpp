@@ -1,6 +1,6 @@
 #include "Common.h"
-#include "MTRand.h"
-#include "Debug.h"
+#include "misc/MTRand.h"
+#include "misc/Debug.h"
 #include <direct.h>
 #include <io.h>
 #include <sys/types.h>
@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <aclapi.h>
 
-#include "PerfTimer.h"
+#include "misc/PerfTimer.h"
 
 HINSTANCE Sexy::gHInstance;
 bool Sexy::gDebug = false;

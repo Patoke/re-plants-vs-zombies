@@ -1,6 +1,6 @@
 #include <map>
 #include "Resources.h"
-#include "SexyAppFramework/ResourceManager.h"
+#include "misc/ResourceManager.h"
 
 using namespace Sexy;
 

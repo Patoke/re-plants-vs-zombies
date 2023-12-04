@@ -7,9 +7,9 @@
 #include "ReanimAtlas.h"
 #include "EffectSystem.h"
 #include "../GameConstants.h"
-#include "../SexyAppFramework/Font.h"
-#include "../SexyAppFramework/PerfTimer.h"
-#include "../SexyAppFramework/MemoryImage.h"
+#include "graphics/Font.h"
+#include "misc/PerfTimer.h"
+#include "graphics/MemoryImage.h"
 
 unsigned int gReanimatorDefCount;                     //[0x6A9EE4]
 ReanimatorDefinition* gReanimatorDefArray;   //[0x6A9EE8]

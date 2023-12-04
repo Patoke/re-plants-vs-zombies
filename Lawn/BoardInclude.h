@@ -15,5 +15,5 @@
 #include "MessageWidget.h"
 #include "../GameConstants.h"
 #include "Widget/GameButton.h"
-#include "../SexyAppFramework/Debug.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "misc/Debug.h"
+#include "graphics/Graphics.h"

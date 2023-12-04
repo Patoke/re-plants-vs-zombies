@@ -3,7 +3,7 @@
 
 #include "../ConstEnums.h"
 #include "DataArray.h"
-#include "../SexyAppFramework/SexyMatrix.h"
+#include "misc/SexyMatrix.h"
 
 namespace Sexy
 {

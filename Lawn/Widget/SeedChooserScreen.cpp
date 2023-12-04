@@ -15,11 +15,11 @@
 #include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
 #include "../System/PopDRMComm.h"
-#include "../../SexyAppFramework/Debug.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/MTRand.h"
+#include "misc/Debug.h"
+#include "widget/Dialog.h"
+#include "misc/MTRand.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x483380
 // GOTY @Patoke: 0x48E020

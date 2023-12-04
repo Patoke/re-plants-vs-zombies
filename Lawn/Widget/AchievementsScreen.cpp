@@ -12,11 +12,11 @@
 #include "../System/ProfileMgr.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/Dialog.h"
+#include "widget/WidgetManager.h"
 
 Rect aBackButtonRect = { 120, 35, 130, 80 };
 

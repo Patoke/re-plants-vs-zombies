@@ -16,10 +16,10 @@
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/Reanimator.h"
-#include "../../SexyAppFramework/Debug.h"
+#include "misc/Debug.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/ImageFont.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "graphics/ImageFont.h"
+#include "widget/WidgetManager.h"
 #include "AchievementsScreen.h"
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] =

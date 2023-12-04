@@ -4,7 +4,7 @@
 #include "../Widget/ChallengeScreen.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Buffer.h"
+#include "misc/Buffer.h"
 #include "../../SexyAppFramework/SexyAppBase.h"
 
 static int gUserVersion = 12;

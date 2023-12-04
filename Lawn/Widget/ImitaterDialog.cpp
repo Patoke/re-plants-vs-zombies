@@ -6,7 +6,7 @@
 #include "SeedChooserScreen.h"
 #include "../ToolTipWidget.h"
 #include "../../GameConstants.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x482B00
 ImitaterDialog::ImitaterDialog() : 

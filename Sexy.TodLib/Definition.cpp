@@ -5,9 +5,9 @@
 #include "TodDebug.h"
 #include "Definition.h"
 #include "zlib/zlib.h"
-#include "../PakLib/PakInterface.h"
-#include "../SexyAppFramework/PerfTimer.h"
-#include "../SexyAppFramework/XMLParser.h"
+#include "paklib/PakInterface.h"
+#include "misc/PerfTimer.h"
+#include "misc/XMLParser.h"
 
 DefSymbol gTrailFlagDefSymbols[] = {  //0x69E150
     { 0, "Loops" },                 { -1, nullptr }

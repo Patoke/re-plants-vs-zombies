@@ -9,8 +9,8 @@
 #include "NewOptionsDialog.h"
 #include "../../ConstEnums.h"
 #include "../../Sexy.TodLib/TodFoley.h"
-#include "../../SexyAppFramework/Slider.h"
-#include "../../SexyAppFramework/Checkbox.h"
+#include "widget/Slider.h"
+#include "widget/Checkbox.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;

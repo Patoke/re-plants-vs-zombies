@@ -9,7 +9,7 @@
 #include "../../Sexy.TodLib/Attachment.h"
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include "widget/Dialog.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 

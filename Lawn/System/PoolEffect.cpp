@@ -3,10 +3,10 @@
 #include "../../Resources.h"
 #include "../../GameConstants.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/DDImage.h"
-#include "../../SexyAppFramework/Graphics.h"
-#include "../../SexyAppFramework/DDInterface.h"
-#include "../../SexyAppFramework/D3DInterface.h"
+#include "graphics/DDImage.h"
+#include "graphics/Graphics.h"
+#include "graphics/DDInterface.h"
+#include "graphics/D3DInterface.h"
 
 //0x469A60
 void PoolEffect::PoolEffectInitialize()

@@ -1,7 +1,7 @@
 #ifndef __CUTSCENE_H__
 #define __CUTSCENE_H__
 
-#include "../SexyAppFramework/KeyCodes.h"
+#include "misc/KeyCodes.h"
 #include "Zombie.h"
 
 using namespace Sexy;

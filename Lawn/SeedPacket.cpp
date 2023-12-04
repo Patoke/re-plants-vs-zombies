@@ -6,9 +6,9 @@
 #include "CursorObject.h"
 #include "../Resources.h"
 #include "MessageWidget.h"
-#include "../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../Sexy.TodLib/FilterEffect.h"
-#include "../SexyAppFramework/SexyMatrix.h"
+#include "misc/SexyMatrix.h"
 
 SeedPacket::SeedPacket()
 {

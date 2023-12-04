@@ -16,7 +16,7 @@
 #include "../Sexy.TodLib/Attachment.h"
 #include "../Sexy.TodLib/TodParticle.h"
 #include "../Sexy.TodLib/EffectSystem.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 
 static SpecialGridPlacement gGreenhouseGridPlacement[] =  //0x69DE50

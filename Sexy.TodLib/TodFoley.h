@@ -2,7 +2,7 @@
 #define __TODFOLEY_H__
 
 #include "../Resources.h"
-#include "../SexyAppFramework/DSoundInstance.h"
+#include "sound/DSoundInstance.h"
 using namespace Sexy;
 
 #define MAX_FOLEY_TYPES 110

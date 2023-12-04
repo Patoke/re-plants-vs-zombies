@@ -9,7 +9,7 @@
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/ImageFont.h"
+#include "graphics/ImageFont.h"
 
 
 //0x456A80
