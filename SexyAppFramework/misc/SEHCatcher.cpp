@@ -1026,7 +1026,7 @@ void SEHCatcher::ShowSubmitInfoDialog()
 	HFONT aCourierNewFont = CreateFontA(aFontHeight, 0, 0, 0, FW_NORMAL, 0, 0,
 			false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_DONTCARE, "Courier New");
-	(void)aCourierNewFont; // Unused, TODO work out if can be removed
+	(void)aCourierNewFont; // Unused
 	if (!gUseDefaultFonts)
 		SendMessage(mEditWindow, WM_SETFONT, (WPARAM) mDialogFont, 0);
 	SetFocus(mEditWindow);
