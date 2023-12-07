@@ -187,7 +187,11 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32 ${ALL_FILES})
+else()
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
+endif()
 
 add_subdirectory(graphics)
 add_subdirectory(sound)
@@ -273,7 +277,7 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     ">"
 )
 
-#${ImageLib__JPEG_LIB_DIR}/libjpeg.a
+#${ImageLib__libjpeg_dir}/libjpeg.a
 #add_dependencies(libjpeg ImageLib__JPEG)
 #add_dependencies(${PROJECT_NAME} ImageLib__JPEG)
 

@@ -26,6 +26,10 @@
 #include <mmsystem.h>
 #include "misc/ModVal.h"
 
+// fallback if NOMINMAX fails (somehow?)
+#undef min
+#undef max
+
 // Removed wide string support
 typedef std::string			SexyString;
 #define _S(x)				x

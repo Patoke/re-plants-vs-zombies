@@ -332,7 +332,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 		}
 	}
 
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 //0x42E6E0

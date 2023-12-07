@@ -77,16 +77,6 @@ typedef enum _D3DFORMAT
     D3DFMT_FORCE_DWORD          =0x7fffffff
 } D3DFORMAT;
 
-/* Direct3D8 Device types */
-typedef enum _D3DDEVTYPE
-{
-    D3DDEVTYPE_HAL         = 1,
-    D3DDEVTYPE_REF         = 2,
-    D3DDEVTYPE_SW          = 3,
-
-    D3DDEVTYPE_FORCE_DWORD  = 0x7fffffff
-} D3DDEVTYPE;
-
 typedef enum _D3DRESOURCETYPE {
     D3DRTYPE_SURFACE                =  1,
     D3DRTYPE_VOLUME                 =  2,
@@ -194,7 +184,7 @@ typedef struct _D3DPRESENT_PARAMETERS_
 #define D3DADAPTER_DEFAULT                     0
 #define D3DENUM_NO_WHQL_LEVEL                   0x00000002L
 
-#include <d3d8caps.h>
+//#include <d3d8caps.h>
 
 DECLARE_INTERFACE_(IDirect3D8, IUnknown)
 {

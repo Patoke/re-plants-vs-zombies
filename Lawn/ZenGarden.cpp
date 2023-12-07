@@ -426,7 +426,7 @@ int ZenGarden::GetPlantSellPrice(Plant* thePlant)
     }
     TOD_ASSERT();
 
-    __builtin_unreachable();
+    std::unreachable();
 }
 
 //0x51DA00

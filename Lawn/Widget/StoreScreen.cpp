@@ -202,7 +202,7 @@ bool StoreScreen::IsItemSoldOut(StoreItem theStoreItem)
         return mApp->mZenGarden->IsZenGardenFull(true) || aPlayer->mPurchases[theStoreItem] == GetCurrentDaysSince2000();
     else return aPlayer->mPurchases[theStoreItem];
 
-    __builtin_unreachable();
+    std::unreachable();
 }
 
 //0x48AAD0

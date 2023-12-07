@@ -44,7 +44,7 @@ bool FModSoundInstance::IsReleased()
 {
     return false;
 }
-void   FModSoundInstance::SetBaseVolume (double /*theBaseVolume*/)  {__builtin_unreachable();}
-void   FModSoundInstance::SetBasePan    (int /*theBasePan*/)        {__builtin_unreachable();}
-void   FModSoundInstance::AdjustPitch   (double /*theNumSteps*/)    {__builtin_unreachable();}
-double FModSoundInstance::GetVolume     ()                          {__builtin_unreachable();}
+void   FModSoundInstance::SetBaseVolume (double /*theBaseVolume*/)  {std::unreachable();}
+void   FModSoundInstance::SetBasePan    (int /*theBasePan*/)        {std::unreachable();}
+void   FModSoundInstance::AdjustPitch   (double /*theNumSteps*/)    {std::unreachable();}
+double FModSoundInstance::GetVolume     ()                          {std::unreachable();}

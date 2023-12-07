@@ -2348,7 +2348,7 @@ Plant* Board::GetTopPlantAt(int theGridX, int theGridY, PlantPriority thePriorit
 	case PlantPriority::TOPPLANT_ONLY_UNDER_PLANT:				return aPlantOnLawn.mUnderPlant;
 	default:													TOD_ASSERT();
 	}
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 //0x40D3A0
@@ -9038,7 +9038,7 @@ int Board::LeftFogColumn()
 	if (mLevel >= 37 && mLevel <= 40)									return 4;
 	TOD_ASSERT();
 
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 //0x41C210
@@ -9887,7 +9887,7 @@ int Board::GetNumWavesPerSurvivalStage()
 
 	TOD_ASSERT();
 
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 //0x41DA50
@@ -9978,7 +9978,7 @@ bool Board::CanUseGameObject(GameObjectType theGameObject)
 	
 	TOD_ASSERT();
 
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 void Board::ShakeBoard(int theShakeAmountX, int theShakeAmountY)
