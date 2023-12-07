@@ -11,11 +11,23 @@ set(CMAKE_CONFIGURATION_TYPES
     CACHE STRING "List of supported configurations." FORCE
 )
 
-set(universal_compiler_flags "-fsanitize=undefined -fsanitize-trap -pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
-#set(universal_compiler_flags "-pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
+set(CMAKE_CXX_STANDARD 23)
+
+# @Patoke todo: probably add MSVC counterparts?
+if(MSVC)
+    set(universal_compiler_flags "")
+else()
+    set(universal_compiler_flags "-fsanitize=undefined -fsanitize-trap -pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
+    #set(universal_compiler_flags "-pthread -fuse-ld=lld -fno-omit-frame-pointer -fstack-protector-all -fms-extensions -fdiagnostics-color=always -gdwarf-2 -O0")
+endif()
 set(universal_cxxflags "${CMAKE_CXX_FLAGS} ${universal_compiler_flags}")
 set(universal_cflags   "${CMAKE_C_FLAGS} ${universal_compiler_flags}")
-set(warn_flags "-Wall -Wextra -Werror")
+
+if(MSVC)
+    set(warn_flags "")
+else()
+    set(warn_flags "-Wall -Wextra -Werror")
+endif()
 
 set(CMAKE_CXX_FLAGS "${universal_cflags} ${warn_flags}")
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${universal_cflags} ${warn_flags}")
@@ -24,8 +36,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(CMAKE_RC_COMPILER_INIT windres)
 ENABLE_LANGUAGE(RC)
-  SET(CMAKE_RC_COMPILE_OBJECT
-      "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> <SOURCE>")
+if(!WIN32)
+    SET(CMAKE_RC_COMPILE_OBJECT
+        "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> <SOURCE>")
+endif()
 
 ################################################################################
 # Nuget packages function stub.

@@ -41,7 +41,7 @@ bool Sexy::ExtractResourcesByName(ResourceManager* theResourceManager, const cha
 	if (!strcmp(theName, "LoadingImages")) return ExtractLoadingImagesResources(theResourceManager);
 	if (!strcmp(theName, "LoadingSounds")) return ExtractLoadingSoundsResources(theResourceManager);
 
-	__builtin_unreachable();
+	std::unreachable();
 }
 
 // DelayLoad_Almanac Resources

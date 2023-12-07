@@ -187,7 +187,11 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32 ${ALL_FILES})
+else()
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
+endif()
 
 add_subdirectory(graphics)
 add_subdirectory(sound)
@@ -261,45 +265,26 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
-        "kernel32;"
-        "user32;"
-        "gdi32;"
-        "winspool;"
-        "comdlg32;"
-        "advapi32;"
-        "shell32;"
-        "ole32;"
-        "oleaut32;"
-        "uuid;"
-        "odbc32;"
-        "odbccp32;"
         "winmm;"
         "ws2_32;"
-        "ddraw;"
+        #"ddraw;"
     ">"
     "$<$<CONFIG:Release>:"
-        "kernel32;"
-        "user32;"
-        "gdi32;"
-        "winspool;"
-        "comdlg32;"
-        "advapi32;"
-        "shell32;"
-        "ole32;"
-        "oleaut32;"
-        "uuid;"
-        "odbc32;"
-        "odbccp32;"
         "winmm;"
         "ws2_32;"
-	    "ddraw;"
+	    #"ddraw;"
 	#"ucrt;"
     ">"
 )
 
-#${ImageLib__JPEG_LIB_DIR}/libjpeg.a
+#${ImageLib__libjpeg_dir}/libjpeg.a
 #add_dependencies(libjpeg ImageLib__JPEG)
 #add_dependencies(${PROJECT_NAME} ImageLib__JPEG)
+
+add_library(d8vk STATIC IMPORTED)
+set_target_properties(d8vk
+    PROPERTIES IMPORTED_LOCATION ../lib/d3d8.dll.a
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ".") # SexyAppFramework

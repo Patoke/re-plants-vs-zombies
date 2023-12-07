@@ -9,7 +9,7 @@ inline int QueryCounters(__int64 *lpPerformanceCount)
 {
 	(void)lpPerformanceCount;
 	// Argh fuck it just hope it never happens
-	__builtin_unreachable();
+	std::unreachable();
 	// returns TSC only
 	/*
 	asm (
@@ -28,7 +28,7 @@ inline int DeltaCounters(__int64 *lpPerformanceCount)
 {
 	(void)lpPerformanceCount;
 	// Argh fuck it just hope it never happens
-	__builtin_unreachable();
+	std::unreachable();
 	/*
 	asm (
 		"mov ebx, dword ptr [lpPerformanceCount]"
