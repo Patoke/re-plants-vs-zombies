@@ -22,56 +22,56 @@ enum class DefFieldType : int
 };
 
 /*
-    [ÎªÍ¨Ë×Àí½âÒÔÏÂÄÚÈİ£¬ÔÚ´Ë¹æ¶¨]
-        ¡°ÓÃÓÚ´æ´¢ÆäËûÀàµÄ¶¨ÒåÊı¾İ¡±µÄÀà£¬³ÆÎª¶¨ÒåÊı¾İÀà£¬¼Ç×÷ _DefClass¡£ÏàÓ¦µØ£¬½«±» _DefClass ¶¨ÒåµÄÀà¼Ç×÷ _Class¡£
-        ÀıÈç£¬ReanimatorDefinition ×÷Îª Reanimation Àà£¨¶¯»­Àà£©µÄ¶¨ÒåÊı¾İÀà£¬TodParticleDefinition ×÷Îª TodParticleSystem Àà£¨Á£×ÓÏµÍ³Àà£©µÄ¶¨ÒåÊı¾İÀàµÈ¡£
+    [ä¸ºé€šä¿—ç†è§£ä»¥ä¸‹å†…å®¹ï¼Œåœ¨æ­¤è§„å®š]
+        â€œç”¨äºå­˜å‚¨å…¶ä»–ç±»çš„å®šä¹‰æ•°æ®â€çš„ç±»ï¼Œç§°ä¸ºå®šä¹‰æ•°æ®ç±»ï¼Œè®°ä½œ _DefClassã€‚ç›¸åº”åœ°ï¼Œå°†è¢« _DefClass å®šä¹‰çš„ç±»è®°ä½œ _Classã€‚
+        ä¾‹å¦‚ï¼ŒReanimatorDefinition ä½œä¸º Reanimation ç±»ï¼ˆåŠ¨ç”»ç±»ï¼‰çš„å®šä¹‰æ•°æ®ç±»ï¼ŒTodParticleDefinition ä½œä¸º TodParticleSystem ç±»ï¼ˆç²’å­ç³»ç»Ÿç±»ï¼‰çš„å®šä¹‰æ•°æ®ç±»ç­‰ã€‚
 */
 
 // ====================================================================================================
-// ¡ï ¡¾¶¨Òå±êÖ¾¡¿
+// â˜… ã€å®šä¹‰æ ‡å¿—ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ¶ÔÓÚ°´±êÖ¾Î»ÅĞ¶ÏµÄ£¨/Ã¶¾ÙÀàĞÍµÄ£©Êı¾İ£¬Ò»¸ö DefSymbol ¼ÇÂ¼ÆäÒ»¸ö±êÖ¾Î»ÉÏµÄ£¨/Ò»¸öÃ¶¾ÙÏîµÄ£©Öµ¡£
+// å¯¹äºæŒ‰æ ‡å¿—ä½åˆ¤æ–­çš„ï¼ˆ/æšä¸¾ç±»å‹çš„ï¼‰æ•°æ®ï¼Œä¸€ä¸ª DefSymbol è®°å½•å…¶ä¸€ä¸ªæ ‡å¿—ä½ä¸Šçš„ï¼ˆ/ä¸€ä¸ªæšä¸¾é¡¹çš„ï¼‰å€¼ã€‚
 // ====================================================================================================
 class DefSymbol
 {
 public:
-    int                 mSymbolValue;                   //+0x0£º±êÖ¾Î»ÉÏµÄÖµ»òÃ¶¾ÙÏî¶ÔÓ¦µÄÊıÖµ£¬ÈôÎª -1 Ôò±íÊ¾²»´æÔÚ¸ÃÏî
-    const char*         mSymbolName;                    //+0x4£º±êÖ¾Î»»òÃ¶¾ÙÏîµÄÃû³Æ£¬Îª¿ÕÖ¸ÕëÊ±±íÊ¾²»´æÔÚ¸ÃÏî£¬¹Ê±»×÷Îª¶ÁÈ¡½áÊøµÄ±êÖ¾
+    int                 mSymbolValue;                   //+0x0ï¼šæ ‡å¿—ä½ä¸Šçš„å€¼æˆ–æšä¸¾é¡¹å¯¹åº”çš„æ•°å€¼ï¼Œè‹¥ä¸º -1 åˆ™è¡¨ç¤ºä¸å­˜åœ¨è¯¥é¡¹
+    const char*         mSymbolName;                    //+0x4ï¼šæ ‡å¿—ä½æˆ–æšä¸¾é¡¹çš„åç§°ï¼Œä¸ºç©ºæŒ‡é’ˆæ—¶è¡¨ç¤ºä¸å­˜åœ¨è¯¥é¡¹ï¼Œæ•…è¢«ä½œä¸ºè¯»å–ç»“æŸçš„æ ‡å¿—
 };
 //extern DefSymbol gParticleFlagSymbols[];  //0x69E290
 //extern DefSymbol gEmitterTypeSymbols[];  //0x69E260
 //extern DefSymbol gParticleTypeSymbols[];  //0x69E200
 
 // ====================================================================================================
-// ¡ï ¡¾½á¹¹×Ö¶Î¡¿
+// â˜… ã€ç»“æ„å­—æ®µã€‘
 // ----------------------------------------------------------------------------------------------------
-// ½á¹¹×Ö¶Î¼ÇÂ¼ÁËÒ»¸öÀàÖĞµÄÒ»¸öµÄ³ÉÔ±±äÁ¿£¨_MemVar£©µÄÊı¾İºÍÆäÔÚËù´¦ÀàÖĞµÄ½á¹¹¡£
+// ç»“æ„å­—æ®µè®°å½•äº†ä¸€ä¸ªç±»ä¸­çš„ä¸€ä¸ªçš„æˆå‘˜å˜é‡ï¼ˆ_MemVarï¼‰çš„æ•°æ®å’Œå…¶åœ¨æ‰€å¤„ç±»ä¸­çš„ç»“æ„ã€‚
 // ====================================================================================================
 class DefField
 {
 public:
-    const char*         mFieldName;                     //+0x0£ºÖ¸Ïò _MemVar µÄÃû³Æ¡£Ö¸Ïò¿Õ×Ö·ûÊı×éÊ±±íÊ¾ÎŞ´Ë±äÁ¿£¬¹Ê±»×÷Îª¶ÁÈ¡½áÊøµÄ±êÖ¾
-    int                 mFieldOffset;                   //+0x4£º_MemVar ÔÚËù´¦ÀàÖĞµÄÆ«ÒÆÁ¿£¨½áºÏ»ã±àÀí½â£©
-    DefFieldType        mFieldType;                     //+0x8£º*_MemVar µÄÊı¾İ´æ´¢ÀàĞÍ£¬²»Í¬ÀàĞÍµÄÊı¾İµÄ¶ÁÈ¡·½Ê½Ò²ÓĞËù²»Í¬
-    void*               mExtraData;                     //+0xC£º¶îÍâÊı¾İ¡£ÓÃÓÚ¶Ô *_MemVar ÖĞ°üº¬µÄÖ¸Õë±äÁ¿½øĞĞÉî¿½±´¡£
-    // Èô _MemVar ÎªÖ¸ÏòÆäËû¶¨ÒåÊı¾İµÄÖ¸ÕëĞÍ±äÁ¿£¬Ôò mExtraData ÎªÖ¸Ïò _MemVar Ëù¶¨ÒåµÄÀàµÄ¶¨Òå½á¹¹Í¼µÄÖ¸Õë£»
-    // Èô _MemVar Îª±êÖ¾»òÃ¶¾ÙÀàĞÍµÄÊı¾İ£¬Ôò mExtraData ÎªÖ¸ÏòÆä¸÷±êÖ¾Êı¾İµÄ DefSymbol Êı×éµÄÖ¸Õë£»·ñÔò£¬mExtraData Îª¿ÕÖ¸Õë¡£
-    // ËäÈ»½èÖúÒ»¸ö _DefClass ÀàµÄ¶¨Òå½á¹¹Í¼¾ÍÒÑ¾­¿ÉÒÔÍ¨¹ıÏà¹Øº¯Êı¶ÁÈ¡¸Ã _DefClass µÄÈ«²¿Êı¾İ£¨¼´½øĞĞÇ³¿½±´£©£¬
-    // µ«ÊÇ _DefClass ÖĞµÄ²¿·ÖÖ¸Õë±äÁ¿Ö¸ÏòµÄÊı¾İÈÔÈ»ĞèÒª½øÒ»²½ÒÀ¿¿ÏàÓ¦ÀàĞÍµÄ¶¨Òå½á¹¹Í¼½øĞĞµİ¹é¶ÁÈ¡£¨¼´½øĞĞÉî¿½±´£©¡£
-    // ¼´£ºÍ¨¹ı²ã²ãÇ¶Ì×µÄ¶¨Òå½á¹¹Í¼£¬½«Ô­±¾º¬ÓĞ²ã¼¶¹ØÏµµÄ¸÷ÀàĞÍ±äÁ¿Ö¸Õë¡°Õ¹¿ª¡±£¬Ö±µ½µ±Ç°±äÁ¿µÄÊı¾İÖĞÒÑ¾­²»´æÔÚ¿ÉÒÔ¡°Õ¹¿ª¡±µÄÖ¸ÕëÎªÖ¹£¬µİ¹é¶ÁÈ¡½áÊø¡£
+    const char*         mFieldName;                     //+0x0ï¼šæŒ‡å‘ _MemVar çš„åç§°ã€‚æŒ‡å‘ç©ºå­—ç¬¦æ•°ç»„æ—¶è¡¨ç¤ºæ— æ­¤å˜é‡ï¼Œæ•…è¢«ä½œä¸ºè¯»å–ç»“æŸçš„æ ‡å¿—
+    int                 mFieldOffset;                   //+0x4ï¼š_MemVar åœ¨æ‰€å¤„ç±»ä¸­çš„åç§»é‡ï¼ˆç»“åˆæ±‡ç¼–ç†è§£ï¼‰
+    DefFieldType        mFieldType;                     //+0x8ï¼š*_MemVar çš„æ•°æ®å­˜å‚¨ç±»å‹ï¼Œä¸åŒç±»å‹çš„æ•°æ®çš„è¯»å–æ–¹å¼ä¹Ÿæœ‰æ‰€ä¸åŒ
+    void*               mExtraData;                     //+0xCï¼šé¢å¤–æ•°æ®ã€‚ç”¨äºå¯¹ *_MemVar ä¸­åŒ…å«çš„æŒ‡é’ˆå˜é‡è¿›è¡Œæ·±æ‹·è´ã€‚
+    // è‹¥ _MemVar ä¸ºæŒ‡å‘å…¶ä»–å®šä¹‰æ•°æ®çš„æŒ‡é’ˆå‹å˜é‡ï¼Œåˆ™ mExtraData ä¸ºæŒ‡å‘ _MemVar æ‰€å®šä¹‰çš„ç±»çš„å®šä¹‰ç»“æ„å›¾çš„æŒ‡é’ˆï¼›
+    // è‹¥ _MemVar ä¸ºæ ‡å¿—æˆ–æšä¸¾ç±»å‹çš„æ•°æ®ï¼Œåˆ™ mExtraData ä¸ºæŒ‡å‘å…¶å„æ ‡å¿—æ•°æ®çš„ DefSymbol æ•°ç»„çš„æŒ‡é’ˆï¼›å¦åˆ™ï¼ŒmExtraData ä¸ºç©ºæŒ‡é’ˆã€‚
+    // è™½ç„¶å€ŸåŠ©ä¸€ä¸ª _DefClass ç±»çš„å®šä¹‰ç»“æ„å›¾å°±å·²ç»å¯ä»¥é€šè¿‡ç›¸å…³å‡½æ•°è¯»å–è¯¥ _DefClass çš„å…¨éƒ¨æ•°æ®ï¼ˆå³è¿›è¡Œæµ…æ‹·è´ï¼‰ï¼Œ
+    // ä½†æ˜¯ _DefClass ä¸­çš„éƒ¨åˆ†æŒ‡é’ˆå˜é‡æŒ‡å‘çš„æ•°æ®ä»ç„¶éœ€è¦è¿›ä¸€æ­¥ä¾é ç›¸åº”ç±»å‹çš„å®šä¹‰ç»“æ„å›¾è¿›è¡Œé€’å½’è¯»å–ï¼ˆå³è¿›è¡Œæ·±æ‹·è´ï¼‰ã€‚
+    // å³ï¼šé€šè¿‡å±‚å±‚åµŒå¥—çš„å®šä¹‰ç»“æ„å›¾ï¼Œå°†åŸæœ¬å«æœ‰å±‚çº§å…³ç³»çš„å„ç±»å‹å˜é‡æŒ‡é’ˆâ€œå±•å¼€â€ï¼Œç›´åˆ°å½“å‰å˜é‡çš„æ•°æ®ä¸­å·²ç»ä¸å­˜åœ¨å¯ä»¥â€œå±•å¼€â€çš„æŒ‡é’ˆä¸ºæ­¢ï¼Œé€’å½’è¯»å–ç»“æŸã€‚
 };
 
 // ====================================================================================================
-// ¡ï ¡¾¶¨Òå½á¹¹Í¼¡¿
+// â˜… ã€å®šä¹‰ç»“æ„å›¾ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ¶¨Òå½á¹¹Í¼ÃèÊöÁËÒ»ÖÖ¶¨ÒåÊı¾İÀà£¨_DefClass£©ÖĞ¶¨ÒåÊı¾İµÄ´æ´¢¸ñÊ½ºÍ¶ÁÈ¡·½Ê½£¬ÀàËÆÓÚ¡°_DefDefClass¡±¡£
+// å®šä¹‰ç»“æ„å›¾æè¿°äº†ä¸€ç§å®šä¹‰æ•°æ®ç±»ï¼ˆ_DefClassï¼‰ä¸­å®šä¹‰æ•°æ®çš„å­˜å‚¨æ ¼å¼å’Œè¯»å–æ–¹å¼ï¼Œç±»ä¼¼äºâ€œ_DefDefClassâ€ã€‚
 // ====================================================================================================
 class DefMap
 {
 public:
-    DefField*           mMapFields;                     //+0x0£º½á¹¹×Ö¶ÎµÄÊı×é£¬¼ÇÂ¼ _DefClass ÀàÖĞµÄ¸÷³ÉÔ±±äÁ¿ÔÚ _DefClass ÖĞµÄ½á¹¹£¨Ã¿Ïî¼ÇÂ¼Ò»ÖÖ½á¹¹£©
-    int                 mDefSize;                       //+0x4£ºÒ»¸ö _DefClass ÊµÀıËùÕ¼ÓÃµÄÄÚ´æ´óĞ¡£¬Ò²¼´ºóĞø³õ´Î¶ÁÈ¡Ê±µÄ¶ÁÈ¡³¤¶È£¬Ò»°ãÎª sizeof(_DefClass)
-    void*               (*mConstructorFunc)(void*);     //+0x8£º_DefClass ÀàĞÍÊµÀıµÄ¹¹Ôìº¯ÊıµÄÖ¸Õë
+    DefField*           mMapFields;                     //+0x0ï¼šç»“æ„å­—æ®µçš„æ•°ç»„ï¼Œè®°å½• _DefClass ç±»ä¸­çš„å„æˆå‘˜å˜é‡åœ¨ _DefClass ä¸­çš„ç»“æ„ï¼ˆæ¯é¡¹è®°å½•ä¸€ç§ç»“æ„ï¼‰
+    int                 mDefSize;                       //+0x4ï¼šä¸€ä¸ª _DefClass å®ä¾‹æ‰€å ç”¨çš„å†…å­˜å¤§å°ï¼Œä¹Ÿå³åç»­åˆæ¬¡è¯»å–æ—¶çš„è¯»å–é•¿åº¦ï¼Œä¸€èˆ¬ä¸º sizeof(_DefClass)
+    void*               (*mConstructorFunc)(void*);     //+0x8ï¼š_DefClass ç±»å‹å®ä¾‹çš„æ„é€ å‡½æ•°çš„æŒ‡é’ˆ
 };
 
 void* __cdecl           TodParticleDefinitionConstructor(void* thePointer); //0x5155A0
@@ -103,42 +103,42 @@ extern DefMap gReanimatorTrackDefMap;  //0x69F178
 extern DefMap gReanimatorDefMap;  //0x69F1B4
 
 // ====================================================================================================
-// ¡ï ¡¾¶¨ÒåÊı×é¡¿
+// â˜… ã€å®šä¹‰æ•°ç»„ã€‘
 // ----------------------------------------------------------------------------------------------------
-// Ò»¸ö¶¨ÒåÊı×é¶ÔÓ¦Ò»ÖÖÖ¸ÕëÀàĞÍ±äÁ¿Ö¸ÏòµÄÀàĞÍ¡£
+// ä¸€ä¸ªå®šä¹‰æ•°ç»„å¯¹åº”ä¸€ç§æŒ‡é’ˆç±»å‹å˜é‡æŒ‡å‘çš„ç±»å‹ã€‚
 // ====================================================================================================
 class DefinitionArrayDef
 {
 public:
-    void*               mArrayData;                     //+0x0£ºÓÉÈô¸É¸öÌØ¶¨¶¨ÒåÊı¾İÀàĞÍµÄÊµÀı¹¹³ÉµÄÊı×é£¬ÀıÈç¶¯»­¶¨ÒåÖĞµÄ¡°¹ìµÀ¡±¶¨Òå
-    int                 mArrayCount;                    //+0x4£ºÊı×éµÄ´óĞ¡£¬ÀıÈç¶¯»­¶¨ÒåÖĞµÄ¡°¹ìµÀ¡±ÊıÁ¿»òÁ£×ÓÏµÍ³¶¨ÒåÖĞµÄ¡°·¢ÉäÆ÷¡±ÊıÁ¿
-    // ¶¨ÒåÊı¾İÀàÖĞµÄÒ»¸ö¡°Êı×é£¨Ö¸Õë£© + ÊıÁ¿¡±µÄ×éºÏ£¬ÔÚ¶ÁÈ¡Ê±½«±» DefField ÊÓ×÷Ò»¸ö DefinitionArrayDef ½á¹¹
-    // ÀıÈç TodParticleDefinition ÏÂµÄ *mEmitterDefs ºÍ mEmitterDefCount¡¢ÒÔ¼° TodEmitterDefinition ÏÂµÄ *mParticleFields ºÍ mParticleFieldCount µÈ¡£
-    // ÔÚ¶ÁÈ¡Ê±£¬×÷Îª mArrayCount µÄÒ»ÏîÊı¾İ×ÜÊÇÄÜÔÚ³õ´Î¶ÁÈ¡Ê±¾Í±»ÕıÈ·¶ÁÈ¡£¨ÒòÎªÊÇÕûÊıÀàĞÍ£©£¬¹ÊÆäÒ²»áÔÚºóĞø mArrayData µÄĞŞ¸´¹ı³ÌÖĞ³ÉÎªĞ£Ñé²Î¿¼
+    void*               mArrayData;                     //+0x0ï¼šç”±è‹¥å¹²ä¸ªç‰¹å®šå®šä¹‰æ•°æ®ç±»å‹çš„å®ä¾‹æ„æˆçš„æ•°ç»„ï¼Œä¾‹å¦‚åŠ¨ç”»å®šä¹‰ä¸­çš„â€œè½¨é“â€å®šä¹‰
+    int                 mArrayCount;                    //+0x4ï¼šæ•°ç»„çš„å¤§å°ï¼Œä¾‹å¦‚åŠ¨ç”»å®šä¹‰ä¸­çš„â€œè½¨é“â€æ•°é‡æˆ–ç²’å­ç³»ç»Ÿå®šä¹‰ä¸­çš„â€œå‘å°„å™¨â€æ•°é‡
+    // å®šä¹‰æ•°æ®ç±»ä¸­çš„ä¸€ä¸ªâ€œæ•°ç»„ï¼ˆæŒ‡é’ˆï¼‰ + æ•°é‡â€çš„ç»„åˆï¼Œåœ¨è¯»å–æ—¶å°†è¢« DefField è§†ä½œä¸€ä¸ª DefinitionArrayDef ç»“æ„
+    // ä¾‹å¦‚ TodParticleDefinition ä¸‹çš„ *mEmitterDefs å’Œ mEmitterDefCountã€ä»¥åŠ TodEmitterDefinition ä¸‹çš„ *mParticleFields å’Œ mParticleFieldCount ç­‰ã€‚
+    // åœ¨è¯»å–æ—¶ï¼Œä½œä¸º mArrayCount çš„ä¸€é¡¹æ•°æ®æ€»æ˜¯èƒ½åœ¨åˆæ¬¡è¯»å–æ—¶å°±è¢«æ­£ç¡®è¯»å–ï¼ˆå› ä¸ºæ˜¯æ•´æ•°ç±»å‹ï¼‰ï¼Œæ•…å…¶ä¹Ÿä¼šåœ¨åç»­ mArrayData çš„ä¿®å¤è¿‡ç¨‹ä¸­æˆä¸ºæ ¡éªŒå‚è€ƒ
 };
 
 // ====================================================================================================
-// ¡ï ¡¾Ñ¹Ëõ¶¨ÒåÊı¾İÍ·¡¿
+// â˜… ã€å‹ç¼©å®šä¹‰æ•°æ®å¤´ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ÔÚÑ¹ËõÊı¾İÇ°Ìí¼ÓÒ»¸öÑ¹Ëõ¶¨ÒåÊı¾İÍ·£¬¼ÇÂ¼Ğ£Ñé»º´æÖµ¼°Ô­Ê¼Êı¾İ³¤¶È£¬ÓÃÓÚÔÚ½âÑ¹Ê±¼ì²âÊı¾İÍêÕûĞÔ¡£
+// åœ¨å‹ç¼©æ•°æ®å‰æ·»åŠ ä¸€ä¸ªå‹ç¼©å®šä¹‰æ•°æ®å¤´ï¼Œè®°å½•æ ¡éªŒç¼“å­˜å€¼åŠåŸå§‹æ•°æ®é•¿åº¦ï¼Œç”¨äºåœ¨è§£å‹æ—¶æ£€æµ‹æ•°æ®å®Œæ•´æ€§ã€‚
 // ====================================================================================================
 class CompressedDefinitionHeader
 {
 public:
-    unsigned int        mCookie;                        //+0x0£ºÓÃÓÚÑ¹ËõĞ£ÑéµÄ»º´æÖµ
-    unsigned long       mUncompressedSize;              //+0x4£ºÎ´Ñ¹ËõÊı¾İµÄ³¤¶È
+    unsigned int        mCookie;                        //+0x0ï¼šç”¨äºå‹ç¼©æ ¡éªŒçš„ç¼“å­˜å€¼
+    unsigned int        mUncompressedSize;              //+0x4ï¼šæœªå‹ç¼©æ•°æ®çš„é•¿åº¦
 };
 
 // ====================================================================================================
-// ¡ï ¡¾¶¨ÒåÂ·¾¶¡¿
+// â˜… ã€å®šä¹‰è·¯å¾„ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ¶¨ÒåÂ·¾¶ÔÚÒ»ÖÖÌùÍ¼Ç°×ºÓë¸ÃÇ°×ºµÄÌùÍ¼´æ·ÅµÄÎÄ¼ş¼ĞÂ·¾¶Ö®¼ä½¨Á¢¹ØÁª¡£
+// å®šä¹‰è·¯å¾„åœ¨ä¸€ç§è´´å›¾å‰ç¼€ä¸è¯¥å‰ç¼€çš„è´´å›¾å­˜æ”¾çš„æ–‡ä»¶å¤¹è·¯å¾„ä¹‹é—´å»ºç«‹å…³è”ã€‚
 // ====================================================================================================
 class DefLoadResPath
 {
 public:
-    const char*         mPrefix;                        //+0x0£ºÌùÍ¼µÄÇ°×º£¬Èç¡°IMAGE_"
-    const char*         mDirectory;                     //+0x4£ºÇ°×º¶ÔÓ¦µÄÌùÍ¼ËùÔÚÎÄ¼ş¼Ğ£¬Èç¡°images\¡±
+    const char*         mPrefix;                        //+0x0ï¼šè´´å›¾çš„å‰ç¼€ï¼Œå¦‚â€œIMAGE_"
+    const char*         mDirectory;                     //+0x4ï¼šå‰ç¼€å¯¹åº”çš„è´´å›¾æ‰€åœ¨æ–‡ä»¶å¤¹ï¼Œå¦‚â€œimages\â€
 };
 
 SexyString /*__cdecl*/  DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString& theXMLFilePath);
@@ -158,7 +158,7 @@ bool                    DefinitionReadArrayField(XMLParser* theXmlParser, Defini
 bool                    DefinitionReadFloatTrackField(XMLParser* theXmlParser, FloatParameterTrack* theTrack);
 bool                    DefinitionReadFlagField(XMLParser* theXmlParser, const SexyString& theElementName, uint* theResultValue, DefSymbol* theSymbolMap);
 bool                    DefinitionReadImageField(XMLParser* theXmlParser, Image** theImage);
-bool                    DefinitionReadFontField(XMLParser* theXmlParser, Font** theFont);
+bool                    DefinitionReadFontField(XMLParser* theXmlParser, _Font** theFont);
 bool                    DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition, bool* theDone);
 bool                    DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
@@ -170,13 +170,13 @@ uint /*__cdecl*/        DefinitionCalcHash(DefMap* theDefMap);
 bool                    DefReadFromCacheString(void*& theReadPtr, char** theString);
 bool                    DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefMap* theDefMap);
 bool                    DefReadFromCacheImage(void*& theReadPtr, Image** theImage);
-bool                    DefReadFromCacheFont(void*& theReadPtr, Font** theFont);
+bool                    DefReadFromCacheFont(void*& theReadPtr, _Font** theFont);
 bool                    DefReadFromCacheFloatTrack(void*& theReadPtr, FloatParameterTrack* theTrack);
 bool                    DefMapReadFromCache(void*& theReadPtr, DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionCompileAndLoad(const SexyString& theXMLFilePath, DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionLoadMap(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionLoadImage(Image** theImage, const SexyString& theName);
-bool                    DefinitionLoadFont(Font** theFont, const SexyString& theName);
+bool                    DefinitionLoadFont(_Font** theFont, const SexyString& theName);
 bool                    DefinitionLoadXML(const SexyString& theFilename, DefMap* theDefMap, void* theDefinition);
 void                    DefinitionFreeArrayField(DefinitionArrayDef* theArray, DefMap* theDefMap);
 void                    DefinitionFreeMap(DefMap* theDefMap, void* theDefinition);

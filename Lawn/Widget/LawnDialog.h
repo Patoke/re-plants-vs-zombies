@@ -2,7 +2,7 @@
 #define __LAWNDIALOG_H__
 
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include "widget/Dialog.h"
 
 constexpr const int DIALOG_HEADER_OFFSET = 45;
 
@@ -18,7 +18,7 @@ namespace Sexy
 	class CheckboxListener;
 }
 
-using namespace std;
+//using namespace std;
 using namespace Sexy;
 
 class ReanimationWidget : public Widget
@@ -63,7 +63,7 @@ public:
 	virtual void			Update();
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
-	virtual void			CheckboxChecked(int theId, bool theChecked);
+	virtual void			CheckboxChecked();
 	virtual void			KeyDown(KeyCode theKey);
 	virtual void			AddedToManager(WidgetManager* theWidgetManager);
 	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);

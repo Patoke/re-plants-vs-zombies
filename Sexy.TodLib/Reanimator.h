@@ -3,8 +3,8 @@
 
 #include "DataArray.h"
 #include "FilterEffect.h"
-#include "../SexyAppFramework/SexyMatrix.h"
-using namespace std;
+#include "misc/SexyMatrix.h"
+//using namespace std;
 using namespace Sexy;
 
 class Reanimation;
@@ -17,14 +17,14 @@ class ReanimatorTransform;
 class ReanimatorDefinition;
 namespace Sexy
 {
-    class Font;
+    class _Font;
     class Image;
     class Graphics;
     class MemoryImage;
 };
 
 // ######################################################################################################################################################
-// ############################################################### ÒÔÏÂÎª¶¯»­¶¨ÒåÏà¹ØÄÚÈİ ###############################################################
+// ############################################################### ä»¥ä¸‹ä¸ºåŠ¨ç”»å®šä¹‰ç›¸å…³å†…å®¹ ###############################################################
 // ######################################################################################################################################################
 
 constexpr const float DEFAULT_FIELD_PLACEHOLDER = -10000.0f;
@@ -36,40 +36,48 @@ enum ReanimFlags
     REANIM_FAST_DRAW_IN_SW_MODE
 };
 
+struct ReanimatorTransformArray {
+    ReanimatorTransform* mTransforms;
+    int count;
+};
+
 class ReanimatorTrack
 {
 public:
-    const char*                     mName;                          //+0x0£º¹ìµÀÃû³Æ
-    ReanimatorTransform*            mTransforms;                    //+0x4£ºÃ¿Ò»Ö¡µÄ¶¯»­±ä»»µÄÊı×é
-    int                             mTransformCount;                //+0x8£º¶¯»­±ä»»ÊıÁ¿£¬¼´Ö¡ÊıÁ¿
+    const char*                     mName;                          //+0x0ï¼šè½¨é“åç§°
+    ReanimatorTransformArray        mTransforms;                    //+0x4ï¼šæ¯ä¸€å¸§çš„åŠ¨ç”»å˜æ¢çš„æ•°ç»„
     
 public:
-    ReanimatorTrack() : mName(""), mTransforms(nullptr), mTransformCount(0) { }
+    ReanimatorTrack() : mName(""), mTransforms({NULL,0}) { }
+};
+
+struct ReanimatorTrackArray {
+    ReanimatorTrack* tracks;
+    int count;
 };
 
 // ====================================================================================================
-// ¡ï ¡¾¶¯»­Æ÷¶¨Òå¡¿
+// â˜… ã€åŠ¨ç”»å™¨å®šä¹‰ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ÓÃÓÚÃèÊöÒ»ÖÖ¶¯»­ÀàĞÍÓë¸Ã¶¯»­µÄÊı¾İÎÄ¼şµÄÎÄ¼şÃû¼°±êÖ¾Ö®¼äµÄ¶ÔÓ¦¹ØÏµ¡£
+// ç”¨äºæè¿°ä¸€ç§åŠ¨ç”»ç±»å‹ä¸è¯¥åŠ¨ç”»çš„æ•°æ®æ–‡ä»¶çš„æ–‡ä»¶ååŠæ ‡å¿—ä¹‹é—´çš„å¯¹åº”å…³ç³»ã€‚
 // ====================================================================================================
 class ReanimatorDefinition
 {
 public:
-    ReanimatorTrack*                mTracks;
-    int                             mTrackCount;
+    ReanimatorTrackArray            mTracks;
     float                           mFPS;
     ReanimAtlas*                    mReanimAtlas;
 
 public:
-    ReanimatorDefinition() : mTracks(nullptr), mTrackCount(0), mFPS(12.0f), mReanimAtlas(nullptr) { }
+    ReanimatorDefinition() : mTracks({nullptr, 0}), mFPS(12.0f), mReanimAtlas(nullptr) { }
 };
-extern int gReanimatorDefCount;                     //[0x6A9EE4]
+extern unsigned int gReanimatorDefCount;                     //[0x6A9EE4]
 extern ReanimatorDefinition* gReanimatorDefArray;   //[0x6A9EE8]
 
 // ====================================================================================================
-// ¡ï ¡¾¶¯»­²ÎÊı¡¿
+// â˜… ã€åŠ¨ç”»å‚æ•°ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ÓÃÓÚÃèÊöÒ»ÖÖ¶¯»­ÀàĞÍÓë¸Ã¶¯»­µÄÊı¾İÎÄ¼şµÄÎÄ¼şÃû¼°±êÖ¾Ö®¼äµÄ¶ÔÓ¦¹ØÏµ¡£
+// ç”¨äºæè¿°ä¸€ç§åŠ¨ç”»ç±»å‹ä¸è¯¥åŠ¨ç”»çš„æ•°æ®æ–‡ä»¶çš„æ–‡ä»¶ååŠæ ‡å¿—ä¹‹é—´çš„å¯¹åº”å…³ç³»ã€‚
 // ====================================================================================================
 class ReanimationParams
 {
@@ -78,7 +86,7 @@ public:
     const char*                     mReanimFileName;
     int                             mReanimParamFlags;
 };
-extern int gReanimationParamArraySize;              //[0x6A9EEC]
+extern unsigned int gReanimationParamArraySize;              //[0x6A9EEC]
 extern ReanimationParams* gReanimationParamArray;   //[0x6A9EF0]
 
 /*inline*/ void                     ReanimationFillInMissingData(float& thePrev, float& theValue);
@@ -92,7 +100,7 @@ void                                ReanimatorFreeDefinitions();
 extern ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS];  //0x6A1340
 
 // ######################################################################################################################################################
-// ############################################################## ÒÔÏÂÕıÊ½¿ªÊ¼¶¯»­Ïà¹ØÉùÃ÷ ##############################################################
+// ############################################################## ä»¥ä¸‹æ­£å¼å¼€å§‹åŠ¨ç”»ç›¸å…³å£°æ˜ ##############################################################
 // ######################################################################################################################################################
 
 enum
@@ -118,16 +126,16 @@ public:
 };
 
 // ====================================================================================================
-// ¡ï ¡¾¶¯»­Æ÷Ê±¼ä¡¿
+// â˜… ã€åŠ¨ç”»å™¨æ—¶é—´ã€‘
 // ----------------------------------------------------------------------------------------------------
-// ÓÃÓÚÃèÊö¶¯»­µ±Ç°ÕıÔÚ²¥·ÅµÄÊ±¼äÎ»ÖÃ¡£
+// ç”¨äºæè¿°åŠ¨ç”»å½“å‰æ­£åœ¨æ’­æ”¾çš„æ—¶é—´ä½ç½®ã€‚
 // ====================================================================================================
 class ReanimatorFrameTime
 {
 public:
-    float                           mFraction;                      //+0x0£ºÁ½Ö¡Ö®¼äÒÑ¾­¹ıµÄ±ÈÀı
-    int                             mAnimFrameBeforeInt;            //+0x4£ºÇ°Ò»¸öÕûÊıÖ¡
-    int                             mAnimFrameAfterInt;             //+0x8£ººóÒ»¸öÕûÊıÖ¡
+    float                           mFraction;                      //+0x0ï¼šä¸¤å¸§ä¹‹é—´å·²ç»è¿‡çš„æ¯”ä¾‹
+    int                             mAnimFrameBeforeInt;            //+0x4ï¼šå‰ä¸€ä¸ªæ•´æ•°å¸§
+    int                             mAnimFrameAfterInt;             //+0x8ï¼šåä¸€ä¸ªæ•´æ•°å¸§
 };
 
 class ReanimatorTransform
@@ -142,7 +150,7 @@ public:
     float                           mFrame;
     float                           mAlpha;
     Image*                          mImage;
-    Font*                           mFont;
+    _Font*                           mFont;
     const char*                     mText;
 
 public:
@@ -230,7 +238,7 @@ public:
     void                            AssignRenderGroupToPrefix(const char* theTrackName, int theRenderGroup);
     void                            PropogateColorToAttachments();
     bool                            ShouldTriggerTimedEvent(float theEventTime);
-    void                            TodTriangleGroupDraw(Graphics* g, TodTriangleGroup* theTriangleGroup) { ; }
+//  void                            TodTriangleGroupDraw(Graphics* g, TodTriangleGroup* theTriangleGroup) { ; }
     Image*                          GetCurrentTrackImage(const char* theTrackName);
     AttachEffect*                   AttachParticleToTrack(const char* theTrackName, TodParticleSystem* theParticleSystem, float thePosX, float thePosY);
     void                            GetTrackBasePoseMatrix(int theTrackIndex, SexyTransform2D& theBasePosMatrix);

@@ -3,7 +3,7 @@
 
 #include <string>
 #include "../../Sexy.TodLib/TodList.h"
-#include "../../SexyAppFramework/Buffer.h"
+#include "misc/Buffer.h"
 
 class Board;
 class Trail;

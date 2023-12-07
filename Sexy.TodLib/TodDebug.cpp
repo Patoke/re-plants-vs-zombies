@@ -1,8 +1,8 @@
 #include <time.h>
 #include "TodDebug.h"
 #include "TodCommon.h"
-#include "../SexyAppFramework/Debug.h"
-#include "../SexyAppFramework/SEHCatcher.h"
+#include "misc/Debug.h"
+#include "misc/SEHCatcher.h"
 #include "../SexyAppFramework/SexyAppBase.h"
 
 using namespace Sexy;
@@ -44,16 +44,18 @@ void TodAssertFailed(const char* theCondition, const char* theFile, int theLine,
 	int aCount = TodVsnprintf(aFormattedMsg, sizeof(aFormattedMsg), theMsg, argList);
 	va_end(argList);
 
-	if (aFormattedMsg[aCount - 1] != '\n')
-	{
-		if (aCount + 1 < 1024)
+	if (aCount != 0) {
+		if (aFormattedMsg[aCount - 1] != '\n')
 		{
-			aFormattedMsg[aCount] = '\n';
-			aFormattedMsg[aCount + 1] = '\0';
-		}
-		else
-		{
-			aFormattedMsg[aCount - 1] = '\n';
+			if (aCount + 1 < 1024)
+			{
+				aFormattedMsg[aCount] = '\n';
+				aFormattedMsg[aCount + 1] = '\0';
+			}
+			else
+			{
+				aFormattedMsg[aCount - 1] = '\n';
+			}
 		}
 	}
 
@@ -221,6 +223,7 @@ void TodTraceWithoutSpamming(const char* theFormat, ...)
 
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char* theMessage)
 {
+	(void)theMessage;
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
 }
 
@@ -240,8 +243,6 @@ long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo)
 
 	return EXCEPTION_EXECUTE_HANDLER;
 }
-
-void (*gBetaSubmitFunc)() = nullptr;
 
 void TodAssertInitForApp()
 {

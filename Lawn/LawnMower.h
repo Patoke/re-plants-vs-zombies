@@ -2,7 +2,7 @@
 #define __LAWNMOWER_H__
 
 #include "../ConstEnums.h"
-#include "../SexyAppFramework/Rect.h"
+#include "misc/Rect.h"
 
 class LawnApp;
 class Board;

@@ -4,7 +4,7 @@
 #include "Reanimator.h"
 #include "TodParticle.h"
 #include "EffectSystem.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 
 Attachment::Attachment()
 {
@@ -146,6 +146,9 @@ void Attachment::SetPosition(const SexyVector2& thePosition)
 			}
 			break;
 		}
+
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -189,6 +192,9 @@ void Attachment::OverrideColor(const Color& theColor)
 			}
 			break;
 		}
+		case EffectType::EFFECT_TRAIL:
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -243,6 +249,9 @@ void Attachment::PropogateColor(const Color& theColor, bool theEnableAdditiveCol
 			}
 			break;
 		}
+		case EffectType::EFFECT_TRAIL:
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -286,6 +295,9 @@ void Attachment::OverrideScale(float theScale)
 			}
 			break;
 		}
+		case EffectType::EFFECT_TRAIL:
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -360,6 +372,8 @@ void Attachment::SetMatrix(const SexyTransform2D& theMatrix)
 			}
 			break;
 		}
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -423,6 +437,9 @@ void Attachment::Draw(Graphics* g, bool theParentHidden)
 			}
 			break;
 		}
+
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 	}
 }
@@ -484,6 +501,9 @@ void Attachment::Detach()
 			}
 			break;
 		}
+
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 
 		aAttachEffect->mEffectID = 0U;
@@ -498,10 +518,17 @@ void Attachment::AttachmentDie()
 {
 	TOD_ASSERT(gEffectSystem);
 
-	DataArray<TodParticleSystem>& aParticleSystems = gEffectSystem->mParticleHolder->mParticleSystems;
-	DataArray<Trail>& aTrails = gEffectSystem->mTrailHolder->mTrails;
-	DataArray<Reanimation>& aReanimations = gEffectSystem->mReanimationHolder->mReanimations;
-	DataArray<Attachment>& aAttachments = gEffectSystem->mAttachmentHolder->mAttachments;
+	// @Minerscale Fix null pointer derefrence due to some sort of circular dependency...
+	// The problems when freeing the data were probably actually bad so this fix is frankly irresponsible
+	// TODO: put todo here so I know to come here when I break everything. !FIXME! !ACHTUNG!
+	DataArray<TodParticleSystem> *aParticleSystems = nullptr;
+	DataArray<Trail> *aTrails = nullptr;
+	DataArray<Reanimation> *aReanimations = nullptr;
+	DataArray<Attachment> *aAttachments = nullptr;
+	if (gEffectSystem->mParticleHolder) aParticleSystems = &gEffectSystem->mParticleHolder->mParticleSystems;
+	if (gEffectSystem->mTrailHolder) aTrails = &gEffectSystem->mTrailHolder->mTrails;
+	if (gEffectSystem->mReanimationHolder) aReanimations = &gEffectSystem->mReanimationHolder->mReanimations;
+	if (gEffectSystem->mAttachmentHolder) aAttachments = &gEffectSystem->mAttachmentHolder->mAttachments;
 
 	for (int i = 0; i < mNumEffects; i++)
 	{
@@ -510,7 +537,7 @@ void Attachment::AttachmentDie()
 		{
 		case EffectType::EFFECT_PARTICLE:
 		{
-			TodParticleSystem* aParticleSystem = aParticleSystems.DataArrayTryToGet(aAttachEffect->mEffectID);
+			TodParticleSystem* aParticleSystem = aParticleSystems?aParticleSystems->DataArrayTryToGet(aAttachEffect->mEffectID):nullptr;
 			if (aParticleSystem)
 			{
 				aParticleSystem->ParticleSystemDie();
@@ -520,7 +547,7 @@ void Attachment::AttachmentDie()
 
 		case EffectType::EFFECT_TRAIL:
 		{
-			Trail* aTrail = aTrails.DataArrayTryToGet(aAttachEffect->mEffectID);
+			Trail* aTrail = aTrails?aTrails->DataArrayTryToGet(aAttachEffect->mEffectID):nullptr;
 			if (aTrail)
 			{
 				aTrail->mDead = true;
@@ -530,7 +557,7 @@ void Attachment::AttachmentDie()
 
 		case EffectType::EFFECT_REANIM:
 		{
-			Reanimation* aReanimation = aReanimations.DataArrayTryToGet(aAttachEffect->mEffectID);
+			Reanimation* aReanimation = aReanimations?aReanimations->DataArrayTryToGet(aAttachEffect->mEffectID):nullptr;
 			if (aReanimation)
 			{
 				aReanimation->ReanimationDie();
@@ -540,13 +567,16 @@ void Attachment::AttachmentDie()
 
 		case EffectType::EFFECT_ATTACHMENT:
 		{
-			Attachment* aAttachment = aAttachments.DataArrayTryToGet(aAttachEffect->mEffectID);
+			Attachment* aAttachment = aAttachments?aAttachments->DataArrayTryToGet(aAttachEffect->mEffectID):nullptr;
 			if (aAttachment)
 			{
 				aAttachment->AttachmentDie();
 			}
 			break;
 		}
+
+		case EffectType::EFFECT_OTHER:
+			break;
 		}
 
 		aAttachEffect->mEffectID = 0U;
@@ -796,6 +826,8 @@ Reanimation* FindReanimAttachment(AttachmentID& theAttachmentID)
 			}
 		}
 	}
+
+	return nullptr;
 }
 
 //0x405500

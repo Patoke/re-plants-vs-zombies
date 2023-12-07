@@ -20,62 +20,19 @@
 #include <algorithm>
 #include <cstdlib>
 
+#define NOMINMAX 1
 #include <windows.h>
 #include <shellapi.h> 
 #include <mmsystem.h>
-#include "ModVal.h"
+#include "misc/ModVal.h"
 
-#ifdef _USE_WIDE_STRING
+// fallback if NOMINMAX fails (somehow?)
+#undef min
+#undef max
 
-typedef std::wstring		SexyString;
-#define _S(x)				L ##x
-
-
-#define sexystrncmp			wcsncmp
-#define sexystrcmp			wcscmp
-#define sexystricmp			wcsicmp
-#define sexysscanf			swscanf
-#define sexyatoi			_wtoi
-#define sexystrcpy			wcscpy
-#define sexystrlen			wcslen
-#define sexyisdigit			iswdigit
-#define sexyisalnum			iswalnum
-#define sexystrchr			wcschr
-
-#define SexyStringToStringFast(x)	WStringToString(x)
-#define SexyStringToWStringFast(x)	(x)
-#define StringToSexyStringFast(x)	StringToWString(x)
-#define WStringToSexyStringFast(x)	(x)
-
-#ifndef SEXYFRAMEWORK_NO_REDEFINE_WIN_API
-// Redefine the functions and structs we need to be wide-string
-#undef CreateWindowEx
-#undef RegisterClass
-#undef MessageBox
-#undef ShellExecute
-#undef GetTextExtentPoint32
-#undef RegisterWindowMessage
-#undef CreateMutex
-#undef DrawTextEx
-#undef TextOut
-
-#define CreateWindowEx				CreateWindowExW
-#define RegisterClass				RegisterClassW
-#define WNDCLASS					WNDCLASSW
-#define MessageBox					MessageBoxW
-#define ShellExecute				ShellExecuteW
-#define GetTextExtentPoint32		GetTextExtentPoint32W
-#define RegisterWindowMessage		RegisterWindowMessageW
-#define CreateMutex					CreateMutexW
-#define DrawTextEx					DrawTextExW
-#define TextOut						TextOutW
-#endif
-
-#else
-
+// Removed wide string support
 typedef std::string			SexyString;
 #define _S(x)				x
-
 
 #define sexystrncmp			strncmp
 #define sexystrcmp			strcmp
@@ -92,8 +49,6 @@ typedef std::string			SexyString;
 #define SexyStringToWStringFast(x)	StringToWString(x)
 #define StringToSexyStringFast(x)	(x)
 #define WStringToSexyStringFast(x)	WStringToString(x)
-
-#endif
 
 #define LONG_BIGE_TO_NATIVE(l) (((l >> 24) & 0xFF) | ((l >> 8) & 0xFF00) | ((l << 8) & 0xFF0000) | ((l << 24) & 0xFF000000))
 #define WORD_BIGE_TO_NATIVE(w) (((w >> 8) & 0xFF) | ((w << 8) & 0xFF00))

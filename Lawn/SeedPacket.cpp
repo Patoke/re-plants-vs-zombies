@@ -6,9 +6,9 @@
 #include "CursorObject.h"
 #include "../Resources.h"
 #include "MessageWidget.h"
-#include "../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../Sexy.TodLib/FilterEffect.h"
-#include "../SexyAppFramework/SexyMatrix.h"
+#include "misc/SexyMatrix.h"
 
 SeedPacket::SeedPacket()
 {
@@ -45,7 +45,7 @@ void SeedPacket::PickNextSlotMachineSeed()
 
 	int aSeedsCount = 0;
 	TodWeightedArray aSeedWeightArray[(int)SeedType::NUM_SEED_TYPES];
-	for (int i = 0; i < LENGTH(SLOT_SEED_TYPES); i++)
+	for (size_t i = 0; i < LENGTH(SLOT_SEED_TYPES); i++)
 	{
 		SeedType aSeedType = SLOT_SEED_TYPES[i];
 
@@ -498,6 +498,8 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 	case SeedType::SEED_ZOMBIQUARIUM_TROPHY:
 		aDrawSeedInMiddle = false;
 		break;
+	default:
+		break;
 	}
 	if (((LawnApp*)gSexyAppBase)->mGameMode == GameMode::GAMEMODE_CHALLENGE_BIG_TIME)
 	{
@@ -553,7 +555,7 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 			aCostStr = StrFormat(_S("%d"), Plant::GetCost(theSeedType, theImitaterType));
 		}
 
-		Font* aTextFont = Sexy::FONT_PICO129;
+		_Font* aTextFont = Sexy::FONT_PICO129;
 		int aTextOffsetX = 32 - aTextFont->StringWidth(aCostStr);
 		int aTextOffsetY = aTextFont->GetAscent() + 54;
 		if (g->mScaleX == 1.0f && g->mScaleY == 1.0f)
@@ -702,6 +704,7 @@ bool SeedPacket::CanPickUp()
 // GOTY @Patoke: 0x4931C0
 void SeedPacket::MouseDown(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;(void)theClickCount;
 	if (mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mPacketType == SeedType::SEED_NONE)
 	{
 		return;
@@ -713,7 +716,7 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 		{
 			mBoard->DisplayAdvice(_S("[ADVICE_SLOT_MACHINE_PULL]"), MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST, AdviceType::ADVICE_NONE);
 		}
-		mBoard->mChallenge->mSlotMachineRollCount = min(mBoard->mChallenge->mSlotMachineRollCount, 2);
+		mBoard->mChallenge->mSlotMachineRollCount = std::min(mBoard->mChallenge->mSlotMachineRollCount, 2);
 		return;
 	}
 
@@ -962,7 +965,7 @@ void SeedBank::Draw(Graphics* g)
 
 	if (!mBoard->HasConveyorBeltSeedBank())
 	{
-		SexyString aMoneyLabel = StrFormat(_S("%d"), max(mBoard->mSunMoney, 0));
+		SexyString aMoneyLabel = StrFormat(_S("%d"), std::max(mBoard->mSunMoney, 0));
 		Color aMoneyColor(0, 0, 0);
 		if (mBoard->mOutOfMoneyCounter > 0 && mBoard->mOutOfMoneyCounter % 20 < 10)
 		{
@@ -1148,7 +1151,7 @@ void SeedBank::UpdateConveyorBelt()
 			SeedPacket* aSeedPacket = &mSeedPackets[i];
 			if (aSeedPacket->mOffsetX > 0)
 			{
-				aSeedPacket->mOffsetX = max(aSeedPacket->mOffsetX - 1, 0);
+				aSeedPacket->mOffsetX = std::max(aSeedPacket->mOffsetX - 1, 0);
 			}
 		}
 

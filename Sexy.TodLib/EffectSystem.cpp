@@ -1,5 +1,3 @@
-#pragma warning(disable:4244 4305 4309)
-
 #include "Trail.h"
 #include "TodDebug.h"
 #include "Attachment.h"
@@ -7,9 +5,9 @@
 #include "TodParticle.h"
 #include "EffectSystem.h"
 #include "../GameConstants.h"
-#include "../SexyAppFramework/DDImage.h"
-#include "../SexyAppFramework/DDInterface.h"
-#include "../SexyAppFramework/D3DInterface.h"
+#include "graphics/DDImage.h"
+#include "graphics/DDInterface.h"
+#include "graphics/D3DInterface.h"
 
 EffectSystem* gEffectSystem = nullptr;  //[0x6A9EB8]
 
@@ -42,7 +40,7 @@ void EffectSystem::EffectSystemDispose()
 	}
 	if (mTrailHolder)
 	{
-		mTrailHolder->DisposeHolder();
+		mTrailHolder->DisposeHolder(); // DisposeHolder is called from the destructor!
 		delete mTrailHolder;
 		mTrailHolder = nullptr;
 	}
@@ -455,7 +453,7 @@ void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatri
 
 	bool aNoClipping = false;
 	TriVertex aVertBuffer[2][3];
-	register TriVertex (*aTriRef)[3] = aVertBuffer;
+	TriVertex (*aTriRef)[3] = aVertBuffer;
 	if (mTriangleCount + 2 <= MAX_TRIANGLES)
 	{
 		if ((

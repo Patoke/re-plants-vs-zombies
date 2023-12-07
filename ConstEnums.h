@@ -244,57 +244,57 @@ enum DamageRangeFlags
 };
 enum Dialogs
 {
-    DIALOG_NEW_GAME,                            // 0£º
-    DIALOG_OPTIONS,                             // 1£º
-    DIALOG_NEWOPTIONS,                          // 2£º²Ëµ¥
-    DIALOG_ALMANAC,                             // 3£ºÍ¼¼ø
-    DIALOG_STORE,                               // 4£ºÉÌµê
-    DIALOG_PREGAME_NAG,                         // 5£º
-    DIALOG_LOAD_GAME,                           // 6£º
-    DIALOG_CONFIRM_UPDATE_CHECK,                // 7£º
-    DIALOG_CHECKING_UPDATES,                    // 8£º
-    DIALOG_REGISTER_ERROR,                      // 9£º
-    DIALOG_COLORDEPTH_EXP,                      // 10£º²»Ö§³Ö´°¿ÚÄ£Ê½
-    DIALOG_OPENURL_WAIT,                        // 11£º
-    DIALOG_OPENURL_FAIL,                        // 12£º
-    DIALOG_QUIT,                                // 13£ºÍË³öÓÎÏ·£¨Ö÷²Ëµ¥µã»÷ÍË³öÊ±£©
-    DIALOG_HIGH_SCORES,                         // 14£º
-    DIALOG_NAG,                                 // 15£º
-    DIALOG_INFO,                                // 16£ºÐÅÏ¢£¨3D ¼ÓËÙ²»Ö§³Ö/²»ÍÆ¼ö£©
-    DIALOG_GAME_OVER,                           // 17£ºÓÎÏ·½áÊø£¨¹Ø¿¨Ê§°Ü£©
-    DIALOG_LEVEL_COMPLETE,                      // 18£º¹Ø¿¨Íê³É
-    DIALOG_PAUSED,                              // 19£ºÔÝÍ£ÓÎÏ·
-    DIALOG_NO_MORE_MONEY,                       // 20£º
-    DIALOG_BONUS,                               // 21£º
-    DIALOG_CONFIRM_BACK_TO_MAIN,                // 22£º·µ»ØÖ÷²Ëµ¥
-    DIALOG_CONFIRM_RESTART,                     // 23£ºÖØÐÂ¿ªÊ¼¹Ø¿¨
-    DIALOG_THANKS_FOR_REGISTERING,              // 24£º
-    DIALOG_NOT_ENOUGH_MONEY,                    // 25£º×Ê½ð²»×ã£¨¹ºÂòÉÌÆ·µ«Ç®Êý²»¹»Ê±´¥·¢£©
-    DIALOG_UPGRADED,                            // 26£º¿¨²ÛÉý¼¶
-    DIALOG_NO_UPGRADE,                          // 27£º
-    DIALOG_CHOOSER_WARNING,                     // 28£ºÑ¡¿¨ÌáÐÑ£¨Î´Ð¯´øÉú²úÑô¹âµÄÖ²Îï¡¢Î´Ð¯´ø×Ï¿¨Ô­Ö²ÎïµÈÇé¿öÏÂ´¥·¢£©
-    DIALOG_USERDIALOG,                          // 29£ºÓÃ»§¶Ô»°
-    DIALOG_CREATEUSER,                          // 30£º´´½¨ÐÂÓÃ»§
-    DIALOG_CONFIRMDELETEUSER,                   // 31£ºÉ¾³ýÓÃ»§
-    DIALOG_RENAMEUSER,                          // 32£ºÖØÃüÃûÓÃ»§
-    DIALOG_CREATEUSERERROR,                     // 33£ºÇëÊäÈëÃû×Ö£¨´´½¨ÐÂÓÃ»§¶Ô»°ÖÐ²»ÊäÈëÓÃ»§ÃûÊ±´¥·¢£©
-    DIALOG_RENAMEUSERERROR,                     // 34£ºÇëÊäÈëÃû×Ö£¨ÖØÃüÃûÓÃ»§¶Ô»°ÖÐ²»ÊäÈëÓÃ»§ÃûÊ±´¥·¢£©
-    DIALOG_CHEAT,                               // 35£ºÌø¹Ø¶Ô»°£¨½öÄÚ²â°æ¿É´¥·¢£©
-    DIALOG_CHEATERROR,                          // 36£ºÌø¹ØÖ¸ÁîÊäÈëÓÐÎó
-    DIALOG_CONTINUE,                            // 37£º¼ÌÐøÓÎÏ·£¨¶Áµµ½øÈë¹Ø¿¨Ê±£©
-    DIALOG_GETREADY,                            // 38£º
-    DIALOG_RESTARTCONFIRM,                      // 39£ºÖØÐÂ¿ªÊ¼ÓÎÏ·£¨¼ÌÐøÓÎÏ·¶Ô»°ÖÐÑ¡Ôñ¿ªÊ¼ÐÂÓÎÏ·Ê±´¥·¢£©
-    DIALOG_CONFIRMPURCHASE,                     // 40£º
-    DIALOG_CONFIRMSELL,                         // 41£º
-    DIALOG_TIMESUP,                             // 42£º
-    DIALOG_VIRTUALHELP,                         // 43£º
-    DIALOG_JUMPAHEAD,                           // 44£º
-    DIALOG_CRAZY_DAVE,                          // 45£º
-    DIALOG_STORE_PURCHASE,                      // 46£º¹ºÂòÉÌÆ·£¨´÷·òÉÌµê£©
-    DIALOG_ZEN_SELL,                            // 47£º³öÊÛÅèÔÔÖ²Îï£¨ìø¾³»¨Ô°£©
-    DIALOG_MESSAGE,                             // 48£ºÍ¨ÓÃÏûÏ¢¶Ô»°£¬°üÀ¨£º¢Ù¼ÓÔØÖÐ£¨ÇÐ»»ÓÃ»§Ê±´¥·¢£©£»¢ÚÐ¡ÓÎÏ·µÈÄ£Ê½Î´½âËø£»¡­¡­
-    DIALOG_IMITATER,                            // 49£ºÄ£·ÂÕß¶Ô»°
-    DIALOG_PURCHASE_PACKET_SLOT,                // 50£ºÉý¼¶¿¨²ÛµÄ¸ñ×ÓÊýÁ¿
+    DIALOG_NEW_GAME,                            // 0ï¼š
+    DIALOG_OPTIONS,                             // 1ï¼š
+    DIALOG_NEWOPTIONS,                          // 2ï¼šèœå•
+    DIALOG_ALMANAC,                             // 3ï¼šå›¾é‰´
+    DIALOG_STORE,                               // 4ï¼šå•†åº—
+    DIALOG_PREGAME_NAG,                         // 5ï¼š
+    DIALOG_LOAD_GAME,                           // 6ï¼š
+    DIALOG_CONFIRM_UPDATE_CHECK,                // 7ï¼š
+    DIALOG_CHECKING_UPDATES,                    // 8ï¼š
+    DIALOG_REGISTER_ERROR,                      // 9ï¼š
+    DIALOG_COLORDEPTH_EXP,                      // 10ï¼šä¸æ”¯æŒçª—å£æ¨¡å¼
+    DIALOG_OPENURL_WAIT,                        // 11ï¼š
+    DIALOG_OPENURL_FAIL,                        // 12ï¼š
+    DIALOG_QUIT,                                // 13ï¼šé€€å‡ºæ¸¸æˆï¼ˆä¸»èœå•ç‚¹å‡»é€€å‡ºæ—¶ï¼‰
+    DIALOG_HIGH_SCORES,                         // 14ï¼š
+    DIALOG_NAG,                                 // 15ï¼š
+    DIALOG_INFO,                                // 16ï¼šä¿¡æ¯ï¼ˆ3D åŠ é€Ÿä¸æ”¯æŒ/ä¸æŽ¨èï¼‰
+    DIALOG_GAME_OVER,                           // 17ï¼šæ¸¸æˆç»“æŸï¼ˆå…³å¡å¤±è´¥ï¼‰
+    DIALOG_LEVEL_COMPLETE,                      // 18ï¼šå…³å¡å®Œæˆ
+    DIALOG_PAUSED,                              // 19ï¼šæš‚åœæ¸¸æˆ
+    DIALOG_NO_MORE_MONEY,                       // 20ï¼š
+    DIALOG_BONUS,                               // 21ï¼š
+    DIALOG_CONFIRM_BACK_TO_MAIN,                // 22ï¼šè¿”å›žä¸»èœå•
+    DIALOG_CONFIRM_RESTART,                     // 23ï¼šé‡æ–°å¼€å§‹å…³å¡
+    DIALOG_THANKS_FOR_REGISTERING,              // 24ï¼š
+    DIALOG_NOT_ENOUGH_MONEY,                    // 25ï¼šèµ„é‡‘ä¸è¶³ï¼ˆè´­ä¹°å•†å“ä½†é’±æ•°ä¸å¤Ÿæ—¶è§¦å‘ï¼‰
+    DIALOG_UPGRADED,                            // 26ï¼šå¡æ§½å‡çº§
+    DIALOG_NO_UPGRADE,                          // 27ï¼š
+    DIALOG_CHOOSER_WARNING,                     // 28ï¼šé€‰å¡æé†’ï¼ˆæœªæºå¸¦ç”Ÿäº§é˜³å…‰çš„æ¤ç‰©ã€æœªæºå¸¦ç´«å¡åŽŸæ¤ç‰©ç­‰æƒ…å†µä¸‹è§¦å‘ï¼‰
+    DIALOG_USERDIALOG,                          // 29ï¼šç”¨æˆ·å¯¹è¯
+    DIALOG_CREATEUSER,                          // 30ï¼šåˆ›å»ºæ–°ç”¨æˆ·
+    DIALOG_CONFIRMDELETEUSER,                   // 31ï¼šåˆ é™¤ç”¨æˆ·
+    DIALOG_RENAMEUSER,                          // 32ï¼šé‡å‘½åç”¨æˆ·
+    DIALOG_CREATEUSERERROR,                     // 33ï¼šè¯·è¾“å…¥åå­—ï¼ˆåˆ›å»ºæ–°ç”¨æˆ·å¯¹è¯ä¸­ä¸è¾“å…¥ç”¨æˆ·åæ—¶è§¦å‘ï¼‰
+    DIALOG_RENAMEUSERERROR,                     // 34ï¼šè¯·è¾“å…¥åå­—ï¼ˆé‡å‘½åç”¨æˆ·å¯¹è¯ä¸­ä¸è¾“å…¥ç”¨æˆ·åæ—¶è§¦å‘ï¼‰
+    DIALOG_CHEAT,                               // 35ï¼šè·³å…³å¯¹è¯ï¼ˆä»…å†…æµ‹ç‰ˆå¯è§¦å‘ï¼‰
+    DIALOG_CHEATERROR,                          // 36ï¼šè·³å…³æŒ‡ä»¤è¾“å…¥æœ‰è¯¯
+    DIALOG_CONTINUE,                            // 37ï¼šç»§ç»­æ¸¸æˆï¼ˆè¯»æ¡£è¿›å…¥å…³å¡æ—¶ï¼‰
+    DIALOG_GETREADY,                            // 38ï¼š
+    DIALOG_RESTARTCONFIRM,                      // 39ï¼šé‡æ–°å¼€å§‹æ¸¸æˆï¼ˆç»§ç»­æ¸¸æˆå¯¹è¯ä¸­é€‰æ‹©å¼€å§‹æ–°æ¸¸æˆæ—¶è§¦å‘ï¼‰
+    DIALOG_CONFIRMPURCHASE,                     // 40ï¼š
+    DIALOG_CONFIRMSELL,                         // 41ï¼š
+    DIALOG_TIMESUP,                             // 42ï¼š
+    DIALOG_VIRTUALHELP,                         // 43ï¼š
+    DIALOG_JUMPAHEAD,                           // 44ï¼š
+    DIALOG_CRAZY_DAVE,                          // 45ï¼š
+    DIALOG_STORE_PURCHASE,                      // 46ï¼šè´­ä¹°å•†å“ï¼ˆæˆ´å¤«å•†åº—ï¼‰
+    DIALOG_ZEN_SELL,                            // 47ï¼šå‡ºå”®ç›†æ ½æ¤ç‰©ï¼ˆç¦…å¢ƒèŠ±å›­ï¼‰
+    DIALOG_MESSAGE,                             // 48ï¼šé€šç”¨æ¶ˆæ¯å¯¹è¯ï¼ŒåŒ…æ‹¬ï¼šâ‘ åŠ è½½ä¸­ï¼ˆåˆ‡æ¢ç”¨æˆ·æ—¶è§¦å‘ï¼‰ï¼›â‘¡å°æ¸¸æˆç­‰æ¨¡å¼æœªè§£é”ï¼›â€¦â€¦
+    DIALOG_IMITATER,                            // 49ï¼šæ¨¡ä»¿è€…å¯¹è¯
+    DIALOG_PURCHASE_PACKET_SLOT,                // 50ï¼šå‡çº§å¡æ§½çš„æ ¼å­æ•°é‡
     NUM_DIALOGS
 };
 enum DebugTextMode
@@ -481,7 +481,7 @@ enum GridItemType
     GRIDITEM_PORTAL_SQUARE = 5,
     GRIDITEM_BRAIN = 6,
     GRIDITEM_SCARY_POT = 7,
-    GRIDITEM_SQUIRREL = 8,
+//  GRIDITEM_SQUIRREL = 8, // unused
     GRIDITEM_ZEN_TOOL = 9,
     GRIDITEM_STINKY = 10,
     GRIDITEM_RAKE = 11,
@@ -569,7 +569,7 @@ enum MessageStyle
     MESSAGE_STYLE_HINT_STAY,
     MESSAGE_STYLE_HINT_TALL_FAST,
     MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE,
-    //MESSAGE_STYLE_HINT_TALL_8SECONDS,// ½öÄÚ²â°æ
+    //MESSAGE_STYLE_HINT_TALL_8SECONDS,// ä»…å†…æµ‹ç‰ˆ
     MESSAGE_STYLE_HINT_TALL_LONG,
     MESSAGE_STYLE_BIG_MIDDLE,
     MESSAGE_STYLE_BIG_MIDDLE_FAST,
@@ -762,39 +762,38 @@ enum PottedPlantNeed
 };
 enum ProjectileMotion
 {
-    MOTION_STRAIGHT = 0,  // Ë®Æ½ÏòÓÒ
-    MOTION_LOBBED = 1,  // Å×ÎïÏß
-    MOTION_THREEPEATER = 2,  // Æ«×ªÏòÓÒ
+    MOTION_STRAIGHT = 0,  // æ°´å¹³å‘å³
+    MOTION_LOBBED = 1,  // æŠ›ç‰©çº¿
+    MOTION_THREEPEATER = 2,  // åè½¬å‘å³
     MOTION_BEE = 3,  // 
     MOTION_BEE_BACKWARDS = 4,  // 
-    MOTION_PUFF = 5,  // Ë®Æ½ÏòÓÒ£¨Ò»¶ÎÊ±¼äºóÏûÊ§£©
-    MOTION_BACKWARDS = 6,  // Ë®Æ½Ïò×ó
-    MOTION_STAR = 7,  // Ð±ÏòÔË¶¯
-    MOTION_FLOAT_OVER = 8,  // »ºÂýÆ¯¸¡ÏòÓÒ£¨ÎÞÅö×²£©
-    MOTION_HOMING = 9   // ×·×Ù
+    MOTION_PUFF = 5,  // æ°´å¹³å‘å³ï¼ˆä¸€æ®µæ—¶é—´åŽæ¶ˆå¤±ï¼‰
+    MOTION_BACKWARDS = 6,  // æ°´å¹³å‘å·¦
+    MOTION_STAR = 7,  // æ–œå‘è¿åŠ¨
+    MOTION_FLOAT_OVER = 8,  // ç¼“æ…¢æ¼‚æµ®å‘å³ï¼ˆæ— ç¢°æ’žï¼‰
+    MOTION_HOMING = 9   // è¿½è¸ª
 };
 enum ProjectileType
 {
-    PROJECTILE_PEA = 0,   // Íã¶¹
-    PROJECTILE_SNOWPEA = 1,   // ±ùÍã¶¹
-    PROJECTILE_CABBAGE = 2,   // ¾íÐÄ²Ë
-    PROJECTILE_MELON = 3,   // Î÷¹Ï
-    PROJECTILE_PUFF = 4,   // æß×Ó
-    PROJECTILE_WINTERMELON = 5,   // ±ù¹Ï
-    PROJECTILE_FIREBALL = 6,   // »ðÍã¶¹
-    PROJECTILE_STAR = 7,   // ÐÇÐÇ
-    PROJECTILE_SPIKE = 8,   // ¼â´Ì
-    PROJECTILE_BASKETBALL = 9,   // ÀºÇò
-    PROJECTILE_KERNEL = 10,  // ÓñÃ×Á£
-    PROJECTILE_COBBIG = 11,  // ÓñÃ×¼ÓÅ©ÅÚ
-    PROJECTILE_BUTTER = 12,  // »ÆÓÍ
-    PROJECTILE_ZOMBIE_PEA = 13,  // ½©Ê¬Íã¶¹
+    PROJECTILE_PEA = 0,   // è±Œè±†
+    PROJECTILE_SNOWPEA = 1,   // å†°è±Œè±†
+    PROJECTILE_CABBAGE = 2,   // å·å¿ƒèœ
+    PROJECTILE_MELON = 3,   // è¥¿ç“œ
+    PROJECTILE_PUFF = 4,   // å­¢å­
+    PROJECTILE_WINTERMELON = 5,   // å†°ç“œ
+    PROJECTILE_FIREBALL = 6,   // ç«è±Œè±†
+    PROJECTILE_STAR = 7,   // æ˜Ÿæ˜Ÿ
+    PROJECTILE_SPIKE = 8,   // å°–åˆº
+    PROJECTILE_BASKETBALL = 9,   // ç¯®çƒ
+    PROJECTILE_KERNEL = 10,  // çŽ‰ç±³ç²’
+    PROJECTILE_COBBIG = 11,  // çŽ‰ç±³åŠ å†œç‚®
+    PROJECTILE_BUTTER = 12,  // é»„æ²¹
+    PROJECTILE_ZOMBIE_PEA = 13,  // åƒµå°¸è±Œè±†
     NUM_PROJECTILES = 14
 };
-enum ReanimationType
-{
-    REANIM_NONE = -1,
-    REANIM_LOADBAR_SPROUT,
+enum ReanimationType : unsigned int {
+    REANIM_NONE = (unsigned int)-1,
+    REANIM_LOADBAR_SPROUT = 0,
     REANIM_LOADBAR_ZOMBIEHEAD,
     REANIM_SODROLL,
     REANIM_FINAL_WAVE,
@@ -1010,29 +1009,29 @@ enum SeedChooserState
 };
 enum SeedType
 {
-    SEED_PEASHOOTER = 0,                    // Íã¶¹ÉäÊÖ
-    SEED_SUNFLOWER = 1,                     // ÏòÈÕ¿û
-    SEED_CHERRYBOMB = 2,                    // Ó£ÌÒÕ¨µ¯
-    SEED_WALLNUT = 3,                       // ¼á¹û
-    SEED_POTATOMINE = 4,                    // ÍÁ¶¹µØÀ×
-    SEED_SNOWPEA = 5,                       // º®±ùÉäÊÖ
-    SEED_CHOMPER = 6,                       // ´ó×ì»¨
-    SEED_REPEATER = 7,                      // Ë«·¢ÉäÊÖ
-    SEED_PUFFSHROOM = 8,                    // Ð¡Åç¹½
-    SEED_SUNSHROOM = 9,                     // Ñô¹â¹½
-    SEED_FUMESHROOM = 10,                   // ´óÅç¹½
-    SEED_GRAVEBUSTER = 11,                  // Ä¹±®ÍÌÊÉÕß
-    SEED_HYPNOSHROOM = 12,                  // ÷È»ó¹½
-    SEED_SCAREDYSHROOM = 13,                // µ¨Ð¡¹½
-    SEED_ICESHROOM = 14,                    // º®±ù¹½
-    SEED_DOOMSHROOM = 15,                   // »ÙÃð¹½
-    SEED_LILYPAD = 16,                      // Ë¯Á«
-    SEED_SQUASH = 17,                       // ÎÑ¹Ï
-    SEED_THREEPEATER = 18,                  // ÈýÏßÉäÊÖ
-    SEED_TANGLEKELP = 19,                   // ²øÈÆº£²Ý
-    SEED_JALAPENO = 20,                     // »ð±¬À±½·
-    SEED_SPIKEWEED = 21,                    // µØ´Ì
-    SEED_TORCHWOOD = 22,                    // »ð¾æÊ÷×®
+    SEED_PEASHOOTER = 0,                    // è±Œè±†å°„æ‰‹
+    SEED_SUNFLOWER = 1,                     // å‘æ—¥è‘µ
+    SEED_CHERRYBOMB = 2,                    // æ¨±æ¡ƒç‚¸å¼¹
+    SEED_WALLNUT = 3,                       // åšæžœ
+    SEED_POTATOMINE = 4,                    // åœŸè±†åœ°é›·
+    SEED_SNOWPEA = 5,                       // å¯’å†°å°„æ‰‹
+    SEED_CHOMPER = 6,                       // å¤§å˜´èŠ±
+    SEED_REPEATER = 7,                      // åŒå‘å°„æ‰‹
+    SEED_PUFFSHROOM = 8,                    // å°å–·è‡
+    SEED_SUNSHROOM = 9,                     // é˜³å…‰è‡
+    SEED_FUMESHROOM = 10,                   // å¤§å–·è‡
+    SEED_GRAVEBUSTER = 11,                  // å¢“ç¢‘åžå™¬è€…
+    SEED_HYPNOSHROOM = 12,                  // é­…æƒ‘è‡
+    SEED_SCAREDYSHROOM = 13,                // èƒ†å°è‡
+    SEED_ICESHROOM = 14,                    // å¯’å†°è‡
+    SEED_DOOMSHROOM = 15,                   // æ¯ç­è‡
+    SEED_LILYPAD = 16,                      // ç¡èŽ²
+    SEED_SQUASH = 17,                       // çªç“œ
+    SEED_THREEPEATER = 18,                  // ä¸‰çº¿å°„æ‰‹
+    SEED_TANGLEKELP = 19,                   // ç¼ ç»•æµ·è‰
+    SEED_JALAPENO = 20,                     // ç«çˆ†è¾£æ¤’
+    SEED_SPIKEWEED = 21,                    // åœ°åˆº
+    SEED_TORCHWOOD = 22,                    // ç«ç‚¬æ ‘æ¡©
     SEED_TALLNUT = 23,
     SEED_SEASHROOM = 24,
     SEED_PLANTERN = 25,
@@ -1130,7 +1129,7 @@ enum StoreItem
     STORE_ITEM_PVZ,
     STORE_ITEM_INVALID = -1
 };
-enum StorePages
+enum StorePages : int
 {
     STORE_PAGE_SLOT_UPGRADES = 0,
     STORE_PAGE_PLANT_UPGRADES = 1,
@@ -1140,20 +1139,20 @@ enum StorePages
 };
 enum TodCurves
 {
-    CURVE_CONSTANT,             // ³£º¯ÊýÇúÏß
-    CURVE_LINEAR,               // ÏßÐÔÇúÏß
-    CURVE_EASE_IN,              // ¶þ´ÎÇúÏß£¨»ºÈë£©
-    CURVE_EASE_OUT,             // ¶þ´ÎÇúÏß£¨»º³ö£©
-    CURVE_EASE_IN_OUT,          // »ºÈë»º³öÇúÏß
-    CURVE_EASE_IN_OUT_WEAK,     // »ºÈë»º³öÇúÏß£¨Ð§¹û¼õÈõ£©
-    CURVE_FAST_IN_OUT,          // ¿ìÈë¿ì³öÇúÏß
-    CURVE_FAST_IN_OUT_WEAK,     // ¿ìÈë¿ì³öÇúÏß£¨Ð§¹û¼õÈõ£©
-    CURVE_WEAK_FAST_IN_OUT,     // ¡¾·ÏÆú¡¿Èõ¿ìÈë¿ì³öÇúÏß
-    CURVE_BOUNCE,               // µ¯ÌøÐ§¹ûÇúÏß
-    CURVE_BOUNCE_FAST_MIDDLE,   // µ¯ÌøÐ§¹ûÇúÏß£¨¼âÐÎ£©
-    CURVE_BOUNCE_SLOW_MIDDLE,   // µ¯ÌøÐ§¹ûÇúÏß£¨ÕÖÐÎ£©
-    CURVE_SIN_WAVE,             // ÕýÏÒÇúÏß
-    CURVE_EASE_SIN_WAVE         // »ºÈë»º³öµÄÕýÏÒÇúÏß
+    CURVE_CONSTANT,             // å¸¸å‡½æ•°æ›²çº¿
+    CURVE_LINEAR,               // çº¿æ€§æ›²çº¿
+    CURVE_EASE_IN,              // äºŒæ¬¡æ›²çº¿ï¼ˆç¼“å…¥ï¼‰
+    CURVE_EASE_OUT,             // äºŒæ¬¡æ›²çº¿ï¼ˆç¼“å‡ºï¼‰
+    CURVE_EASE_IN_OUT,          // ç¼“å…¥ç¼“å‡ºæ›²çº¿
+    CURVE_EASE_IN_OUT_WEAK,     // ç¼“å…¥ç¼“å‡ºæ›²çº¿ï¼ˆæ•ˆæžœå‡å¼±ï¼‰
+    CURVE_FAST_IN_OUT,          // å¿«å…¥å¿«å‡ºæ›²çº¿
+    CURVE_FAST_IN_OUT_WEAK,     // å¿«å…¥å¿«å‡ºæ›²çº¿ï¼ˆæ•ˆæžœå‡å¼±ï¼‰
+    CURVE_WEAK_FAST_IN_OUT,     // ã€åºŸå¼ƒã€‘å¼±å¿«å…¥å¿«å‡ºæ›²çº¿
+    CURVE_BOUNCE,               // å¼¹è·³æ•ˆæžœæ›²çº¿
+    CURVE_BOUNCE_FAST_MIDDLE,   // å¼¹è·³æ•ˆæžœæ›²çº¿ï¼ˆå°–å½¢ï¼‰
+    CURVE_BOUNCE_SLOW_MIDDLE,   // å¼¹è·³æ•ˆæžœæ›²çº¿ï¼ˆç½©å½¢ï¼‰
+    CURVE_SIN_WAVE,             // æ­£å¼¦æ›²çº¿
+    CURVE_EASE_SIN_WAVE         // ç¼“å…¥ç¼“å‡ºçš„æ­£å¼¦æ›²çº¿
 };
 enum TrialType
 {
@@ -1355,11 +1354,36 @@ enum ZombieType
 };
 
 //////////////////////////////
-enum AttachmentID { ATTACHMENTID_NULL };
-enum CoinID { COINID_NULL };
-enum ParticleID { PARTICLEID_NULL };
-enum ParticleEmitterID { PARTICLEEMITTERID_NULL };
-enum ParticleSystemID { PARTICLESYSTEMID_NULL };
-enum PlantID { PLANTID_NULL };
-enum ReanimationID { REANIMATIONID_NULL };
-enum ZombieID { ZOMBIEID_NULL };
+// Enums are not supposed to have invalid values, a typedef is much more appropriate
+//typedef unsigned int AttachmentID;
+//const AttachmentID ATTACHMENTID_NULL = 0;
+//
+//typedef unsigned int CoinID;
+//const CoinID COINID_NULL = 0;
+//
+//typedef unsigned int ParticleID;
+//const ParticleID PARTICLEID_NULL = 0;
+//
+//typedef unsigned int ParticleEmitterID;
+//const ParticleEmitterID PARTICLEEMITTERID_NULL = 0;
+//
+//typedef unsigned int ParticleSystemID;
+//const ParticleSystemID PARTICLESYSTEMID_NULL = 0;
+//
+//typedef unsigned int PlantID;
+//const PlantID PLANTID_NULL = 0;
+//
+//typedef unsigned int ReanimationID;
+//const ReanimationID REANIMATIONID_NULL = 0;
+//
+//typedef unsigned int ZombieID;
+//const ZombieID ZOMBIEID_NULL = 0;
+
+enum AttachmentID      : int { ATTACHMENTID_NULL };
+enum CoinID            : unsigned int { COINID_NULL };
+enum ParticleID        : unsigned int { PARTICLEID_NULL };
+enum ParticleEmitterID : unsigned int { PARTICLEEMITTERID_NULL };
+enum ParticleSystemID  : unsigned int { PARTICLESYSTEMID_NULL };
+enum PlantID           : unsigned int { PLANTID_NULL };
+enum ReanimationID     : unsigned int { REANIMATIONID_NULL };
+enum ZombieID          : unsigned int { ZOMBIEID_NULL };

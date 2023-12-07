@@ -198,7 +198,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
                 SeedType::SEED_CHOMPER
             };
             
-            SeedType aSeedType = (SeedType)TodPickFromArray((int*)aSeedList, LENGTH(aSeedList));
+            SeedType aSeedType = (SeedType)TodPickFromArray((intptr_t*)aSeedList, LENGTH(aSeedList));
             mPottedPlantSpec.InitializePottedPlant(aSeedType);
         }
         else if (mBoard->mBackground == BackgroundType::BACKGROUND_2_NIGHT)
@@ -214,7 +214,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
                 SeedType::SEED_DOOMSHROOM
             };
 
-            SeedType aSeedType = (SeedType)TodPickFromArray((int*)aSeedList, LENGTH(aSeedList));
+            SeedType aSeedType = (SeedType)TodPickFromArray((intptr_t*)aSeedList, LENGTH(aSeedList));
             mPottedPlantSpec.InitializePottedPlant(aSeedType);
         }
         else if (mBoard->mBackground == BackgroundType::BACKGROUND_3_POOL)
@@ -230,7 +230,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
                 SeedType::SEED_TALLNUT
             };
 
-            SeedType aSeedType = (SeedType)TodPickFromArray((int*)aSeedList, LENGTH(aSeedList));
+            SeedType aSeedType = (SeedType)TodPickFromArray((intptr_t*)aSeedList, LENGTH(aSeedList));
             mPottedPlantSpec.InitializePottedPlant(aSeedType);
         }
         else if (mBoard->mBackground == BackgroundType::BACKGROUND_4_FOG)
@@ -246,7 +246,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
                 SeedType::SEED_MAGNETSHROOM
             };
 
-            SeedType aSeedType = (SeedType)TodPickFromArray((int*)aSeedList, LENGTH(aSeedList));
+            SeedType aSeedType = (SeedType)TodPickFromArray((intptr_t*)aSeedList, LENGTH(aSeedList));
             mPottedPlantSpec.InitializePottedPlant(aSeedType);
         }
         else if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF)
@@ -260,7 +260,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
                 SeedType::SEED_MELONPULT
             };
 
-            SeedType aSeedType = (SeedType)TodPickFromArray((int*)aSeedList, LENGTH(aSeedList));
+            SeedType aSeedType = (SeedType)TodPickFromArray((intptr_t*)aSeedList, LENGTH(aSeedList));
             mPottedPlantSpec.InitializePottedPlant(aSeedType);
         }
         else
@@ -1382,7 +1382,7 @@ void Coin::DroppedUsableSeed()
 
     if (mTimesDropped == 0)
     {
-        mDisappearCounter = min(mDisappearCounter, 1200);
+        mDisappearCounter = std::min(mDisappearCounter, 1200);
     }
 
     mTimesDropped++;
@@ -1391,6 +1391,7 @@ void Coin::DroppedUsableSeed()
 //0x432C00
 void Coin::MouseDown(int x, int y, int theClickCount)
 {
+    (void)x;(void)y;
     if (mBoard == nullptr || mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mDead)
     {
         return;

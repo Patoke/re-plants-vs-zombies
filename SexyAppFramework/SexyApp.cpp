@@ -1,17 +1,12 @@
 #include "SexyApp.h"
 
 //#include "..\Crypt\RegKey.h"
-#include "SEHCatcher.h"
+#include "misc/SEHCatcher.h"
 //#include "InternetManager.h"
 #include <time.h>
 #include <fstream>
 #include <direct.h>
 //#include "BetaSupport.h"
-
-#ifdef ZYLOM
-#include "zylomso.h"
-using namespace zylom::zylomso;
-#endif
 
 using namespace Sexy;
 
@@ -62,13 +57,14 @@ SexyApp::SexyApp()
 
 SexyApp::~SexyApp()
 {
-	delete mBetaSupport;
-	delete mInternetManager;
+	//delete mBetaSupport;
+	//delete mInternetManager;
 }
 
+/*
 bool SexyApp::Validate(const std::string& theUserName, const std::string& theRegCode)
 {
-	/*BigInt n("42BF94023BBA6D040C8B81D9");
+	BigInt n("42BF94023BBA6D040C8B81D9");
 	BigInt e("11");
 
 	ulong i;
@@ -110,9 +106,9 @@ bool SexyApp::Validate(const std::string& theUserName, const std::string& theReg
 	BigInt aSignature = KeyToInt(theRegCode);
 	BigInt aHashTest = aSignature.ModPow(e, n);
 
-	return aHashTest == aHash;*/
-	return true;
+	return aHashTest == aHash;
 }
+*/
 
 void SexyApp::ReadFromRegistry()
 {
@@ -221,7 +217,7 @@ void SexyApp::ReadFromRegistry()
 	
 	RegistryReadString("RegCode", &mRegCode);		
 
-	mIsRegistered |= Validate(mRegUserName, mRegCode);	
+	mIsRegistered |= true /*Validate(mRegUserName, mRegCode)*/;	
 
 	// Override registry values with partner.xml values
 	mRegisterLink = GetString("RegisterLink", mRegisterLink);
@@ -433,6 +429,7 @@ bool SexyApp::OpenRegisterPage()
 	return OpenRegisterPage(aStatsMap);
 }
 
+/*
 bool SexyApp::CheckSignature(const Buffer& theBuffer, const std::string& theFileName)
 {
 #ifdef _DEBUG
@@ -441,7 +438,7 @@ bool SexyApp::CheckSignature(const Buffer& theBuffer, const std::string& theFile
 	return true;
 #endif
 
-	/*if (mSkipSignatureChecks)
+	if (mSkipSignatureChecks)
 		return true;
 
 	char aSigStr[25];
@@ -486,9 +483,9 @@ bool SexyApp::CheckSignature(const Buffer& theBuffer, const std::string& theFile
 	BigInt aSignature(aSigStr);
 	BigInt aHashTest = aSignature.ModPow(e, n);
 
-	return aHashTest == aHash;*/
-	return true;
+	return aHashTest == aHash;
 }
+*/
 
 void SexyApp::PreTerminate()
 {
@@ -538,7 +535,7 @@ std::string SexyApp::GetGameSEHInfo()
 	sprintf(aGamesPlayedStr, "%d", mTimesPlayed);
 
 	std::string anInfoString = SexyAppBase::GetGameSEHInfo() + 
-		"Times Played: " + std::string(aGamesPlayedStr) + "\r\n";
+		"Times Played: " + std::string(aGamesPlayedStr) + "\r\n" +
 		"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
 		"Build Date: " + mBuildDate + "\r\n";
 

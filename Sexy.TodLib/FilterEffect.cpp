@@ -1,15 +1,15 @@
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "FilterEffect.h"
-#include "../SexyAppFramework/MemoryImage.h"
+#include "graphics/MemoryImage.h"
 
 //0x446B80
 void RGB_to_HSL(float r, float g, float b, float& h, float& s, float& l)
 {
-	float maxval = max(r, g);
-	maxval = max(maxval, b);
-	float minval = min(r, g);
-	minval = min(minval, b);
+	float maxval = std::max(r, g);
+	maxval = std::max(maxval, b);
+	float minval = std::min(r, g);
+	minval = std::min(minval, b);
 
 	l = (minval + maxval) / 2;  //luminosity
 	if (l <= 0.0f)
@@ -154,6 +154,9 @@ MemoryImage* FilterEffectCreateImage(Image* theImage, FilterEffect theFilterEffe
 	case FilterEffect::FILTER_EFFECT_WASHED_OUT:		FilterEffectDoWashedOut(aImage);		break;
 	case FilterEffect::FILTER_EFFECT_LESS_WASHED_OUT:	FilterEffectDoLessWashedOut(aImage);	break;
 	case FilterEffect::FILTER_EFFECT_WHITE:				FilterEffectDoWhite(aImage);			break;
+	case FilterEffect::NUM_FILTER_EFFECTS:
+	case FilterEffect::FILTER_EFFECT_NONE:
+		break;
 	}
 
 	aImage->mBitsChangedCount++;

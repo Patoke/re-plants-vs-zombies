@@ -4,8 +4,8 @@
 #include "../../ConstEnums.h"
 #include "../System/PlayerInfo.h"
 #include "../../Sexy.TodLib/DataArray.h"
-#include "../../SexyAppFramework/Dialog.h"
-using namespace std;
+#include "widget/Dialog.h"
+//using namespace std;
 using namespace Sexy;
 
 #define MAX_PAGE_SPOTS 8
@@ -32,7 +32,7 @@ public:
 	NewLawnButton*				mNextButton;                    //+0x15C
     Widget*                     mOverlayWidget;                 //+0x160
 	int                         mStoreTime;                     //+0x164
-	string                      mBubbleText;                    //+0x168
+	std::string                      mBubbleText;                    //+0x168
     int                         mBubbleCountDown;               //+0x184
     bool                        mBubbleClickToContinue;         //+0x188
     int                         mAmbientSpeechCountDown;        //+0x18C

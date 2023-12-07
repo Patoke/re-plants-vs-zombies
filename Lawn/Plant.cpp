@@ -460,6 +460,8 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
     case SeedType::SEED_TANGLEKELP:
         TOD_ASSERT(aBodyReanim);
         aBodyReanim->SetTruncateDisappearingFrames();
+    default:
+        break;
     }
     
     if ((mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BIG_TIME) &&
@@ -1018,7 +1020,7 @@ void Plant::UpdateProductionPlant()
     if (mLaunchCounter <= 100)
     {
         int aFlashCountdown = TodAnimateCurve(100, 0, mLaunchCounter, 0, 100, TodCurves::CURVE_LINEAR);
-        mEatenFlashCountdown = max(mEatenFlashCountdown, aFlashCountdown);
+        mEatenFlashCountdown = std::max(mEatenFlashCountdown, aFlashCountdown);
     }
     if (mLaunchCounter <= 0)
     {
@@ -1463,7 +1465,7 @@ Zombie* Plant::FindSquashTarget()
                     if (aZombie->IsWalkingBackwards() || aZombieRect.mX + aZombieRect.mWidth >= aPlantX)
                     {
                         if (mBoard->ZombieGetID(aZombie) == mTargetZombieID)
-                            return aZombie;  // ÊÇËø¶¨µÄÄ¿±ê½©Ê¬£¬ÔòÖ±½Ó·µ»Ø¸Ã½©Ê¬
+                            return aZombie;  // æ˜¯é”å®šçš„ç›®æ ‡åƒµå°¸ï¼Œåˆ™ç›´æ¥è¿”å›è¯¥åƒµå°¸
 
                         if (aClosestZombie == nullptr || aRange < aClosestRange)
                         {
@@ -2017,6 +2019,8 @@ bool Plant::DrawMagnetItemsOnTop()
 
         return false;
     }
+
+    return false;
 }
 
 //0x461D90
@@ -2141,7 +2145,7 @@ void Plant::UpdateMagnetShroom()
             {
                 int aDiffX = abs(aGridItem->mGridX - mPlantCol);
                 int aDiffY = abs(aGridItem->mGridY - mRow);
-                int aSquareDistance = max(aDiffX, aDiffY);
+                int aSquareDistance = std::max(aDiffX, aDiffY);
                 if (aSquareDistance <= 2)
                 {
                     float aDistance = aSquareDistance + aDiffY * 0.05f;
@@ -3569,6 +3573,8 @@ float PlantFlowerPotHeightOffset(SeedType theSeedType, float theFlowerPotScale)
     case SeedType::SEED_INSTANT_COFFEE:
         aScaleOffsetFix -= 20.0f;
         break;
+    default:
+        break;
     }
 
     return aHeightOffset + (theFlowerPotScale * aScaleOffsetFix - aScaleOffsetFix);
@@ -4305,20 +4311,21 @@ void Plant::BurnRow(int theRow)
     Zombie* aBossZombie = mBoard->GetBossZombie();
     if (aBossZombie && aBossZombie->mFireballRow == theRow)
     {
-        // ×¢£ºÔ­°æÖĞ½« Zombie::BossDestroyIceballInRow(int) º¯Êı¸ÄÎªÁË Zombie::BossDestroyIceball()£¬±ùÇòÊÇ·ñÎ»ÓÚÄ¿±êĞĞµÄÅĞ¶ÏÔòÒÆ¶¯ÖÁ´Ë´¦½øĞĞ
-        aBossZombie->BossDestroyIceballInRow(theRow);
+        // æ³¨ï¼šåŸç‰ˆä¸­å°† Zombie::BossDestroyIceballInRow(int) å‡½æ•°æ”¹ä¸ºäº† Zombie::BossDestroyIceball()ï¼Œå†°çƒæ˜¯å¦ä½äºç›®æ ‡è¡Œçš„åˆ¤æ–­åˆ™ç§»åŠ¨è‡³æ­¤å¤„è¿›è¡Œ
+        aBossZombie->BossDestroyIceballInRow();
     }
 }
 
 //0x4665B0
-void Plant::BlowAwayFliers(int theX, int theRow)
+void Plant::BlowAwayFliers()
 {
     Zombie* aZombie = nullptr;
     while (mBoard->IterateZombies(aZombie))
     {
         if (!aZombie->IsDeadOrDying())
         {
-            Rect aZombieRect = aZombie->GetZombieRect();
+            // Verified as a pure function, safe to remove
+            // Rect aZombieRect = aZombie->GetZombieRect();
             if (aZombie->IsFlying())
             {
                 aZombie->mBlowingAway = true;
@@ -4358,7 +4365,7 @@ void Plant::DoSpecial()
         if (mState != PlantState::STATE_DOINGSPECIAL)
         {
             mState = PlantState::STATE_DOINGSPECIAL;
-            BlowAwayFliers(mX, mRow);
+            BlowAwayFliers();
         }
         break;
     }
@@ -4455,6 +4462,8 @@ void Plant::DoSpecial()
 
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -4916,7 +4925,7 @@ Zombie* Plant::FindTargetZombie(int theRow, PlantWeapon thePlantWeapon)
                 if (aZombie->mZombieType == ZombieType::ZOMBIE_POLEVAULTER)
                 {
                     aAttackRect.mX += 40;
-                    aAttackRect.mWidth -= 40;  // Ô­°æ¾­µäÍÁ¶¹µØÀ× Bug ¼°¡°ËÄ³Å¸ËÒıÀ×¡±µÄÔ­Àí
+                    aAttackRect.mWidth -= 40;  // åŸç‰ˆç»å…¸åœŸè±†åœ°é›· Bug åŠâ€œå››æ’‘æ†å¼•é›·â€çš„åŸç†
                 }
 
                 if (aZombie->mZombieType == ZombieType::ZOMBIE_BUNGEE && aZombie->mTargetCol != mPlantCol)
@@ -4950,7 +4959,7 @@ Zombie* Plant::FindTargetZombie(int theRow, PlantWeapon thePlantWeapon)
                 aWeight = -Distance2D(mX + 40.0f, mY + 40.0f, aZombieRect.mX + aZombieRect.mWidth / 2, aZombieRect.mY + aZombieRect.mHeight / 2);
                 if (aZombie->IsFlying())
                 {
-                    aWeight += 10000;  // ÓÅÏÈ¹¥»÷·ÉĞĞµ¥Î»
+                    aWeight += 10000;  // ä¼˜å…ˆæ”»å‡»é£è¡Œå•ä½
                 }
             }
 
@@ -4981,7 +4990,7 @@ int Plant::DistanceToClosestZombie()
             int aDistance = -GetRectOverlap(aAttackRect, aZombieRect);
             if (aDistance < aClosestDistance)
             {
-                aClosestDistance = max(aDistance, 0);
+                aClosestDistance = std::max(aDistance, 0);
             }
         }
     }

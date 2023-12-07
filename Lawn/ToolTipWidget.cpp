@@ -2,7 +2,7 @@
 #include "ToolTipWidget.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/TodCommon.h"
-#include "../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;
@@ -68,15 +68,15 @@ void ToolTipWidget::CalculateSize()
 
 	int aTitleWidth = FONT_TINYBOLD->StringWidth(mTitle);
 	int aWarningWidth = FONT_PICO129->StringWidth(mWarningText);
-	int aMaxWidth = max(aTitleWidth, aWarningWidth);
+	int aMaxWidth = std::max(aTitleWidth, aWarningWidth);
 
-	mGetsLinesWidth = max(aMaxWidth - 30, 100);
+	mGetsLinesWidth = std::max(aMaxWidth - 30, 100);
 	GetLines(aLines);
 
-	for (int i = 0; i < aLines.size(); i++)
+	for (size_t i = 0; i < aLines.size(); i++)
 	{
 		int aLineWidth = FONT_PICO129->StringWidth(aLines[i]);
-		aMaxWidth = max(aMaxWidth, aLineWidth);
+		aMaxWidth = std::max(aMaxWidth, aLineWidth);
 	}
 
 	int aHeight = 6;
@@ -181,7 +181,7 @@ void ToolTipWidget::Draw(Graphics* g)
 	GetLines(aLines);
 
 	g->SetFont(FONT_PICO129);
-	for (int i = 0; i < aLines.size(); i++)
+	for (size_t i = 0; i < aLines.size(); i++)
 	{
 		SexyString aLine = aLines[i];
 		g->DrawString(aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());

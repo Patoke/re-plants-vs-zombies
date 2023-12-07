@@ -2,8 +2,8 @@
 #include "TodCommon.h"
 #include "Reanimator.h"
 #include "ReanimAtlas.h"
-#include "../SexyAppFramework/PerfTimer.h"
-#include "../SexyAppFramework/MemoryImage.h"
+#include "misc/PerfTimer.h"
+#include "graphics/MemoryImage.h"
 
 //0x470250
 ReanimAtlas::ReanimAtlas()
@@ -24,10 +24,10 @@ void ReanimAtlas::ReanimAtlasDispose()
 
 ReanimAtlasImage* ReanimAtlas::GetEncodedReanimAtlas(Image* theImage)
 {
-	if (theImage == nullptr || (int)theImage > 1000)
+	if (theImage == nullptr || (intptr_t)theImage > 1000)
 		return nullptr;
 
-	int aAtlasIndex = (int)theImage - 1;
+	intptr_t aAtlasIndex = (intptr_t)theImage - 1;
 	TOD_ASSERT(aAtlasIndex >= 0 && aAtlasIndex < mImageCount);
 	return &mImageArray[aAtlasIndex];
 }
@@ -63,7 +63,7 @@ bool sSortByNonIncreasingHeight(const ReanimAtlasImage& image1, const ReanimAtla
 	else if (image1.mWidth != image2.mWidth)
 		return image1.mWidth > image2.mWidth;
 	else
-		return (unsigned int)&image1 > (unsigned int)&image2;
+		return (uintptr_t)&image1 > (uintptr_t)&image2;
 }
 
 static int GetClosestPowerOf2Above(int theNum)
@@ -88,8 +88,8 @@ int ReanimAtlas::PickAtlasWidth()
 			aMaxWidth = aImage->mWidth + 2;
 	}
 
-	int aWidth = FloatRoundToInt(sqrt(totalArea));  // ¼Ù¶¨ÎªÕı·½ÏòÇøÓòÊ±£¬Õı·½ÏòµÄ±ß³¤
-	return GetClosestPowerOf2Above(min(max(aWidth, aMaxWidth), 2048));  // È¡¡°±ß³¤¡±ºÍ¡°×î¿íÌùÍ¼µÄ¿í¶È¡±µÄ½Ï´óÖµ£¨ÇÒ²»³¬¹ı 2048£©£¬²¢ÏòÉÏÈ¡ÖÁ 2 µÄÕûÊı´ÎÃİ
+	int aWidth = FloatRoundToInt(sqrt(totalArea));  // å‡å®šä¸ºæ­£æ–¹å‘åŒºåŸŸæ—¶ï¼Œæ­£æ–¹å‘çš„è¾¹é•¿
+	return GetClosestPowerOf2Above(std::min(std::max(aWidth, aMaxWidth), 2048));  // å–â€œè¾¹é•¿â€å’Œâ€œæœ€å®½è´´å›¾çš„å®½åº¦â€çš„è¾ƒå¤§å€¼ï¼ˆä¸”ä¸è¶…è¿‡ 2048ï¼‰ï¼Œå¹¶å‘ä¸Šå–è‡³ 2 çš„æ•´æ•°æ¬¡å¹‚
 }
 
 //0x470420
@@ -98,10 +98,10 @@ bool ReanimAtlas::ImageFits(int theImageCount, const Rect& rectTest, int theMaxW
 	if (rectTest.mX + rectTest.mWidth > theMaxWidth)
 		return false;
 
-	for (int i = 0; i < theImageCount; i++)  // ±éÀúÌùÍ¼Êı×éµÄÇ° theImageCount ¸öÌùÍ¼£¬ÅĞ¶Ï¸ø¶¨¾ØĞÎÊÇ·ñÓëÄ³ÌùÍ¼Õ¼ÓÃµÄÇøÓòÓĞ³åÍ»
+	for (int i = 0; i < theImageCount; i++)  // éå†è´´å›¾æ•°ç»„çš„å‰ theImageCount ä¸ªè´´å›¾ï¼Œåˆ¤æ–­ç»™å®šçŸ©å½¢æ˜¯å¦ä¸æŸè´´å›¾å ç”¨çš„åŒºåŸŸæœ‰å†²çª
 	{
 		ReanimAtlasImage* aImage = &mImageArray[i];
-		if (Rect(aImage->mX, aImage->mY, aImage->mWidth, aImage->mHeight).Inflate(1, 1).Intersects(rectTest))  // ÌùÍ¼Õ¼ÓÃÇøÓòÎª×ÔÉíÇøÓò¼°ÏòÍâÑÓÉì 1 ÏñËØ
+		if (Rect(aImage->mX, aImage->mY, aImage->mWidth, aImage->mHeight).Inflate(1, 1).Intersects(rectTest))  // è´´å›¾å ç”¨åŒºåŸŸä¸ºè‡ªèº«åŒºåŸŸåŠå‘å¤–å»¶ä¼¸ 1 åƒç´ 
 			return false;
 	}
 	return true;
@@ -117,18 +117,18 @@ bool ReanimAtlas::ImageFindPlaceOnSide(ReanimAtlasImage* theAtlasImageToPlace, i
 	for (int i = 0; i < theImageCount; i++)
 	{
 		ReanimAtlasImage* aImage = &mImageArray[i];
-		if (theToRight)  // Èç¹û¹æ¶¨ÁË¾ÓÓÒ
+		if (theToRight)  // å¦‚æœè§„å®šäº†å±…å³
 		{
 			rectTest.mX = aImage->mX + aImage->mWidth + 1;
 			rectTest.mY = aImage->mY;
 		}
-		else  // ·ñÔò¾ÓÓÚÏÂ·½
+		else  // å¦åˆ™å±…äºä¸‹æ–¹
 		{
 			rectTest.mX = aImage->mX;
 			rectTest.mY = aImage->mY + aImage->mHeight + 1;
 		}
 
-		if (ImageFits(theImageCount, rectTest, theMaxWidth))  // Èç¹ûÍ¼Æ¬ÄÜ¹»·ÅµÃÏÂ
+		if (ImageFits(theImageCount, rectTest, theMaxWidth))  // å¦‚æœå›¾ç‰‡èƒ½å¤Ÿæ”¾å¾—ä¸‹
 		{
 			theAtlasImageToPlace->mX = rectTest.mX;
 			theAtlasImageToPlace->mY = rectTest.mY;
@@ -148,7 +148,7 @@ bool ReanimAtlas::ImageFindPlace(ReanimAtlasImage* theAtlasImageToPlace, int the
 {
 	return 
 		ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, true) || 
-		ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, false);  // ·Ö±ğ³¢ÊÔÔÚ¾ÓÓÒºÍ¾ÓÏÂµÄÎ»ÖÃ·ÅÖÃÍ¼Æ¬
+		ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, false);  // åˆ†åˆ«å°è¯•åœ¨å±…å³å’Œå±…ä¸‹çš„ä½ç½®æ”¾ç½®å›¾ç‰‡
 }
 
 bool ReanimAtlas::PlaceAtlasImage(ReanimAtlasImage* theAtlasImageToPlace, int theImageCount, int theMaxWidth)
@@ -170,7 +170,7 @@ bool ReanimAtlas::PlaceAtlasImage(ReanimAtlasImage* theAtlasImageToPlace, int th
 //0x470580
 void ReanimAtlas::ArrangeImages(int& theAtlasWidth, int& theAtlasHeight)
 {
-	std::sort(mImageArray, mImageArray + mImageCount, sSortByNonIncreasingHeight);  // ½«ËùÓĞÍ¼¼¯Í¼Æ¬°´¸ß¶È½µĞòÅÅĞò
+	std::sort(mImageArray, mImageArray + mImageCount, sSortByNonIncreasingHeight);  // å°†æ‰€æœ‰å›¾é›†å›¾ç‰‡æŒ‰é«˜åº¦é™åºæ’åº
 	theAtlasWidth = PickAtlasWidth();
 	theAtlasHeight = 0;
 
@@ -180,12 +180,12 @@ void ReanimAtlas::ArrangeImages(int& theAtlasWidth, int& theAtlasHeight)
 		PlaceAtlasImage(aImage, i, theAtlasWidth);
 
 		/* 
-			´Ë´¦Ô­Îª¡°theAtlasHeight = max(GetClosestPowerOf2Above(aImage->mY + aImage->mHeight), theAtlasHeight);¡±
-			ÕâÑùÔÚ max ºêÕ¹¿ªÊ±£¬»áµ¼ÖÂ GetClosestPowerOf2Above(aImage->mY + aImage->mHeight) ±»ÖØ¸´¼ÆËã£¬¹ÊÉÔ×÷ĞŞ¸Ä
+			æ­¤å¤„åŸä¸ºâ€œtheAtlasHeight = max(GetClosestPowerOf2Above(aImage->mY + aImage->mHeight), theAtlasHeight);â€
+			è¿™æ ·åœ¨ max å®å±•å¼€æ—¶ï¼Œä¼šå¯¼è‡´ GetClosestPowerOf2Above(aImage->mY + aImage->mHeight) è¢«é‡å¤è®¡ç®—ï¼Œæ•…ç¨ä½œä¿®æ”¹
 		*/ 
 
 		int aImageHeight = GetClosestPowerOf2Above(aImage->mY + aImage->mHeight);
-		theAtlasHeight = max(aImageHeight, theAtlasHeight);
+		theAtlasHeight = std::max(aImageHeight, theAtlasHeight);
 	}
 }
 
@@ -217,32 +217,32 @@ void ReanimAtlas::ReanimAtlasCreate(ReanimatorDefinition* theReanimDef)
 	PerfTimer aTimer;
 	aTimer.Start();
 
-	for (int aTrackIndex = 0; aTrackIndex < theReanimDef->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < theReanimDef->mTracks.count; aTrackIndex++)
 	{
-		ReanimatorTrack* aTrack = &theReanimDef->mTracks[aTrackIndex];
-		for (int aKeyIndex = 0; aKeyIndex < aTrack->mTransformCount; aKeyIndex++)  // ±éÀúÃ¿Ò»Ö¡ÉÏµÄÌùÍ¼
+		ReanimatorTrack* aTrack = &theReanimDef->mTracks.tracks[aTrackIndex];
+		for (int aKeyIndex = 0; aKeyIndex < aTrack->mTransforms.count; aKeyIndex++)  // éå†æ¯ä¸€å¸§ä¸Šçš„è´´å›¾
 		{
-			Image* aImage = aTrack->mTransforms[aKeyIndex].mImage;
-			// Èç¹û´æÔÚÌùÍ¼£¬ÇÒÌùÍ¼µÄ¿í¡¢¸ß¾ù²»´óÓÚ 254 ÏñËØ£¬ÇÒÏàÍ¬µÄÌùÍ¼Î´¼ÓÈëÖÁÍ¼¼¯Í¼Æ¬Êı×éÖĞ
+			Image* aImage = aTrack->mTransforms.mTransforms[aKeyIndex].mImage;
+			// å¦‚æœå­˜åœ¨è´´å›¾ï¼Œä¸”è´´å›¾çš„å®½ã€é«˜å‡ä¸å¤§äº 254 åƒç´ ï¼Œä¸”ç›¸åŒçš„è´´å›¾æœªåŠ å…¥è‡³å›¾é›†å›¾ç‰‡æ•°ç»„ä¸­
 			if (aImage != nullptr && aImage->mWidth <= 254 && aImage->mHeight <= 254 && FindImage(aImage) < 0)
-				AddImage(aImage);  // ÏÈ½«Æä¼ÓÈëÊı×éÖĞ£¬ºóĞøÔÙÈ·¶¨ÆäÎ»ÓÚÍ¼¼¯ÖĞµÄÎ»ÖÃ
+				AddImage(aImage);  // å…ˆå°†å…¶åŠ å…¥æ•°ç»„ä¸­ï¼Œåç»­å†ç¡®å®šå…¶ä½äºå›¾é›†ä¸­çš„ä½ç½®
 		}
 	}
 
 	int aAtlasWidth, aAtlasHeight;
 	ArrangeImages(aAtlasWidth, aAtlasHeight);
 
-	for (int aTrackIndex = 0; aTrackIndex < theReanimDef->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < theReanimDef->mTracks.count; aTrackIndex++)
 	{
-		ReanimatorTrack* aTrack = &theReanimDef->mTracks[aTrackIndex];
-		for (int aKeyIndex = 0; aKeyIndex < aTrack->mTransformCount; aKeyIndex++)  // ±éÀúÃ¿Ò»Ö¡ÉÏµÄÌùÍ¼
+		ReanimatorTrack* aTrack = &theReanimDef->mTracks.tracks[aTrackIndex];
+		for (int aKeyIndex = 0; aKeyIndex < aTrack->mTransforms.count; aKeyIndex++)  // éå†æ¯ä¸€å¸§ä¸Šçš„è´´å›¾
 		{
-			Image*& aImage = aTrack->mTransforms[aKeyIndex].mImage;
+			Image*& aImage = aTrack->mTransforms.mTransforms[aKeyIndex].mImage;
 			if (aImage != nullptr && aImage->mWidth <= 254 && aImage->mHeight <= 254)
 			{
-				int aImageIndex = FindImage(aImage);
+				intptr_t aImageIndex = FindImage(aImage);
 				TOD_ASSERT(aImageIndex >= 0);
-				aImage = (Image*)(aImageIndex + 1);  // ¡ï ½«Í¼Æ¬ÔÚÊı×éÖĞµÄĞòºÅ×÷Îª Image* ĞŞ¸Ä¶¯»­¶¨Òå
+				aImage = (Image*)(aImageIndex + 1);  // â˜… å°†å›¾ç‰‡åœ¨æ•°ç»„ä¸­çš„åºå·ä½œä¸º Image* ä¿®æ”¹åŠ¨ç”»å®šä¹‰
 			}
 		}
 	}
@@ -252,7 +252,7 @@ void ReanimAtlas::ReanimAtlasCreate(ReanimatorDefinition* theReanimDef)
 	for (int aImageIndex = 0; aImageIndex < mImageCount; aImageIndex++)
 	{
 		ReanimAtlasImage* aImage = &mImageArray[aImageIndex];
-		aMemoryGraphis.DrawImage(aImage->mOriginalImage, aImage->mX, aImage->mY);  // ½«Ô­ÌùÍ¼»æÖÆÔÚÍ¼¼¯ÉÏ
+		aMemoryGraphis.DrawImage(aImage->mOriginalImage, aImage->mX, aImage->mY);  // å°†åŸè´´å›¾ç»˜åˆ¶åœ¨å›¾é›†ä¸Š
 	}
-	FixPixelsOnAlphaEdgeForBlending(mMemoryImage);  // ½«ËùÓĞÍ¸Ã÷ÏñËØµÄÑÕÉ«ĞŞÕıÎªÆäÖÜÎ§ÏñËØÑÕÉ«µÄÆ½¾ùÖµ
+	FixPixelsOnAlphaEdgeForBlending(mMemoryImage);  // å°†æ‰€æœ‰é€æ˜åƒç´ çš„é¢œè‰²ä¿®æ­£ä¸ºå…¶å‘¨å›´åƒç´ é¢œè‰²çš„å¹³å‡å€¼
 }

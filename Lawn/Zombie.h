@@ -176,10 +176,10 @@ public:
     void                            DieNoLoot();
     /*inline*/ void                 DieWithLoot();
     void                            Draw(Graphics* g);
-    void                            DrawZombie(Graphics* g, const ZombieDrawPosition& theDrawPos);
-    void                            DrawZombieWithParts(Graphics* g, const ZombieDrawPosition& theDrawPos);
+//  void                            DrawZombie(Graphics* g, const ZombieDrawPosition& theDrawPos);
+//  void                            DrawZombieWithParts(Graphics* g, const ZombieDrawPosition& theDrawPos);
     void                            DrawZombiePart(Graphics* g, Image* theImage, int theFrame, int theRow, const ZombieDrawPosition& theDrawPos);
-    void                            DrawBungeeCord(Graphics* g, int theOffsetX, int theOffsetY);
+    void                            DrawBungeeCord(Graphics* g, int theOffsetX);
     void                            TakeDamage(int theDamage, unsigned int theDamageFlags);
     /*inline*/ void                 SetRow(int theRow);
     float                           GetPosYBasedOnRow(int theRow);
@@ -311,8 +311,8 @@ public:
     void                            SetAnimRate(float theAnimRate);
     void                            ApplyAnimRate(float theAnimRate);
     /*inline*/ bool                 IsDeadOrDying();
-    void                            DrawDancerReanim(Graphics* g, const ZombieDrawPosition& theDrawPos);
-    void                            DrawBungeeReanim(Graphics* g, const ZombieDrawPosition& theDrawPos);
+    void                            DrawDancerReanim(Graphics* g);
+    void                            DrawBungeeReanim(Graphics* g);
     void                            DrawBungeeTarget(Graphics* g);
     void                            BungeeDie();
     void                            ZamboniDeath(unsigned int theDamageFlags);
@@ -346,7 +346,7 @@ public:
     void                            BossHeadSpit();
     void                            UpdateBossFireball();
     void                            BossDestroyFireball();
-    void                            BossDestroyIceballInRow(int theRow);
+    void                            BossDestroyIceballInRow();
     void                            DiggerLoseAxe();
     void                            BungeeDropZombie(Zombie* theDroppedZombie, int theGridX, int theGridY);
     void                            ShowYuckyFace(bool theShow);
@@ -366,7 +366,7 @@ public:
     void                            BossStartDeath();
     void                            RemoveColdEffects();
     void                            BossHeadSpitEffect();
-    void                            DrawBossFireBall(Graphics* g, const ZombieDrawPosition& theDrawPos);
+    void                            DrawBossFireBall(Graphics* g);
     void                            UpdateZombiePeaHead();
     void                            UpdateZombieJalapenoHead();
     void                            ApplyBossSmokeParticles(bool theEnable);
@@ -380,7 +380,7 @@ public:
     bool                            IsFireResistant();
     /*inline*/ void                 EnableMustache(bool theEnableMustache);
     /*inline*/ void                 EnableFuture(bool theEnableFuture);
-    /*inline*/ void                 EnableDance(bool theEnableDance);
+    /*inline*/ void                 EnableDance();
     void                            BungeeDropPlant();
     void                            RemoveButter();
     void                            BalloonPropellerHatSpin(bool theSpinning);

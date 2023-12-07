@@ -1,3 +1,4 @@
+#include <corecrt.h>
 #include <time.h>
 #include "LawnApp.h"
 #include "Lawn/Board.h"
@@ -30,7 +31,7 @@
 #include "Lawn/Widget/CreditScreen.h"
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Sexy.TodLib/FilterEffect.h"
-#include "SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 #include "Sexy.TodLib/TodStringFile.h"
 #include "Lawn/Widget/AlmanacDialog.h"
 #include "Lawn/Widget/NewUserDialog.h"
@@ -39,12 +40,12 @@
 #include "Lawn/Widget/ChallengeScreen.h"
 #include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
-#include "SexyAppFramework/WidgetManager.h"
-#include "SexyAppFramework/ResourceManager.h"
+#include "widget/WidgetManager.h"
+#include "misc/ResourceManager.h"
 
-#include "SexyAppFramework/Checkbox.h"
-#include "SexyAppFramework/BassMusicInterface.h"
-#include "SexyAppFramework/Dialog.h"
+#include "widget/Checkbox.h"
+#include "sound/BassMusicInterface.h"
+#include "widget/Dialog.h"
 #include "SexyAppFramework/resource.h"
 
 bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659
@@ -244,9 +245,11 @@ LawnApp::~LawnApp()
 	delete mLastLevelStats;
 
 	mResourceManager->DeleteResources("");
+	/*
 #ifdef _DEBUG
 	BetaSubmit(true);
 #endif
+	*/
 }
 
 //0x44F200
@@ -326,9 +329,11 @@ void LawnApp::KillBoard()
 	KillSeedChooserScreen();
 	if (mBoard)
 	{
+/*
 #ifdef _DEBUG
 		BetaRecordLevelStats();
 #endif
+*/
 		mBoard->DisposeBoard();
 		mWidgetManager->RemoveWidget(mBoard);
 		SafeDeleteWidget(mBoard);
@@ -1219,6 +1224,7 @@ void LawnApp::ShowResourceError(bool doExit)
 	SexyAppBase::ShowResourceError(doExit);
 }
 
+/*
 void BetaSubmitFunc()
 {
 	if (gLawnApp)
@@ -1226,6 +1232,7 @@ void BetaSubmitFunc()
 		gLawnApp->BetaSubmit(false);
 	}
 }
+*/
 
 //0x451880
 // GOTY @Patoke: 0x454C60
@@ -1252,7 +1259,7 @@ void LawnApp::Init()
 	//	gSexyCache->Disconnect();
 	//}
 
-	mSessionID = _time32(nullptr);
+	mSessionID = _time64(nullptr);
 	mPlayTimeActiveSession = 0;
 	mPlayTimeInactiveSession = 0;
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
@@ -1262,7 +1269,6 @@ void LawnApp::Init()
 	// @Patoke: horrible debug checks, breaks the whole exe in release mode
 //#ifdef _DEBUG
 	TodAssertInitForApp();
-	gBetaSubmitFunc = BetaSubmitFunc;
 	TodLog("session id: %u", mSessionID);
 //#endif
 
@@ -1351,7 +1357,7 @@ void LawnApp::Init()
 }
 
 //0x4522A0
-bool LawnApp::ChangeDirHook(const char* theIntendedPath)
+bool LawnApp::ChangeDirHook(const char* /*theIntendedPath*/)
 {
 	return false;
 }
@@ -1719,9 +1725,9 @@ void LawnApp::LoadGroup(const char* theGroupName, int theGroupAveMsToLoad)
 		mLoadingFailed = true;
 	}
 
-	int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
-	int aGroupTime = max(aTimer.GetDuration(), 0);
-	TraceLoadGroup(theGroupName, aGroupTime, aTotalGroupWeight, theGroupAveMsToLoad);
+	//int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
+	//int aGroupTime = max(aTimer.GetDuration(), 0.0);
+	//TraceLoadGroup(theGroupName, aGroupTime, aTotalGroupWeight, theGroupAveMsToLoad);
 }
 
 //0x4528E0
@@ -1763,7 +1769,8 @@ void LawnApp::LoadingThreadProc()
 	TodTrace("loading '%s' %d ms", "resources", (int)aTimer.GetDuration());
 
 	mMusic->MusicInit();
-	int aDuration = max(aTimer.GetDuration(), 0);
+	// aDuration goes unused
+	//int aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	mPoolEffect = new PoolEffect();
@@ -1782,14 +1789,14 @@ void LawnApp::LoadingThreadProc()
 	TodHesitationTrace("trail");
 	
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray));
-	aDuration = max(aTimer.GetDuration(), 0);
+	//aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	PreloadForUser();
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
 
-	aDuration = max(aTimer.GetDuration(), 0);
+	//aDuration = max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	GetNumPreloadingTasks();
@@ -1883,9 +1890,12 @@ void LawnApp::PreDisplayHook()
 	SexyApp::PreDisplayHook();
 }
 
-void LawnApp::ButtonPress(int theId)
-{
-}
+
+void LawnApp::ButtonPress(int) {}
+void LawnApp::ButtonDownTick(int) {}
+void LawnApp::ButtonMouseEnter(int) {}
+void LawnApp::ButtonMouseLeave(int) {}
+void LawnApp::ButtonMouseMove(int, int, int) {}
 
 //0x4531E0
 // GOTY @Patoke: 0x456690
@@ -1918,7 +1928,7 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
-			SendMessage(mHWnd, WM_CLOSE, NULL, NULL);
+			SendMessage(mHWnd, WM_CLOSE, 0, 0);
 			return;
 
 		case Dialogs::DIALOG_NAG:
@@ -2380,7 +2390,7 @@ int LawnApp::GetSeedsAvailable()
 	}
 
 	SeedType aSeedTypeMax = GetAwardSeedForLevel(aLevel);
-	return min(49, aSeedTypeMax);
+	return std::min(NUM_SEEDS_IN_CHOOSER, aSeedTypeMax);
 }
 
 //0x453B20
@@ -2716,7 +2726,7 @@ void LawnApp::CrazyDaveTalkMessage(const SexyString& theMessage)
 
 	int aWordsCount = 0;
 	bool isControlWord = false;
-	for (int i = 0; i < theMessage.size(); i++)
+	for (size_t i = 0; i < theMessage.size(); i++)
 	{
 		if (theMessage[i] == _S('{'))
 		{
@@ -3492,7 +3502,7 @@ void LawnApp::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 }
 
 /* #################################################################################################### */
-
+/*
 void LawnApp::BetaSubmit(bool theAskForComments)
 {
 
@@ -3512,6 +3522,7 @@ void LawnApp::TraceLoadGroup(const char* theGroupName, int theGroupTime, int the
 {
 
 }
+*/
 
 /* #################################################################################################### */
 

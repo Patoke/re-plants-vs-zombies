@@ -2,7 +2,7 @@
 #define __CHALLENGESCREEN_H__
 
 #include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include "widget/Dialog.h"
 using namespace Sexy;
 
 #define NUM_CHALLENGE_MODES ((int)GameMode::NUM_GAME_MODES - 1)
@@ -48,9 +48,13 @@ public:
     virtual void                AddedToManager(WidgetManager* theWidgetManager);
     virtual void                RemovedFromManager(WidgetManager* theWidgetManager);
     virtual void                ButtonPress(int theId);
+    virtual void                ButtonDownTick(int){}
+    virtual void                ButtonMouseEnter(int){}
+    virtual void                ButtonMouseLeave(int){}
+    virtual void                ButtonMouseMove(int, int, int){}
     virtual void                ButtonDepress(int theId);
     void                        UpdateToolTip();
-    virtual void                KeyChar(char theChar) { ; }
+//  virtual void                KeyChar(char theChar);
 
     /*inline*/ bool             IsScaryPotterLevel(GameMode theGameMode);
     /*inline*/ bool             IsIZombieLevel(GameMode theGameMode);

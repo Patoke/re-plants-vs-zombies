@@ -12,11 +12,11 @@
 #include "../System/ProfileMgr.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/Dialog.h"
+#include "widget/WidgetManager.h"
 
 Rect aBackButtonRect = { 120, 35, 130, 80 };
 
@@ -112,7 +112,10 @@ void AchievementsWidget::Draw(Graphics* g) {
 		g->DrawImage(IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, 128, 55);
 
 	for (int i = 0; i < MAX_ACHIEVEMENTS; i++) {
-		bool aHasAchievement = mApp->mPlayerInfo->mEarnedAchievements[i];
+		bool aHasAchievement;
+		if (mApp->mPlayerInfo) aHasAchievement = mApp->mPlayerInfo->mEarnedAchievements[i];
+		else aHasAchievement = false;
+
 		int aCurrAchievementOff = 57 * int(i / 2);
 		int aImageXPos = i % 2 == 0 ? 120 : 410;
 		int aImageYPos = 178 + aCurrAchievementOff;
@@ -169,6 +172,7 @@ void AchievementsWidget::KeyDown(KeyCode theKey) {
 
 // GOTY @Patoke: 0x4017F0
 void AchievementsWidget::MouseDown(int x, int y, int theClickCount) {
+	(void)theClickCount;
 	if (aBackButtonRect.Contains(x, y))
 		mApp->PlaySample(SOUND_GRAVEBUTTON);
 
@@ -178,6 +182,7 @@ void AchievementsWidget::MouseDown(int x, int y, int theClickCount) {
 
 // GOTY @Patoke: 0x401890
 void AchievementsWidget::MouseUp(int x, int y, int theClickCount) {
+	(void)theClickCount;
 	Point aPos = Point(x, y);
 	if (aBackButtonRect.Contains(aPos)) {
 		mApp->mGameSelector->SlideTo(0, 0);
@@ -228,20 +233,20 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 		return;
 
 	if (theApp->HasFinishedAdventure()) {
-		GiveAchievement(theApp, HomeSecurity, true);
+		GiveAchievement(theApp, AchievementId::HomeSecurity, true);
 	}
 
 	if (theApp->EarnedGoldTrophy()) {
-		GiveAchievement(theApp, NovelPeasPrize, true);
+		GiveAchievement(theApp, AchievementId::NovelPeasPrize, true);
 	}
 
 	if (theApp->CanSpawnYetis()) {
-		GiveAchievement(theApp, Zombologist, true);
+		GiveAchievement(theApp, AchievementId::Zombologist, true);
 	}
 
 	int aTreeSize = theApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];
 	if (aTreeSize >= 100) {
-		GiveAchievement(theApp, ToweringWisdom, true);
+		GiveAchievement(theApp, AchievementId::ToweringWisdom, true);
 	}
 
 	bool aGiveAchievement = true;
@@ -251,6 +256,6 @@ void ReportAchievement::AchievementInitForPlayer(LawnApp* theApp) {
 	}
 
 	if (aGiveAchievement) {
-		GiveAchievement(theApp, Morticulturalist, aGiveAchievement);
+		GiveAchievement(theApp, AchievementId::Morticulturalist, aGiveAchievement);
 	}
 }

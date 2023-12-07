@@ -68,7 +68,7 @@ public:
 	ZombieType					ZombieHitTest(int x, int y);
 	virtual void				MouseUp(int x, int y, int theClickCount);
 	virtual void				MouseDown(int x, int y, int theClickCount);
-	virtual void				KeyChar(char theChar) {  }
+//	virtual void				KeyChar(char theChar);
 
 	static ZombieType			GetZombieType(int theIndex);
 	/*inline*/ void				ShowPlant(SeedType theSeedType);

@@ -2,9 +2,9 @@
 #define __CREDITSCREEN_H__
 
 #include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/PerfTimer.h"
-#include "../../SexyAppFramework/ButtonListener.h"
+#include "widget/Widget.h"
+#include "misc/PerfTimer.h"
+#include "widget/ButtonListener.h"
 
 using namespace Sexy;
 
@@ -108,6 +108,10 @@ public:
 	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
+	virtual void			ButtonDownTick(int){}
+	virtual void			ButtonMouseEnter(int){}
+	virtual void			ButtonMouseLeave(int){}
+	virtual void			ButtonMouseMove(int, int, int){}
 	Reanimation*			PlayReanim(int aIndex);
 	void					JumpToFrame(CreditsPhase thePhase, float theFrame);
 	void					GetTiming(CreditsTiming** theBeforeTiming, CreditsTiming** theAfterTiming, float* theFraction);

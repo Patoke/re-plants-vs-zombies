@@ -2,7 +2,7 @@
 #define __CHEATDIALOG_H__
 
 #include "LawnDialog.h"
-#include "../../SexyAppFramework/EditListener.h"
+#include "widget/EditListener.h"
 
 class CheatDialog : public LawnDialog, public EditListener
 {

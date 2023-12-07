@@ -15,11 +15,11 @@
 #include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
 #include "../System/PopDRMComm.h"
-#include "../../SexyAppFramework/Debug.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/MTRand.h"
+#include "misc/Debug.h"
+#include "widget/Dialog.h"
+#include "misc/MTRand.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x483380
 // GOTY @Patoke: 0x48E020
@@ -198,6 +198,7 @@ int SeedChooserScreen::PickFromWeightedArrayUsingSpecialRandSeed(TodWeightedArra
 		if (aWeight > aRndResult) return theArray[j].mItem;
 	}
 	DBG_ASSERT(false);
+	std::unreachable();
 }
 
 //0x483F70
@@ -207,7 +208,8 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		aSeedArray[aSeedType].mItem = aSeedType;
-		uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
+		// Seems to be a pure function, should be okay to comment out
+		// uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
 		if ((aSeedType == SEED_GATLINGPEA && !mApp->mPlayerInfo->mPurchases[STORE_ITEM_PLANT_GATLINGPEA]) || !mApp->SeedTypeAvailable(aSeedType) ||
 			SeedNotAllowedToPick(aSeedType) || Plant::IsUpgrade(aSeedType) || aSeedType == SEED_IMITATER || aSeedType == SEED_UMBRELLA || aSeedType == SEED_BLOVER)
 		{
@@ -255,7 +257,7 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 //0x484220
 bool SeedChooserScreen::Has7Rows()
 {
-	PlayerInfo* aPlayer = mApp->mPlayerInfo;
+	// PlayerInfo* aPlayer = mApp->mPlayerInfo; // unused
 	if (mApp->HasFinishedAdventure() || mApp->mPlayerInfo->mPurchases[STORE_ITEM_PLANT_GATLINGPEA]) return true;
 	for (SeedType aSeedType = SEED_TWINSUNFLOWER; aSeedType < SEED_COBCANNON; aSeedType = (SeedType)(aSeedType + 1))
 		if (aSeedType != SEED_SPIKEROCK && mApp->SeedTypeAvailable(aSeedType)) return true;
@@ -966,6 +968,7 @@ void SeedChooserScreen::CancelLawnView()
 //0x486630
 void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;
 	if (theClickCount == 1)
 	{
 		if (mMenuButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);

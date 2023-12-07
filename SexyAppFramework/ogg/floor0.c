@@ -133,7 +133,7 @@ static const unsigned char MLOOP_2[64]={
 
 static const unsigned char MLOOP_3[8]={0,1,2,2,3,3,3,3};
 
-void vorbis_lsp_to_curve(ogg_int32_t *curve,int *map,int n,int ln,
+void vorbis_lsp_to_curve(ogg_int32_t *curve,int *map,int n,
 			 ogg_int32_t *lsp,int m,
 			 ogg_int32_t amp,
 			 ogg_int32_t ampoffset,
@@ -410,8 +410,8 @@ static void *floor0_inverse1(vorbis_block *vb,vorbis_look_floor *i){
   return(NULL);
 }
 
-static int floor0_inverse2(vorbis_block *vb,vorbis_look_floor *i,
-			   void *memo,ogg_int32_t *out){
+static int floor0_inverse2(vorbis_block *vb,vorbis_look_floor *i, void *memo,ogg_int32_t *out){
+  (void)vb;
   vorbis_look_floor0 *look=(vorbis_look_floor0 *)i;
   vorbis_info_floor0 *info=look->vi;
   
@@ -420,7 +420,7 @@ static int floor0_inverse2(vorbis_block *vb,vorbis_look_floor *i,
     ogg_int32_t amp=lsp[look->m];
 
     /* take the coefficients back to a spectral envelope curve */
-    vorbis_lsp_to_curve(out,look->linearmap,look->n,look->ln,
+    vorbis_lsp_to_curve(out,look->linearmap,look->n,
 			lsp,look->m,amp,info->ampdB,look->lsp_look);
     return(1);
   }
@@ -433,5 +433,3 @@ vorbis_func_floor floor0_exportbundle={
   &floor0_unpack,&floor0_look,&floor0_free_info,
   &floor0_free_look,&floor0_inverse1,&floor0_inverse2
 };
-
-

@@ -1,7 +1,7 @@
 #include "NewUserDialog.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 //0x45D610
 // GOTY @Patoke: 0x460F20
@@ -66,6 +66,7 @@ void NewUserDialog::Draw(Graphics* g)
 //0x45D9D0
 void NewUserDialog::EditWidgetText(int theId, const SexyString& theString)
 {
+	(void)theId;(void)theString;
 	mApp->ButtonDepress(mId + 2000);
 }
 
@@ -81,7 +82,7 @@ SexyString NewUserDialog::GetName()
 	SexyString aString;
 	SexyChar aLastChar = _S(' ');
 
-	for (int i = 0; i < mNameEditWidget->mString.size(); i++)
+	for (size_t i = 0; i < mNameEditWidget->mString.size(); i++)
 	{
 		SexyChar aChar = mNameEditWidget->mString[i];
 		if (aChar != _S(' '))

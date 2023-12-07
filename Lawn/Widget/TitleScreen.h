@@ -1,8 +1,8 @@
 #ifndef __TITLESCREEN_H__
 #define __TITLESCREEN_H__
 
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/ButtonListener.h"
+#include "widget/Widget.h"
+#include "widget/ButtonListener.h"
 
 using namespace Sexy;
 
@@ -63,6 +63,10 @@ public:
 	virtual void			RemovedFromManager(WidgetManager* theWidgetManager);
 	virtual void			ButtonPress(int theId);
 	virtual void			ButtonDepress(int theId);
+	virtual void			ButtonDownTick(int){}
+	virtual void			ButtonMouseEnter(int){}
+	virtual void			ButtonMouseLeave(int){}
+	virtual void			ButtonMouseMove(int, int, int){}
 	virtual void			MouseDown(int x, int y, int theClickCount);
 	virtual void			KeyDown(KeyCode theKey);
 	void					SetRegistered();

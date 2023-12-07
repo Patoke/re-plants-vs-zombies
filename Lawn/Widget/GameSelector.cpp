@@ -15,11 +15,11 @@
 #include "../System/TypingCheck.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Font.h"
+#include "graphics/Font.h"
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/Dialog.h"
+#include "widget/WidgetManager.h"
 
 static float gFlowerCenter[3][2] = { { 765.0f, 483.0f }, { 663.0f, 455.0f }, { 701.0f, 439.0f } };  //0x665430
 
@@ -152,7 +152,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	);
 	mAchievementsButton->Resize(20, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
 	mAchievementsButton->mClip = false;
-	mAchievementsButton->mBtnNoDraw = false;
+	mAchievementsButton->mBtnNoDraw = mHasTrophy;
 	mAchievementsButton->mMouseVisible = false;
 
 	mQuickPlayButton = MakeNewButton(
@@ -340,7 +340,7 @@ GameSelector::GameSelector(LawnApp* theApp)
 	TodHesitationTrace("gameselectorinit");
 }
 
-//0x449D00¡¢0x449D20
+//0x449D00ã€0x449D20
 GameSelector::~GameSelector()
 {
 	if (mAdventureButton)
@@ -610,22 +610,6 @@ void GameSelector::Draw(Graphics* g)
 		TodDrawStringMatrix(g, Sexy::FONT_BRIANNETOD16, aOverlayMatrix * aOffsetMatrix, aWelcomeStr, Color(255, 245, 200));
 
 	}
-
-	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
-	ReanimatorTransform aTransformLeft;
-	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
-	if (mHasTrophy)
-	{
-		// @Patoke: updated pos to match GOTY
-		if (mApp->EarnedGoldTrophy())
-			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 1, 0);
-		else
-			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 0, 0);
-		
-		TodParticleSystem* aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
-		if (aTrophyParticle)
-			aTrophyParticle->Draw(g);
-	}
 }
 
 //0x44AB50
@@ -659,8 +643,8 @@ void GameSelector::DrawOverlay(Graphics* g)
 		float aTransSubX = aTransAreaX;
 		float aTransSubY = aTransAreaY;
 
-		int aStage = ClampInt((mLevel - 1) / 10 + 1, 1, 6);  // ´ó¹Ø
-		int aSub = mLevel - (aStage - 1) * 10;  // Ð¡¹Ø
+		int aStage = ClampInt((mLevel - 1) / 10 + 1, 1, 6);  // å¤§å…³
+		int aSub = mLevel - (aStage - 1) * 10;  // å°å…³
 		if (mApp->IsTrialStageLocked() && (mLevel >= 25 || mApp->HasFinishedAdventure()))
 		{
 			aStage = 3;
@@ -685,7 +669,7 @@ void GameSelector::DrawOverlay(Graphics* g)
 		g->SetColorizeImages(true);
 		g->SetColor(mAdventureButton->mColors[ButtonWidget::COLOR_BKG]);
 		// @Patoke: changed positions for GOTY adventure icon
-		TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransAreaX + 486.0f, aTransAreaY + 47.f, aStage, 0);  // »æÖÆ´ó¹ØÊý
+		TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransAreaX + 486.0f, aTransAreaY + 47.f, aStage, 0);  // ç»˜åˆ¶å¤§å…³æ•°
 		if (aSub < 10)
 		{
 			TodDrawImageCelF(g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 509.f, aTransSubY + 50.f, aSub, 0);
@@ -724,6 +708,25 @@ void GameSelector::DrawOverlay(Graphics* g)
 			g->DrawString(_S("PRESS/PARTNER PREVIEW BUILD: DO NOT DISTRIBUTE"), 27, 594);
 		else
 			g->DrawString(_S("BETA BUILD: DO NOT DISTRIBUTE"), 27, 594);
+	}
+
+	// @Minerscale: Trophy needs to draw in the DrawOverlay
+	Reanimation* aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+
+	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
+	ReanimatorTransform aTransformLeft;
+	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
+	if (mHasTrophy)
+	{
+		// @Patoke: updated pos to match GOTY
+		if (mApp->EarnedGoldTrophy())
+			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 1, 0);
+		else
+			TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.f, aTransformLeft.mTransY + 345.f, 0, 0);
+		
+		TodParticleSystem* aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
+		if (aTrophyParticle)
+			aTrophyParticle->Draw(g);
 	}
 
 	mToolTip->Draw(g);
@@ -932,6 +935,8 @@ void GameSelector::Update()
 	case SelectorAnimState::SELECTOR_SHOW_SIGN:
 		if (aSelectorReanim->mLoopCount > 0)
 			mSelectorState = SelectorAnimState::SELECTOR_IDLE;
+		break;
+	case SelectorAnimState::SELECTOR_IDLE:
 		break;
 	}
 
@@ -1192,6 +1197,7 @@ void GameSelector::KeyChar(char theChar)
 // GOTY @Patoke: 0x44F040
 void GameSelector::MouseDown(int x, int y, int theClickCount)
 {
+	(void)theClickCount;
 	for (int i = 0; i < 3; i++)
 	{
 		Reanimation* aFlowerReanim = mApp->ReanimationGet(mFlowerReanimID[i]);
@@ -1220,7 +1226,7 @@ void GameSelector::ButtonMouseEnter(int theId)
 
 //0x44C540
 // GOTY @Patoke: 0x44F220
-void GameSelector::ButtonPress(int theId, int theClickCount)
+void GameSelector::ButtonPress(int theId)
 {
 	if (theId == GameSelector::GameSelector_Adventure || theId == GameSelector::GameSelector_Minigame ||
 		theId == GameSelector::GameSelector_Puzzle || theId == GameSelector::GameSelector_Survival ||
@@ -1271,8 +1277,8 @@ void GameSelector::ClickedAdventure()
 	aHandReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 	mHandReanimID = mApp->ReanimationGetID(aHandReanim);
 	mApp->PlayFoley(FoleyType::FOLEY_DIRT_RISE);
-	for (int i = 0; i < aHandReanim->mDefinition->mTrackCount; i++)
-		if (!strnicmp(aHandReanim->mDefinition->mTracks[i].mName, "rock", 4))
+	for (int i = 0; i < aHandReanim->mDefinition->mTracks.count; i++)
+		if (!strnicmp(aHandReanim->mDefinition->mTracks.tracks[i].mName, "rock", 4))
 			aHandReanim->mTrackInstances[i].mIgnoreClipRect = true;
 }
 

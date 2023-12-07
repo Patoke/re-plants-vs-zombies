@@ -42,7 +42,7 @@
    typedef __int16 ogg_int16_t;
 #  else
    /* Cygwin */
-   #include <_G_config.h>
+   #include "_G_config.h"
    typedef _G_int64_t ogg_int64_t;
    typedef _G_int32_t ogg_int32_t;
    typedef _G_uint32_t ogg_uint32_t;

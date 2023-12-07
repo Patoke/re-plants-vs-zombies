@@ -112,7 +112,7 @@ public:
 			aItem++;
 
 		DataArray<T>::DataArrayItem* aLast = &mBlock[mMaxUsedCount];
-		while ((unsigned int)aItem < (unsigned int)aLast)
+		while ((intptr_t)aItem < (intptr_t)aLast)
 		{
 			if (aItem->mID & DATA_ARRAY_KEY_MASK)
 			{
@@ -153,7 +153,7 @@ public:
 			return nullptr;
 
 		DataArrayItem* aBlock = &mBlock[theId & DATA_ARRAY_INDEX_MASK];
-		return aBlock->mID == theId ? &aBlock->mItem : nullptr;
+		return (aBlock->mID == theId) ? &aBlock->mItem : nullptr;
 	}
 
 	T* DataArrayGet(unsigned int theId)

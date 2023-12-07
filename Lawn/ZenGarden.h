@@ -2,6 +2,7 @@
 #define __ZENGARDEN_H__
 
 #include "../ConstEnums.h"
+#include <corecrt.h>
 
 #define ZEN_MAX_GRIDSIZE_X 8
 #define ZEN_MAX_GRIDSIZE_Y 4
@@ -39,7 +40,7 @@ public:
 public:
     ZenGarden();
 
-    void                    ZenGardenInitLevel(bool theJustSwitchingGardens);
+    void                    ZenGardenInitLevel();
     /*inline*/ void         DrawPottedPlantIcon(Graphics* g, float x, float y, PottedPlant* thePottedPlant);
     void                    DrawPottedPlant(Graphics* g, float x, float y, PottedPlant* thePottedPlant, float theScale, bool theDrawPot);
     bool                    IsZenGardenFull(bool theIncludeDroppedPresents);
@@ -48,7 +49,7 @@ public:
     void                    MouseDownWithTool(int x, int y, CursorType theCursorType);
     void                    MovePlant(Plant* thePlant, int theGridX, int theGridY);
     void                    MouseDownWithMoneySign(Plant* thePlant);
-    Plant*                  PlacePottedPlant(int thePottedPlantIndex);
+    Plant*                  PlacePottedPlant(intptr_t thePottedPlantIndex);
     float                   PlantPottedDrawHeightOffset(SeedType theSeedType, float theScale);
     static float            ZenPlantOffsetX(PottedPlant* thePottedPlant);
     int                     GetPlantSellPrice(Plant* thePlant);
@@ -70,7 +71,7 @@ public:
     PottedPlantNeed         GetPlantsNeed(PottedPlant* thePottedPlant);
     void                    MouseDownWithFeedingTool(int x, int y, CursorType theCursorType);
     void                    DrawPlantOverlay(Graphics* g, Plant* thePlant);
-    PottedPlant*            PottedPlantFromIndex(int thePottedPlantIndex);
+    PottedPlant*            PottedPlantFromIndex(intptr_t thePottedPlantIndex);
     bool                    WasPlantNeedFulfilledToday(PottedPlant* thePottedPlant);
     void                    PottedPlantUpdate(Plant* thePlant);
     void                    AddHappyEffect(Plant* thePlant);

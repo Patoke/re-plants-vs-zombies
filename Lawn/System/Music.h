@@ -2,7 +2,7 @@
 #define __MUSIC_H__
 
 #include <string>
-#include "../../SexyAppFramework/bass.h"
+#include "sound/bass.h"
 
 class LawnApp;
 namespace Sexy
@@ -13,18 +13,18 @@ namespace Sexy
 enum MusicTune
 {
 	MUSIC_TUNE_NONE = -1,
-	MUSIC_TUNE_DAY_GRASSWALK = 1,				// ����ݵعؿ�
-	MUSIC_TUNE_NIGHT_MOONGRAINS,				// ��ҹ�ݵعؿ�
-	MUSIC_TUNE_POOL_WATERYGRAVES,				// ����Ӿ�عؿ�
-	MUSIC_TUNE_FOG_RIGORMORMIST,				// ��ҹӾ�عؿ�
-	MUSIC_TUNE_ROOF_GRAZETHEROOF,				// �ݶ��ؿ�
-	MUSIC_TUNE_CHOOSE_YOUR_SEEDS,				// ѡ������/С��Ϸ����
-	MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME,		// ���˵�
-	MUSIC_TUNE_ZEN_GARDEN,						// ������԰
-	MUSIC_TUNE_PUZZLE_CEREBRAWL,				// ����ģʽ
-	MUSIC_TUNE_MINIGAME_LOONBOON,				// С��Ϸ
-	MUSIC_TUNE_CONVEYER,						// ���ʹ��ؿ�
-	MUSIC_TUNE_FINAL_BOSS_BRAINIAC_MANIAC,		// ������ʿ�ؿ�
+	MUSIC_TUNE_DAY_GRASSWALK = 1,				// 白天草地关卡
+	MUSIC_TUNE_NIGHT_MOONGRAINS,				// 黑夜草地关卡
+	MUSIC_TUNE_POOL_WATERYGRAVES,				// 白天泳池关卡
+	MUSIC_TUNE_FOG_RIGORMORMIST,				// 黑夜泳池关卡
+	MUSIC_TUNE_ROOF_GRAZETHEROOF,				// 屋顶关卡
+	MUSIC_TUNE_CHOOSE_YOUR_SEEDS,				// 选卡界面/小游戏界面
+	MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME,		// 主菜单
+	MUSIC_TUNE_ZEN_GARDEN,						// 禅境花园
+	MUSIC_TUNE_PUZZLE_CEREBRAWL,				// 解谜模式
+	MUSIC_TUNE_MINIGAME_LOONBOON,				// 小游戏
+	MUSIC_TUNE_CONVEYER,						// 传送带关卡
+	MUSIC_TUNE_FINAL_BOSS_BRAINIAC_MANIAC,		// 僵王博士关卡
 	MUSIC_TUNE_CREDITS_ZOMBIES_ON_YOUR_LAWN,	// MV
 	NUM_MUSIC_TUNES
 };
@@ -73,8 +73,8 @@ public:
 	MusicFile					mCurMusicFileDrums;					//+0x10
 	MusicFile					mCurMusicFileHihats;				//+0x14
 	int							mBurstOverride;						//+0x18
-	int							mBaseBPM;							//+0x1C
-	int							mBaseModSpeed;						//+0x20
+	float						mBaseBPM;							//+0x1C
+	float						mBaseModSpeed;						//+0x20
 	MusicBurstState				mMusicBurstState;					//+0x24
 	int							mBurstStateCounter;					//+0x28
 	MusicDrumsState				mMusicDrumsState;					//+0x2C

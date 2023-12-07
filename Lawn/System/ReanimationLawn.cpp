@@ -3,16 +3,16 @@
 #include "../../LawnApp.h"
 #include "ReanimationLawn.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Color.h"
+#include "graphics/Color.h"
 #include "../../Sexy.TodLib/Reanimator.h"
-#include "../../SexyAppFramework/MemoryImage.h"
+#include "graphics/MemoryImage.h"
 
 //0x46EF00
 void ReanimatorCache::UpdateReanimationForVariation(Reanimation* theReanim, DrawVariation theDrawVariation)
 {
 	if (theDrawVariation >= DrawVariation::VARIATION_MARIGOLD_WHITE && theDrawVariation <= DrawVariation::VARIATION_MARIGOLD_LIGHT_GREEN)
 	{
-		int aVariationIndex = (int)theDrawVariation - (int)DrawVariation::VARIATION_MARIGOLD_WHITE;
+		size_t aVariationIndex = (size_t)theDrawVariation - (size_t)DrawVariation::VARIATION_MARIGOLD_WHITE;
 		Color MARIGOLD_VARIATIONS[] = {
 			Color(255, 255, 255),
 			Color(230, 30, 195),
@@ -135,7 +135,7 @@ void ReanimatorCache::GetPlantImageSize(SeedType theSeedType, int& theOffsetX, i
 //0x46F330
 MemoryImage* ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 {
-	MemoryImage* aImage;
+	MemoryImage* aImage = nullptr;
 
 	switch (theMowerType)
 	{

@@ -7,13 +7,13 @@
 #include "ReanimAtlas.h"
 #include "EffectSystem.h"
 #include "../GameConstants.h"
-#include "../SexyAppFramework/Font.h"
-#include "../SexyAppFramework/PerfTimer.h"
-#include "../SexyAppFramework/MemoryImage.h"
+#include "graphics/Font.h"
+#include "misc/PerfTimer.h"
+#include "graphics/MemoryImage.h"
 
-int gReanimatorDefCount;                     //[0x6A9EE4]
+unsigned int gReanimatorDefCount;                     //[0x6A9EE4]
 ReanimatorDefinition* gReanimatorDefArray;   //[0x6A9EE8]
-int gReanimationParamArraySize;              //[0x6A9EEC]
+unsigned int gReanimationParamArraySize;              //[0x6A9EEC]
 ReanimationParams* gReanimationParamArray;   //[0x6A9EF0]
 
 ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { //0x6A1340
@@ -179,9 +179,9 @@ ReanimatorTransform::ReanimatorTransform() :
 void ReanimationFillInMissingData(float& thePrev, float& theValue)
 {
 	if (theValue == DEFAULT_FIELD_PLACEHOLDER)
-		theValue = thePrev;  // Èôµ±Ç°Ö¡ÉÏµÄÖµÎ´Éè¶¨£¬ÔòÒÔÇ°Ò»Ö¡µÄÊıÖµ¸³Öµµ±Ç°Ö¡
+		theValue = thePrev;  // è‹¥å½“å‰å¸§ä¸Šçš„å€¼æœªè®¾å®šï¼Œåˆ™ä»¥å‰ä¸€å¸§çš„æ•°å€¼èµ‹å€¼å½“å‰å¸§
 	else
-		thePrev = theValue;  // ·ñÔò£¬½«µ±Ç°Ö¡µÄÊı¾İ¼ÇÂ¼Îª¡°Ç°Ò»Ö¡µÄÊı¾İ¡±
+		thePrev = theValue;  // å¦åˆ™ï¼Œå°†å½“å‰å¸§çš„æ•°æ®è®°å½•ä¸ºâ€œå‰ä¸€å¸§çš„æ•°æ®â€
 }
 
 void ReanimationFillInMissingData(void*& thePrev, void*& theValue)
@@ -198,9 +198,9 @@ bool ReanimationLoadDefinition(const SexyString& theFileName, ReanimatorDefiniti
 	if (!DefinitionLoadXML(theFileName, &gReanimatorDefMap, theDefinition))
 		return false;
 
-	for (int aTrackIndex = 0; aTrackIndex < theDefinition->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < theDefinition->mTracks.count; aTrackIndex++)
 	{
-		ReanimatorTrack* aTrack = &theDefinition->mTracks[aTrackIndex];
+		ReanimatorTrack* aTrack = &theDefinition->mTracks.tracks[aTrackIndex];
 		float aPrevTransX = 0.0f;
 		float aPrevTransY = 0.0f;
 		float aPrevSkewX = 0.0f;
@@ -210,13 +210,13 @@ bool ReanimationLoadDefinition(const SexyString& theFileName, ReanimatorDefiniti
 		float aPrevFrame = 0.0f;
 		float aPrevAlpha = 1.0f;
 		Image* aPrevImage = nullptr;
-		Font* aPrevFont = nullptr;
+		_Font* aPrevFont = nullptr;
 		const char* aPrevText = "";
 
-		// ±éÀúÃ¿Ò»Ö¡£¬ÒÀ´ÎÓÃÇ°Ò»Ö¡µÄÊı¾İÌî³äºóÒ»Ö¡µÄÎ´¶¨ÒåÊı¾İ£¬²¢ÖØĞÂ¼ÇÂ¼Ç°Ò»Ö¡µÄÊı¾İ
-		for (int i = 0; i < aTrack->mTransformCount; i++)
+		// éå†æ¯ä¸€å¸§ï¼Œä¾æ¬¡ç”¨å‰ä¸€å¸§çš„æ•°æ®å¡«å……åä¸€å¸§çš„æœªå®šä¹‰æ•°æ®ï¼Œå¹¶é‡æ–°è®°å½•å‰ä¸€å¸§çš„æ•°æ®
+		for (int i = 0; i < aTrack->mTransforms.count; i++)
 		{
-			ReanimatorTransform& aTransform = aTrack->mTransforms[i];
+			ReanimatorTransform& aTransform = aTrack->mTransforms.mTransforms[i];
 			ReanimationFillInMissingData(aPrevTransX, aTransform.mTransX);
 			ReanimationFillInMissingData(aPrevTransY, aTransform.mTransY);
 			ReanimationFillInMissingData(aPrevSkewX, aTransform.mSkewX);
@@ -239,7 +239,7 @@ bool ReanimationLoadDefinition(const SexyString& theFileName, ReanimatorDefiniti
 //0x4717D0
 void ReanimationFreeDefinition(ReanimatorDefinition* theDefinition)
 {
-	// ÊÍ·Å Atlas
+	// é‡Šæ”¾ Atlas
 	if (theDefinition->mReanimAtlas != nullptr)
 	{
 		theDefinition->mReanimAtlas->ReanimAtlasDispose();
@@ -247,14 +247,14 @@ void ReanimationFreeDefinition(ReanimatorDefinition* theDefinition)
 		theDefinition->mReanimAtlas = nullptr;
 	}
 
-	// »Ö¸´¶¨ÒåÊı¾İ
-	for (int aTrackIndex = 0; aTrackIndex < theDefinition->mTrackCount; aTrackIndex++)
+	// æ¢å¤å®šä¹‰æ•°æ®
+	for (int aTrackIndex = 0; aTrackIndex < theDefinition->mTracks.count; aTrackIndex++)
 	{
-		ReanimatorTrack* aTrack = &theDefinition->mTracks[aTrackIndex];
+		ReanimatorTrack* aTrack = &theDefinition->mTracks.tracks[aTrackIndex];
 		const char* aPrevText = nullptr;
-		for (int i = 0; i < aTrack->mTransformCount; i++)
+		for (int i = 0; i < aTrack->mTransforms.count; i++)
 		{
-			ReanimatorTransform& aTransform = aTrack->mTransforms[i];
+			ReanimatorTransform& aTransform = aTrack->mTransforms.mTransforms[i];
 			if (*aTransform.mText != '\0' && aTransform.mText == aPrevText)
 				aTransform.mText = "";
 			else
@@ -262,7 +262,7 @@ void ReanimationFreeDefinition(ReanimatorDefinition* theDefinition)
 		}
 	}
 
-	// ÊÍ·Å¶¨Òå
+	// é‡Šæ”¾å®šä¹‰
 	DefinitionFreeMap(&gReanimatorDefMap, theDefinition);
 }
 
@@ -323,8 +323,8 @@ void Reanimation::ReanimationDelete()
 	TOD_ASSERT(mDead);
 	if (mTrackInstances != nullptr)
 	{
-		int aItemSize = mDefinition->mTrackCount * sizeof(ReanimatorTrackInstance);
-		FindGlobalAllocator(aItemSize)->Free(mTrackInstances, aItemSize);  // ÓÉ TodAllocator »ØÊÕ¶¯»­¹ìµÀµÄÄÚ´æÇøÓò
+		int aItemSize = mDefinition->mTracks.count * sizeof(ReanimatorTrackInstance);
+		FindGlobalAllocator(aItemSize)->Free(mTrackInstances, aItemSize);  // ç”± TodAllocator å›æ”¶åŠ¨ç”»è½¨é“çš„å†…å­˜åŒºåŸŸ
 		mTrackInstances = nullptr;
 	}
 }
@@ -343,18 +343,18 @@ void ReanimationCreateAtlas(ReanimatorDefinition* theDefinition, ReanimationType
 {
 	ReanimationParams& aParam = gReanimationParamArray[(int)theReanimationType];
 	if (theDefinition->mReanimAtlas != nullptr || TestBit(aParam.mReanimParamFlags, ReanimFlags::REANIM_NO_ATLAS))
-		return;  // µ±¶¯»­ÒÑ´æÔÚ Atlas »òÎŞĞè Atlas Ê±£¬Ö±½ÓÍË³ö
+		return;  // å½“åŠ¨ç”»å·²å­˜åœ¨ Atlas æˆ–æ— éœ€ Atlas æ—¶ï¼Œç›´æ¥é€€å‡º
 
 	PerfTimer aTimer;
 	aTimer.Start();
 	TodHesitationTrace("preatlas");
 	ReanimAtlas* aAtlas = new ReanimAtlas();
-	theDefinition->mReanimAtlas = aAtlas;  // ¸³Öµ¶¯»­ Atlas Ö¸Õë
+	theDefinition->mReanimAtlas = aAtlas;  // èµ‹å€¼åŠ¨ç”» Atlas æŒ‡é’ˆ
 	aAtlas->ReanimAtlasCreate(theDefinition);
 
 	TodHesitationTrace("atlas '%s'", aParam.mReanimFileName);
-	int aDuration = max(aTimer.GetDuration(), 0);
-	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE)  //£¨½öÄÚ²â°æ£©´´½¨Ê±¼ä¹ı³¤µÄ±¨¸æ
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
+	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE)  //ï¼ˆä»…å†…æµ‹ç‰ˆï¼‰åˆ›å»ºæ—¶é—´è¿‡é•¿çš„æŠ¥å‘Š
 		TodTraceAndLog("LOADING:Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
@@ -381,12 +381,12 @@ void Reanimation::ReanimationInitialize(float theX, float theY, ReanimatorDefini
 	mAnimRate = theDefinition->mFPS;
 	mLastFrameTime = -1.0f;
 
-	if (theDefinition->mTrackCount != 0)
+	if (theDefinition->mTracks.count != 0)
 	{
-		mFrameCount = mDefinition->mTracks[0].mTransformCount;
-		int aItemSize = theDefinition->mTrackCount * sizeof(ReanimatorTrackInstance);
-		mTrackInstances = (ReanimatorTrackInstance*)FindGlobalAllocator(aItemSize)->Calloc(aItemSize);  // ÉêÇë¶¯»­¹ìµÀÊµÀıÊı×éËùĞèµÄÄÚ´æ
-		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)  // ±éÀú³õÊ¼»¯Êı×éÖĞÃ¿¸ö¹ìµÀÊµÀı
+		mFrameCount = mDefinition->mTracks.tracks[0].mTransforms.count;
+		int aItemSize = theDefinition->mTracks.count * sizeof(ReanimatorTrackInstance);
+		mTrackInstances = (ReanimatorTrackInstance*)FindGlobalAllocator(aItemSize)->Calloc(aItemSize);  // ç”³è¯·åŠ¨ç”»è½¨é“å®ä¾‹æ•°ç»„æ‰€éœ€çš„å†…å­˜
+		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)  // éå†åˆå§‹åŒ–æ•°ç»„ä¸­æ¯ä¸ªè½¨é“å®ä¾‹
 		{
 			ReanimatorTrackInstance* aTrack = &mTrackInstances[aTrackIndex];
 			if (aTrack != nullptr)
@@ -405,8 +405,8 @@ void Reanimation::Update()
 		return;
 
 	TOD_ASSERT(_finite(mAnimRate));
-	mLastFrameTime = mAnimTime;  // ¸üĞÂÉÏÒ»Ö¡µÄÑ­»·ÂÊ
-	mAnimTime += SECONDS_PER_UPDATE * mAnimRate / mFrameCount;  // ¸üĞÂµ±Ç°Ñ­»·ÂÊ
+	mLastFrameTime = mAnimTime;  // æ›´æ–°ä¸Šä¸€å¸§çš„å¾ªç¯ç‡
+	mAnimTime += SECONDS_PER_UPDATE * mAnimRate / mFrameCount;  // æ›´æ–°å½“å‰å¾ªç¯ç‡
 
 	if (mAnimRate > 0)
 	{
@@ -477,19 +477,19 @@ void Reanimation::Update()
 		}
 	}
 
-	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
 	{
 		ReanimatorTrackInstance* aTrack = &mTrackInstances[aTrackIndex];
 		if (aTrack->mBlendCounter > 0)
-			aTrack->mBlendCounter--;  // ¸üĞÂ¹ìµÀµÄ»ìºÏµ¹¼ÆÊ±
+			aTrack->mBlendCounter--;  // æ›´æ–°è½¨é“çš„æ··åˆå€’è®¡æ—¶
 
-		if (aTrack->mShakeOverride != 0.0f)  // ¸üĞÂ¹ìµÀÕğ¶¯
+		if (aTrack->mShakeOverride != 0.0f)  // æ›´æ–°è½¨é“éœ‡åŠ¨
 		{
 			aTrack->mShakeX = RandRangeFloat(-aTrack->mShakeOverride, aTrack->mShakeOverride);
 			aTrack->mShakeY = RandRangeFloat(-aTrack->mShakeOverride, aTrack->mShakeOverride);
 		}
 
-		if (strnicmp(mDefinition->mTracks[aTrackIndex].mName, "attacher__", 10) == 0)  // IsAttacher
+		if (strnicmp(mDefinition->mTracks.tracks[aTrackIndex].mName, "attacher__", 10) == 0)  // IsAttacher
 			UpdateAttacherTrack(aTrackIndex);
 
 		if (aTrack->mAttachmentID != AttachmentID::ATTACHMENTID_NULL)
@@ -512,16 +512,16 @@ void BlendTransform(ReanimatorTransform* theResult, const ReanimatorTransform& t
 
 	float aSkewX2 = theTransform2.mSkewX;
 	float aSkewY2 = theTransform2.mSkewY;
-	// ÍÆ²âÕâÀïÔ­ÒâÊÇÎªÁËÈ·±£´ÓÁ½¸ö±ä»»Ö®¼äµÄÇãĞ±½Ç¶È²»³¬¹ı ¦Ğ£¨WP °æ£©£¬
-	// Ô­°æ£¨ÒÔ¼°ÄÚ²â°æ£©Êµ¼ÊÎª£¬ÇãĞ±³¬¹ı ¦Ğ Ê± theTransform2 ±ä»»ÎŞĞ§
+	// æ¨æµ‹è¿™é‡ŒåŸæ„æ˜¯ä¸ºäº†ç¡®ä¿ä»ä¸¤ä¸ªå˜æ¢ä¹‹é—´çš„å€¾æ–œè§’åº¦ä¸è¶…è¿‡ Ï€ï¼ˆWP ç‰ˆï¼‰ï¼Œ
+	// åŸç‰ˆï¼ˆä»¥åŠå†…æµ‹ç‰ˆï¼‰å®é™…ä¸ºï¼Œå€¾æ–œè¶…è¿‡ Ï€ æ—¶ theTransform2 å˜æ¢æ— æ•ˆ
 	while (aSkewX2 > theTransform1.mSkewX + 180.0f)
-		aSkewX2 = theTransform1.mSkewX;  // £¨aSkewX2 -= 360.0f£©
+		aSkewX2 = theTransform1.mSkewX;  // ï¼ˆaSkewX2 -= 360.0fï¼‰
 	while (aSkewX2 < theTransform1.mSkewX - 180.0f)
-		aSkewX2 = theTransform1.mSkewX;  // £¨aSkewX2 += 360.0f£©
+		aSkewX2 = theTransform1.mSkewX;  // ï¼ˆaSkewX2 += 360.0fï¼‰
 	while (aSkewY2 > theTransform1.mSkewY + 180.0f)
-		aSkewY2 = theTransform1.mSkewY;  // £¨aSkewY2 -= 360.0f£©
+		aSkewY2 = theTransform1.mSkewY;  // ï¼ˆaSkewY2 -= 360.0fï¼‰
 	while (aSkewY2 < theTransform1.mSkewY - 180.0f)
-		aSkewY2 = theTransform1.mSkewY;  // £¨aSkewY2 += 360.0f£©
+		aSkewY2 = theTransform1.mSkewY;  // ï¼ˆaSkewY2 += 360.0fï¼‰
 
 	theResult->mSkewX = FloatLerp(theTransform1.mSkewX, aSkewX2, theBlendFactor);
 	theResult->mSkewY = FloatLerp(theTransform1.mSkewY, aSkewY2, theBlendFactor);
@@ -537,24 +537,24 @@ void Reanimation::GetCurrentTransform(int theTrackIndex, ReanimatorTransform* th
 {
 	ReanimatorFrameTime aFrameTime;
 	GetFrameTime(&aFrameTime);
-	GetTransformAtTime(theTrackIndex, theTransformCurrent, &aFrameTime);  // ½áºÏÁ½Ö¡Ö®¼äµÄ×ÔÈ»²¹¼äÈ¡µÃ»ù´¡±ä»»
+	GetTransformAtTime(theTrackIndex, theTransformCurrent, &aFrameTime);  // ç»“åˆä¸¤å¸§ä¹‹é—´çš„è‡ªç„¶è¡¥é—´å–å¾—åŸºç¡€å˜æ¢
 	
 	ReanimatorTrackInstance* aTrack = &mTrackInstances[theTrackIndex];
-	if (FloatRoundToInt(theTransformCurrent->mFrame) >= 0 && aTrack->mBlendCounter > 0)  // Èôµ±Ç°²»Îª¿Õ°×Ö¡ÇÒ¹ìµÀ´¦ÓÚ±ä»»»ìºÏ¹ı³ÌÖĞ
+	if (FloatRoundToInt(theTransformCurrent->mFrame) >= 0 && aTrack->mBlendCounter > 0)  // è‹¥å½“å‰ä¸ä¸ºç©ºç™½å¸§ä¸”è½¨é“å¤„äºå˜æ¢æ··åˆè¿‡ç¨‹ä¸­
 	{
 		float aBlendFactor = aTrack->mBlendCounter / (float)aTrack->mBlendTime;
-		BlendTransform(theTransformCurrent, *theTransformCurrent, aTrack->mBlendTransform, aBlendFactor);  // ½áºÏ¸²Ğ´±ä»»¼ÆËã»ìºÏºóµÄÊµ¼Ê±ä»»
+		BlendTransform(theTransformCurrent, *theTransformCurrent, aTrack->mBlendTransform, aBlendFactor);  // ç»“åˆè¦†å†™å˜æ¢è®¡ç®—æ··åˆåçš„å®é™…å˜æ¢
 	}
 }
 
 //0x472020
 void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* theTransform, ReanimatorFrameTime* theFrameTime)
 {
-	TOD_ASSERT(theTrackIndex >= 0 && theTrackIndex < mDefinition->mTrackCount);
-	ReanimatorTrack* aTrack = &mDefinition->mTracks[theTrackIndex];
-	TOD_ASSERT(aTrack->mTransformCount == mDefinition->mTracks[0].mTransformCount);
-	ReanimatorTransform& aTransBefore = aTrack->mTransforms[theFrameTime->mAnimFrameBeforeInt];  // Ç°Ò»Ö¡µÄ±ä»»¶¨Òå
-	ReanimatorTransform& aTransAfter = aTrack->mTransforms[theFrameTime->mAnimFrameAfterInt];  // ºóÒ»Ö¡µÄ±ä»»¶¨Òå
+	TOD_ASSERT(theTrackIndex >= 0 && theTrackIndex < mDefinition->mTracks.count);
+	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[theTrackIndex];
+	TOD_ASSERT(aTrack->mTransforms.count == mDefinition->mTracks.tracks[0].mTransforms.count);
+	ReanimatorTransform& aTransBefore = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameBeforeInt];  // å‰ä¸€å¸§çš„å˜æ¢å®šä¹‰
+	ReanimatorTransform& aTransAfter = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameAfterInt];  // åä¸€å¸§çš„å˜æ¢å®šä¹‰
 
 	theTransform->mTransX = FloatLerp(aTransBefore.mTransX, aTransAfter.mTransX, theFrameTime->mFraction);
 	theTransform->mTransY = FloatLerp(aTransBefore.mTransY, aTransAfter.mTransY, theFrameTime->mFraction);
@@ -568,7 +568,7 @@ void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* the
 	theTransform->mText = aTransBefore.mText;
 
 	if (aTransBefore.mFrame != -1.0f && aTransAfter.mFrame == -1.0f && theFrameTime->mFraction > 0.0f && mTrackInstances[theTrackIndex].mTruncateDisappearingFrames)
-		theTransform->mFrame = -1.0f;  // µ±´ÓÒ»¸ö·Ç¿Õ°×Ö¡¹ı¶ÉÖÁ¿Õ°×Ö¡Ê±£¬Èô¹ìµÀÉèÖÃÁË½Ø¶ÏÏûÊ§Ö¡£¬ÔòÉ¾È¥¹ı¶ÉµÄ¹ı³Ì
+		theTransform->mFrame = -1.0f;  // å½“ä»ä¸€ä¸ªéç©ºç™½å¸§è¿‡æ¸¡è‡³ç©ºç™½å¸§æ—¶ï¼Œè‹¥è½¨é“è®¾ç½®äº†æˆªæ–­æ¶ˆå¤±å¸§ï¼Œåˆ™åˆ å»è¿‡æ¸¡çš„è¿‡ç¨‹
 	else
 		theTransform->mFrame = aTransBefore.mFrame;
 }
@@ -576,7 +576,7 @@ void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* the
 //0x4720F0
 void Reanimation::MatrixFromTransform(const ReanimatorTransform& theTransform, SexyMatrix3& theMatrix)
 {
-	// ½«ÇãĞ±µÄ½Ç¶È×ª»¯Îª»¡¶È
+	// å°†å€¾æ–œçš„è§’åº¦è½¬åŒ–ä¸ºå¼§åº¦
 	float aSkewX = -DEG_TO_RAD(theTransform.mSkewX);
 	float aSkewY = -DEG_TO_RAD(theTransform.mSkewY);
 
@@ -594,22 +594,22 @@ void Reanimation::MatrixFromTransform(const ReanimatorTransform& theTransform, S
 //0x472190
 void Reanimation::ReanimBltMatrix(Graphics* g, Image* theImage, SexyMatrix3& theTransform, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect)
 {
-	if (!gSexyAppBase->Is3DAccelerated() &&  // Î´¿ªÆô 3D Ó²¼ş¼ÓËÙ
-		TestBit(gReanimationParamArray[(int)mReanimationType].mReanimParamFlags, (int)ReanimFlags::REANIM_FAST_DRAW_IN_SW_MODE) &&  // ¶¯»­ÔÊĞíÊ¹ÓÃÈí¼şäÖÈ¾
-		FloatApproxEqual(theTransform.m01, 0.0f) && FloatApproxEqual(theTransform.m10, 0.0f) &&  // ºáÏòºÍ×İÏòµÄÇãĞ±Öµ¾ùÎª 0
-		theTransform.m00 > 0.0f && theTransform.m11 > 0.0f &&  // ºáÏòºÍ×İÏòµÄÀ­ÉìÖµ¾ù´óÓÚ 0
+	if (!gSexyAppBase->Is3DAccelerated() &&  // æœªå¼€å¯ 3D ç¡¬ä»¶åŠ é€Ÿ
+		TestBit(gReanimationParamArray[(int)mReanimationType].mReanimParamFlags, (int)ReanimFlags::REANIM_FAST_DRAW_IN_SW_MODE) &&  // åŠ¨ç”»å…è®¸ä½¿ç”¨è½¯ä»¶æ¸²æŸ“
+		FloatApproxEqual(theTransform.m01, 0.0f) && FloatApproxEqual(theTransform.m10, 0.0f) &&  // æ¨ªå‘å’Œçºµå‘çš„å€¾æ–œå€¼å‡ä¸º 0
+		theTransform.m00 > 0.0f && theTransform.m11 > 0.0f &&  // æ¨ªå‘å’Œçºµå‘çš„æ‹‰ä¼¸å€¼å‡å¤§äº 0
 		theColor == Color::White)
 	{
 		float aScaleX = theTransform.m00;
 		float aScaleY = theTransform.m11;
 		int aPosX = FloatRoundToInt(theTransform.m02 - aScaleX * theSrcRect.mWidth * 0.5f);
 		int aPosY = FloatRoundToInt(theTransform.m12 - aScaleY * theSrcRect.mHeight * 0.5f);
-		int aOldMode = g->GetDrawMode();  // ±¸·İÔ­»æÖÆÄ£Ê½
+		int aOldMode = g->GetDrawMode();  // å¤‡ä»½åŸç»˜åˆ¶æ¨¡å¼
 		g->SetDrawMode(theDrawMode);
-		Rect aOldClipRect = g->mClipRect;  // ±¸·İÔ­²Ã¼ô¾ØĞÎ
+		Rect aOldClipRect = g->mClipRect;  // å¤‡ä»½åŸè£å‰ªçŸ©å½¢
 		g->SetClipRect(theClipRect);
 
-		if (FloatApproxEqual(aScaleX, 1.0f) && FloatApproxEqual(aScaleY, 1.0f))  // Èç¹ûÎŞÀ­Éì
+		if (FloatApproxEqual(aScaleX, 1.0f) && FloatApproxEqual(aScaleY, 1.0f))  // å¦‚æœæ— æ‹‰ä¼¸
 			g->DrawImage(theImage, aPosX, aPosY, theSrcRect);
 		else
 		{
@@ -619,8 +619,8 @@ void Reanimation::ReanimBltMatrix(Graphics* g, Image* theImage, SexyMatrix3& the
 			g->DrawImage(theImage, aDestRect, theSrcRect);
 		}
 
-		g->SetDrawMode(aOldMode);  // »¹Ô­»æÖÆÄ£Ê½
-		g->SetClipRect(aOldClipRect);  // »¹Ô­²Ã¼ô¾ØĞÎ
+		g->SetDrawMode(aOldMode);  // è¿˜åŸç»˜åˆ¶æ¨¡å¼
+		g->SetClipRect(aOldClipRect);  // è¿˜åŸè£å‰ªçŸ©å½¢
 	}
 	else
 		TodBltMatrix(g, theImage, theTransform, theClipRect, theColor, theDrawMode, theSrcRect);
@@ -630,31 +630,32 @@ void Reanimation::ReanimBltMatrix(Graphics* g, Image* theImage, SexyMatrix3& the
 // GOTY @Patoke: 0x4769B0
 bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, TodTriangleGroup* theTriangleGroup)
 {
+	(void)theRenderGroup;
 	ReanimatorTransform aTransform;
-	ReanimatorTrackInstance* aTrackInstance = &mTrackInstances[theTrackIndex];  // Ä¿±ê¹ìµÀµÄÖ¸Õë
-	GetCurrentTransform(theTrackIndex, &aTransform);  // È¡µÃµ±Ç°¶¯»­±ä»»
-	int aImageFrame = FloatRoundToInt(aTransform.mFrame);  // Í¼ÏñÔÚÌùÍ¼ÖĞËù´¦µÄ·İÊı
-	if (aImageFrame < 0)  // ²»´æÔÚÍ¼ÏñÊ±£¬·µ»Ø
+	ReanimatorTrackInstance* aTrackInstance = &mTrackInstances[theTrackIndex];  // ç›®æ ‡è½¨é“çš„æŒ‡é’ˆ
+	GetCurrentTransform(theTrackIndex, &aTransform);  // å–å¾—å½“å‰åŠ¨ç”»å˜æ¢
+	int aImageFrame = FloatRoundToInt(aTransform.mFrame);  // å›¾åƒåœ¨è´´å›¾ä¸­æ‰€å¤„çš„ä»½æ•°
+	if (aImageFrame < 0)  // ä¸å­˜åœ¨å›¾åƒæ—¶ï¼Œè¿”å›
 		return false;
 
 	Color aColor = aTrackInstance->mTrackColor;
-	if (!aTrackInstance->mIgnoreColorOverride)  // ³ı·Ç¹ìµÀÎŞÊÓ¶¯»­µÄ¸²Ğ´ÑÕÉ«
+	if (!aTrackInstance->mIgnoreColorOverride)  // é™¤éè½¨é“æ— è§†åŠ¨ç”»çš„è¦†å†™é¢œè‰²
 	{
-		aColor = ColorsMultiply(aColor, mColorOverride);  // ½«¹ìµÀÑÕÉ«Óë¶¯»­µÄ¸²Ğ´ÑÕÉ«½øĞĞÕıÆ¬µşµ×»ìºÏ
+		aColor = ColorsMultiply(aColor, mColorOverride);  // å°†è½¨é“é¢œè‰²ä¸åŠ¨ç”»çš„è¦†å†™é¢œè‰²è¿›è¡Œæ­£ç‰‡å åº•æ··åˆ
 	}
-	if (g->GetColorizeImages())  // Èô Graphics ×ÅÉ«
+	if (g->GetColorizeImages())  // è‹¥ Graphics ç€è‰²
 	{
-		aColor = ColorsMultiply(aColor, g->GetColor());  // ½«ÑÕÉ«ÔÙÓë Graphics µÄÑÕÉ«½øĞĞÕıÆ¬µşµ×»ìºÏ
+		aColor = ColorsMultiply(aColor, g->GetColor());  // å°†é¢œè‰²å†ä¸ Graphics çš„é¢œè‰²è¿›è¡Œæ­£ç‰‡å åº•æ··åˆ
 	}
 	int aImageAlpha = ClampInt(FloatRoundToInt(aTransform.mAlpha * aColor.mAlpha), 0, 255);
-	if (aImageAlpha <= 0)  // µ±Í¼ÏñÍêÈ«Í¸Ã÷Ê±£¬·µ»Ø
+	if (aImageAlpha <= 0)  // å½“å›¾åƒå®Œå…¨é€æ˜æ—¶ï¼Œè¿”å›
 	{
 		return false;
 	}
 	aColor.mAlpha = aImageAlpha;
 
 	Color aExtraAdditiveColor;
-	if (mEnableExtraAdditiveDraw)  // Èç¹û¶¯»­ÆôÓÃ¶îÍâµş¼ÓÑÕÉ«£¨¸ßÁÁ£©
+	if (mEnableExtraAdditiveDraw)  // å¦‚æœåŠ¨ç”»å¯ç”¨é¢å¤–å åŠ é¢œè‰²ï¼ˆé«˜äº®ï¼‰
 	{
 		aExtraAdditiveColor = mExtraAdditiveColor;
 		aExtraAdditiveColor.mAlpha = ColorComponentMultiply(mExtraAdditiveColor.mAlpha, aImageAlpha);
@@ -667,35 +668,35 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	}
 
 	Rect aClipRect = g->mClipRect;
-	if (aTrackInstance->mIgnoreClipRect)  // Èç¹û¹ìµÀÎŞÊÓ²Ã¼ô¾ØĞÎ
+	if (aTrackInstance->mIgnoreClipRect)  // å¦‚æœè½¨é“æ— è§†è£å‰ªçŸ©å½¢
 	{
-		aClipRect = Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);  // ²Ã¼ô¾ØĞÎÖØÖÃÎªÆÁÄ»¾ØĞÎ
+		aClipRect = Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);  // è£å‰ªçŸ©å½¢é‡ç½®ä¸ºå±å¹•çŸ©å½¢
 	}
 
 	Image* aImage = aTransform.mImage;
 	ReanimAtlasImage* aAtlasImage = nullptr;
-	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // Èç¹û atlas ´æÔÚÇÒµ±Ç°±ä»»´æÔÚÍ¼Ïñ£¨aTransform.mImage Êµ¼ÊÎªÕûÊıĞÍµÄÍ¼¼¯±àºÅ£©
+	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // å¦‚æœ atlas å­˜åœ¨ä¸”å½“å‰å˜æ¢å­˜åœ¨å›¾åƒï¼ˆaTransform.mImage å®é™…ä¸ºæ•´æ•°å‹çš„å›¾é›†ç¼–å·ï¼‰
 	{
-		aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // È¡µÃÏàÓ¦µÄÍ¼¼¯Êı¾İ
-		if (aAtlasImage != nullptr)  // Èç¹ûÊÇºÏ·¨µÄÍ¼¼¯±àºÅ£¬³É¹¦È¡µÃ¶ÔÓ¦Ö¸Õë
+		aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // å–å¾—ç›¸åº”çš„å›¾é›†æ•°æ®
+		if (aAtlasImage != nullptr)  // å¦‚æœæ˜¯åˆæ³•çš„å›¾é›†ç¼–å·ï¼ŒæˆåŠŸå–å¾—å¯¹åº”æŒ‡é’ˆ
 		{
-			aImage = aAtlasImage->mOriginalImage;  // ½«ÕæÕıµÄ Sexy::Image* ÀàĞÍµÄÌùÍ¼¸³Öµ¸ø aImage
+			aImage = aAtlasImage->mOriginalImage;  // å°†çœŸæ­£çš„ Sexy::Image* ç±»å‹çš„è´´å›¾èµ‹å€¼ç»™ aImage
 		}
-		if (aTrackInstance->mImageOverride != nullptr)  // Èç¹ûÄ¿±ê¹ìµÀ´æÔÚ¸²Ğ´ÌùÍ¼
+		if (aTrackInstance->mImageOverride != nullptr)  // å¦‚æœç›®æ ‡è½¨é“å­˜åœ¨è¦†å†™è´´å›¾
 		{
-			aAtlasImage = nullptr;  // ²»Ê¹ÓÃÍ¼¼¯
+			aAtlasImage = nullptr;  // ä¸ä½¿ç”¨å›¾é›†
 		}
 	}
 	SexyMatrix3 aMatrix;
 	bool aFullScreen = false;
-	if (aImage != nullptr)  // Èç¹û´æÔÚÌùÍ¼¡£´Ë´¦ÈôÉÏÒ»²½ÖĞÍ¼¼¯±àºÅ·Ç·¨£¬Ôò¿ÉÄÜµ¼ÖÂ±ÀÀ£
+	if (aImage != nullptr)  // å¦‚æœå­˜åœ¨è´´å›¾ã€‚æ­¤å¤„è‹¥ä¸Šä¸€æ­¥ä¸­å›¾é›†ç¼–å·éæ³•ï¼Œåˆ™å¯èƒ½å¯¼è‡´å´©æºƒ
 	{
 		int aCelWidth = aImage->GetCelWidth();
 		int aCelHeight = aImage->GetCelHeight();
 		aMatrix.LoadIdentity();
-		SexyMatrix3Translation(aMatrix, aCelWidth * 0.5f, aCelHeight * 0.5f);  // ½«¾ØÕó±ä»»µÄ×ø±êÉè¶¨ÔÚÌùÍ¼µÄÖĞĞÄÎ»ÖÃ
+		SexyMatrix3Translation(aMatrix, aCelWidth * 0.5f, aCelHeight * 0.5f);  // å°†çŸ©é˜µå˜æ¢çš„åæ ‡è®¾å®šåœ¨è´´å›¾çš„ä¸­å¿ƒä½ç½®
 	}
-	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // Èç¹û´æÔÚ×ÖÌåÇÒÎÄ±¾²»Îª¿Õ
+	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // å¦‚æœå­˜åœ¨å­—ä½“ä¸”æ–‡æœ¬ä¸ä¸ºç©º
 	{
 		aMatrix.LoadIdentity();
 		int aWidth = aTransform.mFont->StringWidth(aTransform.mText);
@@ -703,30 +704,30 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	}
 	else
 	{
-		if (stricmp(mDefinition->mTracks[theTrackIndex].mName, "fullscreen"))  // Èç¹û¼ÈÃ»ÓĞÍ¼ÏñÒ²Ã»ÓĞÎÄ±¾£¬ÇÒ²»ÊÇÈ«ÆÁ¹ìµÀ
-			return false;  // ÎŞĞè»æÖÆ
-		aFullScreen = true;  // ±ê¼ÇÈ«ÆÁ¹ìµÀ£¬ºóĞø»áÌî³äÒ»¸öÆÁÄ»´óĞ¡µÄ¾ØĞÎ
+		if (stricmp(mDefinition->mTracks.tracks[theTrackIndex].mName, "fullscreen"))  // å¦‚æœæ—¢æ²¡æœ‰å›¾åƒä¹Ÿæ²¡æœ‰æ–‡æœ¬ï¼Œä¸”ä¸æ˜¯å…¨å±è½¨é“
+			return false;  // æ— éœ€ç»˜åˆ¶
+		aFullScreen = true;  // æ ‡è®°å…¨å±è½¨é“ï¼Œåç»­ä¼šå¡«å……ä¸€ä¸ªå±å¹•å¤§å°çš„çŸ©å½¢
 	}
 
-	if (mDefinition->mReanimAtlas != nullptr && aAtlasImage == nullptr)  // ÓĞ atlas µ«²»ÓÃµÄÇé¿ö
-		theTriangleGroup->DrawGroup(g);  // ÏÈ°ÑÔ­ÓĞµÄÈı½Ç×é»æÖÆÁË
+	if (mDefinition->mReanimAtlas != nullptr && aAtlasImage == nullptr)  // æœ‰ atlas ä½†ä¸ç”¨çš„æƒ…å†µ
+		theTriangleGroup->DrawGroup(g);  // å…ˆæŠŠåŸæœ‰çš„ä¸‰è§’ç»„ç»˜åˆ¶äº†
 
 	SexyMatrix3 aTransformMatrix;
 	MatrixFromTransform(aTransform, aTransformMatrix);
-	SexyMatrix3Multiply(aMatrix, aTransformMatrix, aMatrix);  // ÒÔ¶¯»­±ä»»¾ØÕó×÷ÓÃ aMatrix
-	SexyMatrix3Multiply(aMatrix, mOverlayMatrix, aMatrix);  // ÒÔ¶¯»­¸²Ğ´¾ØÕó×÷ÓÃ aMatrix
-	SexyMatrix3Translation(aMatrix, aTrackInstance->mShakeX + g->mTransX - 0.5f, aTrackInstance->mShakeY + g->mTransY - 0.5f);  // ¹ìµÀÕğ¶¯¼° g µÄÓ°Ïì
+	SexyMatrix3Multiply(aMatrix, aTransformMatrix, aMatrix);  // ä»¥åŠ¨ç”»å˜æ¢çŸ©é˜µä½œç”¨ aMatrix
+	SexyMatrix3Multiply(aMatrix, mOverlayMatrix, aMatrix);  // ä»¥åŠ¨ç”»è¦†å†™çŸ©é˜µä½œç”¨ aMatrix
+	SexyMatrix3Translation(aMatrix, aTrackInstance->mShakeX + g->mTransX - 0.5f, aTrackInstance->mShakeY + g->mTransY - 0.5f);  // è½¨é“éœ‡åŠ¨åŠ g çš„å½±å“
 
-	if (aAtlasImage != nullptr)  // Èç¹û´æÔÚÍ¼¼¯£¨¶¯»­¶¨Òå´æÔÚ atlas£¬¹ìµÀ±ä»»´æÔÚÍ¼Ïñ£¬¹ìµÀ²»´æÔÚ¸²Ğ´ÌùÍ¼£©
+	if (aAtlasImage != nullptr)  // å¦‚æœå­˜åœ¨å›¾é›†ï¼ˆåŠ¨ç”»å®šä¹‰å­˜åœ¨ atlasï¼Œè½¨é“å˜æ¢å­˜åœ¨å›¾åƒï¼Œè½¨é“ä¸å­˜åœ¨è¦†å†™è´´å›¾ï¼‰
 	{
 		Rect aSrcRect(aAtlasImage->mX, aAtlasImage->mY, aAtlasImage->mWidth, aAtlasImage->mHeight);
 		aImage = mDefinition->mReanimAtlas->mMemoryImage;
-		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // Èç¹û¶¯»­´æÔÚÂË¾µ
+		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // å¦‚æœåŠ¨ç”»å­˜åœ¨æ»¤é•œ
 		{
-			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // È¡µÃÂË¾µºóµÄÌùÍ¼
+			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // å–å¾—æ»¤é•œåçš„è´´å›¾
 		}
-		theTriangleGroup->AddTriangle(g, aImage, aMatrix, aClipRect, aColor, g->mDrawMode, aSrcRect);  // ÏòÈı½Ç×éÖĞÌí¼ÓÈı½ÇĞÎ
-		if (mEnableExtraAdditiveDraw && !aTrackInstance->mIgnoreExtraAdditiveColor)  // Èç¹û¶¯»­´æÔÚ¶îÍâµş¼ÓÑÕÉ«ÇÒ¹ìµÀ²»ÄÜÎŞÊÓÖ®
+		theTriangleGroup->AddTriangle(g, aImage, aMatrix, aClipRect, aColor, g->mDrawMode, aSrcRect);  // å‘ä¸‰è§’ç»„ä¸­æ·»åŠ ä¸‰è§’å½¢
+		if (mEnableExtraAdditiveDraw && !aTrackInstance->mIgnoreExtraAdditiveColor)  // å¦‚æœåŠ¨ç”»å­˜åœ¨é¢å¤–å åŠ é¢œè‰²ä¸”è½¨é“ä¸èƒ½æ— è§†ä¹‹
 		{
 			theTriangleGroup->AddTriangle(g, aImage, aMatrix, aClipRect, aExtraAdditiveColor, Graphics::DRAWMODE_ADDITIVE, aSrcRect);
 		}
@@ -736,24 +737,24 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 				g, FilterEffectGetImage(aImage, FilterEffect::FILTER_EFFECT_WHITE), aMatrix, aClipRect, aExtraOverlayColor, Graphics::DRAWMODE_NORMAL, aSrcRect);
 		}
 	}
-	else if (aImage != nullptr)  // Èç¹û²»´æÔÚ atlas µ«¹ìµÀ±ä»»´æÔÚÍ¼Ïñ
+	else if (aImage != nullptr)  // å¦‚æœä¸å­˜åœ¨ atlas ä½†è½¨é“å˜æ¢å­˜åœ¨å›¾åƒ
 	{
-		if (aTrackInstance->mImageOverride != nullptr)  // Èç¹û¹ìµÀ´æÔÚ¸²Ğ´ÌùÍ¼
+		if (aTrackInstance->mImageOverride != nullptr)  // å¦‚æœè½¨é“å­˜åœ¨è¦†å†™è´´å›¾
 		{
-			aImage = aTrackInstance->mImageOverride;  // ½«ÌùÍ¼Ìæ»»Îª¸²Ğ´ÌùÍ¼
+			aImage = aTrackInstance->mImageOverride;  // å°†è´´å›¾æ›¿æ¢ä¸ºè¦†å†™è´´å›¾
 		}
-		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // Èç¹û¶¯»­´æÔÚÂË¾µ
+		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // å¦‚æœåŠ¨ç”»å­˜åœ¨æ»¤é•œ
 		{
-			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // ½«ÌùÍ¼Ìæ»»ÎªÂË¾µºóµÄÌùÍ¼
+			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // å°†è´´å›¾æ›¿æ¢ä¸ºæ»¤é•œåçš„è´´å›¾
 		}
 		while (aImageFrame >= aImage->mNumCols)
 		{
-			aImageFrame -= aImage->mNumCols;  // È·±£»æÖÆµÄÁĞÊı²»»á³¬¹ıÌùÍ¼×îºóÒ»ÁĞ
+			aImageFrame -= aImage->mNumCols;  // ç¡®ä¿ç»˜åˆ¶çš„åˆ—æ•°ä¸ä¼šè¶…è¿‡è´´å›¾æœ€åä¸€åˆ—
 		}
 
 		int aCelWidth = aImage->GetCelWidth();
 		Rect aSrcRect(aImageFrame * aCelWidth, 0, aCelWidth, aImage->GetCelHeight());
-		ReanimBltMatrix(g, aImage, aMatrix, aClipRect, aColor, g->mDrawMode, aSrcRect);  // ´ø¾ØÕó»æÖÆ¹ìµÀÍ¼Ïñ
+		ReanimBltMatrix(g, aImage, aMatrix, aClipRect, aColor, g->mDrawMode, aSrcRect);  // å¸¦çŸ©é˜µç»˜åˆ¶è½¨é“å›¾åƒ
 		if (mEnableExtraAdditiveDraw)
 		{
 			ReanimBltMatrix(g, aImage, aMatrix, aClipRect, aExtraAdditiveColor, Graphics::DRAWMODE_ADDITIVE, aSrcRect);
@@ -764,23 +765,23 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 			ReanimBltMatrix(g, aOverlayImage, aMatrix, aClipRect, aExtraOverlayColor, Graphics::DRAWMODE_NORMAL, aSrcRect);
 		}
 	}
-	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // Èç¹û²»´æÔÚÍ¼Ïñµ«´æÔÚÎÄ±¾
+	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')  // å¦‚æœä¸å­˜åœ¨å›¾åƒä½†å­˜åœ¨æ–‡æœ¬
 	{
 		TodDrawStringMatrix(g, aTransform.mFont, aMatrix, aTransform.mText, aColor);
 		if (mEnableExtraAdditiveDraw)
 		{
-			int aOldMode = g->GetDrawMode();  // ±¸·İ»æÖÆÄ£Ê½
+			int aOldMode = g->GetDrawMode();  // å¤‡ä»½ç»˜åˆ¶æ¨¡å¼
 			g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
 			TodDrawStringMatrix(g, aTransform.mFont, aMatrix, aTransform.mText, aExtraAdditiveColor);
-			g->SetDrawMode(aOldMode);  // »¹Ô­»æÖÆÄ£Ê½
+			g->SetDrawMode(aOldMode);  // è¿˜åŸç»˜åˆ¶æ¨¡å¼
 		}
 	}
-	else if (aFullScreen)  // ²»´æÔÚÍ¼ÏñºÍÎÄ±¾£¬µ«ÊÇÈ«ÆÁ
+	else if (aFullScreen)  // ä¸å­˜åœ¨å›¾åƒå’Œæ–‡æœ¬ï¼Œä½†æ˜¯å…¨å±
 	{
-		Color aOldColor = g->GetColor();  // ±¸·İÑÕÉ«
+		Color aOldColor = g->GetColor();  // å¤‡ä»½é¢œè‰²
 		g->SetColor(aColor);
 		g->FillRect(-g->mTransX, -g->mTransY, BOARD_WIDTH, BOARD_HEIGHT);
-		g->SetColor(aOldColor);  // »¹Ô­ÑÕÉ«
+		g->SetColor(aOldColor);  // è¿˜åŸé¢œè‰²
 	}
 	return true;
 }
@@ -793,11 +794,11 @@ Image* Reanimation::GetCurrentTrackImage(const char* theTrackName)
 	GetCurrentTransform(aTrackIndex, &aTransform);
 
 	Image* aImage = aTransform.mImage;
-	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // Èç¹û´æÔÚÍ¼¼¯ÇÒ´æÔÚÍ¼Ïñ£¨·ñÔò·µ»ØµÄ aImage Îª nullptr£©
+	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // å¦‚æœå­˜åœ¨å›¾é›†ä¸”å­˜åœ¨å›¾åƒï¼ˆå¦åˆ™è¿”å›çš„ aImage ä¸º nullptrï¼‰
 	{
-		ReanimAtlasImage* aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // È¡µÃÏàÓ¦µÄÍ¼¼¯Êı¾İ
+		ReanimAtlasImage* aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // å–å¾—ç›¸åº”çš„å›¾é›†æ•°æ®
 		if (aAtlasImage != nullptr)
-			aImage = aAtlasImage->mOriginalImage;  // ·µ»ØÍ¼¼¯¶ÔÓ¦µÄÔ­ÌùÍ¼
+			aImage = aAtlasImage->mOriginalImage;  // è¿”å›å›¾é›†å¯¹åº”çš„åŸè´´å›¾
 	}
 	return aImage;
 }
@@ -810,11 +811,11 @@ void Reanimation::GetTrackMatrix(int theTrackIndex, SexyTransform2D& theMatrix)
 	GetCurrentTransform(theTrackIndex, &aTransform);
 	int aImageFrame = FloatRoundToInt(aTransform.mFrame);
 	Image* aImage = aTransform.mImage;
-	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // Èç¹û´æÔÚÍ¼¼¯ÇÒ´æÔÚÍ¼Ïñ£¨·ñÔò·µ»ØµÄ aImage Îª nullptr£©
+	if (mDefinition->mReanimAtlas != nullptr && aImage != nullptr)  // å¦‚æœå­˜åœ¨å›¾é›†ä¸”å­˜åœ¨å›¾åƒï¼ˆå¦åˆ™è¿”å›çš„ aImage ä¸º nullptrï¼‰
 	{
-		ReanimAtlasImage* aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // È¡µÃÏàÓ¦µÄÍ¼¼¯Êı¾İ
+		ReanimAtlasImage* aAtlasImage = mDefinition->mReanimAtlas->GetEncodedReanimAtlas(aImage);  // å–å¾—ç›¸åº”çš„å›¾é›†æ•°æ®
 		if (aAtlasImage != nullptr)
-			aImage = aAtlasImage->mOriginalImage;  // ·µ»ØÍ¼¼¯¶ÔÓ¦µÄÔ­ÌùÍ¼
+			aImage = aAtlasImage->mOriginalImage;  // è¿”å›å›¾é›†å¯¹åº”çš„åŸè´´å›¾
 	}
 
 	theMatrix.LoadIdentity();
@@ -822,22 +823,22 @@ void Reanimation::GetTrackMatrix(int theTrackIndex, SexyTransform2D& theMatrix)
 	{
 		int aCelWidth = aImage->GetCelWidth();
 		int aCelHeight = aImage->GetCelHeight();
-		SexyMatrix3Translation(theMatrix, aCelWidth * 0.5f, aCelHeight * 0.5f);  // ½«¾ØÕó±ä»»µÄ×ø±êÉè¶¨ÔÚÌùÍ¼µÄÖĞĞÄÎ»ÖÃ
+		SexyMatrix3Translation(theMatrix, aCelWidth * 0.5f, aCelHeight * 0.5f);  // å°†çŸ©é˜µå˜æ¢çš„åæ ‡è®¾å®šåœ¨è´´å›¾çš„ä¸­å¿ƒä½ç½®
 	}
 	else if (aTransform.mFont != nullptr && *aTransform.mText != '\0')
 		SexyMatrix3Translation(theMatrix, 0.0f, aTransform.mFont->mAscent);
 
 	SexyTransform2D aTransformMatrix;
 	MatrixFromTransform(aTransform, aTransformMatrix);
-	SexyMatrix3Multiply(theMatrix, aTransformMatrix, theMatrix);  // ÒÔ¶¯»­±ä»»¾ØÕó×÷ÓÃ theMatrix
-	SexyMatrix3Multiply(theMatrix, mOverlayMatrix, theMatrix);  // ÒÔ¶¯»­¸²Ğ´¾ØÕó×÷ÓÃ theMatrix
-	SexyMatrix3Translation(theMatrix, aTrackInstance->mShakeX - 0.5f, aTrackInstance->mShakeY - 0.5f);  // ¹ìµÀÕğ¶¯µÄÓ°Ïì
+	SexyMatrix3Multiply(theMatrix, aTransformMatrix, theMatrix);  // ä»¥åŠ¨ç”»å˜æ¢çŸ©é˜µä½œç”¨ theMatrix
+	SexyMatrix3Multiply(theMatrix, mOverlayMatrix, theMatrix);  // ä»¥åŠ¨ç”»è¦†å†™çŸ©é˜µä½œç”¨ theMatrix
+	SexyMatrix3Translation(theMatrix, aTrackInstance->mShakeX - 0.5f, aTrackInstance->mShakeY - 0.5f);  // è½¨é“éœ‡åŠ¨çš„å½±å“
 }
 
 //0x472D90
 void Reanimation::GetFrameTime(ReanimatorFrameTime* theFrameTime)
 {
-	TOD_ASSERT(mFrameStart + mFrameCount <= mDefinition->mTracks[0].mTransformCount);
+	TOD_ASSERT(mFrameStart + mFrameCount <= mDefinition->mTracks.tracks[0].mTransforms.count);
 	int aFrameCount;
 	if (mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_FULL_LAST_FRAME || mLoopType == ReanimLoopType::REANIM_LOOP_FULL_LAST_FRAME ||
 		mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_FULL_LAST_FRAME_AND_HOLD)
@@ -848,14 +849,14 @@ void Reanimation::GetFrameTime(ReanimatorFrameTime* theFrameTime)
 	float aAnimFrameBefore = floor(aAnimPosition);
 	theFrameTime->mFraction = aAnimPosition - aAnimFrameBefore;
 	theFrameTime->mAnimFrameBeforeInt = FloatRoundToInt(aAnimFrameBefore);
-	if (theFrameTime->mAnimFrameBeforeInt >= mFrameStart + mFrameCount - 1)  // Èç¹ûµ±Ç°´¦ÓÚ½áÊøµÄÒ»Ö¡
+	if (theFrameTime->mAnimFrameBeforeInt >= mFrameStart + mFrameCount - 1)  // å¦‚æœå½“å‰å¤„äºç»“æŸçš„ä¸€å¸§
 	{
 		theFrameTime->mAnimFrameBeforeInt = mFrameStart + mFrameCount - 1;
-		theFrameTime->mAnimFrameAfterInt = theFrameTime->mAnimFrameBeforeInt;  // ½«Ç°¡¢ºóµÄÕûÊıÖ¡¾ù¸³ÖµÎª×îºóÒ»Ö¡
+		theFrameTime->mAnimFrameAfterInt = theFrameTime->mAnimFrameBeforeInt;  // å°†å‰ã€åçš„æ•´æ•°å¸§å‡èµ‹å€¼ä¸ºæœ€åä¸€å¸§
 	}
 	else
-		theFrameTime->mAnimFrameAfterInt = theFrameTime->mAnimFrameBeforeInt + 1;  // ºóÒ»ÕûÊıÖ¡µÈÓÚÇ°Ò»ÕûÊıÖ¡µÄºóÒ»Ö¡
-	TOD_ASSERT(theFrameTime->mAnimFrameBeforeInt >= 0 && theFrameTime->mAnimFrameAfterInt < mDefinition->mTracks[0].mTransformCount);
+		theFrameTime->mAnimFrameAfterInt = theFrameTime->mAnimFrameBeforeInt + 1;  // åä¸€æ•´æ•°å¸§ç­‰äºå‰ä¸€æ•´æ•°å¸§çš„åä¸€å¸§
+	TOD_ASSERT(theFrameTime->mAnimFrameBeforeInt >= 0 && theFrameTime->mAnimFrameAfterInt < mDefinition->mTracks.tracks[0].mTransforms.count);
 }
 
 //0x472E40
@@ -865,7 +866,7 @@ void Reanimation::DrawRenderGroup(Graphics* g, int theRenderGroup)
 		return;
 
 	TodTriangleGroup aTriangleGroup;
-	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
 	{
 		ReanimatorTrackInstance* aTrackInstance = &mTrackInstances[aTrackIndex];
 		if (aTrackInstance->mRenderGroup == theRenderGroup)
@@ -890,8 +891,8 @@ void Reanimation::Draw(Graphics* g)
 // GOTY @Patoke: 0x477640
 int Reanimation::FindTrackIndex(const char* theTrackName)
 {
-	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
-		if (stricmp(mDefinition->mTracks[aTrackIndex].mName, theTrackName) == 0)
+	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
+		if (stricmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
 			return aTrackIndex;
 
 	TodTrace("Can't find track '%s'", theTrackName);
@@ -907,11 +908,11 @@ ReanimatorTrackInstance* Reanimation::GetTrackInstanceByName(const char* theTrac
 //0x472F80
 void Reanimation::AttachToAnotherReanimation(Reanimation* theAttachReanim, const char* theTrackName)
 {
-	if (theAttachReanim->mDefinition->mTrackCount <= 0)
+	if (theAttachReanim->mDefinition->mTracks.count <= 0)
 		return;
 
 	if (theAttachReanim->mFrameBasePose == -1)
-		theAttachReanim->mFrameBasePose = theAttachReanim->mFrameStart;  // ½«µ±Ç°¶¯×÷µÄÆğÊ¼Ö¡×÷Îª±ä»»»ù×¼Ö¡
+		theAttachReanim->mFrameBasePose = theAttachReanim->mFrameStart;  // å°†å½“å‰åŠ¨ä½œçš„èµ·å§‹å¸§ä½œä¸ºå˜æ¢åŸºå‡†å¸§
 	AttachReanim(theAttachReanim->GetTrackInstanceByName(theTrackName)->mAttachmentID, this, 0.0f, 0.0f);
 }
 
@@ -919,7 +920,7 @@ void Reanimation::SetBasePoseFromAnim(const char* theTrackName)
 {
 	int aFrameStart, aFrameCount;
 	GetFramesForLayer(theTrackName, aFrameStart, aFrameCount);
-	mFrameBasePose = aFrameStart;  // ½«µ±Ç°¹ìµÀ¶¯»­µÄÆğÊ¼Ö¡×÷Îª±ä»»»ù×¼Ö¡
+	mFrameBasePose = aFrameStart;  // å°†å½“å‰è½¨é“åŠ¨ç”»çš„èµ·å§‹å¸§ä½œä¸ºå˜æ¢åŸºå‡†å¸§
 }
 
 //0x472FD0
@@ -944,8 +945,8 @@ AttachEffect* Reanimation::AttachParticleToTrack(const char* theTrackName, TodPa
 	int aTrackIndex = FindTrackIndex(theTrackName);
 	ReanimatorTrackInstance* aTrackInstance = &mTrackInstances[aTrackIndex];
 	SexyTransform2D aBasePoseMatrix;
-	GetTrackBasePoseMatrix(aTrackIndex, aBasePoseMatrix);  // È¡µÃ¹ìµÀ»ù´¡ĞÎÌ¬µÄ±ä»»¾ØÕó
-	SexyVector2 aPosition = aBasePoseMatrix * SexyVector2(thePosX, thePosY);  // ÒÔ»ù´¡ĞÎÌ¬µÄ¾ØÕó±ä»»Î»ÖÃÏòÁ¿
+	GetTrackBasePoseMatrix(aTrackIndex, aBasePoseMatrix);  // å–å¾—è½¨é“åŸºç¡€å½¢æ€çš„å˜æ¢çŸ©é˜µ
+	SexyVector2 aPosition = aBasePoseMatrix * SexyVector2(thePosX, thePosY);  // ä»¥åŸºç¡€å½¢æ€çš„çŸ©é˜µå˜æ¢ä½ç½®å‘é‡
 	return AttachParticle(aTrackInstance->mAttachmentID, theParticleSystem, aPosition.x, aPosition.y);
 }
 
@@ -954,22 +955,22 @@ AttachEffect* Reanimation::AttachParticleToTrack(const char* theTrackName, TodPa
 void Reanimation::GetAttachmentOverlayMatrix(int theTrackIndex, SexyTransform2D& theOverlayMatrix)
 {
 	ReanimatorTransform aTransform;
-	GetCurrentTransform(theTrackIndex, &aTransform);  // È¡µÃº¬»ìºÏ¡¢²»º¬¸²Ğ´µÄ×ÔÈ»±ä»»
+	GetCurrentTransform(theTrackIndex, &aTransform);  // å–å¾—å«æ··åˆã€ä¸å«è¦†å†™çš„è‡ªç„¶å˜æ¢
 	SexyTransform2D aTransformMatrix;
 	MatrixFromTransform(aTransform, aTransformMatrix);
-	SexyMatrix3Multiply(aTransformMatrix, mOverlayMatrix, aTransformMatrix);  // ÒÔ¶¯»­¸²Ğ´¾ØÕó×÷ÓÃÓÚ¶¯»­±ä»»¾ØÕó
+	SexyMatrix3Multiply(aTransformMatrix, mOverlayMatrix, aTransformMatrix);  // ä»¥åŠ¨ç”»è¦†å†™çŸ©é˜µä½œç”¨äºåŠ¨ç”»å˜æ¢çŸ©é˜µ
 
 	SexyTransform2D aBasePoseMatrix;
-	GetTrackBasePoseMatrix(theTrackIndex, aBasePoseMatrix);  // È¡µÃ¹ìµÀ»ù´¡ĞÎÌ¬µÄ±ä»»¾ØÕó
+	GetTrackBasePoseMatrix(theTrackIndex, aBasePoseMatrix);  // å–å¾—è½¨é“åŸºç¡€å½¢æ€çš„å˜æ¢çŸ©é˜µ
 	SexyTransform2D aBasePoseMatrixInv;
-	SexyMatrix3Inverse(aBasePoseMatrix, aBasePoseMatrixInv);  // È¡µÃ»ù´¡ĞÎÌ¬¾ØÕóµÄÄæ
+	SexyMatrix3Inverse(aBasePoseMatrix, aBasePoseMatrixInv);  // å–å¾—åŸºç¡€å½¢æ€çŸ©é˜µçš„é€†
 	theOverlayMatrix = aTransformMatrix * aBasePoseMatrixInv;
 }
 
 //0x4731D0
 void Reanimation::GetFramesForLayer(const char* theTrackName, int& theFrameStart, int& theFrameCount)
 {
-	if (mDefinition->mTrackCount == 0)  // Èç¹û¶¯»­Ã»ÓĞ¹ìµÀ
+	if (mDefinition->mTracks.count == 0)  // å¦‚æœåŠ¨ç”»æ²¡æœ‰è½¨é“
 	{
 		theFrameStart = 0;
 		theFrameCount = 0;
@@ -977,19 +978,19 @@ void Reanimation::GetFramesForLayer(const char* theTrackName, int& theFrameStart
 	}
 
 	int aTrackIndex = FindTrackIndex(theTrackName);
-	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTrackCount);
-	ReanimatorTrack* aTrack = &mDefinition->mTracks[aTrackIndex];
+	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTracks.count);
+	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[aTrackIndex];
 	theFrameStart = 0;
 	theFrameCount = 1;
-	for (int i = 0; i < aTrack->mTransformCount; i++)
-		if (aTrack->mTransforms[i].mFrame >= 0.0f)
+	for (int i = 0; i < aTrack->mTransforms.count; i++)
+		if (aTrack->mTransforms.mTransforms[i].mFrame >= 0.0f)
 		{
-			theFrameStart = i;  // È¡¹ìµÀÉÏµÄÊ×¸ö·Ç¿Õ°×Ö¡×÷ÎªÆğÊ¼Ö¡
+			theFrameStart = i;  // å–è½¨é“ä¸Šçš„é¦–ä¸ªéç©ºç™½å¸§ä½œä¸ºèµ·å§‹å¸§
 			break;
 		}
-	for (int j = theFrameStart; j < aTrack->mTransformCount; j++)
-		if (aTrack->mTransforms[j].mFrame >= 0.0f)
-			theFrameCount = j - theFrameStart + 1;  // È¡´ÓÆğÊ¼Ö¡ÖÁ¹ìµÀ×îºóÒ»¸ö·Ç¿Õ°×Ö¡Ö®¼äÎªÖ¡ÊıÁ¿
+	for (int j = theFrameStart; j < aTrack->mTransforms.count; j++)
+		if (aTrack->mTransforms.mTransforms[j].mFrame >= 0.0f)
+			theFrameCount = j - theFrameStart + 1;  // å–ä»èµ·å§‹å¸§è‡³è½¨é“æœ€åä¸€ä¸ªéç©ºç™½å¸§ä¹‹é—´ä¸ºå¸§æ•°é‡
 }
 
 //0x473280
@@ -1006,8 +1007,8 @@ void Reanimation::SetFramesForLayer(const char* theTrackName)
 //0x4732C0
 bool Reanimation::TrackExists(const char* theTrackName)
 {
-	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
-		if (stricmp(mDefinition->mTracks[aTrackIndex].mName, theTrackName) == 0)
+	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
+		if (stricmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
 			return true;
 	return false;
 }
@@ -1015,14 +1016,14 @@ bool Reanimation::TrackExists(const char* theTrackName)
 //0x473310
 void Reanimation::StartBlend(int theBlendTime)
 {
-	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
+	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
 	{
 		ReanimatorTransform aTransform;
 		GetCurrentTransform(aTrackIndex, &aTransform);
-		if (FloatRoundToInt(aTransform.mFrame) >= 0)  // Èôµ±Ç°¹ìµÀµ±Ç°²»´¦ÓÚ¿Õ°×Ö¡
+		if (FloatRoundToInt(aTransform.mFrame) >= 0)  // è‹¥å½“å‰è½¨é“å½“å‰ä¸å¤„äºç©ºç™½å¸§
 		{
 			ReanimatorTrackInstance* aTrackInstance = &mTrackInstances[aTrackIndex];
-			aTrackInstance->mBlendTransform = aTransform;  // ¼ÇÂ¼µ±Ç°±ä»»Îª»ìºÏµÄ³õÊ¼£¨Ô´£©±ä»»
+			aTrackInstance->mBlendTransform = aTransform;  // è®°å½•å½“å‰å˜æ¢ä¸ºæ··åˆçš„åˆå§‹ï¼ˆæºï¼‰å˜æ¢
 			aTrackInstance->mBlendTime = theBlendTime;
 			aTrackInstance->mBlendCounter = theBlendTime;
 			aTrackInstance->mBlendTransform.mFont = nullptr;
@@ -1038,7 +1039,7 @@ void Reanimation::ReanimationDie()
 	if (!mDead)
 	{
 		mDead = true;
-		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)
+		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
 		{
 			TOD_ASSERT(mTrackInstances);
 			AttachmentDie(mTrackInstances[aTrackIndex].mAttachmentID);
@@ -1079,9 +1080,9 @@ void Reanimation::SetImageOverride(const char* theTrackName, Image* theImage)
 //0x4734B0
 void Reanimation::SetTruncateDisappearingFrames(const char* theTrackName, bool theTruncateDisappearingFrames)
 {
-	if (theTrackName == nullptr)  // Èô¸ø³öµÄ¹ìµÀÃû³ÆÎª¿ÕÖ¸Õë
+	if (theTrackName == nullptr)  // è‹¥ç»™å‡ºçš„è½¨é“åç§°ä¸ºç©ºæŒ‡é’ˆ
 	{
-		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTrackCount; aTrackIndex++)  // ÒÀ´ÎÉèÖÃÃ¿Ò»¹ìµÀ
+		for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)  // ä¾æ¬¡è®¾ç½®æ¯ä¸€è½¨é“
 			mTrackInstances[aTrackIndex].mTruncateDisappearingFrames = theTruncateDisappearingFrames;
 	}
 	else
@@ -1120,21 +1121,21 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 {
 	TOD_ASSERT(theReanimType >= 0 && theReanimType < gReanimatorDefCount);
 	ReanimatorDefinition* aReanimDef = &gReanimatorDefArray[(int)theReanimType];
-	if (aReanimDef->mTracks != nullptr)  // Èç¹û¹ìµÀÖ¸Õë²»Îª¿ÕÖ¸Õë£¬ËµÃ÷¶¨ÒåÊı¾İÒÑ¾­¼ÓÔØ
+	if (aReanimDef->mTracks.tracks != nullptr)  // å¦‚æœè½¨é“æŒ‡é’ˆä¸ä¸ºç©ºæŒ‡é’ˆï¼Œè¯´æ˜å®šä¹‰æ•°æ®å·²ç»åŠ è½½
 		return;
 	ReanimationParams* aReanimParams = &gReanimationParamArray[(int)theReanimType];
 	if (theIsPreloading)
 	{
-		if (gSexyAppBase->mShutdown || gAppCloseRequest())  // Ô¤¼ÓÔØÊ±Èô³ÌĞòÍË³ö£¬ÔòÈ¡Ïû¼ÓÔØ
+		if (gSexyAppBase->mShutdown || gAppCloseRequest())  // é¢„åŠ è½½æ—¶è‹¥ç¨‹åºé€€å‡ºï¼Œåˆ™å–æ¶ˆåŠ è½½
 			return;
 	}
-	else  // < ÒÔÏÂ²¿·Ö½öÄÚ²â°æÖ´ĞĞ >
+	else  // < ä»¥ä¸‹éƒ¨åˆ†ä»…å†…æµ‹ç‰ˆæ‰§è¡Œ >
 	{
 		if (gAppHasUsedCheatKeys())
-			TodTraceAndLog("Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName());
+			TodTraceAndLog("Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
 		else
-			TodTraceAndLog("Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName());
-	}  // < ÒÔÉÏ²¿·Ö½öÄÚ²â°æÖ´ĞĞ >
+			TodTraceAndLog("Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
+	}  // < ä»¥ä¸Šéƒ¨åˆ†ä»…å†…æµ‹ç‰ˆæ‰§è¡Œ >
 
 	PerfTimer aTimer;
 	aTimer.Start();
@@ -1146,7 +1147,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 		TodErrorMessageBox(aBuf, "Error");
 	}
 	int aDuration = aTimer.GetDuration();
-	if (aDuration > 100)  //£¨½öÄÚ²â°æ£©´´½¨Ê±¼ä¹ı³¤µÄ±¨¸æ
+	if (aDuration > 100)  //ï¼ˆä»…å†…æµ‹ç‰ˆï¼‰åˆ›å»ºæ—¶é—´è¿‡é•¿çš„æŠ¥å‘Š
 		TodTraceAndLog("LOADING:Long reanim '%s' %d ms on %s", aReanimParams->mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
@@ -1160,7 +1161,7 @@ void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int 
 	gReanimatorDefCount = theReanimationParamArraySize;
 	gReanimatorDefArray = new ReanimatorDefinition[theReanimationParamArraySize];
 
-	for (int i = 0; i < gReanimationParamArraySize; i++)
+	for (unsigned int i = 0; i < gReanimationParamArraySize; i++)
 	{
 		ReanimationParams* aReanimationParams = &theReanimationParamArray[i];
 		TOD_ASSERT(aReanimationParams->mReanimationType == i);
@@ -1172,7 +1173,7 @@ void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int 
 //0x473870
 void ReanimatorFreeDefinitions()
 {
-	for (int i = 0; i < gReanimatorDefCount; i++)
+	for (unsigned int i = 0; i < gReanimatorDefCount; i++)
 		ReanimationFreeDefinition(&gReanimatorDefArray[i]);
 
 	delete[] gReanimatorDefArray;
@@ -1188,11 +1189,11 @@ float Reanimation::GetTrackVelocity(const char* theTrackName)
 	ReanimatorFrameTime aFrameTime;
 	GetFrameTime(&aFrameTime);
 	int aTrackIndex = FindTrackIndex(theTrackName);
-	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTrackCount);
+	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTracks.count);
 
-	ReanimatorTrack* aTrack = &mDefinition->mTracks[aTrackIndex];
-	float aDis = aTrack->mTransforms[aFrameTime.mAnimFrameAfterInt].mTransX - aTrack->mTransforms[aFrameTime.mAnimFrameBeforeInt].mTransX;
-	return aDis * SECONDS_PER_UPDATE * mAnimRate;  // Ë²Ê±ËÙÂÊ = Á½Ö¡¼äµÄºá×ø±êÖ®²î * Ò»Ö¡µÄÊ±³¤ * ¶¯»­ËÙÂÊ
+	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[aTrackIndex];
+	float aDis = aTrack->mTransforms.mTransforms[aFrameTime.mAnimFrameAfterInt].mTransX - aTrack->mTransforms.mTransforms[aFrameTime.mAnimFrameBeforeInt].mTransX;
+	return aDis * SECONDS_PER_UPDATE * mAnimRate;  // ç¬æ—¶é€Ÿç‡ = ä¸¤å¸§é—´çš„æ¨ªåæ ‡ä¹‹å·® * ä¸€å¸§çš„æ—¶é•¿ * åŠ¨ç”»é€Ÿç‡
 }
 
 //0x473930
@@ -1201,18 +1202,18 @@ bool Reanimation::IsTrackShowing(const char* theTrackName)
 	ReanimatorFrameTime aFrameTime;
 	GetFrameTime(&aFrameTime);
 	int aTrackIndex = FindTrackIndex(theTrackName);
-	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTrackCount);
+	TOD_ASSERT(aTrackIndex >= 0 && aTrackIndex < mDefinition->mTracks.count);
 
-	return mDefinition->mTracks[aTrackIndex].mTransforms[aFrameTime.mAnimFrameAfterInt].mFrame >= 0.0f;  // ·µ»ØÏÂÒ»ÕûÊıÖ¡ÊÇ·ñ´æÔÚÍ¼Ïñ
+	return mDefinition->mTracks.tracks[aTrackIndex].mTransforms.mTransforms[aFrameTime.mAnimFrameAfterInt].mFrame >= 0.0f;  // è¿”å›ä¸‹ä¸€æ•´æ•°å¸§æ˜¯å¦å­˜åœ¨å›¾åƒ
 }
 
 //0x473980
 void Reanimation::ShowOnlyTrack(const char* theTrackName)
 {
-	for (int i = 0; i < mDefinition->mTrackCount; i++)
+	for (int i = 0; i < mDefinition->mTracks.count; i++)
 	{
-		// ¹ìµÀÃûÓëÖ¸¶¨Ãû³ÆÏàÍ¬Ê±£¬ÉèÖÃ¹ìµÀäÖÈ¾·Ö×éÎªÕı³£ÏÔÊ¾£¬·ñÔòÉèÖÃ¹ìµÀäÖÈ¾·Ö×éÎªÒş²Ø
-		mTrackInstances[i].mRenderGroup = stricmp(mDefinition->mTracks[i].mName, theTrackName) == 0 ? RENDER_GROUP_NORMAL : RENDER_GROUP_HIDDEN;
+		// è½¨é“åä¸æŒ‡å®šåç§°ç›¸åŒæ—¶ï¼Œè®¾ç½®è½¨é“æ¸²æŸ“åˆ†ç»„ä¸ºæ­£å¸¸æ˜¾ç¤ºï¼Œå¦åˆ™è®¾ç½®è½¨é“æ¸²æŸ“åˆ†ç»„ä¸ºéšè—
+		mTrackInstances[i].mRenderGroup = stricmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0 ? RENDER_GROUP_NORMAL : RENDER_GROUP_HIDDEN;
 	}
 }
 
@@ -1220,10 +1221,10 @@ void Reanimation::ShowOnlyTrack(const char* theTrackName)
 // GOTY @Patoke: 0x478120
 void Reanimation::AssignRenderGroupToTrack(const char* theTrackName, int theRenderGroup)
 {
-	for (int i = 0; i < mDefinition->mTrackCount; i++)
-		if (stricmp(mDefinition->mTracks[i].mName, theTrackName) == 0)
+	for (int i = 0; i < mDefinition->mTracks.count; i++)
+		if (stricmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
 		{
-			mTrackInstances[i].mRenderGroup = theRenderGroup;  // ½öÉèÖÃÊ×¸öÃû³ÆÇ¡ºÃÎª theTrackName µÄ¹ìµÀ
+			mTrackInstances[i].mRenderGroup = theRenderGroup;  // ä»…è®¾ç½®é¦–ä¸ªåç§°æ°å¥½ä¸º theTrackName çš„è½¨é“
 			return;
 		}
 }
@@ -1233,10 +1234,10 @@ void Reanimation::AssignRenderGroupToTrack(const char* theTrackName, int theRend
 void Reanimation::AssignRenderGroupToPrefix(const char* theTrackName, int theRenderGroup)
 {
 	size_t aPrifixLength = strlen(theTrackName);
-	for (int i = 0; i < mDefinition->mTrackCount; i++)
+	for (int i = 0; i < mDefinition->mTracks.count; i++)
 	{
-		const char* const aTrackName = mDefinition->mTracks[i].mName;
-		if (strlen(aTrackName) >= aPrifixLength && !strnicmp(aTrackName, theTrackName, aPrifixLength))  // ¹ìµÀÃû³Æ³¤¶È±ØĞë²»Ğ¡ÓÚÖ¸¶¨Ç°×º³¤¶È
+		const char* const aTrackName = mDefinition->mTracks.tracks[i].mName;
+		if (strlen(aTrackName) >= aPrifixLength && !strnicmp(aTrackName, theTrackName, aPrifixLength))  // è½¨é“åç§°é•¿åº¦å¿…é¡»ä¸å°äºæŒ‡å®šå‰ç¼€é•¿åº¦
 			mTrackInstances[i].mRenderGroup = theRenderGroup;
 	}
 }
@@ -1244,7 +1245,7 @@ void Reanimation::AssignRenderGroupToPrefix(const char* theTrackName, int theRen
 //0x473AE0
 void Reanimation::PropogateColorToAttachments()
 {
-	for (int i = 0; i < mDefinition->mTrackCount; i++)
+	for (int i = 0; i < mDefinition->mTracks.count; i++)
 		AttachmentPropogateColor(
 			mTrackInstances[i].mAttachmentID, mColorOverride, mEnableExtraAdditiveDraw, mExtraAdditiveColor, mEnableExtraOverlayDraw, mExtraOverlayColor
 		);
@@ -1254,21 +1255,21 @@ void Reanimation::PropogateColorToAttachments()
 bool Reanimation::ShouldTriggerTimedEvent(float theEventTime)
 {
 	TOD_ASSERT(theEventTime >= 0.0f && theEventTime <= 1.0f);
-	if (mFrameCount == 0 || mLastFrameTime <= 0.0f || mAnimRate <= 0.0f)  // Ã»ÓĞ¶¯»­»òµ¹·Å»òÎ´²¥·Å
+	if (mFrameCount == 0 || mLastFrameTime <= 0.0f || mAnimRate <= 0.0f)  // æ²¡æœ‰åŠ¨ç”»æˆ–å€’æ”¾æˆ–æœªæ’­æ”¾
 		return false;
 
-	if (mAnimTime >= mLastFrameTime)  // Ò»°ãÇé¿öÏÂ£¬¿É´¥·¢µÄ·¶Î§Îª [mLastFrameTime, mAnimTime]
+	if (mAnimTime >= mLastFrameTime)  // ä¸€èˆ¬æƒ…å†µä¸‹ï¼Œå¯è§¦å‘çš„èŒƒå›´ä¸º [mLastFrameTime, mAnimTime]
 		return theEventTime >= mLastFrameTime && theEventTime < mAnimTime;
-	else  // Èô¶¯»­ÕıºÃÍê³ÉÒ»´ÎÑ­»·¶øÖØĞÂ½øÈëÏÂÒ»´ÎÑ­»·£¬Ôò¿É´¥·¢µÄ·¶Î§Îª [0, mAnimTime] ¡È [mLastFrameTime, 1]
+	else  // è‹¥åŠ¨ç”»æ­£å¥½å®Œæˆä¸€æ¬¡å¾ªç¯è€Œé‡æ–°è¿›å…¥ä¸‹ä¸€æ¬¡å¾ªç¯ï¼Œåˆ™å¯è§¦å‘çš„èŒƒå›´ä¸º [0, mAnimTime] âˆª [mLastFrameTime, 1]
 		return theEventTime >= mLastFrameTime || theEventTime < mAnimTime;
 }
 //0x473BF0
 // GOTY @Patoke: 0x478310
 void Reanimation::PlayReanim(const char* theTrackName, ReanimLoopType theLoopType, int theBlendTime, float theAnimRate)
 {
-	if (theBlendTime > 0)  // µ±ĞèÒª²¹¼ä¹ı¶ÉÊ±£¬¿ªÊ¼»ìºÏ
+	if (theBlendTime > 0)  // å½“éœ€è¦è¡¥é—´è¿‡æ¸¡æ—¶ï¼Œå¼€å§‹æ··åˆ
 		StartBlend(theBlendTime);
-	if (theAnimRate != 0.0f)  // µ±Ö¸¶¨µÄËÙÂÊÎª 0 Ê±£¬±íÊ¾²»¸Ä±äÔ­ÓĞ¶¯»­ËÙÂÊ
+	if (theAnimRate != 0.0f)  // å½“æŒ‡å®šçš„é€Ÿç‡ä¸º 0 æ—¶ï¼Œè¡¨ç¤ºä¸æ”¹å˜åŸæœ‰åŠ¨ç”»é€Ÿç‡
 		mAnimRate = theAnimRate;
 
 	mLoopType = theLoopType;
@@ -1283,40 +1284,40 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform& theTransform, At
 	theAttacherInfo.mTrackName = "";
 	theAttacherInfo.mAnimRate = 12.0f;
 	theAttacherInfo.mLoopType = ReanimLoopType::REANIM_LOOP;
-	if (theTransform.mFrame == -1.0f)  // Èç¹ûÊÇ¿Õ°×Ö¡
+	if (theTransform.mFrame == -1.0f)  // å¦‚æœæ˜¯ç©ºç™½å¸§
 		return;
 
-	/* ¸½Êô¹ìµÀÃû³Æ¸ñÊ½£ºattacher__REANIMNAME__TRACKNAME[TAG1][TAG2]¡­¡­ */
+	/* é™„å±è½¨é“åç§°æ ¼å¼ï¼šattacher__REANIMNAME__TRACKNAME[TAG1][TAG2]â€¦â€¦ */
 
-	const char* aReanimName = strstr(theTransform.mText, "__");  // Ö¸Ïò¶¯»­Ãû³ÆÇ°µÄË«ÏÂ»®Ïß
-	if (aReanimName == nullptr)  // Èç¹û×Ö·û´®ÖĞ²»º¬Ë«ÏÂ»®Ïß
+	const char* aReanimName = strstr(theTransform.mText, "__");  // æŒ‡å‘åŠ¨ç”»åç§°å‰çš„åŒä¸‹åˆ’çº¿
+	if (aReanimName == nullptr)  // å¦‚æœå­—ç¬¦ä¸²ä¸­ä¸å«åŒä¸‹åˆ’çº¿
 		return;
-	const char* aTags = strstr(aReanimName + 2, "[");  // ¶¯»­Ãû³ÆÖ®ºó£¬Ö¸Ïò TAG Ç°µÄÖĞÀ¨ºÅ
-	const char* aTrackName = strstr(aReanimName + 2, "__");  // ¶¯»­Ãû³ÆÖ®ºó£¬Ö¸Ïò¹ìµÀÃû³ÆÇ°µÄË«ÏÂ»®Ïß
-	if (aTags && aTrackName && (unsigned int)aTags < (unsigned int)aTrackName)  // Èç¹û¡°[¡±Ö®ºó»¹ÓĞË«ÏÂ»®Ïß£¬Ôò×Ö·û´®·Ç·¨
+	const char* aTags = strstr(aReanimName + 2, "[");  // åŠ¨ç”»åç§°ä¹‹åï¼ŒæŒ‡å‘ TAG å‰çš„ä¸­æ‹¬å·
+	const char* aTrackName = strstr(aReanimName + 2, "__");  // åŠ¨ç”»åç§°ä¹‹åï¼ŒæŒ‡å‘è½¨é“åç§°å‰çš„åŒä¸‹åˆ’çº¿
+	if (aTags && aTrackName && ((uintptr_t)aTags < (uintptr_t)aTrackName))  // å¦‚æœâ€œ[â€ä¹‹åè¿˜æœ‰åŒä¸‹åˆ’çº¿ï¼Œåˆ™å­—ç¬¦ä¸²éæ³•
 		return;
 
-	if (aTrackName)  // Èç¹ûÓĞ¶¨Òå¹ìµÀÃû³Æ
+	if (aTrackName)  // å¦‚æœæœ‰å®šä¹‰è½¨é“åç§°
 	{
-		theAttacherInfo.mReanimName.assign(aReanimName + 2, aTrackName - aReanimName - 2);  // È¡Á½´¦Ë«ÏÂ»®ÏßÖ®¼äµÄ²¿·Ö£¨REANIMNAME£©
-		if (aTags)  // Èç¹ûÓĞ¶¨Òå±êÇ©
-			theAttacherInfo.mTrackName.assign(aTrackName + 2, aTags - aTrackName - 2);  // È¡µ½ TAG µÄÖĞÀ¨ºÅÖ®Ç°
+		theAttacherInfo.mReanimName.assign(aReanimName + 2, aTrackName - aReanimName - 2);  // å–ä¸¤å¤„åŒä¸‹åˆ’çº¿ä¹‹é—´çš„éƒ¨åˆ†ï¼ˆREANIMNAMEï¼‰
+		if (aTags)  // å¦‚æœæœ‰å®šä¹‰æ ‡ç­¾
+			theAttacherInfo.mTrackName.assign(aTrackName + 2, aTags - aTrackName - 2);  // å–åˆ° TAG çš„ä¸­æ‹¬å·ä¹‹å‰
 		else
-			theAttacherInfo.mTrackName.assign(aTrackName + 2);  // È¡µ½×Ö·û´®½áÎ²
+			theAttacherInfo.mTrackName.assign(aTrackName + 2);  // å–åˆ°å­—ç¬¦ä¸²ç»“å°¾
 	}
-	else if (aTags)  // Èç¹ûÎ´¶¨Òå¹ìµÀÃû³Æµ«¶¨ÒåÁË±êÇ©
-		theAttacherInfo.mReanimName.assign(aReanimName + 2, aTags - aReanimName - 2);  // È¡Ë«ÏÂ»®ÏßÖÁÖĞÀ¨ºÅÖ®¼äµÄ²¿·Ö
-	else  // Èç¹ûÖ»¶¨ÒåÁË¹ìµÀÃû³Æ
-		theAttacherInfo.mReanimName.assign(aReanimName + 2);  // ´ÓË«ÏÂ»®ÏßÖ®ºóÈ¡µ½×Ö·û´®½áÎ²
+	else if (aTags)  // å¦‚æœæœªå®šä¹‰è½¨é“åç§°ä½†å®šä¹‰äº†æ ‡ç­¾
+		theAttacherInfo.mReanimName.assign(aReanimName + 2, aTags - aReanimName - 2);  // å–åŒä¸‹åˆ’çº¿è‡³ä¸­æ‹¬å·ä¹‹é—´çš„éƒ¨åˆ†
+	else  // å¦‚æœåªå®šä¹‰äº†è½¨é“åç§°
+		theAttacherInfo.mReanimName.assign(aReanimName + 2);  // ä»åŒä¸‹åˆ’çº¿ä¹‹åå–åˆ°å­—ç¬¦ä¸²ç»“å°¾
 
-	while (aTags)  // ¶ÁÈ¡Ã¿¸ö TAG
+	while (aTags)  // è¯»å–æ¯ä¸ª TAG
 	{
 		const char* aTagEnds = strstr(aTags + 1, "]");
-		if (aTagEnds == nullptr)  // Èç¹ûÃ»ÓĞÓÒÖĞÀ¨ºÅ
+		if (aTagEnds == nullptr)  // å¦‚æœæ²¡æœ‰å³ä¸­æ‹¬å·
 			break;
 		
-		std::string aCode(aTags + 1, aTagEnds - aTags - 1);  // È¡ÖĞÀ¨ºÅÄÚµÄÎÄ±¾
-		if (sscanf_s(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)  // ³¢ÊÔ½«ÎÄ±¾×÷Îª¸¡µãÊıÉ¨Ãè£¬Èç¹ûÉ¨Ãè³É¹¦Ôò½«½á¹û×÷Îª¶¯»­ËÙÂÊ
+		std::string aCode(aTags + 1, aTagEnds - aTags - 1);  // å–ä¸­æ‹¬å·å†…çš„æ–‡æœ¬
+		if (sscanf_s(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)  // å°è¯•å°†æ–‡æœ¬ä½œä¸ºæµ®ç‚¹æ•°æ‰«æï¼Œå¦‚æœæ‰«ææˆåŠŸåˆ™å°†ç»“æœä½œä¸ºåŠ¨ç”»é€Ÿç‡
 		{
 			if (aCode.compare("hold") == 0)
 				theAttacherInfo.mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
@@ -1324,61 +1325,62 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform& theTransform, At
 				theAttacherInfo.mLoopType = ReanimLoopType::REANIM_PLAY_ONCE;
 		}
 
-		aTags = strstr(aTagEnds + 1, "[");  // ¼ÌĞøÑ°ÕÒÏÂÒ»¸ö TAG µÄ×óÖĞÀ¨ºÅ
+		aTags = strstr(aTagEnds + 1, "[");  // ç»§ç»­å¯»æ‰¾ä¸‹ä¸€ä¸ª TAG çš„å·¦ä¸­æ‹¬å·
 	}
 }
 
 //0x473EB0
 void Reanimation::AttacherSynchWalkSpeed(int theTrackIndex, Reanimation* theAttachReanim, AttacherInfo& theAttacherInfo)
 {
-	ReanimatorTrack* aTrack = &mDefinition->mTracks[theTrackIndex];
+	(void)theAttacherInfo;
+	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[theTrackIndex];
 	ReanimatorFrameTime aFrameTime;
 	GetFrameTime(&aFrameTime);
 
 	int aPlaceHolderFrameStart = aFrameTime.mAnimFrameBeforeInt;
-	while (aPlaceHolderFrameStart > mFrameStart && aTrack->mTransforms[aPlaceHolderFrameStart - 1].mText == aTrack->mTransforms[aPlaceHolderFrameStart].mText)
-		aPlaceHolderFrameStart--;  // È¡µ±Ç°ËùÔÚÇø¼äµÄµÚÒ»Ö¡
+	while (aPlaceHolderFrameStart > mFrameStart && aTrack->mTransforms.mTransforms[aPlaceHolderFrameStart - 1].mText == aTrack->mTransforms.mTransforms[aPlaceHolderFrameStart].mText)
+		aPlaceHolderFrameStart--;  // å–å½“å‰æ‰€åœ¨åŒºé—´çš„ç¬¬ä¸€å¸§
 	int aPlaceHolderFrameEnd = aFrameTime.mAnimFrameBeforeInt;
-	while (aPlaceHolderFrameEnd < mFrameStart + mFrameCount - 1 && aTrack->mTransforms[aPlaceHolderFrameEnd + 1].mText == aTrack->mTransforms[aPlaceHolderFrameEnd].mText)
-		aPlaceHolderFrameEnd++;  // È¡µ±Ç°ËùÔÚÇø¼äµÄ×îºóÒ»Ö¡
+	while (aPlaceHolderFrameEnd < mFrameStart + mFrameCount - 1 && aTrack->mTransforms.mTransforms[aPlaceHolderFrameEnd + 1].mText == aTrack->mTransforms.mTransforms[aPlaceHolderFrameEnd].mText)
+		aPlaceHolderFrameEnd++;  // å–å½“å‰æ‰€åœ¨åŒºé—´çš„æœ€åä¸€å¸§
 	int aPlaceHolderFrameCount = aPlaceHolderFrameEnd - aPlaceHolderFrameStart;
-	ReanimatorTransform& aPlaceHolderStartTrans = aTrack->mTransforms[aPlaceHolderFrameStart];
-	ReanimatorTransform& aPlaceHolderEndTrans = aTrack->mTransforms[aPlaceHolderFrameEnd];
-	if (FloatApproxEqual(mAnimRate, 0.0f))  // Èç¹û¶¯»­×ÔÉíµÄËÙÂÊÎª 0
+	ReanimatorTransform& aPlaceHolderStartTrans = aTrack->mTransforms.mTransforms[aPlaceHolderFrameStart];
+	ReanimatorTransform& aPlaceHolderEndTrans = aTrack->mTransforms.mTransforms[aPlaceHolderFrameEnd];
+	if (FloatApproxEqual(mAnimRate, 0.0f))  // å¦‚æœåŠ¨ç”»è‡ªèº«çš„é€Ÿç‡ä¸º 0
 	{
-		theAttachReanim->mAnimRate = 0.0f;  // ¸½Êô¶¯»­µÄËÙÂÊÒ²Îª 0
+		theAttachReanim->mAnimRate = 0.0f;  // é™„å±åŠ¨ç”»çš„é€Ÿç‡ä¹Ÿä¸º 0
 		return;
 	}
-	float aPlaceHolderDistance = -(aPlaceHolderEndTrans.mTransX - aPlaceHolderStartTrans.mTransX);  // Õ¼Î»¹ìµÀÔÚµ±Ç°Çø¼äÄÚµÄÎ»ÒÆ
-	float aPlaceHolderSeconds = aPlaceHolderFrameCount / mAnimRate;  // Õ¼Î»¹ìµÀÔÚµ±Ç°Çø¼äÄÚµÄÊ±³¤
-	if (FloatApproxEqual(aPlaceHolderSeconds, 0.0f))  // Èç¹ûµ±Ç°ËùÔÚÇø¼ä²»´æÔÚÈÎºÎÖ¡
+	float aPlaceHolderDistance = -(aPlaceHolderEndTrans.mTransX - aPlaceHolderStartTrans.mTransX);  // å ä½è½¨é“åœ¨å½“å‰åŒºé—´å†…çš„ä½ç§»
+	float aPlaceHolderSeconds = aPlaceHolderFrameCount / mAnimRate;  // å ä½è½¨é“åœ¨å½“å‰åŒºé—´å†…çš„æ—¶é•¿
+	if (FloatApproxEqual(aPlaceHolderSeconds, 0.0f))  // å¦‚æœå½“å‰æ‰€åœ¨åŒºé—´ä¸å­˜åœ¨ä»»ä½•å¸§
 	{
-		theAttachReanim->mAnimRate = 0.0f;  // ¸½Êô¶¯»­µÄËÙÂÊÎª 0
+		theAttachReanim->mAnimRate = 0.0f;  // é™„å±åŠ¨ç”»çš„é€Ÿç‡ä¸º 0
 		return;
 	}
 
 	int aGroundTrackIndex = theAttachReanim->FindTrackIndex("_ground");
-	ReanimatorTrack* aGroundTrack = &theAttachReanim->mDefinition->mTracks[aGroundTrackIndex];
-	ReanimatorTransform& aTransformGuyStart = aGroundTrack->mTransforms[theAttachReanim->mFrameStart];
-	ReanimatorTransform& aTransformGuyEnd = aGroundTrack->mTransforms[theAttachReanim->mFrameStart + theAttachReanim->mFrameCount - 1];
-	float aGuyDistance = aTransformGuyEnd.mTransX - aTransformGuyStart.mTransX;  // Êµ¼Ê¶¯»­ÔÚÍêÕû¶¯×÷ÖÜÆÚÄÚµÄÎ»ÒÆ
-	if (aGuyDistance < FLT_EPSILON || aPlaceHolderDistance < FLT_EPSILON)  // Èç¹ûÕ¼Î»Î»ÒÆÎª 0 »òÊµ¼Ê¶¯»­ÖÜÆÚÎ»ÒÆÎª 0£¬Ôò¸½Êô¶¯»­ÎŞ·¨ÒÆ¶¯
+	ReanimatorTrack* aGroundTrack = &theAttachReanim->mDefinition->mTracks.tracks[aGroundTrackIndex];
+	ReanimatorTransform& aTransformGuyStart = aGroundTrack->mTransforms.mTransforms[theAttachReanim->mFrameStart];
+	ReanimatorTransform& aTransformGuyEnd = aGroundTrack->mTransforms.mTransforms[theAttachReanim->mFrameStart + theAttachReanim->mFrameCount - 1];
+	float aGuyDistance = aTransformGuyEnd.mTransX - aTransformGuyStart.mTransX;  // å®é™…åŠ¨ç”»åœ¨å®Œæ•´åŠ¨ä½œå‘¨æœŸå†…çš„ä½ç§»
+	if (aGuyDistance < FLT_EPSILON || aPlaceHolderDistance < FLT_EPSILON)  // å¦‚æœå ä½ä½ç§»ä¸º 0 æˆ–å®é™…åŠ¨ç”»å‘¨æœŸä½ç§»ä¸º 0ï¼Œåˆ™é™„å±åŠ¨ç”»æ— æ³•ç§»åŠ¨
 	{
-		theAttachReanim->mAnimRate = 0.0f;  // ¸½Êô¶¯»­µÄËÙÂÊÎª 0
+		theAttachReanim->mAnimRate = 0.0f;  // é™„å±åŠ¨ç”»çš„é€Ÿç‡ä¸º 0
 		return;
 	}
 
-	float aLoops = aPlaceHolderDistance / aGuyDistance;  // ÒÔ¸½Êô¶¯»­Ä¿±êÎ»ÒÆ£¨Õ¼Î»Î»ÒÆ£©³ıÒÔÆäÖÜÆÚÎ»ÒÆ£¬µÃµ½¸½Êô¶¯»­ĞèÒªÑ­»·µÄÖÜÆÚÊı
+	float aLoops = aPlaceHolderDistance / aGuyDistance;  // ä»¥é™„å±åŠ¨ç”»ç›®æ ‡ä½ç§»ï¼ˆå ä½ä½ç§»ï¼‰é™¤ä»¥å…¶å‘¨æœŸä½ç§»ï¼Œå¾—åˆ°é™„å±åŠ¨ç”»éœ€è¦å¾ªç¯çš„å‘¨æœŸæ•°
 	ReanimatorTransform aTransformGuyCurrent;
 	theAttachReanim->GetCurrentTransform(aGroundTrackIndex, &aTransformGuyCurrent);
 	AttachEffect* aAttachEffect = FindFirstAttachment(mTrackInstances[theTrackIndex].mAttachmentID);
 	if (aAttachEffect != nullptr)
 	{
-		float aGuyCurrentDistance = aTransformGuyCurrent.mTransX - aTransformGuyStart.mTransX;  // ¸½Êô¶¯»­ÔÚÆäÖÜÆÚÄÚµ±Ç°ÒÑ¾­¹ıµÄÎ»ÒÆ
-		float aGuyExpectedDistance = aGuyDistance * theAttachReanim->mAnimTime;  // ÒÔÔÈËÙÔË¶¯µÄÕ¼Î»¹ìµÀ¼ÆËãµÄ¡¢¸½Êô¶¯»­µ±Ç°µÄÀíÂÛÎ»ÒÆ
-		aAttachEffect->mOffset.m02 = aGuyExpectedDistance - aGuyCurrentDistance;  // µ÷Õû¸½ÊôĞ§¹ûµÄºáÏò±ä»»ÒÔÊ¹¸½Êô¶¯»­µÄÎ»ÒÆ±£³ÖÓëÕ¼Î»¶¯»­Ò»ÖÂ
+		float aGuyCurrentDistance = aTransformGuyCurrent.mTransX - aTransformGuyStart.mTransX;  // é™„å±åŠ¨ç”»åœ¨å…¶å‘¨æœŸå†…å½“å‰å·²ç»è¿‡çš„ä½ç§»
+		float aGuyExpectedDistance = aGuyDistance * theAttachReanim->mAnimTime;  // ä»¥åŒ€é€Ÿè¿åŠ¨çš„å ä½è½¨é“è®¡ç®—çš„ã€é™„å±åŠ¨ç”»å½“å‰çš„ç†è®ºä½ç§»
+		aAttachEffect->mOffset.m02 = aGuyExpectedDistance - aGuyCurrentDistance;  // è°ƒæ•´é™„å±æ•ˆæœçš„æ¨ªå‘å˜æ¢ä»¥ä½¿é™„å±åŠ¨ç”»çš„ä½ç§»ä¿æŒä¸å ä½åŠ¨ç”»ä¸€è‡´
 	}
-	theAttachReanim->mAnimRate = aLoops * theAttachReanim->mFrameCount / aPlaceHolderSeconds;  // ËÙÂÊ = ĞèÒª²¥·ÅµÄÖ¡Êı ¡Â ¿ÉÒÔ²¥·ÅµÄÊ±³¤
+	theAttachReanim->mAnimRate = aLoops * theAttachReanim->mFrameCount / aPlaceHolderSeconds;  // é€Ÿç‡ = éœ€è¦æ’­æ”¾çš„å¸§æ•° Ã· å¯ä»¥æ’­æ”¾çš„æ—¶é•¿
 }
 
 //0x4740B0
@@ -1391,10 +1393,10 @@ void Reanimation::UpdateAttacherTrack(int theTrackIndex)
 	ParseAttacherTrack(aTransform, aAttacherInfo);
 
 	ReanimationType aReanimationType = ReanimationType::REANIM_NONE;
-	if (aAttacherInfo.mReanimName.size() != 0)  // Èç¹û¸½Êô¹ìµÀÉè¶¨ÁËµ±Ç°µÄ¸½Êô¶¯»­Ãû³Æ
+	if (aAttacherInfo.mReanimName.size() != 0)  // å¦‚æœé™„å±è½¨é“è®¾å®šäº†å½“å‰çš„é™„å±åŠ¨ç”»åç§°
 	{
 		std::string aReanimFileName = StrFormat("reanim\\%s.reanim", aAttacherInfo.mReanimName.c_str());
-		for (int i = 0; i < gReanimationParamArraySize; i++)  // ÔÚ¶¯»­²ÎÊıÊı×éÖĞÑ°ÕÒ¶¯»­ÎÄ¼şÃû¶ÔÓ¦µÄ¶¯»­ÀàĞÍ
+		for (unsigned int i = 0; i < gReanimationParamArraySize; i++)  // åœ¨åŠ¨ç”»å‚æ•°æ•°ç»„ä¸­å¯»æ‰¾åŠ¨ç”»æ–‡ä»¶åå¯¹åº”çš„åŠ¨ç”»ç±»å‹
 		{
 			ReanimationParams* aParams = &gReanimationParamArray[i];
 			if (stricmp(aReanimFileName.c_str(), aParams->mReanimFileName) == 0)
@@ -1404,31 +1406,31 @@ void Reanimation::UpdateAttacherTrack(int theTrackIndex)
 			}
 		}
 	}
-	if (aReanimationType == ReanimationType::REANIM_NONE)  // Èç¹ûÃ»ÓĞÉè¶¨µ±Ç°¸½Êô¶¯»­Ãû³Æ£¬»òÎ´ÕÒµ½ÏàÓ¦µÄ¶¯»­
+	if (aReanimationType == ReanimationType::REANIM_NONE)  // å¦‚æœæ²¡æœ‰è®¾å®šå½“å‰é™„å±åŠ¨ç”»åç§°ï¼Œæˆ–æœªæ‰¾åˆ°ç›¸åº”çš„åŠ¨ç”»
 	{
-		AttachmentDie(aTrackInstance->mAttachmentID);  // Çå³ı¸½¼ş
+		AttachmentDie(aTrackInstance->mAttachmentID);  // æ¸…é™¤é™„ä»¶
 		return;
 	}
 
 	Reanimation* aAttachReanim = FindReanimAttachment(aTrackInstance->mAttachmentID);
-	if (aAttachReanim == nullptr || aAttachReanim->mReanimationType != aReanimationType)  // Èç¹ûÔ­ÏÈÃ»ÓĞ¸½Êô¶¯»­£¬»òÔ­¸½Êô¶¯»­²»ÊÇÉÏÊöÉè¶¨µÄ¶¯»­
+	if (aAttachReanim == nullptr || aAttachReanim->mReanimationType != aReanimationType)  // å¦‚æœåŸå…ˆæ²¡æœ‰é™„å±åŠ¨ç”»ï¼Œæˆ–åŸé™„å±åŠ¨ç”»ä¸æ˜¯ä¸Šè¿°è®¾å®šçš„åŠ¨ç”»
 	{
-		AttachmentDie(aTrackInstance->mAttachmentID);  // Çå³ıÔ­ÓĞ¸½¼ş
-		aAttachReanim = gEffectSystem->mReanimationHolder->AllocReanimation(0.0f, 0.0f, 0, aReanimationType);  // ÖØĞÂ´´½¨Ò»¸öÖ¸¶¨µÄ¶¯»­
+		AttachmentDie(aTrackInstance->mAttachmentID);  // æ¸…é™¤åŸæœ‰é™„ä»¶
+		aAttachReanim = gEffectSystem->mReanimationHolder->AllocReanimation(0.0f, 0.0f, 0, aReanimationType);  // é‡æ–°åˆ›å»ºä¸€ä¸ªæŒ‡å®šçš„åŠ¨ç”»
 		aAttachReanim->mLoopType = aAttacherInfo.mLoopType;
 		aAttachReanim->mAnimRate = aAttacherInfo.mAnimRate;
 		AttachReanim(aTrackInstance->mAttachmentID, aAttachReanim, 0.0f, 0.0f);
-		mFrameBasePose = NO_BASE_POSE;  // Éè¶¨¸½Êô¶¯»­ºó£¬×ÔÉí²»ÔÙ´æÔÚ»ù×¼Ö¡
+		mFrameBasePose = NO_BASE_POSE;  // è®¾å®šé™„å±åŠ¨ç”»åï¼Œè‡ªèº«ä¸å†å­˜åœ¨åŸºå‡†å¸§
 	}
 
-	if (aAttacherInfo.mTrackName.size() != 0)  // Èç¹û¶¨ÒåÁË¸½Êô¶¯»­µÄ¶¯×÷¹ìµÀ
+	if (aAttacherInfo.mTrackName.size() != 0)  // å¦‚æœå®šä¹‰äº†é™„å±åŠ¨ç”»çš„åŠ¨ä½œè½¨é“
 	{
 		int aAnimFrameStart, aAnimFrameCount;
 		aAttachReanim->GetFramesForLayer(aAttacherInfo.mTrackName.c_str(), aAnimFrameStart, aAnimFrameCount);
-		if (aAttachReanim->mFrameStart != aAnimFrameStart || aAttachReanim->mFrameCount != aAnimFrameCount)  // if (!aAttachReanim->IsAnimPlaying(¡­¡­))
+		if (aAttachReanim->mFrameStart != aAnimFrameStart || aAttachReanim->mFrameCount != aAnimFrameCount)  // if (!aAttachReanim->IsAnimPlaying(â€¦â€¦))
 		{
 			aAttachReanim->StartBlend(20);
-			aAttachReanim->SetFramesForLayer(aAttacherInfo.mTrackName.c_str());  // ²¥·ÅÖ¸¶¨¹ìµÀÉÏµÄ¶¯×÷
+			aAttachReanim->SetFramesForLayer(aAttacherInfo.mTrackName.c_str());  // æ’­æ”¾æŒ‡å®šè½¨é“ä¸Šçš„åŠ¨ä½œ
 		}
 
 		if (aAttachReanim->mAnimRate == 12.0f && aAttacherInfo.mTrackName.compare("anim_walk") == 0 && aAttachReanim->TrackExists("_ground"))
@@ -1457,7 +1459,7 @@ Reanimation* Reanimation::FindSubReanim(ReanimationType theReanimType)
 	if (mReanimationType == theReanimType)
 		return this;
 
-	for (int i = 0; i < mDefinition->mTrackCount; i++)
+	for (int i = 0; i < mDefinition->mTracks.count; i++)
 	{
 		Reanimation* aReanimation = FindReanimAttachment(mTrackInstances[i].mAttachmentID);
 		if (aReanimation != nullptr)

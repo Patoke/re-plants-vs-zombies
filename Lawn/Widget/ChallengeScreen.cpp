@@ -8,9 +8,9 @@
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Debug.h"
+#include "misc/Debug.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  _S("[SURVIVAL_DAY_NORMAL]") },
@@ -156,7 +156,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	if (mApp->mGameMode != GAMEMODE_UPSELL || mApp->mGameScene != SCENE_LEVEL_INTRO)
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 
-	bool aIsIZombie = false;
+	// bool aIsIZombie = false; // Unused
 	if (mPageIndex == CHALLENGE_PAGE_SURVIVAL && mApp->mPlayerInfo->mHasNewSurvival)
 	{
 		SetUnlockChallengeIndex(mPageIndex, false);
@@ -331,6 +331,8 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
 			return aIdxInPage >= aNumTrophies ? aIdxInPage - aNumTrophies + 1 : 0;
 		}
 	}
+
+	std::unreachable();
 }
 
 //0x42E6E0
@@ -388,7 +390,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 		if (AccomplishmentsNeeded(theChallengeIndex) <= 1)
 		{
 			// ============================================================================================
-			// ¡ø »æÖÆ°´Å¥ÉÏµÄÐ¡ÓÎÏ·Í¼±ê
+			// â–² ç»˜åˆ¶æŒ‰é’®ä¸Šçš„å°æ¸¸æˆå›¾æ ‡
 			// ============================================================================================
 			if (aChallengeButton->mDisabled)
 			{
@@ -419,14 +421,14 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			}
 
 			// ============================================================================================
-			// ¡ø »æÖÆÐ¡ÓÎÏ·°´Å¥±ß¿ò
+			// â–² ç»˜åˆ¶å°æ¸¸æˆæŒ‰é’®è¾¹æ¡†
 			// ============================================================================================
 			bool aHighLight = aChallengeButton->mIsOver && theChallengeIndex != mUnlockChallengeIndex;
 			g->SetColorizeImages(false);
 			g->DrawImage(aHighLight ? Sexy::IMAGE_CHALLENGE_WINDOW : Sexy::IMAGE_CHALLENGE_WINDOW_HIGHLIGHT, aPosX - 6, aPosY - 2);
 
 			// ============================================================================================
-			// ¡ø »æÖÆÐ¡ÓÎÏ·µÄÃû³Æ
+			// â–² ç»˜åˆ¶å°æ¸¸æˆçš„åç§°
 			// ============================================================================================
 			Color aTextColor = aHighLight ? Color(250, 40, 40) : Color(42, 42, 90);
 			SexyString aName = TodStringTranslate(aDef.mChallengeName);
@@ -442,7 +444,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			}
 			else
 			{
-				// ÏÈ³¢ÊÔÔÚÃû³Æ×Ö·û´®µÄºó°ë¶ÎÈ¡¿Õ¸ñÒÔ½«×Ö·û´®·Ö¸ôÎªÁ½ÐÐ£¬Èôºó°ë¶ÎÖÐÎÞ¿Õ¸ñÔòÔÚÕû¸ö×Ö·û´®ÖÐÑ°ÕÒ¿Õ¸ñ
+				// å…ˆå°è¯•åœ¨åç§°å­—ç¬¦ä¸²çš„åŽåŠæ®µå–ç©ºæ ¼ä»¥å°†å­—ç¬¦ä¸²åˆ†éš”ä¸ºä¸¤è¡Œï¼Œè‹¥åŽåŠæ®µä¸­æ— ç©ºæ ¼åˆ™åœ¨æ•´ä¸ªå­—ç¬¦ä¸²ä¸­å¯»æ‰¾ç©ºæ ¼
 				int aHalfPos = (mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
 				const SexyChar* aSpacedChar = sexystrchr(aName.c_str() + aHalfPos, _S(' '));
 				if (aSpacedChar == nullptr)
@@ -450,7 +452,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 					aSpacedChar = sexystrchr(aName.c_str(), _S(' '));
 				}
 
-				// ·Ö±ð¼ÆËãÈ¡µÃÁ½ÐÐÎÄ±¾µÄ³¤¶È
+				// åˆ†åˆ«è®¡ç®—å–å¾—ä¸¤è¡Œæ–‡æœ¬çš„é•¿åº¦
 				int aLine1Len = aNameLen;
 				int aLine2Len = 0;
 				if (aSpacedChar != nullptr)
@@ -459,7 +461,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 					aLine2Len = aNameLen - aLine1Len - 1;
 				}
 
-				// ·Ö±ð»æÖÆÁ½ÐÐÎÄ±¾×Ö·û´®
+				// åˆ†åˆ«ç»˜åˆ¶ä¸¤è¡Œæ–‡æœ¬å­—ç¬¦ä¸²
 				TodDrawString(g, aName.substr(0, aLine1Len), aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
 				if (aLine2Len > 0)
 				{
@@ -468,7 +470,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
 			}
 
 			// ============================================================================================
-			// ¡ø »æÖÆ¹Ø¿¨Ëø¶¨»ò¹Ø¿¨Íê³ÉµÄÌùÍ¼ÒÔ¼°¹Ø¿¨×î¸ß¼ÇÂ¼µÄÎÄ±¾µÈ
+			// â–² ç»˜åˆ¶å…³å¡é”å®šæˆ–å…³å¡å®Œæˆçš„è´´å›¾ä»¥åŠå…³å¡æœ€é«˜è®°å½•çš„æ–‡æœ¬ç­‰
 			// ============================================================================================
 			int aRecord = mApp->mPlayerInfo->mChallengeRecords[theChallengeIndex];
 			if (theChallengeIndex == mUnlockChallengeIndex)
@@ -595,6 +597,7 @@ void ChallengeScreen::RemovedFromManager(WidgetManager* theWidgetManager)
 //0x42F720
 void ChallengeScreen::ButtonPress(int theId)
 {
+	(void)theId;
 	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
 }
 
@@ -691,7 +694,7 @@ void ChallengeScreen::UpdateToolTip()
 				mToolTip->mVisible = true;
 				return;
 			} // end if (MoreTrophiesNeeded(aChallengeMode) > 0)
-		} // end ÐèÒªÏÔÊ¾±êÇ©µÄÌõ¼þÅÐ¶Ï
+		} // end éœ€è¦æ˜¾ç¤ºæ ‡ç­¾çš„æ¡ä»¶åˆ¤æ–­
 	}
 
 	mToolTip->mVisible = false;

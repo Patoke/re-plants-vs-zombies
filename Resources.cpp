@@ -1,6 +1,6 @@
 #include <map>
 #include "Resources.h"
-#include "SexyAppFramework/ResourceManager.h"
+#include "misc/ResourceManager.h"
 
 using namespace Sexy;
 
@@ -25,7 +25,7 @@ bool Sexy::ExtractResourcesByName(ResourceManager* theResourceManager, const cha
 	if (!strcmp(theName, "DelayLoad_GreenHouseOverlay")) return ExtractDelayLoad_GreenHouseOverlayResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_MushroomGarden")) return ExtractDelayLoad_MushroomGardenResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_Store")) return ExtractDelayLoad_StoreResources(theResourceManager);
-	if (!strcmp(theName, "DelayLoad_TreeOfWisdom")) return ExtractDelayLoad_TreeOfWisdomResources(theResourceManager);
+//	if (!strcmp(theName, "DelayLoad_TreeOfWisdom")) return ExtractDelayLoad_TreeOfWisdomResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_Zombatar")) return ExtractDelayLoad_ZombatarResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_ZombieFinalNote")) return ExtractDelayLoad_ZombieFinalNoteResources(theResourceManager);
 	if (!strcmp(theName, "DelayLoad_ZombieNote")) return ExtractDelayLoad_ZombieNoteResources(theResourceManager);
@@ -40,6 +40,8 @@ bool Sexy::ExtractResourcesByName(ResourceManager* theResourceManager, const cha
 	if (!strcmp(theName, "LoadingFonts")) return ExtractLoadingFontsResources(theResourceManager);
 	if (!strcmp(theName, "LoadingImages")) return ExtractLoadingImagesResources(theResourceManager);
 	if (!strcmp(theName, "LoadingSounds")) return ExtractLoadingSoundsResources(theResourceManager);
+
+	std::unreachable();
 }
 
 // DelayLoad_Almanac Resources
@@ -309,8 +311,8 @@ bool Sexy::ExtractDelayLoad_ChallengeScreenResources(ResourceManager* theManager
 }
 
 // DelayLoad_Credits Resources
-Font* Sexy::FONT_BRIANNETOD32;
-Font* Sexy::FONT_BRIANNETOD32BLACK;
+_Font* Sexy::FONT_BRIANNETOD32;
+_Font* Sexy::FONT_BRIANNETOD32BLACK;
 Image* Sexy::IMAGE_CREDITS_PLAYBUTTON;
 Image* Sexy::IMAGE_CREDITS_ZOMBIENOTE;
 Image* Sexy::IMAGE_REANIM_CREDITS_DISCOLIGHTS;
@@ -472,21 +474,6 @@ bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager* theManager)
 }
 
 // DelayLoad_TreeOfWisdom Resources
-
-bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(ResourceManager* theManager)
-{
-	gNeedRecalcVariableToIdMap = true;
-
-	ResourceManager& aMgr = *theManager;
-	try
-	{
-	}
-	catch (ResourceManagerException&)
-	{
-		return false;
-	}
-	return true;
-}
 
 // DelayLoad_Zombatar Resources
 Image* Sexy::IMAGE_ZOMBATAR_ACCEPT_BUTTON;
@@ -1125,7 +1112,7 @@ bool Sexy::ExtractInitResources(ResourceManager* theManager)
 }
 
 // LoaderBar Resources
-Font* Sexy::FONT_BRIANNETOD16;
+_Font* Sexy::FONT_BRIANNETOD16;
 Image* Sexy::IMAGE_LOADBAR_DIRT;
 Image* Sexy::IMAGE_LOADBAR_GRASS;
 Image* Sexy::IMAGE_PVZ_LOGO;
@@ -1160,24 +1147,24 @@ bool Sexy::ExtractLoaderBarResources(ResourceManager* theManager)
 }
 
 // LoadingFonts Resources
-Font* Sexy::FONT_BRIANNETOD12;
-Font* Sexy::FONT_CONTINUUMBOLD14;
-Font* Sexy::FONT_CONTINUUMBOLD14OUTLINE;
-Font* Sexy::FONT_DWARVENTODCRAFT12;
-Font* Sexy::FONT_DWARVENTODCRAFT15;
-Font* Sexy::FONT_DWARVENTODCRAFT18;
-Font* Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT18GREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT18YELLOW;
-Font* Sexy::FONT_DWARVENTODCRAFT24;
-Font* Sexy::FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT36GREENINSET;
-Font* Sexy::FONT_HOUSEOFTERROR16;
-Font* Sexy::FONT_HOUSEOFTERROR20;
-Font* Sexy::FONT_HOUSEOFTERROR28;
+_Font* Sexy::FONT_BRIANNETOD12;
+_Font* Sexy::FONT_CONTINUUMBOLD14;
+_Font* Sexy::FONT_CONTINUUMBOLD14OUTLINE;
+_Font* Sexy::FONT_DWARVENTODCRAFT12;
+_Font* Sexy::FONT_DWARVENTODCRAFT15;
+_Font* Sexy::FONT_DWARVENTODCRAFT18;
+_Font* Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
+_Font* Sexy::FONT_DWARVENTODCRAFT18GREENINSET;
+_Font* Sexy::FONT_DWARVENTODCRAFT18YELLOW;
+_Font* Sexy::FONT_DWARVENTODCRAFT24;
+_Font* Sexy::FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
+_Font* Sexy::FONT_DWARVENTODCRAFT36GREENINSET;
+_Font* Sexy::FONT_HOUSEOFTERROR16;
+_Font* Sexy::FONT_HOUSEOFTERROR20;
+_Font* Sexy::FONT_HOUSEOFTERROR28;
 Image* Sexy::FONT_IMAGE_HOUSEOFTERROR28;
-Font* Sexy::FONT_PICO129;
-Font* Sexy::FONT_TINYBOLD;
+_Font* Sexy::FONT_PICO129;
+_Font* Sexy::FONT_TINYBOLD;
 
 bool Sexy::ExtractLoadingFontsResources(ResourceManager* theManager)
 {
@@ -3205,9 +3192,9 @@ Sexy::Image* Sexy::GetImageById(ResourceId theId)
 	return *(Sexy::Image**)gResources[(int)theId];
 }
 
-Sexy::Font* Sexy::GetFontById(ResourceId theId)
+Sexy::_Font* Sexy::GetFontById(ResourceId theId)
 {
-	return *(Sexy::Font**)gResources[(int)theId];
+	return *(Sexy::_Font**)gResources[(int)theId];
 }
 
 int Sexy::GetSoundById(ResourceId theId)
@@ -3220,14 +3207,14 @@ Image*& Sexy::GetImageRefById(ResourceId theId)
 	return *(Image**)gResources[(int)theId];
 }
 
-Font*& Sexy::GetFontRefById(ResourceId theId)
+_Font*& Sexy::GetFontRefById(ResourceId theId)
 {
-	return *(Font**)gResources[(int)theId];
+	return *(_Font**)gResources[(int)theId];
 }
 
 int& Sexy::GetSoundRefById(ResourceId theId)
 {
-	return *(int*)gResources[(int)theId];
+	return *(int*)gResources[(intptr_t)theId];
 }
 
 Sexy::ResourceId Sexy::GetIdByImage(Image* theImage)
@@ -3235,12 +3222,12 @@ Sexy::ResourceId Sexy::GetIdByImage(Image* theImage)
 	return GetIdByVariable(theImage);
 }
 
-Sexy::ResourceId Sexy::GetIdByFont(Font* theFont)
+Sexy::ResourceId Sexy::GetIdByFont(_Font* theFont)
 {
 	return GetIdByVariable(theFont);
 }
 
-Sexy::ResourceId Sexy::GetIdBySound(int theSound)
+Sexy::ResourceId Sexy::GetIdBySound(intptr_t theSound)
 {
 	return GetIdByVariable((void*)theSound);
 }
@@ -3248,17 +3235,17 @@ Sexy::ResourceId Sexy::GetIdBySound(int theSound)
 //0x47FBC0
 Sexy::ResourceId Sexy::GetIdByVariable(void* theVariable)
 {
-	static std::map<int, int> aMap;
+	static std::map<intptr_t, intptr_t> aMap;
 
 	if (gNeedRecalcVariableToIdMap)
 	{
 		gNeedRecalcVariableToIdMap = false;
 		aMap.clear();
 		for (int i = 0; i < (int)ResourceId::RESOURCE_ID_MAX; i++)
-			aMap[*(int*)gResources[i]] = i;
+			aMap[*(intptr_t*)gResources[i]] = i;
 	}
 
-	auto anIter = aMap.find((int)theVariable);
+	auto anIter = aMap.find((intptr_t)theVariable);
 	return anIter == aMap.end() ? ResourceId::RESOURCE_ID_MAX : (ResourceId)anIter->second;
 }
 /*
@@ -3270,6 +3257,6 @@ Sexy::ResourceId Sexy::GetIdByVariable(void* theVariable)
 	{ 
 		mov edi,[aMap+04]  ; edi = *aMap.end()
 		mov ebx,[anIter]   ; ebx = *anIter
-		cmp ebx,edi        ; this ”Î other µƒ °∞==°±≤Ÿ◊˜£¨±»Ωœ *this ”Î *other  «∑Òœ‡Õ¨
+		cmp ebx,edi        ; this ‰∏é other ÁöÑ ‚Äú==‚ÄùÊìç‰ΩúÔºåÊØîËæÉ *this ‰∏é *other ÊòØÂê¶Áõ∏Âêå
 	}
 */

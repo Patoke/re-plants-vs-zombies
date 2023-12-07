@@ -1,10 +1,10 @@
 #include "TitleScreen.h"
-#include "../../SexyAppFramework/HyperlinkWidget.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/HyperlinkWidget.h"
+#include "widget/WidgetManager.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/SexyMatrix.h"
+#include "misc/SexyMatrix.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodDebug.h"
@@ -293,7 +293,7 @@ void TitleScreen::Update()
 		float aLoadTime = aEstimatedTotalLoadTime * (1 - aCurrentProgress);
 		aLoadTime = ClampFloat(aLoadTime, 100, 3000);
 		mBarVel = mTotalBarWidth / aLoadTime;
-		mBarStartProgress = min(aCurrentProgress, 0.9f);
+		mBarStartProgress = std::min(aCurrentProgress, 0.9f);
 	}
 
 	float aLoadingPercent = (aCurrentProgress - mBarStartProgress) / (1 - mBarStartProgress);
@@ -429,7 +429,7 @@ void TitleScreen::Update()
 		mTotalBarWidth * 0.91f 
 	};
 
-	for (int i = 0; i < LENGTH(aTriggerPoint); i++)
+	for (size_t i = 0; i < LENGTH(aTriggerPoint); i++)
 	{
 		if (aPrevWidth < aTriggerPoint[i] && mCurBarWidth >= aTriggerPoint[i])
 		{
@@ -493,6 +493,7 @@ void TitleScreen::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
 //0x48E600
 void TitleScreen::ButtonPress(int theId)
 {
+	(void)theId;
 	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
 }
 
@@ -514,6 +515,7 @@ void TitleScreen::ButtonDepress(int theId)
 //0x48E650
 void TitleScreen::MouseDown(int x, int y, int theClickCount)
 {
+	(void)x;(void)y;(void)theClickCount;
 	if (mLoadingThreadComplete)
 	{
 		mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);

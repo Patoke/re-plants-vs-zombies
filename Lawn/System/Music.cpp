@@ -2,11 +2,11 @@
 #include "../Board.h"
 #include "PlayerInfo.h"
 #include "../../LawnApp.h"
-#include "../../PakLib/PakInterface.h"
+#include "paklib/PakInterface.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/BassLoader.h"
-#include "../../SexyAppFramework/BassMusicInterface.h"
+#include "sound/BassLoader.h"
+#include "sound/BassMusicInterface.h"
 
 using namespace Sexy;
 
@@ -38,35 +38,32 @@ MusicFileData gMusicFileData[MusicFile::NUM_MUSIC_FILES];  //0x6A9ED0
 //0x45A2C0
 bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 {
-	HMUSIC aHMusic = NULL;
-	HSTREAM aStream = NULL;
+	HMUSIC aHMusic = 0;
+	HSTREAM aStream = 0;
 	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
 	std::string anExt;
 
-	int aDot = theFileName.rfind('.');
-	if (aDot != std::string::npos)  // ÎÄ¼şÃûÖĞ²»º¬¡°.¡±£¨ÎÄ¼şÎŞÀ©Õ¹Ãû£©
-		anExt = StringToLower(theFileName.substr(aDot + 1));  // È¡µÃĞ¡Ğ´µÄÎÄ¼şÀ©Õ¹Ãû
+	size_t aDot = theFileName.rfind('.');
+	if (aDot != std::string::npos)  // æ–‡ä»¶åä¸­ä¸å«â€œ.â€ï¼ˆæ–‡ä»¶æ— æ‰©å±•åï¼‰
+		anExt = StringToLower(theFileName.substr(aDot + 1));  // å–å¾—å°å†™çš„æ–‡ä»¶æ‰©å±•å
 
-	if (anExt.compare("wav") && anExt.compare("ogg") && anExt.compare("mp3"))  // Èç¹û²»ÊÇÕâÈıÖÖÍØÕ¹Ãû
+	if (anExt.compare("wav") && anExt.compare("ogg") && anExt.compare("mp3"))  // å¦‚æœä¸æ˜¯è¿™ä¸‰ç§æ‹“å±•å
 	{
 		PFILE* pFile = p_fopen(theFileName.c_str(), "rb");
 		if (pFile == nullptr)
 			return false;
 
-		p_fseek(pFile, 0, SEEK_END);  // Ö¸Õëµ÷ÕûÖÁÎÄ¼şÄ©Î²
-		int aSize = p_ftell(pFile);  // µ±Ç°Î»ÖÃ¼´ÎªÎÄ¼ş³¤¶È
-		p_fseek(pFile, 0, SEEK_SET);  // Ö¸Õëµ÷»ØÎÄ¼ş¿ªÍ·
+		p_fseek(pFile, 0, SEEK_END);  // æŒ‡é’ˆè°ƒæ•´è‡³æ–‡ä»¶æœ«å°¾
+		int aSize = p_ftell(pFile);  // å½“å‰ä½ç½®å³ä¸ºæ–‡ä»¶é•¿åº¦
+		p_fseek(pFile, 0, SEEK_SET);  // æŒ‡é’ˆè°ƒå›æ–‡ä»¶å¼€å¤´
 		void* aData = operator new[](aSize);
-		p_fread(aData, sizeof(char), aSize, pFile);  // °´×Ö½Ú¶ÁÈ¡Êı¾İ
-		p_fclose(pFile);  // ¹Ø±ÕÎÄ¼şÁ÷
+		p_fread(aData, sizeof(char), aSize, pFile);  // æŒ‰å­—èŠ‚è¯»å–æ•°æ®
+		p_fclose(pFile);  // å…³é—­æ–‡ä»¶æµ
 
-		if (gBass->mVersion2)
-			aHMusic = gBass->BASS_MusicLoad2(true, aData, 0, 0, aBass->mMusicLoadFlags, 0);
-		else
-			aHMusic = gBass->BASS_MusicLoad(true, aData, 0, 0, aBass->mMusicLoadFlags);
-		delete[] aData;
+		aHMusic = gBass->BASS_MusicLoad(true, aData, 0, aSize, aBass->mMusicLoadFlags, 0);
+		delete[] (char *)aData;
 
-		if (aHMusic == NULL)
+		if (aHMusic == 0)
 			return false;
 	}
 	else
@@ -75,25 +72,25 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 		if (pFile == nullptr)
 			return false;
 
-		p_fseek(pFile, 0, SEEK_END);  // Ö¸Õëµ÷ÕûÖÁÎÄ¼şÄ©Î²
-		int aSize = p_ftell(pFile);  // µ±Ç°Î»ÖÃ¼´ÎªÎÄ¼ş³¤¶È
-		p_fseek(pFile, 0, SEEK_SET);  // Ö¸Õëµ÷»ØÎÄ¼ş¿ªÍ·
+		p_fseek(pFile, 0, SEEK_END);  // æŒ‡é’ˆè°ƒæ•´è‡³æ–‡ä»¶æœ«å°¾
+		int aSize = p_ftell(pFile);  // å½“å‰ä½ç½®å³ä¸ºæ–‡ä»¶é•¿åº¦
+		p_fseek(pFile, 0, SEEK_SET);  // æŒ‡é’ˆè°ƒå›æ–‡ä»¶å¼€å¤´
 		void* aData = operator new[](aSize);
-		p_fread(aData, sizeof(char), aSize, pFile);  // °´×Ö½Ú¶ÁÈ¡Êı¾İ
-		p_fclose(pFile);  // ¹Ø±ÕÎÄ¼şÁ÷
+		p_fread(aData, sizeof(char), aSize, pFile);  // æŒ‰å­—èŠ‚è¯»å–æ•°æ®
+		p_fclose(pFile);  // å…³é—­æ–‡ä»¶æµ
 		
 		aStream = gBass->BASS_StreamCreateFile(true, aData, 0, aSize, 0);
 		TOD_ASSERT(gMusicFileData[theMusicFile].mFileData == nullptr);
 		gMusicFileData[theMusicFile].mFileData = (unsigned int*)aData;
 
-		if (aStream == NULL)
+		if (aStream == 0)
 			return false;
 	}
 	
 	BassMusicInfo aMusicInfo;
 	aMusicInfo.mHStream = aStream;
 	aMusicInfo.mHMusic = aHMusic;
-	aBass->mMusicMap.insert(BassMusicMap::value_type(theMusicFile, aMusicInfo));  // ½«Ä¿±êÒôÀÖÎÄ¼ş±àºÅºÍÒôÀÖĞÅÏ¢µÄ¶Ô×é¼ÓÈëÒôÀÖÊı¾İÈİÆ÷
+	aBass->mMusicMap.insert(BassMusicMap::value_type(theMusicFile, aMusicInfo));  // å°†ç›®æ ‡éŸ³ä¹æ–‡ä»¶ç¼–å·å’ŒéŸ³ä¹ä¿¡æ¯çš„å¯¹ç»„åŠ å…¥éŸ³ä¹æ•°æ®å®¹å™¨
 	return true;
 }
 
@@ -110,24 +107,28 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 23;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 27;	aTrackEnd1 = 27;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 24;	aTrackEnd1 = 26;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 17;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 18;	aTrackEnd1 = 24;	aTrackStart2 = 29;	aTrackEnd2 = 29;	break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 25;	aTrackEnd1 = 28;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_FOG_RIGORMORMIST:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 15;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 23;	aTrackEnd1 = 23;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 16;	aTrackEnd1 = 22;											break;
+		default: break;
 		} break;
 	case MusicTune::MUSIC_TUNE_ROOF_GRAZETHEROOF:
 		switch (theMusicFile) {
 		case MusicFile::MUSIC_FILE_MAIN_MUSIC:		aTrackCount = 29;	aTrackStart1 = 0;	aTrackEnd1 = 17;											break;
 		case MusicFile::MUSIC_FILE_HIHATS:			aTrackCount = 29;	aTrackStart1 = 21;	aTrackEnd1 = 21;											break;
 		case MusicFile::MUSIC_FILE_DRUMS:			aTrackCount = 29;	aTrackStart1 = 18;	aTrackEnd1 = 20;											break;
+		default: break;
 		} break;
 	default:
 		if (theMusicFile == MusicFile::MUSIC_FILE_MAIN_MUSIC || theMusicFile == MusicFile::MUSIC_FILE_DRUMS)
@@ -142,15 +143,15 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 	HMUSIC aHMusic = GetBassMusicHandle(theMusicFile);
 	for (int aTrack = 0; aTrack < aTrackCount; aTrack++)
 	{
-		int aVolume;
+		float aVolume;
 		if (aTrack >= aTrackStart1 && aTrack <= aTrackEnd1)
-			aVolume = 100;
+			aVolume = 1;
 		else if (aTrack >= aTrackStart2 && aTrack <= aTrackEnd2)
-			aVolume = 100;
+			aVolume = 1;
 		else
 			aVolume = 0;
 
-		gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_VOL_CHAN + aTrack, aVolume);  // ÉèÖÃÒôÀÖÃ¿Ìõ¹ìµÀµÄÒôÁ¿ÊôĞÔ£¨¾²ÒôÓë·ñ£©
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, aVolume);  // è®¾ç½®éŸ³ä¹æ¯æ¡è½¨é“çš„éŸ³é‡å±æ€§ï¼ˆé™éŸ³ä¸å¦ï¼‰
 	}
 }
 
@@ -164,7 +165,7 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string& theFileName)
 	}
 	else
 	{
-		gBass->BASS_MusicSetAttribute(GetBassMusicHandle(theMusicFile), BASS_MUSIC_ATTRIB_PSCALER, 4);  // ÉèÖÃÒôÀÖ¶¨Î»¾«È·¶ÈÊôĞÔ
+		gBass->BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);  // è®¾ç½®éŸ³ä¹å®šä½ç²¾ç¡®åº¦å±æ€§
 		TodHesitationTrace("song '%s'", theFileName.c_str());
 	}
 }
@@ -184,13 +185,13 @@ void Music::MusicInit()
 #endif
 
 	LoadSong(MusicFile::MUSIC_FILE_DRUMS, "sounds\\mainmusic.mo3");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds\\mainmusic_hihats.mo3");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 
 #ifdef _DEBUG
 	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds\\ZombiesOnYourLawn.ogg");
-	mApp->mCompletedLoadingThreadTasks += /*Ô­°æ*/3500;///*ÄÚ²â°æ*/800;
+	mApp->mCompletedLoadingThreadTasks += /*åŸç‰ˆ*/3500;///*å†…æµ‹ç‰ˆ*/800;
 	if (mApp->mCompletedLoadingThreadTasks != aNumLoadingTasks)
 		TodTrace("Didn't calculate loading task count correctly!!!!");
 #endif
@@ -201,7 +202,7 @@ void Music::MusicCreditScreenInit()
 {
 #ifndef _DEBUG
 	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
-	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) == aBass->mMusicMap.end())  // Èç¹ûÉĞÎ´¼ÓÔØ
+	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) == aBass->mMusicMap.end())  // å¦‚æœå°šæœªåŠ è½½
 		LoadSong(MusicFile::MUSIC_FILE_MAIN_MUSIC, "sounds\\ZombiesOnYourLawn.ogg");
 #endif
 }
@@ -251,20 +252,21 @@ void Music::PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolu
 
 	if (aMusicInfo->mHStream)
 	{
-		bool aNoLoop = theMusicFile == MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN;  // MV ÒôÀÖ²»Ñ­»·
+		bool aNoLoop = theMusicFile == MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN;  // MV éŸ³ä¹ä¸å¾ªç¯
 		mMusicInterface->PlayMusic(theMusicFile, theOffset, aNoLoop);
 	}
 	else
 	{
-		gBass->BASS_ChannelStop(aMusicInfo->mHMusic);  // ÏÈÍ£Ö¹ÕıÔÚ²¥·ÅµÄÒôÀÖ
-		SetupMusicFileForTune(theMusicFile, mCurMusicTune);  // µ÷ÕûÃ¿Ìõ¹ìµÀµÄ¾²ÒôÓë·ñ
+		gBass->BASS_ChannelStop(aMusicInfo->mHMusic);  // å…ˆåœæ­¢æ­£åœ¨æ’­æ”¾çš„éŸ³ä¹
+		SetupMusicFileForTune(theMusicFile, mCurMusicTune);  // è°ƒæ•´æ¯æ¡è½¨é“çš„é™éŸ³ä¸å¦
 		aMusicInfo->mStopOnFade = false;
 		aMusicInfo->mVolume = aMusicInfo->mVolumeCap * theVolume;
 		aMusicInfo->mVolumeAdd = 0.0;
-		gBass->BASS_ChannelSetAttributes(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // µ÷ÕûÒôÀÖÒôÁ¿
-		gBass->BASS_ChannelSetFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP);
-		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset | 0x80000000);  // ÉèÖÃÆ«ÒÆÎ»ÖÃ
-		gBass->BASS_ChannelPlay(aMusicInfo->mHMusic, false);  // ÖØĞÂ¿ªÊ¼²¥·Å
+		//gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, -1, aMusicInfo->mVolume * 100.0, -101);  // è°ƒæ•´éŸ³ä¹éŸ³é‡
+		gBass->BASS_ChannelSetAttribute(aMusicInfo->mHMusic, BASS_ATTRIB_VOL, aMusicInfo->mVolume);
+		gBass->BASS_ChannelFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP, -1);
+		gBass->BASS_ChannelSetPosition(aMusicInfo->mHMusic, MAKELONG(theOffset, 0) /**/, BASS_POS_MUSIC_ORDER);  // è®¾ç½®åç§»ä½ç½®
+		gBass->BASS_ChannelPlay(aMusicInfo->mHMusic, false);  // é‡æ–°å¼€å§‹æ’­æ”¾
 	}
 }
 
@@ -298,8 +300,8 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		mCurMusicFileDrums = MusicFile::MUSIC_FILE_DRUMS;
 		if (theOffset == -1)
 		{
-			theOffset = 0x80000030;
-			theDrumsOffset = 0x8000005C;
+			theOffset = 0x30;
+			theDrumsOffset = 0x5C;
 		}
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		PlayFromOffset(mCurMusicFileDrums, theDrumsOffset, 0.0);
@@ -310,7 +312,7 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		mCurMusicFileDrums = MusicFile::MUSIC_FILE_DRUMS;
 		mCurMusicFileHihats = MusicFile::MUSIC_FILE_HIHATS;
 		if (theOffset == -1)
-			theOffset = 0x8000005E;
+			theOffset = 0x5E;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		PlayFromOffset(mCurMusicFileDrums, theOffset, 0.0);
 		PlayFromOffset(mCurMusicFileHihats, theOffset, 0.0);
@@ -321,7 +323,7 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		mCurMusicFileDrums = MusicFile::MUSIC_FILE_DRUMS;
 		mCurMusicFileHihats = MusicFile::MUSIC_FILE_HIHATS;
 		if (theOffset == -1)
-			theOffset = 0x8000007D;
+			theOffset = 0x7D;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		PlayFromOffset(mCurMusicFileDrums, theOffset, 0.0);
 		PlayFromOffset(mCurMusicFileHihats, theOffset, 0.0);
@@ -332,7 +334,7 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		mCurMusicFileDrums = MusicFile::MUSIC_FILE_DRUMS;
 		mCurMusicFileHihats = MusicFile::MUSIC_FILE_HIHATS;
 		if (theOffset == -1)
-			theOffset = 0x800000B8;
+			theOffset = 0xB8;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		PlayFromOffset(mCurMusicFileDrums, theOffset, 0.0);
 		PlayFromOffset(mCurMusicFileHihats, theOffset, 0.0);
@@ -341,14 +343,14 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 	case MusicTune::MUSIC_TUNE_CHOOSE_YOUR_SEEDS:
 		mCurMusicFileMain = MusicFile::MUSIC_FILE_MAIN_MUSIC;
 		if (theOffset == -1)
-			theOffset = 0x8000007A;
+			theOffset = 0x7A;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		break;
 
 	case MusicTune::MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME:
 		mCurMusicFileMain = MusicFile::MUSIC_FILE_MAIN_MUSIC;
 		if (theOffset == -1)
-			theOffset = 0x80000098;
+			theOffset = 0x98;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		break;
 
@@ -404,27 +406,27 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 		if (mCurMusicFileMain != MusicFile::MUSIC_FILE_NONE)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileMain);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 		if (mCurMusicFileDrums != -1)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileDrums);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 		if (mCurMusicFileHihats != -1)
 		{
 			HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileHihats);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, mBaseBPM);
-			gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED, mBaseModSpeed);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, mBaseBPM);
+			gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, mBaseModSpeed);
 		}
 	}
 	else
 	{
 		HMUSIC aHMusic = GetBassMusicHandle(mCurMusicFileMain);
-		mBaseBPM = gBass->BASS_MusicGetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM);
-		mBaseModSpeed = gBass->BASS_MusicGetAttribute(aHMusic, BASS_MUSIC_ATTRIB_SPEED);
+		gBass->BASS_ChannelGetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, &mBaseBPM);
+		gBass->BASS_ChannelGetAttribute(aHMusic, BASS_ATTRIB_MUSIC_SPEED, &mBaseModSpeed);
 	}
 }
 
@@ -439,8 +441,8 @@ void Music::MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusic
 {
 	unsigned int aPosToMatch = GetMusicOrder(theMusicFileToMatch);
 	unsigned int aPosToSync = GetMusicOrder(theMusicFileToSync);
-	int aDiff = (aPosToSync >> 16) - (aPosToMatch >> 16);  // ´ıÍ¬²½µÄÒôÀÖÓëÄ¿±êÒôÀÖµÄÀÖÇúĞòºÅÖ®²î
-	if (abs(aDiff) <= 128)  // µ±Ç°½øĞĞµÄÀÖÇúĞòºÅÖ®²î³¬¹ı 128 Ê±£¬¿ª°Ú£¨
+	int aDiff = (aPosToSync >> 16) - (aPosToMatch >> 16);  // å¾…åŒæ­¥çš„éŸ³ä¹ä¸ç›®æ ‡éŸ³ä¹çš„ä¹æ›²åºå·ä¹‹å·®
+	if (abs(aDiff) <= 128)  // å½“å‰è¿›è¡Œçš„ä¹æ›²åºå·ä¹‹å·®è¶…è¿‡ 128 æ—¶ï¼Œå¼€æ‘†ï¼ˆ
 	{
 		HMUSIC aHMusic = GetBassMusicHandle(theMusicFileToSync);
 
@@ -454,7 +456,7 @@ void Music::MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusic
 		else if (aDiff < 0)
 			aBPM -= 1;
 
-		gBass->BASS_MusicSetAttribute(aHMusic, BASS_MUSIC_ATTRIB_BPM, aBPM);  // ÊÊµ±µ÷Õû´ıÍ¬²½ÒôÀÖµÄËÙÂÊÒÔËõĞ¡²î¾à
+		gBass->BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_BPM, aBPM);  // é€‚å½“è°ƒæ•´å¾…åŒæ­¥éŸ³ä¹çš„é€Ÿç‡ä»¥ç¼©å°å·®è·
 	}
 }
 
@@ -633,6 +635,8 @@ void Music::UpdateMusicBurst()
 			if (mDrumsStateCounter == 0)
 				mMusicDrumsState = MusicDrumsState::MUSIC_DRUMS_OFF;
 			break;
+		case MusicDrumsState::MUSIC_DRUMS_OFF:
+			break;
 	}
 
 	if (aBurstScheme == 1)
@@ -645,7 +649,7 @@ void Music::UpdateMusicBurst()
 		mMusicInterface->SetSongVolume(mCurMusicFileMain, aMainTrackVolume);
 		mMusicInterface->SetSongVolume(mCurMusicFileDrums, aDrumsVolume);
 		if (aDrumsJumpOrder != -1)
-			gBass->BASS_ChannelSetPosition(GetBassMusicHandle(mCurMusicFileDrums), LOWORD(aDrumsJumpOrder) | 0x80000000);
+			gBass->BASS_ChannelSetPosition(GetBassMusicHandle(mCurMusicFileDrums), MAKELONG(aDrumsJumpOrder,0) /*| 0x80000000*/, BASS_POS_MUSIC_ORDER);
 	}
 }
 
@@ -727,7 +731,7 @@ void Music::GameMusicPause(bool thePause)
 			
 			if (aMusicInfo->mHStream)
 			{
-				mPauseOffset = gBass->BASS_ChannelGetPosition(aMusicInfo->mHStream);
+				mPauseOffset = gBass->BASS_ChannelGetPosition(aMusicInfo->mHStream, BASS_POS_MUSIC_ORDER);
 				mMusicInterface->StopMusic(mCurMusicFileMain);
 			}
 			else
@@ -762,6 +766,6 @@ void Music::GameMusicPause(bool thePause)
 
 int Music::GetNumLoadingTasks()
 {
-	//return 800 * 3;  // ÄÚ²â°æ
-	return 3500 * 2;  // Ô­°æ
+	//return 800 * 3;  // å†…æµ‹ç‰ˆ
+	return 3500 * 2;  // åŸç‰ˆ
 }

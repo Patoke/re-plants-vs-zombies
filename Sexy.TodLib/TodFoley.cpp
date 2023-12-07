@@ -1,7 +1,7 @@
 #include "TodFoley.h"
 #include "TodDebug.h"
 #include "TodCommon.h"
-#include "../SexyAppFramework/SoundManager.h"
+#include "sound/SoundManager.h"
 
 int gFoleyParamArraySize;        //[0x6A9F04]
 FoleyParams* gFoleyParamArray;   //[0x6A9F00]
@@ -184,7 +184,7 @@ bool SoundSystemHasFoleyPlayedTooRecently(TodFoley* theSoundSystem, FoleyType th
 	for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)
 	{
 		FoleyInstance* aFoleyInstance = &aFoleyData->mFoleyInstances[i];
-		if (aFoleyInstance->mRefCount != 0 && gSexyAppBase->mUpdateCount - aFoleyInstance->mStartTime < 10)  // ÈôÍ¬ÖÖÒôĞ§´æÔÚ½ü 10 cs ÄÚ²¥·ÅµÄÊµÀı
+		if (aFoleyInstance->mRefCount != 0 && gSexyAppBase->mUpdateCount - aFoleyInstance->mStartTime < 10)  // è‹¥åŒç§éŸ³æ•ˆå­˜åœ¨è¿‘ 10 cs å†…æ’­æ”¾çš„å®ä¾‹
 			return true;
 	}
 	return false;
@@ -233,30 +233,30 @@ FoleyInstance* SoundSystemGetFreeInstanceIndex(TodFoley* theSoundSystem, FoleyTy
 void TodFoley::PlayFoleyPitch(FoleyType theFoleyType, float thePitch)
 {
 	FoleyParams* aFoleyParams = LookupFoley(theFoleyType);
-	SoundSystemReleaseFinishedInstances(this);  // ÊÍ·ÅÒÑ²¥·ÅÍê³ÉµÄÒôĞ§ÊµÀı
+	SoundSystemReleaseFinishedInstances(this);  // é‡Šæ”¾å·²æ’­æ”¾å®Œæˆçš„éŸ³æ•ˆå®ä¾‹
 	if (SoundSystemHasFoleyPlayedTooRecently(this, theFoleyType) && !TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_LOOP))
-		return;  // ·ÇÑ­»·ÒôĞ§²»¿ÉÖØµş²¥·Å
+		return;  // éå¾ªç¯éŸ³æ•ˆä¸å¯é‡å æ’­æ”¾
 
-	if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_ONE_AT_A_TIME))  // Èç¹û¶¨ÒåÁË²»¿Éµş¼Ó²¥·Å
+	if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_ONE_AT_A_TIME))  // å¦‚æœå®šä¹‰äº†ä¸å¯å åŠ æ’­æ”¾
 	{
 		FoleyInstance* aFoleyInstance = SoundSystemFindInstance(this, theFoleyType);
 		if (aFoleyInstance != nullptr)
 		{
-			aFoleyInstance->mRefCount++;  // Ôö¼Ó 1 ´ÎÒıÓÃ¼ÆÊı
-			aFoleyInstance->mStartTime = gSexyAppBase->mUpdateCount;  // Ë¢ĞÂ¿ªÊ¼µÄÊ±¼ä
+			aFoleyInstance->mRefCount++;  // å¢åŠ  1 æ¬¡å¼•ç”¨è®¡æ•°
+			aFoleyInstance->mStartTime = gSexyAppBase->mUpdateCount;  // åˆ·æ–°å¼€å§‹çš„æ—¶é—´
 			return;
 		}
 	}
 	FoleyInstance* aFoleyInstance = SoundSystemGetFreeInstanceIndex(this, theFoleyType);
-	if (aFoleyInstance == nullptr)  // Èç¹ûÒÑ¾­´æÔÚ 8 ¸öÒôĞ§ÊµÀı
+	if (aFoleyInstance == nullptr)  // å¦‚æœå·²ç»å­˜åœ¨ 8 ä¸ªéŸ³æ•ˆå®ä¾‹
 		return;
 
 	int aVariations = 0;
-	int aVariationsArray[10];
+	intptr_t aVariationsArray[10];
 	FoleyTypeData* aFoleyData = &mFoleyTypeData[(int)theFoleyType];
 	for (int i = 0; i < 10; i++)
 	{
-		if (!TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_DONT_REPEAT) || aFoleyData->mLastVariationPlayed != i)  // Èç¹ûÎ´ÖØ¸´»ò²»½ûÖ¹ÖØ¸´
+		if (!TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_DONT_REPEAT) || aFoleyData->mLastVariationPlayed != i)  // å¦‚æœæœªé‡å¤æˆ–ä¸ç¦æ­¢é‡å¤
 		{
 			if (aFoleyParams->mSfxID[i] == nullptr)
 				break;
@@ -275,12 +275,12 @@ void TodFoley::PlayFoleyPitch(FoleyType theFoleyType, float thePitch)
 	aFoleyInstance->mRefCount = 1;
 	aFoleyInstance->mStartTime = gSexyAppBase->mUpdateCount;
 	aFoleyData->mLastVariationPlayed = aVariation;
-	if (thePitch != 0.0f)  // Èç¹û²ÎÊıÖ¸¶¨ÁËÒô¸ß
-		aSoundInstance->AdjustPitch(thePitch);  // µ÷ÕûÒô¸ß
-	if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_USES_MUSIC_VOLUME))  // Èç¹û¶¨ÒåÁËÊ¹ÓÃÒôÀÖÒôÁ¿
-		ApplyMusicVolume(aFoleyInstance);  // ½«ÒôĞ§µÄÒôÁ¿µ÷ÕûÎªÓëÒôÀÖÒ»ÖÂ
+	if (thePitch != 0.0f)  // å¦‚æœå‚æ•°æŒ‡å®šäº†éŸ³é«˜
+		aSoundInstance->AdjustPitch(thePitch);  // è°ƒæ•´éŸ³é«˜
+	if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_USES_MUSIC_VOLUME))  // å¦‚æœå®šä¹‰äº†ä½¿ç”¨éŸ³ä¹éŸ³é‡
+		ApplyMusicVolume(aFoleyInstance);  // å°†éŸ³æ•ˆçš„éŸ³é‡è°ƒæ•´ä¸ºä¸éŸ³ä¹ä¸€è‡´
 	bool aIsLooping = TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_LOOP);
-	aSoundInstance->Play(aIsLooping, false);  // ÕıÊ½¿ªÊ¼²¥·ÅÒôĞ§
+	aSoundInstance->Play(aIsLooping, false);  // æ­£å¼å¼€å§‹æ’­æ”¾éŸ³æ•ˆ
 }
 
 //0x515240
@@ -289,8 +289,8 @@ void TodFoley::PlayFoley(FoleyType theFoleyType)
 {
 	FoleyParams* aFoleyParams = LookupFoley(theFoleyType);
 	float aPitch = 0.0f;
-	if (aFoleyParams->mPitchRange != 0.0f)  // Èç¹û¶¨ÒåÁËÒô¸ß·¶Î§
-		aPitch = Sexy::Rand(aFoleyParams->mPitchRange);  // ÔÚ·¶Î§ÄÚËæ»úÑ¡È¡Ò»¸öÒô¸ß
+	if (aFoleyParams->mPitchRange != 0.0f)  // å¦‚æœå®šä¹‰äº†éŸ³é«˜èŒƒå›´
+		aPitch = Sexy::Rand(aFoleyParams->mPitchRange);  // åœ¨èŒƒå›´å†…éšæœºé€‰å–ä¸€ä¸ªéŸ³é«˜
 	PlayFoleyPitch(theFoleyType, aPitch);
 }
 
@@ -304,8 +304,8 @@ void TodFoley::StopFoley(FoleyType theFoleyType)
 
 	TOD_ASSERT(aFoleyInstance->mRefCount > 0);
 	TOD_ASSERT(aFoleyInstance->mInstance);
-	aFoleyInstance->mRefCount--;  // ¼õÉÙ 1 ´ÎÒıÓÃ¼ÆÊı
-	if (aFoleyInstance->mRefCount == 0)  // Èç¹û¼õÉÙÖ®ºóÎŞÒıÓÃ£¬ÔòÖ±½ÓÊÍ·Å
+	aFoleyInstance->mRefCount--;  // å‡å°‘ 1 æ¬¡å¼•ç”¨è®¡æ•°
+	if (aFoleyInstance->mRefCount == 0)  // å¦‚æœå‡å°‘ä¹‹åæ— å¼•ç”¨ï¼Œåˆ™ç›´æ¥é‡Šæ”¾
 	{
 		aFoleyInstance->mInstance->Release();
 		aFoleyInstance->mInstance = nullptr;
@@ -319,13 +319,13 @@ void TodFoley::GamePause(bool theEnteringPause)
 	for (int aFoleyType = 0; aFoleyType < gFoleyParamArraySize; aFoleyType++)
 	{
 		FoleyParams* aFoleyParams = LookupFoley((FoleyType)aFoleyType);
-		if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_MUTE_ON_PAUSE))  // Èç¹ûÖ¸¶¨ÁËÔİÍ£Ê±¾²Ä¬
+		if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_MUTE_ON_PAUSE))  // å¦‚æœæŒ‡å®šäº†æš‚åœæ—¶é™é»˜
 		{
 			FoleyTypeData* aFoleyData = &mFoleyTypeData[aFoleyType];
-			for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // Éè¶¨Ã¿Ò»¸öÒôĞ§ÊµÀıµÄÔİÍ£Óë·ñ
+			for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // è®¾å®šæ¯ä¸€ä¸ªéŸ³æ•ˆå®ä¾‹çš„æš‚åœä¸å¦
 			{
 				FoleyInstance* aFoleyInstance = &aFoleyData->mFoleyInstances[i];
-				if (aFoleyInstance->mRefCount != 0)  // Èç¹ûÒôĞ§ÊµÀı´æÔÚÒıÓÃ
+				if (aFoleyInstance->mRefCount != 0)  // å¦‚æœéŸ³æ•ˆå®ä¾‹å­˜åœ¨å¼•ç”¨
 				{
 					TodDSoundInstance* aSoundInstance = (TodDSoundInstance*)aFoleyInstance->mInstance;
 					if (theEnteringPause)
@@ -338,7 +338,7 @@ void TodFoley::GamePause(bool theEnteringPause)
 						}
 						else
 						{
-							aFoleyInstance->mPauseOffset = aSoundInstance->GetSoundPosition();  // ±¸·İÔİÍ£Ê±µÄ²¥·Å½ø¶È
+							aFoleyInstance->mPauseOffset = aSoundInstance->GetSoundPosition();  // å¤‡ä»½æš‚åœæ—¶çš„æ’­æ”¾è¿›åº¦
 							aSoundInstance->Stop();
 						}
 					}
@@ -348,7 +348,7 @@ void TodFoley::GamePause(bool theEnteringPause)
 						bool aIsLooping = TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_LOOP);
 						aSoundInstance->Play(aIsLooping, false);
 						if (aSoundInstance->mSoundBuffer != nullptr)
-							aSoundInstance->SetSoundPosition(aFoleyInstance->mPauseOffset);  // »¹Ô­ÔİÍ£Ç°µÄ²¥·Å½ø¶È
+							aSoundInstance->SetSoundPosition(aFoleyInstance->mPauseOffset);  // è¿˜åŸæš‚åœå‰çš„æ’­æ”¾è¿›åº¦
 					}
 				}
 			}
@@ -363,10 +363,10 @@ void TodFoley::CancelPausedFoley()
 	for (int aFoleyType = 0; aFoleyType < gFoleyParamArraySize; aFoleyType++)
 	{
 		FoleyTypeData* aFoleyData = &mFoleyTypeData[aFoleyType];
-		for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // ÅĞ¶ÏÃ¿Ò»¸öÒôĞ§ÊµÀıµÄÔİÍ£Óë·ñ
+		for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // åˆ¤æ–­æ¯ä¸€ä¸ªéŸ³æ•ˆå®ä¾‹çš„æš‚åœä¸å¦
 		{
 			FoleyInstance* aFoleyInstance = &aFoleyData->mFoleyInstances[i];
-			if (aFoleyInstance->mRefCount != 0 && aFoleyInstance->mPaused)  // Èç¹ûÒôĞ§ÊµÀı´æÔÚÒıÓÃÇÒ´¦ÓÚÔİÍ£×´Ì¬
+			if (aFoleyInstance->mRefCount != 0 && aFoleyInstance->mPaused)  // å¦‚æœéŸ³æ•ˆå®ä¾‹å­˜åœ¨å¼•ç”¨ä¸”å¤„äºæš‚åœçŠ¶æ€
 			{
 				aFoleyInstance->mRefCount = 0;
 				aFoleyInstance->mInstance->Release();
@@ -382,7 +382,7 @@ void TodFoley::ApplyMusicVolume(FoleyInstance* theFoleyInstance)
 	if (gSexyAppBase->mSfxVolume < 1e-6)
 		theFoleyInstance->mInstance->SetVolume(0.0);
 	else
-		theFoleyInstance->mInstance->SetVolume(gSexyAppBase->mMusicVolume / gSexyAppBase->mSfxVolume);  // ÕâÑùµÃµ½µÄÒôÁ¿ÔÚ³ËÒÔÒôĞ§ÒôÁ¿ºó¾ÍÓëÒôÀÖÒôÁ¿ÏàµÈ
+		theFoleyInstance->mInstance->SetVolume(gSexyAppBase->mMusicVolume / gSexyAppBase->mSfxVolume);  // è¿™æ ·å¾—åˆ°çš„éŸ³é‡åœ¨ä¹˜ä»¥éŸ³æ•ˆéŸ³é‡åå°±ä¸éŸ³ä¹éŸ³é‡ç›¸ç­‰
 }
 
 //0x5154A0
@@ -392,13 +392,13 @@ void TodFoley::RehookupSoundWithMusicVolume()
 	for (int aFoleyType = 0; aFoleyType < gFoleyParamArraySize; aFoleyType++)
 	{
 		FoleyParams* aFoleyParams = LookupFoley((FoleyType)aFoleyType);
-		if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_USES_MUSIC_VOLUME))  // Èç¹û¹æ¶¨ÁËÊ¹ÓÃÒôÀÖÒôÁ¿
+		if (TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_USES_MUSIC_VOLUME))  // å¦‚æœè§„å®šäº†ä½¿ç”¨éŸ³ä¹éŸ³é‡
 		{
 			FoleyTypeData* aFoleyData = &mFoleyTypeData[aFoleyType];
-			for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // Éè¶¨Ã¿Ò»¸öÒôĞ§ÊµÀıµÄÒôÁ¿
+			for (int i = 0; i < MAX_FOLEY_INSTANCES; i++)  // è®¾å®šæ¯ä¸€ä¸ªéŸ³æ•ˆå®ä¾‹çš„éŸ³é‡
 			{
 				FoleyInstance* aFoleyInstance = &aFoleyData->mFoleyInstances[i];
-				if (aFoleyInstance->mRefCount != 0)  // Èç¹ûÒôĞ§ÊµÀı´æÔÚÒıÓÃ
+				if (aFoleyInstance->mRefCount != 0)  // å¦‚æœéŸ³æ•ˆå®ä¾‹å­˜åœ¨å¼•ç”¨
 					ApplyMusicVolume(aFoleyInstance);
 			}
 		}

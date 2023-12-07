@@ -1,0 +1,7 @@
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_PROCESSOR AMD64)
+set(CHOST "x86_64-w64-mingw32")
+set(CMAKE_C_COMPILER "${CHOST}-clang")
+set(CMAKE_CXX_COMPILER   "${CHOST}-clang++")
+set(CMAKE_RC_COMPILER "${CHOST}-windres")
+set(CMAKE_FIND_ROOT_PATH "/usr/${CHOST}")

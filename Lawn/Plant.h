@@ -228,7 +228,7 @@ public:
     void                    DoSquashDamage();
     void                    BurnRow(int theRow);
     void                    IceZombies();
-    void                    BlowAwayFliers(int theX, int theRow);
+    void                    BlowAwayFliers();
     void                    UpdateGraveBuster();
     TodParticleSystem*      AddAttachedParticle(int thePosX, int thePosY, int theRenderPosition, ParticleEffect theEffect);
     void                    GetPeaHeadOffset(int& theOffsetX, int& theOffsetY);

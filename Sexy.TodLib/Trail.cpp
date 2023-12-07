@@ -106,11 +106,11 @@ void Trail::AddPoint(float x, float y)
 		float aDistance = Distance2D(x, y, aPoint.aPos.x, aPoint.aPos.y);
 		if (aDistance < mDefinition->mMinPointDistance)
 		{
-			return;  // ¾àÀëÉÏ´Î¼ÇÂ¼µÄ¹ì¼£µãµÄ¾àÀë²»ÄÜĞ¡ÓÚ¹æ¶¨µÄ×îĞ¡Öµ
+			return;  // è·ç¦»ä¸Šæ¬¡è®°å½•çš„è½¨è¿¹ç‚¹çš„è·ç¦»ä¸èƒ½å°äºè§„å®šçš„æœ€å°å€¼
 		}
 	}
 	
-	// µ±ÒÑÓĞ¹ì¼£µãÊıÁ¿´ïµ½ÉÏÏŞÊ±£¬ÉáÆú×îÔçµÄÒ»¸ö¹ì¼£µã
+	// å½“å·²æœ‰è½¨è¿¹ç‚¹æ•°é‡è¾¾åˆ°ä¸Šé™æ—¶ï¼Œèˆå¼ƒæœ€æ—©çš„ä¸€ä¸ªè½¨è¿¹ç‚¹
 	if (mNumTrailPoints == aMaxPoints)
 	{
 		memmove(mTrailPoints, mTrailPoints + 1, (mNumTrailPoints - 1) * sizeof(TrailPoint));
@@ -290,6 +290,7 @@ Trail* TrailHolder::AllocTrail(int theRenderOrder, TrailType theTrailType)
 
 Trail* TrailHolder::AllocTrailFromDef(int theRenderOrder, TrailDefinition* theDefinition)
 {
+	(void)theRenderOrder;
 	if (mTrails.mSize == mTrails.mMaxSize)
 		return nullptr;
 

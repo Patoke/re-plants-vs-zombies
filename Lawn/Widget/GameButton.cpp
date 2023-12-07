@@ -2,11 +2,11 @@
 #include "../../LawnApp.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Font.h"
-#include "../../SexyAppFramework/SysFont.h"
-#include "../../SexyAppFramework/Graphics.h"
+#include "graphics/Font.h"
+#include "graphics/SysFont.h"
+#include "graphics/Graphics.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include "widget/WidgetManager.h"
 
 static Color gGameButtonColors[6] = { Color(0, 0, 0), Color(0, 0, 0), Color(0, 0, 0), Color(255, 255, 255), Color(132, 132, 132), Color(212, 212, 212) };
 
@@ -95,7 +95,7 @@ void GameButton::SetDisabled(bool theDisabled)
 	mDisabled = theDisabled;
 }
 
-void GameButton::SetFont(Font* theFont)
+void GameButton::SetFont(_Font* theFont)
 {
 	if (mFont)
 		delete mFont;
@@ -397,7 +397,7 @@ bool NewLawnButton::IsPointVisible(int x, int y)
 
 //0x448BC0
 // GOTY @Patoke: 0x44B810
-NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
+NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
 {
 	NewLawnButton* aButton = new NewLawnButton(nullptr, theId, theListener);
 	aButton->SetFont(theFont == nullptr ? Sexy::FONT_BRIANNETOD12 : theFont);

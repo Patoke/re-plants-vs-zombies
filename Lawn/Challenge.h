@@ -4,7 +4,7 @@
 #include "../ConstEnums.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/FilterEffect.h"
-#include "../SexyAppFramework/Graphics.h"
+#include "graphics/Graphics.h"
 
 #define BEGHOULED_MAX_GRIDSIZEX 8
 #define BEGHOULED_MAX_GRIDSIZEY 5
@@ -98,7 +98,7 @@ public:
     int                    UpdateBeghouledPlant(Plant* thePlant);
     void                    BeghouledFallIntoSquare(int theGridX, int theGridY, BeghouledBoardState* theBoardState);
     void                    BeghouledMakePlantsFall(BeghouledBoardState* theBoardState);
-    void                    ZombieAtePlant(Zombie* theZombie, Plant* thePlant);
+    void                    ZombieAtePlant(/*Zombie* theZombie,*/ Plant* thePlant);
     void                    DrawBackdrop(Graphics* g);
     void                    DrawArtChallenge(Graphics* g);
     void                    CheckForCompleteArtChallenge(int theGridX, int theGridY);
