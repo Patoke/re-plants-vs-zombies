@@ -67,6 +67,7 @@ public:
 /*inline*/ bool			TodLoadNextResource();
 void					TodAddImageToMap(SharedImageRef* theImage, const std::string& thePath);
 bool					TodFindImagePath(Image* theImage, std::string* thePath);
+bool					TodFindFontPath(_Font* theFont, std::string* thePath);
 
 // #################################################################################################### //
 

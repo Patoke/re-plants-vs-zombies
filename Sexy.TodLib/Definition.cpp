@@ -8,6 +8,7 @@
 #include "paklib/PakInterface.h"
 #include "misc/PerfTimer.h"
 #include "misc/XMLParser.h"
+#include "../Resources.h"
 
 DefSymbol gTrailFlagDefSymbols[] = {  //0x69E150
     { 0, "Loops" },                 { -1, nullptr }
@@ -241,6 +242,66 @@ void* ReanimatorDefinitionConstructor(void* thePointer)
     return thePointer;
 }
 
+// @Patoke implement
+unsigned int DefGetSizeString(char** theValue) {
+    return strlen(*theValue) + sizeof(intptr_t);
+}
+
+unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, DefMap* theDefMap) {
+    unsigned int aResult = theValue->mArrayCount * theDefMap->mDefSize + sizeof(intptr_t);
+    for (unsigned int i = 0; theValue->mArrayCount > i; ++i) {
+        aResult += DefinitionGetDeepSize(theDefMap, (void*)((intptr_t)theValue->mArrayData + i * theDefMap->mDefSize));
+    }
+    return aResult;
+}
+
+unsigned int DefGetSizeFloatTrack(FloatParameterTrack* theValue) {
+    return sizeof(FloatParameterTrackNode) * theValue->mCountNodes + sizeof(intptr_t);
+}
+
+unsigned int DefGetSizeImage(Image* theValue) {
+    return sizeof(Image*);
+}
+
+unsigned int DefGetSizeFont(_Font** theValue) {
+    std::string aFontPath{};
+    if (*theValue)
+        TodFindFontPath(*theValue, &aFontPath);
+    return aFontPath.length() + sizeof(unsigned int);
+}
+
+unsigned int DefinitionGetDeepSize(DefMap* theDefMap, void* theDefinition) {
+    unsigned int aResult = 0;
+    for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++) {
+        void* aDest = (void*)((intptr_t)theDefinition + aField->mFieldOffset);
+        switch (aField->mFieldType) {
+        case DefFieldType::DT_STRING:
+            aResult += DefGetSizeString((char**)aDest);
+            break;
+        case DefFieldType::DT_ARRAY:
+            aResult += DefinitionGetArraySize((DefinitionArrayDef*)aDest, (DefMap*)aField->mExtraData);
+            break;
+        case DefFieldType::DT_TRACK_FLOAT:
+            aResult += DefGetSizeFloatTrack((FloatParameterTrack*)aDest);
+            break;
+        case DefFieldType::DT_IMAGE:
+            aResult += DefGetSizeImage((Image*)aDest);
+            break;
+        case DefFieldType::DT_FONT:
+            aResult += DefGetSizeFont((_Font**)aDest);
+            break;
+        default:
+            continue;
+        }
+    }
+
+    return aResult;
+}
+
+unsigned int DefinitionGetSize(DefMap* theDefMap, void* theDefinition) {
+    return theDefMap->mDefSize + DefinitionGetDeepSize(theDefMap, theDefinition);
+}
+
 void* DefinitionAlloc(int theSize)
 {
     void* aPtr = operator new[](theSize);
@@ -379,7 +440,7 @@ bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
     char* aFontName = (char*)_alloca(aLen + 1);  // 在栈上分配字体标签字符数组的内存空间
     SMemR(theReadPtr, aFontName, aLen);  // 读取字体标签字符数组
     aFontName[aLen] = '\0';
-
+    
     *theFont = nullptr;
     return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
 }
@@ -1111,22 +1172,111 @@ bool DefinitionLoadMap(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefi
     return true;
 }
 
-bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition)
-{
-    (void)theCompiledFilePath;(void)theDefMap;(void)theDefinition;
-    /*
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    */
-    return true;
+// @Patoke implemented
+void DefWriteToCacheString(void* theWritePtr, char** theValue) {
+    unsigned int aStringSize = strlen(*theValue);
+    SMemW(theWritePtr, &aStringSize, sizeof(unsigned int));
+    if (aStringSize > 0)
+        SMemW(theWritePtr, theValue, aStringSize);
+}
+
+void DefWriteToCacheArray(void* theWritePtr, DefinitionArrayDef* theValue, DefMap* theDefMap) {
+	SMemW(theWritePtr, &theDefMap->mDefSize, sizeof(unsigned int));
+	SMemW(theWritePtr, theValue->mArrayData, theDefMap->mDefSize * theValue->mArrayCount);
+	for (int i = 0; theValue->mArrayCount > i; ++i)
+		DefMapWriteToCache(theWritePtr, theDefMap, (void*)((intptr_t)theValue->mArrayData + i * theDefMap->mDefSize));
+}
+
+void DefWriteToCacheFloatTrack(void* theWritePtr, FloatParameterTrack* theValue) {
+    SMemW(theWritePtr, &theValue->mCountNodes, sizeof(unsigned int));
+    if (theValue->mCountNodes > 0)
+        SMemW(theWritePtr, theValue->mNodes, theValue->mCountNodes * sizeof(FloatParameterTrackNode));
+}
+
+void DefWriteToCacheImage(void* theWritePtr, Image* theValue) {
+    ResourceId aImageId{};
+    if (theValue)
+        aImageId = GetIdByImage(theValue);
+    else
+        aImageId = (ResourceId)(0xFFFFFFFF); // -1
+    SMemW(theWritePtr, &aImageId, sizeof(unsigned int));
+}
+
+void DefWriteToCacheFont(void* theWritePtr, _Font** theValue) {
+    std::string aFontName{};
+    if (*theValue)
+        TodFindFontPath(*theValue, &aFontName);
+    unsigned int aFontSize = aFontName.length();
+    SMemW(theWritePtr, &aFontSize, sizeof(unsigned int));
+    if (aFontSize > 0)
+        SMemW(theWritePtr, aFontName.c_str(), aFontSize);
+}
+
+void DefMapWriteToCache(void* theWritePtr, DefMap* theDefMap, void* theDefinition) {
+	for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++) {
+		void* aDest = (void*)((intptr_t)theDefinition + aField->mFieldOffset);
+		switch (aField->mFieldType) {
+		case DefFieldType::DT_STRING:
+			DefWriteToCacheString(theWritePtr, (char**)aDest);
+			break;
+		case DefFieldType::DT_ARRAY:
+			DefWriteToCacheArray(theWritePtr, (DefinitionArrayDef*)aDest, (DefMap*)aField->mExtraData);
+			break;
+		case DefFieldType::DT_TRACK_FLOAT:
+			DefWriteToCacheFloatTrack(theWritePtr, (FloatParameterTrack*)aDest);
+			break;
+		case DefFieldType::DT_IMAGE:
+			DefWriteToCacheImage(theWritePtr, (Image*)aDest);
+			break;
+		case DefFieldType::DT_FONT:
+			DefWriteToCacheFont(theWritePtr, (_Font**)aDest);
+			break;
+		default:
+			continue;
+		}
+	}
+}
+
+void* DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSize, unsigned int* theResultSize) {
+    uLongf aCompressedSizePart = theBufferSize / 100 + 12;
+    uLongf aCompressedSize = theBufferSize + aCompressedSizePart;
+    auto aCompressedBuffer = (CompressedDefinitionHeader*)DefinitionAlloc(aCompressedSize + sizeof(CompressedDefinitionHeader));
+    compress((Bytef*)((uintptr_t)aCompressedBuffer + sizeof(CompressedDefinitionHeader)), &aCompressedSize, (Bytef*)theBuffer, theBufferSize);
+    aCompressedBuffer->mCookie = 0xDEADFED4;
+    aCompressedBuffer->mUncompressedSize = theBufferSize;
+    *theResultSize = aCompressedSize + sizeof(CompressedDefinitionHeader);
+    return aCompressedBuffer;
+}
+
+bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition) {
+    unsigned int aCompressedSize = 0;
+    unsigned int aDefSize = DefinitionGetSize(theDefMap, theDefinition) + sizeof(unsigned int);
+    void* aDef = DefinitionAlloc(aDefSize);
+    uint aDefHash = DefinitionCalcHash(theDefMap);
+
+    SMemW(aDef, &aDefHash, sizeof(uint));
+    SMemW(aDef, theDefinition, theDefMap->mDefSize);
+    DefMapWriteToCache(aDef, theDefMap, theDefinition);
+    void* aCompressedDef = DefinitionCompressCompiledBuffer(aDef, aDefSize, &aCompressedSize);
+
+    // @Patoke todo: intentionally causing a memory leak, this causes a critical breakpoint when executed (softlock?)
+    //delete[] aDef; // already compressed, no need to keep this instance alive
+
+    std::string aFilePath = GetFileDir(theCompiledFilePath);
+    MkDir(aFilePath);
+
+    auto aFileStream = fopen(theCompiledFilePath.c_str(), "wb");
+    if (aFileStream) {
+        unsigned int aBytesWritten = fwrite(aCompressedDef, 1u, aCompressedSize, aFileStream);
+
+        delete[] aCompressedDef;
+
+        fclose(aFileStream);
+        return aBytesWritten == aCompressedSize;
+    }
+
+    delete[] aCompressedDef;
+    return false;
 }
 
 bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition)
@@ -1259,8 +1409,9 @@ void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
         switch (aField->mFieldType)
         {
         case DefFieldType::DT_STRING:
-            if (**(char**)aVar != '\0')
-                delete[] *(char**)aVar;  // 释放字符数组
+            // @Patoke todo: removed this, caused a heap problem when closing the game, add back properly (causes memory leak)
+            //if (**(char**)aVar != '\0')
+            //    delete[] *(char**)aVar;  // 释放字符数组
             *(char**)aVar = nullptr;
             break;
         case DefFieldType::DT_ARRAY:
