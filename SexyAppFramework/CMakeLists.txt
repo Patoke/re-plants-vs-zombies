@@ -187,7 +187,7 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-if(WIN32)
+if(MSVC)
     add_executable(${PROJECT_NAME} WIN32 ${ALL_FILES})
 else()
     add_executable(${PROJECT_NAME} ${ALL_FILES})
@@ -244,18 +244,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
         "_DEBUG;"
-        "_WINDOWS;"
-        "_VISUALC_;"
-        "_JPEGLIB_;"
-        "_CRT_SECURE_NO_WARNINGS"
+        #"_WINDOWS;"
+        #"_VISUALC_;"
+        #"_JPEGLIB_;"
+        #"_CRT_SECURE_NO_WARNINGS"
     ">"
     "$<$<CONFIG:Release>:"
         "NDEBUG;"
-        "_WINDOWS;"
-        "_VISUALC_;"
-        "_JPEGLIB_"
+        #"_WINDOWS;"
+        #"_VISUALC_;"
+        #"_JPEGLIB_"
     ">"
-    "WIN32;"
     "_LIB;"
     "_MBCS"
 )

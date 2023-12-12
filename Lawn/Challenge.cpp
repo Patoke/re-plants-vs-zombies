@@ -4393,7 +4393,7 @@ ZombieType Challenge::IZombieSeedTypeToZombieType(SeedType theSeedType)
 	default:						TOD_ASSERT();
 	}
 
-	std::unreachable();
+	unreachable();
 }
 
 //0x42A0F0

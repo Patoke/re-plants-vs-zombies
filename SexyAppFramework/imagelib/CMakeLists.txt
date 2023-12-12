@@ -5,7 +5,7 @@
 include(ExternalProject)
 
 # support for windows
-if(WIN32)
+if(MSVC)
     set(libjpeg_binary "jpeg-static.lib")
     set(zlib_binary "zlibstaticd.lib")
     set(libpng_binary "libpng16_staticd.lib")
@@ -95,7 +95,7 @@ ExternalProject_Add(libpng-src
                             "-DPNG_TESTS=OFF"
                             "-DPNG_BUILD_ZLIB=${zlib_dir}"
                             "-DZLIB_INCLUDE_DIRS=${zlib_dir}"
-                            "-DZLIB_LIBRARIES=${zlib_dir}"
+                            "-DZLIB_LIBRARIES=${zlib_dir}/${zlib_binary}"
                             "-Wno-dev"
 
     INSTALL_COMMAND         ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/png/
