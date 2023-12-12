@@ -663,11 +663,11 @@ bool D3DTester::Init(HWND theHWND, LPDIRECTDRAW7 theDDraw)
 		ZeroMemory(&ddsCaps,sizeof(ddsCaps));
 		ddsCaps.dwCaps = DDSCAPS_VIDEOMEMORY;
 	 
-		HDC aDC = GetDC(NULL);
-		int aWidth = GetDeviceCaps(aDC, HORZRES);
-		int aHeight = GetDeviceCaps(aDC, VERTRES);
-		int aBPP = GetDeviceCaps( aDC, BITSPIXEL );
-		ReleaseDC(NULL, aDC);
+		//HDC aDC = GetDC(NULL);
+		//int aWidth = GetDeviceCaps(aDC, HORZRES);
+		//int aHeight = GetDeviceCaps(aDC, VERTRES);
+		//int aBPP = GetDeviceCaps( aDC, BITSPIXEL );
+		//ReleaseDC(NULL, aDC);
 
 		HRESULT aResult =  mDD7->GetAvailableVidMem(&ddsCaps, &dwTotal, &dwFree);
 		if (!SUCCEEDED(aResult))
@@ -678,9 +678,9 @@ bool D3DTester::Init(HWND theHWND, LPDIRECTDRAW7 theDDraw)
 		{
 			// @Patoke todo: fix this and reimplement, for x64 builds it's broken
 			// fix @Patoke: fix integer overflow
-			int64_t total64bit = dwTotal; // dwTotal will overflow but as long as the vram isn't INT_MAX + 1 it won't heck up
-			total64bit += (aBPP / 8) * aWidth * aHeight;
-			total64bit /= (1024 * 1024);
+			//int64_t total64bit = dwTotal; // dwTotal will overflow but as long as the vram isn't INT_MAX + 1 it won't heck up
+			//total64bit += (aBPP / 8) * aWidth * aHeight;
+			//total64bit /= (1024 * 1024);
 			//dwTotal += (aBPP/8)*aWidth*aHeight;
 			//dwTotal /= (1024*1024);
 			//if (total64bit < mMinVidMemory)

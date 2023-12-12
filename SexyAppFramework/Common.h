@@ -30,6 +30,13 @@
 #undef min
 #undef max
 
+// Define unreachable()
+#ifdef MSVC
+#define unreachable std::unreachable
+#else
+#define unreachable __builtin_unreachable
+#endif
+
 // Removed wide string support
 typedef std::string			SexyString;
 #define _S(x)				x
