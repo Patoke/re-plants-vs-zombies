@@ -162,6 +162,25 @@ bool                    DefinitionReadFontField(XMLParser* theXmlParser, _Font**
 bool                    DefinitionReadField(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefinition, bool* theDone);
 bool                    DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
 bool                    DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition);
+
+void                    DefMapWriteToCache(void* theWritePtr, DefMap* theDefMap, void* theDefinition);
+
+void                    DefWriteToCacheString(void* theWritePtr, char** theValue);
+void                    DefWriteToCacheArray(void* theWritePtr, DefinitionArrayDef* theValue, DefMap* theDefMap);
+void                    DefWriteToCacheFloatTrack(void* theWritePtr, FloatParameterTrack* theValue);
+void                    DefWriteToCacheImage(void* theWritePtr, Image* theValue);
+void                    DefWriteToCacheFont(void* theWritePtr, _Font** theValue);
+
+void*                   DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSize, unsigned int* theResultSize);
+
+/*inline*/ unsigned int DefGetSizeString(char** theValue);
+/*inline*/ unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, DefMap* theDefMap);
+/*inline*/ unsigned int DefGetSizeFloatTrack(FloatParameterTrack* theValue);
+/*inline*/ unsigned int DefGetSizeImage(Image* theValue);
+/*inline*/ unsigned int DefGetSizeFont(_Font** theValue);
+
+/*inline*/ unsigned int DefinitionGetDeepSize(DefMap* theDefMap, void* theDefinition);
+/*inline*/ unsigned int DefinitionGetSize(DefMap* theDefMap, void* theDefinition);
 /*inline*/ void*        DefinitionAlloc(int theSize);
 void*                   DefinitionUncompressCompiledBuffer(void* theCompressedBuffer, size_t theCompressedBufferSize, size_t& theUncompressedSize, const SexyString& theCompiledFilePath);
 uint /*__cdecl*/        DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol* theSymbolMap);

@@ -29,7 +29,7 @@ typedef std::map<SexyString, SexyString>	XMLParamMap;
 ///////////////////////////////////////////////////////////////////////////////
 class ResourceManager
 {
-protected:
+public: // @Patoke todo: revert to protected
 	enum ResType
 	{
 		ResType_Image,
