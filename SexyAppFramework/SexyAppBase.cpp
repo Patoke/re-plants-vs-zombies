@@ -4587,6 +4587,11 @@ void SexyAppBase::MakeWindow()
 {
 	//OutputDebugString("MAKING WINDOW\r\n");
 
+	if (!glfwInit()) {
+		DBG_ASSERTE(glfwInit);
+		return;
+	}
+
 	if (mHWnd != NULL)
 	{
 		SetWindowLongPtr(mHWnd, GWLP_USERDATA, 0);
@@ -4616,8 +4621,8 @@ void SexyAppBase::MakeWindow()
 		int aHeight = aRect.bottom - aRect.top;
 
 		// Get the work area of the desktop to allow us to center
-		RECT aDesktopRect;
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &aDesktopRect, 0);
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		RECT aDesktopRect{ 0, 0, mode->width, mode->height };
 
 		int aPlaceX = 64;
 		int aPlaceY = 64;
@@ -4643,46 +4648,23 @@ void SexyAppBase::MakeWindow()
 		}
 
 		// @Patoke: removed unnecessary if checks for win98
-		mHWnd = CreateWindowEx(
-			0,
-			_S("MainWindow"),
-			SexyStringToStringFast(mTitle).c_str(),
-			aWindowStyle,
-			aPlaceX,
-			aPlaceY,
-			aWidth,
-			aHeight,
-			NULL,
-			NULL,
-			gHInstance,
-			0);
+		mGLWindow = glfwCreateWindow(aWidth, aHeight, SexyStringToStringFast(mTitle).c_str(), nullptr, nullptr);
+		mHWnd = glfwGetWin32Window(mGLWindow);
+		glfwSetWindowPos(mGLWindow, aPlaceX, aPlaceY);
 
 		if (mPreferredX == -1)
 		{
-			::MoveWindow(mHWnd,
+			glfwSetWindowPos(mGLWindow,
 				aDesktopRect.left + ((aDesktopRect.right - aDesktopRect.left) - aWidth) / 2,
-				aDesktopRect.top + (int)(((aDesktopRect.bottom - aDesktopRect.top) - aHeight) * 0.382),
-				aWidth, aHeight, FALSE);
+				aDesktopRect.top + (int)(((aDesktopRect.bottom - aDesktopRect.top) - aHeight) * 0.382));
 		}
 
 		mIsPhysWindowed = true;
 	}
 	else
 	{
-
-		mHWnd = CreateWindowEx(
-			WS_EX_TOPMOST,
-			_S("MainWindow"),
-			SexyStringToStringFast(mTitle).c_str(),
-			WS_POPUP | WS_VISIBLE,
-			0,
-			0,
-			mWidth,
-			mHeight,
-			NULL,
-			NULL,
-			gHInstance,
-			0);
+		mGLWindow = glfwCreateWindow(mWidth, mHeight, SexyStringToStringFast(mTitle).c_str(), glfwGetPrimaryMonitor(), nullptr);
+		mHWnd = glfwGetWin32Window(mGLWindow);
 
 		mIsPhysWindowed = false;
 	}

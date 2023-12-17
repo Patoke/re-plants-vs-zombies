@@ -53,8 +53,8 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_CLEAN_FILES
 target_sources(${PROJECT_NAME} PRIVATE
     Color.cpp
     Color.h
-    D3D8Helper.cpp
-    D3D8Helper.h
+    GLInterface.cpp
+    GLInterface.h
     D3DInterface.cpp
     D3DInterface.h
     DDImage.cpp

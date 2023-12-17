@@ -27,6 +27,11 @@
 #include <mmsystem.h>
 #include "misc/ModVal.h"
 
+// @Patoke todo: remove api exposing after doing a full GLFW port
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <glfw/glfw3.h>
+#include <glfw/glfw3native.h>
+
 // fallback if NOMINMAX fails (somehow?)
 #undef min
 #undef max

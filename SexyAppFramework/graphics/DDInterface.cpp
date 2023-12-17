@@ -412,12 +412,9 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		aDesc.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
 		aDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE |
 							  DDSCAPS_FLIP |
-							  DDSCAPS_COMPLEX/* |
+							  DDSCAPS_COMPLEX | DDSCAPS_3DDEVICE/* |
 							  ,DDSCAPS_FRONTBUFFER*/;
 		aDesc.dwBackBufferCount = 1;
-
-		aDesc.ddsCaps.dwCaps |= DDSCAPS_3DDEVICE;
-
 
 		aResult = CreateSurface(&aDesc, &mPrimarySurface, NULL);
 		if (GotDXError(aResult,"CreateSurface FullScreen Primary"))
@@ -440,7 +437,6 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		ZeroMemory(&aDesc, sizeof(aDesc));
 		aDesc.dwSize = sizeof(aDesc);
 		aDesc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
-		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
 		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE;
 
 		aDesc.dwWidth = mWidth;

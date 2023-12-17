@@ -177,6 +177,7 @@ public:
 	bool					mProcessInTimer;
 	DWORD					mTimeLoaded;
 	HWND					mHWnd;
+	GLFWwindow*				mGLWindow;
 	HWND					mInvisHWnd;
 	bool					mIsScreenSaver;
 	bool					mAllowMonitorPowersave;
