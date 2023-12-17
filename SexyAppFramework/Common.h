@@ -3,6 +3,7 @@
 
 #pragma warning(disable:4786)
 #pragma warning(disable:4503)
+#pragma warning(disable:4003) // not enough arguments for function-like macro invocation 'x'
 
 #undef _WIN32_WINNT
 #undef WIN32_LEAN_AND_MEAN

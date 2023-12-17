@@ -10,7 +10,6 @@
 #include "misc/KeyCodes.h"
 #include "graphics/DDInterface.h"
 #include "graphics/D3DInterface.h"
-#include "graphics/D3DTester.h"
 #include "graphics/DDImage.h"
 #include "graphics/MemoryImage.h"
 #include "misc/HTTPTransfer.h"
@@ -369,58 +368,6 @@ SexyAppBase::SexyAppBase()
 SexyAppBase::~SexyAppBase()
 {
 	Shutdown();
-
-	// Check if we should write the current 3d setting
-	bool showedMsgBox = false;
-	if (mUserChanged3DSetting)
-	{
-		bool writeToRegistry = true;
-		bool is3D = false;
-		bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
-		if(!is3DOptionSet) // should we write the option?
-		{
-			if(!Is3DAccelerationRecommended()) // may need to prompt user if he wants to keep 3d acceleration on
-			{
-				if (Is3DAccelerated())
-				{
-					showedMsgBox = true;
-					int aResult = MessageBox(NULL,
-									GetString("HARDWARE_ACCEL_SWITCHED_ON", 
-															_S("Hardware Acceleration was switched on during this session.\r\n")
-															_S("If this resulted in slower performance, it should be switched off.\r\n")
-															_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
-									(StringToSexyString(mCompanyName) + _S(" ") +
-									 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
-									MB_YESNO | MB_ICONQUESTION);
-
-					mDDInterface->mIs3D = aResult == IDYES ? true : false;
-					if (aResult!=IDYES)
-						writeToRegistry = false;
-				}
-				else
-					writeToRegistry = false;
-			}
-		}
-
-		if (writeToRegistry)
-			RegistryWriteBoolean("Is3D", mDDInterface->mIs3D);
-	}
-
-	if (!showedMsgBox && gD3DInterfacePreDrawError && !IsScreenSaver())
-	{
-		int aResult = MessageBox(NULL, 
-						GetString("HARDWARE_ACCEL_NOT_WORKING", 
-									_S("Hardware Acceleration may not have been working correctly during this session.\r\n")
-									_S("If you noticed graphics problems, you may want to turn off Hardware Acceleration.\r\n")
-									_S("Would you like to keep Hardware Acceleration switched on?")).c_str(),
-						(StringToSexyString(mCompanyName) + _S(" ") +
-						 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation"))).c_str(),
-						MB_YESNO | MB_ICONQUESTION);
-
-		if (aResult==IDNO)
-			RegistryWriteBoolean("Is3D", false);
-	}
-
 
 	DialogMap::iterator aDialogItr = mDialogMap.begin();
 	while (aDialogItr != mDialogMap.end())
@@ -4749,29 +4696,9 @@ void SexyAppBase::MakeWindow()
 	if (mDDInterface == NULL)
 	{
 		mDDInterface = new DDInterface(this);
-
-		// Enable 3d setting
-		bool is3D = false;
-		bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
-		if (is3DOptionSet)
-		{
-			if (mAutoEnable3D)
-			{
-				mAutoEnable3D = false;
-				mTest3D = true;
-			}
-
-			if (is3D)
-				mTest3D = true;
-
-			mDDInterface->mIs3D = is3D;
-		}
 	}
 
 	int aResult = InitDDInterface();
-
-	if (mDDInterface->mD3DTester!=NULL && mDDInterface->mD3DTester->ResultsChanged())
-		RegistryEraseValue(_S("Is3D"));
 
 	if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 	{
@@ -6964,23 +6891,27 @@ void SexyAppBase::Remove3DData(MemoryImage* theMemoryImage)
 
 bool SexyAppBase::Is3DAccelerated()
 {
-	return mDDInterface->mIs3D;
+	// @Patoke todo: bandaid fix, actually remove these calls and use 3D always
+	//return mDDInterface->mIs3D;
+	return true;
 }
 
 bool SexyAppBase::Is3DAccelerationSupported()
 {
-	if (mDDInterface->mD3DTester)
-		return mDDInterface->mD3DTester->Is3DSupported();
-	else
-		return false;
+	// @Patoke todo: bandaid fix, actually remove these calls and use 3D always
+	//if (mDDInterface->mD3DTester)
+	//	return mDDInterface->mD3DTester->Is3DSupported();
+	//else
+	return true;
 }
 
 bool SexyAppBase::Is3DAccelerationRecommended()
 {
-	if (mDDInterface->mD3DTester)
-		return mDDInterface->mD3DTester->Is3DRecommended();
-	else
-		return false;
+	// @Patoke todo: bandaid fix, actually remove these calls and use 3D always
+	//if (mDDInterface->mD3DTester)
+	//	return mDDInterface->mD3DTester->Is3DRecommended();
+	//else
+	return true;
 }
 
 void SexyAppBase::DemoSyncRefreshRate()
@@ -7000,32 +6931,34 @@ void SexyAppBase::DemoSyncRefreshRate()
 
 void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 {
-	if (mDDInterface->mIs3D == is3D)
-		return;
+	// @Patoke todo: bandaid fix, actually remove these calls and use 3D always
+	return;
+	//if (mDDInterface->mIs3D == is3D)
+	//	return;
 
-	mUserChanged3DSetting = true;
-	mDDInterface->mIs3D = is3D;
-	
-	if (reinit)
-	{
-		int aResult = InitDDInterface();
+	//mUserChanged3DSetting = true;
+	//mDDInterface->mIs3D = is3D;
+	//
+	//if (reinit)
+	//{
+	//	int aResult = InitDDInterface();
 
-		if (is3D && aResult != DDInterface::RESULT_OK)
-		{
-			Set3DAcclerated(false, reinit);
-			return;
-		}
-		else if (aResult != DDInterface::RESULT_OK)
-		{
-			Popup(GetString("FAILED_INIT_DIRECTDRAW", _S("Failed to initialize DirectDraw: ")) + StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
-			DoExit(1);
-		}
+	//	if (is3D && aResult != DDInterface::RESULT_OK)
+	//	{
+	//		Set3DAcclerated(false, reinit);
+	//		return;
+	//	}
+	//	else if (aResult != DDInterface::RESULT_OK)
+	//	{
+	//		Popup(GetString("FAILED_INIT_DIRECTDRAW", _S("Failed to initialize DirectDraw: ")) + StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
+	//		DoExit(1);
+	//	}
 
-		ReInitImages();
+	//	ReInitImages();
 
-		mWidgetManager->mImage = mDDInterface->GetScreenImage();
-		mWidgetManager->MarkAllDirty();
-	}
+	//	mWidgetManager->mImage = mDDInterface->GetScreenImage();
+	//	mWidgetManager->MarkAllDirty();
+	//}
 }
 
 SharedImageRef SexyAppBase::SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew)

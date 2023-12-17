@@ -17,7 +17,6 @@ class DDImage;
 class Image;
 class MemoryImage;
 class D3DInterface;
-class D3DTester;
 
 typedef std::set<DDImage*> DDImageSet;
 
@@ -38,8 +37,6 @@ public:
 
 	SexyAppBase*			mApp;
 	D3DInterface*			mD3DInterface;
-	D3DTester*				mD3DTester;
-	bool					mIs3D;
 
 	CritSect				mCritSect;
 	bool					mInRedraw;
@@ -112,7 +109,6 @@ public:
 
 	HRESULT					CreateSurface(DDSURFACEDESC2 *theDesc, LPDIRECTDRAWSURFACE *theSurface, void*);
 	void					ClearSurface(LPDIRECTDRAWSURFACE theSurface);
-	bool					Do3DTest(HWND theHWND);
 
 public:
 	DDInterface(SexyAppBase* theApp);

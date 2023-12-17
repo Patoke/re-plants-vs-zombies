@@ -15,9 +15,9 @@ ExternalProject_Add(glfw-src
     GIT_REPOSITORY          https://github.com/glfw/glfw.git
     GIT_TAG                 3.3.8
     SOURCE_DIR              "${glfw_dir}"
-    INSTALL_DIR             "${glfw_dir}"
+    BINARY_DIR              "${glfw_dir}"
     CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
-                            "-DCMAKE_INSTALL_PREFIX=${glfw_dir}"
+                            "-DCMAKE_INSTALL_PREFIX=${glfw_dir}/install"
                             "-DCMAKE_C_FLAGS=${universal_cflags}"
                             "-DGLFW_BUILD_DOCS=OFF"
                             "-DGLFW_BUILD_TESTS=OFF"
@@ -35,7 +35,7 @@ ExternalProject_Add(glfw-src
     UPDATE_DISCONNECTED     TRUE
 )
 
-add_library(glfw STATIC IMPORTED GLOBAL)
+add_library(glfw STATIC IMPORTED)
 
 add_dependencies(glfw glfw-src)
 
@@ -57,8 +57,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     D3D8Helper.h
     D3DInterface.cpp
     D3DInterface.h
-    D3DTester.cpp
-    D3DTester.h
     DDImage.cpp
     DDImage.h
     DDInterface.cpp

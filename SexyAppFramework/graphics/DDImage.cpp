@@ -19,7 +19,7 @@ extern bool gOptimizeSoftwareDrawing;
 DDImage::DDImage(DDInterface* theDDInterface) :
 	MemoryImage(theDDInterface->mApp)
 {
-	mDDInterface = theDDInterface;	
+	mDDInterface = theDDInterface;
 	Init();
 }
 
@@ -43,29 +43,29 @@ void DDImage::Init()
 {
 	mSurface = NULL;
 	mDDInterface->AddDDImage(this);
-	
+
 	mNoLock = false;
 	mVideoMemory = false;
 	mFirstPixelTrans = false;
-	mWantDDSurface = false;			
+	mWantDDSurface = false;
 	mDrawToBits = false;
 	mSurfaceSet = false;
 
 	mLockCount = 0;
 }
 
-bool DDImage::Check3D(Image *theImage)
+bool DDImage::Check3D(Image* theImage)
 {
-	DDImage *anImage = dynamic_cast<DDImage*>(theImage);
-	if (anImage!=NULL)
+	DDImage* anImage = dynamic_cast<DDImage*>(theImage);
+	if (anImage != NULL)
 		return Check3D(anImage);
 	else
 		return false;
 }
 
-bool DDImage::Check3D(DDImage *theImage)
+bool DDImage::Check3D(DDImage* theImage)
 {
-	return theImage->mDDInterface->mIs3D && theImage->mSurface==theImage->mDDInterface->mDrawSurface;
+	return theImage->mSurface == theImage->mDDInterface->mDrawSurface;
 }
 
 bool DDImage::LockSurface()
@@ -113,13 +113,13 @@ void DDImage::SetSurface(LPDIRECTDRAWSURFACE theSurface)
 	mSurface = theSurface;
 	mSurface->AddRef();
 
-//	TDDSurfaceDesc aDesc;
+	//	TDDSurfaceDesc aDesc;
 	DDSURFACEDESC aDesc;
 	ZeroMemory(&aDesc, sizeof(aDesc));
 	aDesc.dwSize = sizeof(aDesc);
-    aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH;
-    
-    HRESULT aResult = mSurface->GetSurfaceDesc(&aDesc);	(void)aResult;
+	aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH;
+
+	HRESULT aResult = mSurface->GetSurfaceDesc(&aDesc);	(void)aResult;
 
 	mWidth = aDesc.dwWidth;
 	mHeight = aDesc.dwHeight;
@@ -130,7 +130,7 @@ void DDImage::SetSurface(LPDIRECTDRAWSURFACE theSurface)
 bool DDImage::GenerateDDSurface()
 {
 	if (mSurface != NULL)
-		return true;	
+		return true;
 
 	CommitBits();
 
@@ -144,7 +144,7 @@ bool DDImage::GenerateDDSurface()
 		GetBits();
 
 	HRESULT aResult;
-//	TDDSurfaceDesc aDesc;
+	//	TDDSurfaceDesc aDesc;
 	DDSURFACEDESC2 aDesc;
 
 	ZeroMemory(&aDesc, sizeof(aDesc));
@@ -153,7 +153,7 @@ bool DDImage::GenerateDDSurface()
 	aDesc.ddsCaps.dwCaps = mVideoMemory ? DDSCAPS_VIDEOMEMORY : DDSCAPS_SYSTEMMEMORY;
 	aDesc.dwWidth = mWidth;
 	aDesc.dwHeight = mHeight;
-		
+
 	AutoCrit aCrit(mDDInterface->mCritSect); // prevent mSurface from being released while we're in this code
 
 	aResult = mDDInterface->CreateSurface(&aDesc, &mSurface, NULL);
@@ -163,9 +163,9 @@ bool DDImage::GenerateDDSurface()
 	if (!LockSurface())
 		return false;
 
-	const int rRightShift = 16 + (8-mDDInterface->mRedBits);
-	const int gRightShift = 8 + (8-mDDInterface->mGreenBits);
-	const int bRightShift = 0 + (8-mDDInterface->mBlueBits);
+	const int rRightShift = 16 + (8 - mDDInterface->mRedBits);
+	const int gRightShift = 8 + (8 - mDDInterface->mGreenBits);
+	const int bRightShift = 0 + (8 - mDDInterface->mBlueBits);
 
 	const int rLeftShift = mDDInterface->mRedShift;
 	const int gLeftShift = mDDInterface->mGreenShift;
@@ -179,29 +179,29 @@ bool DDImage::GenerateDDSurface()
 
 	if (aNumBits == 16)
 	{
-		ushort* mSurfaceBits = (ushort*) mLockedSurfaceDesc.lpSurface;
+		ushort* mSurfaceBits = (ushort*)mLockedSurfaceDesc.lpSurface;
 
 		if (mSurfaceBits != NULL)
 		{
 			int i;
-			bool firstTrans = true;			
-						
+			bool firstTrans = true;
+
 			ushort* a16Bits = NULL;
 			ushort aTransColor = 0;
-			
+
 			if (mBits != NULL)
 			{
-				a16Bits = new ushort[mWidth*mHeight];
-				ulong* aSrcPtr = mBits;	
+				a16Bits = new ushort[mWidth * mHeight];
+				ulong* aSrcPtr = mBits;
 				ushort* a16SrcPtr = a16Bits;
 
-				for (i = 0; i < mWidth*mHeight; i++)
-				{			
+				for (i = 0; i < mWidth * mHeight; i++)
+				{
 					ulong val = *(aSrcPtr++);
 
-					*a16SrcPtr =	(((val>>rRightShift)<<rLeftShift)&rMask) | 
-									(((val>>gRightShift)<<gLeftShift)&gMask) |
-									(((val>>bRightShift)<<bLeftShift)&bMask);
+					*a16SrcPtr = (((val >> rRightShift) << rLeftShift) & rMask) |
+						(((val >> gRightShift) << gLeftShift) & gMask) |
+						(((val >> bRightShift) << bLeftShift) & bMask);
 
 					int anAlpha = val >> 24;
 					if ((firstTrans) && (anAlpha < 255))
@@ -213,7 +213,7 @@ bool DDImage::GenerateDDSurface()
 					++a16SrcPtr;
 				}
 			}
-			
+
 			if ((mHasTrans) && (mBits != NULL))
 			{
 				if (mFirstPixelTrans)
@@ -222,17 +222,17 @@ bool DDImage::GenerateDDSurface()
 
 					if (a16Bits != NULL)
 					{
-						ushort* aDestPtr = mSurfaceBits;						
+						ushort* aDestPtr = mSurfaceBits;
 						ushort* a16SrcPtr = a16Bits;
 						for (int aRow = 0; aRow < mHeight; aRow++)
 						{
 							for (int aCol = 0; aCol < mWidth; aCol++)
-							{																
+							{
 								*(aDestPtr++) = *a16SrcPtr;
 								++a16SrcPtr;
 							}
 
-							aDestPtr += mLockedSurfaceDesc.lPitch/2 - mWidth;
+							aDestPtr += mLockedSurfaceDesc.lPitch / 2 - mWidth;
 						}
 					}
 				}
@@ -241,7 +241,7 @@ bool DDImage::GenerateDDSurface()
 					bool needNewColor = false;
 					ulong* aSrcPtr = mBits;
 					ushort* a16SrcPtr = a16Bits;
-					for (i = 0; i < mWidth*mHeight; i++)
+					for (i = 0; i < mWidth * mHeight; i++)
 					{
 						ulong val = *(aSrcPtr++);
 						ushort a16Val = *(a16SrcPtr++);
@@ -258,18 +258,18 @@ bool DDImage::GenerateDDSurface()
 					{
 						int* aUsedColorArray = new int[2048];
 
-						ZeroMemory(aUsedColorArray, 2048*sizeof(int));					
+						ZeroMemory(aUsedColorArray, 2048 * sizeof(int));
 
 						aSrcPtr = mBits;
 						a16SrcPtr = a16Bits;
-						for (i = 0; i < mWidth*mHeight; i++)
+						for (i = 0; i < mWidth * mHeight; i++)
 						{
 							ulong val = *(aSrcPtr++);
 							ushort a16Val = *(a16SrcPtr++);
 
 							int anAlpha = val >> 24;
 							if (anAlpha > 0)
-								aUsedColorArray[a16Val/32] |= (1<<(a16Val%32));						
+								aUsedColorArray[a16Val / 32] |= (1 << (a16Val % 32));
 						}
 
 						bool done = false;
@@ -277,11 +277,11 @@ bool DDImage::GenerateDDSurface()
 						{
 							if (aUsedColorArray[i] != 0xFFFF)
 							{
-								for (int aBit = 0; aBit < 32; aBit++)														
+								for (int aBit = 0; aBit < 32; aBit++)
 								{
-									if ((aUsedColorArray[i] & (1<<aBit)) == 0)
+									if ((aUsedColorArray[i] & (1 << aBit)) == 0)
 									{
-										aTransColor = i*32+aBit;
+										aTransColor = i * 32 + aBit;
 										break;
 									}
 								}
@@ -316,7 +316,7 @@ bool DDImage::GenerateDDSurface()
 								++a16SrcPtr;
 							}
 
-							aDestPtr += mLockedSurfaceDesc.lPitch/2 - mWidth;
+							aDestPtr += mLockedSurfaceDesc.lPitch / 2 - mWidth;
 						}
 					}
 				}
@@ -325,39 +325,39 @@ bool DDImage::GenerateDDSurface()
 			{
 				if (a16Bits != NULL)
 				{
-					ushort* aDestPtr = mSurfaceBits;						
+					ushort* aDestPtr = mSurfaceBits;
 					ushort* a16SrcPtr = a16Bits;
 					for (int aRow = 0; aRow < mHeight; aRow++)
 					{
 						for (int aCol = 0; aCol < mWidth; aCol++)
-						{																
+						{
 							*(aDestPtr++) = *a16SrcPtr;
 							++a16SrcPtr;
 						}
 
-						aDestPtr += mLockedSurfaceDesc.lPitch/2 - mWidth;
+						aDestPtr += mLockedSurfaceDesc.lPitch / 2 - mWidth;
 					}
 				}
 			}
 
-			delete a16Bits;	
+			delete a16Bits;
 
 			if (mHasTrans)
 			{
-				DDCOLORKEY aColorKey = {aTransColor, aTransColor};
-				mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);				
-			}		
+				DDCOLORKEY aColorKey = { aTransColor, aTransColor };
+				mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);
+			}
 		}
 	}
 	else if (aNumBits == 32)
 	{
-		ulong* mSurfaceBits = (ulong*) mLockedSurfaceDesc.lpSurface;		
+		ulong* mSurfaceBits = (ulong*)mLockedSurfaceDesc.lpSurface;
 
 		if (mSurfaceBits != NULL)
 		{
 			int i;
-			bool firstTrans = true;						
-			
+			bool firstTrans = true;
+
 			ulong aTransColor = 0;
 
 			if ((mHasTrans) && (mBits != NULL))
@@ -366,9 +366,9 @@ bool DDImage::GenerateDDSurface()
 				{
 					ulong val = *mBits;
 
-					aTransColor = (((val>>rRightShift)<<rLeftShift)&rMask) | 
-								  (((val>>gRightShift)<<gLeftShift)&gMask) |
-								  (((val>>bRightShift)<<bLeftShift)&bMask);
+					aTransColor = (((val >> rRightShift) << rLeftShift) & rMask) |
+						(((val >> gRightShift) << gLeftShift) & gMask) |
+						(((val >> bRightShift) << bLeftShift) & bMask);
 
 					if (mBits != NULL)
 					{
@@ -377,37 +377,37 @@ bool DDImage::GenerateDDSurface()
 						for (int aRow = 0; aRow < mHeight; aRow++)
 						{
 							for (int aCol = 0; aCol < mWidth; aCol++)
-							{				
-								ulong val = *(aSrcPtr++);								
-								
-								*(aDestPtr++) = 
-										(((val>>rRightShift)<<rLeftShift)&rMask) | 
-										(((val>>gRightShift)<<gLeftShift)&gMask) |
-										(((val>>bRightShift)<<bLeftShift)&bMask);
+							{
+								ulong val = *(aSrcPtr++);
+
+								*(aDestPtr++) =
+									(((val >> rRightShift) << rLeftShift) & rMask) |
+									(((val >> gRightShift) << gLeftShift) & gMask) |
+									(((val >> bRightShift) << bLeftShift) & bMask);
 							}
 
-							aDestPtr += mLockedSurfaceDesc.lPitch/4 - mWidth;
+							aDestPtr += mLockedSurfaceDesc.lPitch / 4 - mWidth;
 						}
 					}
 				}
 				else
 				{
-					ulong* aSrcPtr = mBits;	
-					for (i = 0; i < mWidth*mHeight; i++)
-					{			
-						ulong val = *(aSrcPtr++);				
+					ulong* aSrcPtr = mBits;
+					for (i = 0; i < mWidth * mHeight; i++)
+					{
+						ulong val = *(aSrcPtr++);
 
 						int anAlpha = val >> 24;
 						if ((firstTrans) && (anAlpha < 255))
 						{
 							firstTrans = false;
-							aTransColor = val;					
+							aTransColor = val;
 						}
 					}
 
 					bool needNewColor = false;
 					aSrcPtr = mBits;
-					for (i = 0; i < mWidth*mHeight; i++)
+					for (i = 0; i < mWidth * mHeight; i++)
 					{
 						ulong val = *(aSrcPtr++);
 
@@ -423,29 +423,29 @@ bool DDImage::GenerateDDSurface()
 					{
 						int* aUsedColorArray = new int[0x80000];
 
-						ZeroMemory(aUsedColorArray, 0x80000*sizeof(int));					
+						ZeroMemory(aUsedColorArray, 0x80000 * sizeof(int));
 
-						aSrcPtr = mBits;	
-						for (i = 0; i < mWidth*mHeight; i++)
+						aSrcPtr = mBits;
+						for (i = 0; i < mWidth * mHeight; i++)
 						{
-							ulong val = *(aSrcPtr++);						
+							ulong val = *(aSrcPtr++);
 
-							int anAlpha = val >> 24;						
+							int anAlpha = val >> 24;
 
 							if (anAlpha > 0)
-								aUsedColorArray[(val & 0xFFFFFF)/32] |= (1<<(val%32));
+								aUsedColorArray[(val & 0xFFFFFF) / 32] |= (1 << (val % 32));
 						}
 
 						bool done = false;
 						for (int i = 0; i < 0x80000; i++)
 						{
-							if (aUsedColorArray[i] != 0xFFFF)						
+							if (aUsedColorArray[i] != 0xFFFF)
 							{
-								for (int aBit = 0; aBit < 32; aBit++)														
+								for (int aBit = 0; aBit < 32; aBit++)
 								{
-									if ((aUsedColorArray[i] & (1<<aBit)) == 0)								
+									if ((aUsedColorArray[i] & (1 << aBit)) == 0)
 									{
-										aTransColor = i*32+aBit;							
+										aTransColor = i * 32 + aBit;
 										done = true;
 										break;
 									}
@@ -454,7 +454,7 @@ bool DDImage::GenerateDDSurface()
 
 							if (done)
 								break;
-						}						
+						}
 
 						delete[] aUsedColorArray;
 					}
@@ -466,7 +466,7 @@ bool DDImage::GenerateDDSurface()
 						for (int aRow = 0; aRow < mHeight; aRow++)
 						{
 							for (int aCol = 0; aCol < mWidth; aCol++)
-							{				
+							{
 								ulong val = *(aSrcPtr++);
 
 								//*(aDestPtr++) = 0xFF000000 |  ((val >> 24) & 0xFF);
@@ -476,19 +476,19 @@ bool DDImage::GenerateDDSurface()
 									*(aDestPtr++) = aTransColor;
 								else
 								{
-									*(aDestPtr++) = 
-												(((val>>rRightShift)<<rLeftShift)&rMask) | 
-												(((val>>gRightShift)<<gLeftShift)&gMask) |
-												(((val>>bRightShift)<<bLeftShift)&bMask);
+									*(aDestPtr++) =
+										(((val >> rRightShift) << rLeftShift) & rMask) |
+										(((val >> gRightShift) << gLeftShift) & gMask) |
+										(((val >> bRightShift) << bLeftShift) & bMask);
 								}
 							}
 
-							aDestPtr += mLockedSurfaceDesc.lPitch/4 - mWidth;
+							aDestPtr += mLockedSurfaceDesc.lPitch / 4 - mWidth;
 						}
 					}
 				}
 
-				DDCOLORKEY aColorKey = {aTransColor, aTransColor};
+				DDCOLORKEY aColorKey = { aTransColor, aTransColor };
 				mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);
 			}
 			else
@@ -500,16 +500,16 @@ bool DDImage::GenerateDDSurface()
 					for (int aRow = 0; aRow < mHeight; aRow++)
 					{
 						for (int aCol = 0; aCol < mWidth; aCol++)
-						{				
-							ulong val = *(aSrcPtr++);					
+						{
+							ulong val = *(aSrcPtr++);
 
-							*(aDestPtr++) = 
-										(((val>>rRightShift)<<rLeftShift)&rMask) | 
-										(((val>>gRightShift)<<gLeftShift)&gMask) |
-										(((val>>bRightShift)<<bLeftShift)&bMask);
+							*(aDestPtr++) =
+								(((val >> rRightShift) << rLeftShift) & rMask) |
+								(((val >> gRightShift) << gLeftShift) & gMask) |
+								(((val >> bRightShift) << bLeftShift) & bMask);
 						}
 
-						aDestPtr += mLockedSurfaceDesc.lPitch/4 - mWidth;
+						aDestPtr += mLockedSurfaceDesc.lPitch / 4 - mWidth;
 					}
 				}
 			}
@@ -521,7 +521,7 @@ bool DDImage::GenerateDDSurface()
 	}
 
 	UnlockSurface();
-	
+
 	return true;
 }
 
@@ -557,18 +557,18 @@ void DDImage::PurgeBits()
 	if (!mApp->Is3DAccelerated())
 	{
 		if ((mWantDDSurface) && (GenerateDDSurface()))
-		{                        
-			delete [] mBits;
+		{
+			delete[] mBits;
 			mBits = NULL;
 
-			delete [] mColorIndices;
+			delete[] mColorIndices;
 			mColorIndices = NULL;
 
-			delete [] mColorTable;
-			mColorTable = NULL;                        
+			delete[] mColorTable;
+			mColorTable = NULL;
 
 			return;
-		}	
+		}
 	}
 	else // Accelerated
 	{
@@ -578,28 +578,28 @@ void DDImage::PurgeBits()
 			DeleteDDSurface();
 		}
 	}
-	
+
 	MemoryImage::PurgeBits();
 }
 
 void DDImage::DeleteAllNonSurfaceData()
 {
-	delete [] mBits;
+	delete[] mBits;
 	mBits = NULL;
 
-	delete [] mNativeAlphaData;
+	delete[] mNativeAlphaData;
 	mNativeAlphaData = NULL;
 
-	delete [] mRLAdditiveData;
+	delete[] mRLAdditiveData;
 	mRLAdditiveData = NULL;
 
-	delete [] mRLAlphaData;
+	delete[] mRLAlphaData;
 	mRLAlphaData = NULL;
 
-	delete [] mColorTable;
+	delete[] mColorTable;
 	mColorTable = NULL;
 
-	delete [] mColorIndices;
+	delete[] mColorIndices;
 	mColorIndices = NULL;
 }
 
@@ -624,7 +624,7 @@ void DDImage::DeleteExtraBuffers()
 void DDImage::SetVideoMemory(bool wantVideoMemory)
 {
 	if (wantVideoMemory != mVideoMemory)
-	{		
+	{
 		mVideoMemory = wantVideoMemory;
 
 		// Make sure that we have the bits
@@ -642,13 +642,13 @@ void DDImage::RehupFirstPixelTrans()
 	if ((mNoLock) || (!mHasTrans) || (!mFirstPixelTrans))
 		return;
 
-//	TDDSurfaceDesc aDesc;
+	//	TDDSurfaceDesc aDesc;
 	DDSURFACEDESC aDesc;
 
 	ZeroMemory(&aDesc, sizeof(aDesc));
 	aDesc.dwSize = sizeof(aDesc);
-    aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
-    HRESULT aResult = mDDInterface->mPrimarySurface->GetSurfaceDesc(&aDesc);
+	aDesc.dwFlags = DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
+	HRESULT aResult = mDDInterface->mPrimarySurface->GetSurfaceDesc(&aDesc);
 	if (FAILED(aResult))
 		return;
 
@@ -659,12 +659,12 @@ void DDImage::RehupFirstPixelTrans()
 		if (!LockSurface())
 			return;
 
-		ushort* aSurfaceBits = (ushort*) mLockedSurfaceDesc.lpSurface;	
+		ushort* aSurfaceBits = (ushort*)mLockedSurfaceDesc.lpSurface;
 
 		ushort aTransColor = *aSurfaceBits;
 
-		DDCOLORKEY aColorKey = {aTransColor, aTransColor};
-		mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);	
+		DDCOLORKEY aColorKey = { aTransColor, aTransColor };
+		mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);
 
 		UnlockSurface();
 	}
@@ -673,12 +673,12 @@ void DDImage::RehupFirstPixelTrans()
 		if (!LockSurface())
 			return;
 
-		ulong* aSurfaceBits = (ulong*) mLockedSurfaceDesc.lpSurface;		
+		ulong* aSurfaceBits = (ulong*)mLockedSurfaceDesc.lpSurface;
 
 		ulong aTransColor = *aSurfaceBits;
 
-		DDCOLORKEY aColorKey = {aTransColor, aTransColor};
-		mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);		
+		DDCOLORKEY aColorKey = { aTransColor, aTransColor };
+		mSurface->SetColorKey(DDCKEY_SRCBLT, &aColorKey);
 
 		UnlockSurface();
 	}
@@ -694,11 +694,11 @@ LPDIRECTDRAWSURFACE DDImage::GetSurface()
 	return mSurface;
 }
 
-bool DDImage::PolyFill3D(const Point theVertices[], int theNumVertices, const Rect *theClipRect, const Color &theColor, int theDrawMode, int tx, int ty)
+bool DDImage::PolyFill3D(const Point theVertices[], int theNumVertices, const Rect* theClipRect, const Color& theColor, int theDrawMode, int tx, int ty)
 {
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->FillPoly(theVertices,theNumVertices,theClipRect,theColor,theDrawMode,tx,ty);
+		mDDInterface->mD3DInterface->FillPoly(theVertices, theNumVertices, theClipRect, theColor, theDrawMode, tx, ty);
 		return true;
 	}
 	else
@@ -709,16 +709,16 @@ void DDImage::FillRect(const Rect& theRect, const Color& theColor, int theDrawMo
 {
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->FillRect(theRect,theColor,theDrawMode);
+		mDDInterface->mD3DInterface->FillRect(theRect, theColor, theDrawMode);
 		return;
 	}
 
 	CommitBits();
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (mDDInterface->mIs3D))
-	{
+	//if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (mDDInterface->mIs3D))
+	//{
 		MemoryImage::FillRect(theRect, theColor, theDrawMode);
 		return;
-	}	
+	//}
 
 	switch (theDrawMode)
 	{
@@ -747,7 +747,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 	(void)aSurface; // Unused
 
 	if (!LockSurface())
-		return;	
+		return;
 
 	ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
@@ -756,15 +756,15 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 	ulong aRRoundAdd = aRMask >> 1;
 	ulong aGRoundAdd = aGMask >> 1;
 	ulong aBRoundAdd = aBMask >> 1;
-	
+
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{
 		if (theColor.mAlpha == 255)
 		{
 			ushort aColor = (ushort)
 				(((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
-				((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
-				((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask));
+					((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
+					((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask));
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
@@ -775,7 +775,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			int inc = 1;
 			int aCurX;
 			int aCurY;
-			int aRowWidth = mLockedSurfaceDesc.lPitch/2;
+			int aRowWidth = mLockedSurfaceDesc.lPitch / 2;
 			int aRowAdd = aRowWidth;
 
 			if (fabs(dv) < fabs(dh))
@@ -799,18 +799,18 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					aRowAdd = -aRowAdd;
 				}
 
-				ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels++;
 
-				aCurY = (int) theStartY;
-				aCurX = (int) theStartX + 1;
+				aCurY = (int)theStartY;
+				aCurX = (int)theStartX + 1;
 
 				G = 2 * dv - dh;
 				DeltaG1 = 2 * (dv - dh);
 				DeltaG2 = 2 * dv;
-				
-				G += DeltaG2 * (theStartY - (int) theStartY);
+
+				G += DeltaG2 * (theStartY - (int)theStartY);
 
 				while (aCurX <= theEndX)
 				{
@@ -825,7 +825,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					*aDestPixels = aColor;
 
 					aCurX++;
@@ -835,7 +835,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			else
 			{
 				// Mostly vertical
-				if ( dv < 0 )
+				if (dv < 0)
 				{
 					dh = -dh;
 					dv = -dv;
@@ -853,7 +853,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					inc = -1;
 				}
 
-				ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * mLockedSurfaceDesc.lPitch/2) + (int) theStartX;
+				ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * mLockedSurfaceDesc.lPitch / 2) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels += aRowAdd;
 
@@ -862,15 +862,15 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 				G = 2 * dh - dv;
 				// minG = maxG = G; // unused
-				DeltaG1 = 2 * ( dh - dv );
+				DeltaG1 = 2 * (dh - dv);
 				DeltaG2 = 2 * dh;
 
-				G += DeltaG2 * (theStartX - (int) theStartX);
+				G += DeltaG2 * (theStartX - (int)theStartX);
 
 				while (aCurY <= theEndY)
 				{
-					if ( G > 0 )
-					{						
+					if (G > 0)
+					{
 						G += DeltaG1;
 						aCurX += inc;
 						aDestPixels += inc;
@@ -880,7 +880,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					*aDestPixels = aColor;
 
 					aCurY++;
@@ -890,7 +890,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 		}
 		else
 		{
-			ushort src = 
+			ushort src =
 				((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) +
 				((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) +
 				((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
@@ -904,7 +904,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			int inc = 1;
 			int aCurX;
 			int aCurY;
-			int aRowWidth = mLockedSurfaceDesc.lPitch/2;
+			int aRowWidth = mLockedSurfaceDesc.lPitch / 2;
 			int aRowAdd = aRowWidth;
 
 			if (abs(dv) < abs(dh))
@@ -928,12 +928,12 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					aRowAdd = -aRowAdd;
 				}
 
-				ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				ushort dest = *aDestPixels;
-				*(aDestPixels++) = src + 
+				*(aDestPixels++) = src +
 					(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 					(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);				
+					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
 				aCurY = theStartY;
 				aCurX = theStartX + 1;
@@ -942,7 +942,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				DeltaG1 = 2 * (dv - dh);
 				DeltaG2 = 2 * dv;
 
-				G += DeltaG2 * (theStartY - (int) theStartY);
+				G += DeltaG2 * (theStartY - (int)theStartY);
 
 				while (aCurX <= theEndX)
 				{
@@ -957,20 +957,20 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					dest = *aDestPixels;
-					*(aDestPixels++) = src + 
+					*(aDestPixels++) = src +
 						(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);					
+						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
-					aCurX++;					
+					aCurX++;
 				}
 			}
 			else
 			{
 				// Mostly vertical
-				if ( dv < 0 )
+				if (dv < 0)
 				{
 					dh = -dh;
 					dv = -dv;
@@ -988,9 +988,9 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					inc = -1;
 				}
 
-				ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * mLockedSurfaceDesc.lPitch/2) + (int) theStartX;
+				ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * mLockedSurfaceDesc.lPitch / 2) + (int)theStartX;
 				ushort dest = *aDestPixels;
-				*aDestPixels = src + 
+				*aDestPixels = src +
 					(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 					(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -1001,14 +1001,14 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 				G = 2 * dh - dv;
 				// minG = maxG = G; // unused
-				DeltaG1 = 2 * ( dh - dv );
+				DeltaG1 = 2 * (dh - dv);
 				DeltaG2 = 2 * dh;
 
-				G += DeltaG2 * (theStartX - (int) theStartX);
+				G += DeltaG2 * (theStartX - (int)theStartX);
 
 				while (aCurY <= theEndY)
 				{
-					if ( G > 0 )
+					if (G > 0)
 					{
 						G += DeltaG1;
 						aCurX += inc;
@@ -1019,9 +1019,9 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					dest = *aDestPixels;
-					*aDestPixels = src + 
+					*aDestPixels = src +
 						(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -1036,7 +1036,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 	{
 		if (theColor.mAlpha == 255)
 		{
-			ulong aColor = 
+			ulong aColor =
 				((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
 				((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
 				((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask);
@@ -1049,7 +1049,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			int inc = 1;
 			int aCurX;
 			int aCurY;
-			int aRowWidth = mLockedSurfaceDesc.lPitch/4;
+			int aRowWidth = mLockedSurfaceDesc.lPitch / 4;
 			int aRowAdd = aRowWidth;;
 
 			if (abs(dv) < abs(dh))
@@ -1073,7 +1073,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					aRowAdd = -aRowAdd;
 				}
 
-				ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels++;
 
@@ -1084,7 +1084,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				DeltaG1 = 2 * (dv - dh);
 				DeltaG2 = 2 * dv;
 
-				G += DeltaG2 * (theStartY - (int) theStartY);
+				G += DeltaG2 * (theStartY - (int)theStartY);
 
 				while (aCurX <= theEndX)
 				{
@@ -1099,7 +1099,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					*aDestPixels = aColor;
 
 					aCurX++;
@@ -1109,7 +1109,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			else
 			{
 				// Mostly vertical
-				if ( dv < 0 )
+				if (dv < 0)
 				{
 					dh = -dh;
 					dv = -dv;
@@ -1127,7 +1127,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					inc = -1;
 				}
 
-				ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels += aRowAdd;
 
@@ -1136,14 +1136,14 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 				G = 2 * dh - dv;
 				// minG = maxG = G; // unused
-				DeltaG1 = 2 * ( dh - dv );
+				DeltaG1 = 2 * (dh - dv);
 				DeltaG2 = 2 * dh;
 
-				G += DeltaG2 * (theStartX - (int) theStartX);
+				G += DeltaG2 * (theStartX - (int)theStartX);
 
 				while (aCurY <= theEndY)
 				{
-					if ( G > 0 )
+					if (G > 0)
 					{
 						G += DeltaG1;
 						aCurX += inc;
@@ -1154,7 +1154,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					*aDestPixels = aColor;
 
 					aCurY++;
@@ -1164,7 +1164,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 		}
 		else
 		{
-			ulong src = 
+			ulong src =
 				((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) +
 				((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) +
 				((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
@@ -1178,7 +1178,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 			int inc = 1;
 			int aCurX;
 			int aCurY;
-			int aRowWidth = mLockedSurfaceDesc.lPitch/4;
+			int aRowWidth = mLockedSurfaceDesc.lPitch / 4;
 			int aRowAdd = aRowWidth;
 
 			if (abs(dv) < abs(dh))
@@ -1202,12 +1202,12 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					aRowAdd = -aRowAdd;
 				}
 
-				ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				ulong dest = *aDestPixels;
-				*(aDestPixels++) = src + 
+				*(aDestPixels++) = src +
 					(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 					(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);				
+					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
 				aCurY = theStartY;
 				aCurX = theStartX + 1;
@@ -1216,7 +1216,7 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 				DeltaG1 = 2 * (dv - dh);
 				DeltaG2 = 2 * dv;
 
-				G += DeltaG2 * (theStartX - (int) theStartX);
+				G += DeltaG2 * (theStartX - (int)theStartX);
 
 				while (aCurX <= theEndX)
 				{
@@ -1231,20 +1231,20 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					dest = *aDestPixels;
-					*(aDestPixels++) = src + 
+					*(aDestPixels++) = src +
 						(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);					
+						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
-					aCurX++;					
+					aCurX++;
 				}
 			}
 			else
 			{
 				// Mostly vertical
-				if ( dv < 0 )
+				if (dv < 0)
 				{
 					dh = -dh;
 					dv = -dv;
@@ -1262,9 +1262,9 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					inc = -1;
 				}
 
-				ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+				ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				ulong dest = *aDestPixels;
-				*aDestPixels = src + 
+				*aDestPixels = src +
 					(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 					(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 					(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -1275,14 +1275,14 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 
 				G = 2 * dh - dv;
 				// minG = maxG = G; // unused
-				DeltaG1 = 2 * ( dh - dv );
+				DeltaG1 = 2 * (dh - dv);
 				DeltaG2 = 2 * dh;
 
-				G += DeltaG2 * (theStartX - (int) theStartX);
+				G += DeltaG2 * (theStartX - (int)theStartX);
 
 				while (aCurY <= theEndY)
 				{
-					if ( G > 0 )
+					if (G > 0)
 					{
 						G += DeltaG1;
 						aCurX += inc;
@@ -1293,9 +1293,9 @@ void DDImage::NormalDrawLine(double theStartX, double theStartY, double theEndX,
 					}
 					else
 						G += DeltaG2;
-					
+
 					dest = *aDestPixels;
-					*aDestPixels = src + 
+					*aDestPixels = src +
 						(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -1342,12 +1342,12 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 	int* aMaxRedTable = mDDInterface->mRedAddTable;
 	int* aMaxGreenTable = mDDInterface->mGreenAddTable;
 	int* aMaxBlueTable = mDDInterface->mBlueAddTable;
-	
+
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{
-		ushort rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8-mDDInterface->mRedBits);
-		ushort gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8-mDDInterface->mGreenBits);
-		ushort bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8-mDDInterface->mBlueBits);
+		ushort rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8 - mDDInterface->mRedBits);
+		ushort gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8 - mDDInterface->mGreenBits);
+		ushort bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8 - mDDInterface->mBlueBits);
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
@@ -1357,7 +1357,7 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 		int inc = 1;
 		int aCurX;
 		int aCurY;
-		int aRowWidth = mLockedSurfaceDesc.lPitch/2;
+		int aRowWidth = mLockedSurfaceDesc.lPitch / 2;
 		int aRowAdd = aRowWidth;
 
 		if (abs(dv) < abs(dh))
@@ -1381,14 +1381,14 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				aRowAdd = -aRowAdd;
 			}
 
-			ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+			ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 			ushort dest = *aDestPixels;
 
 			int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 			int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-			*(aDestPixels++) = 
+			*(aDestPixels++) =
 				(r << aRedShift) |
 				(g << aGreenShift) |
 				(b << aBlueShift);
@@ -1400,12 +1400,12 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 			DeltaG1 = 2 * (dv - dh);
 			DeltaG2 = 2 * dv;
 
-			G += DeltaG2 * (theStartY - (int) theStartY);
+			G += DeltaG2 * (theStartY - (int)theStartY);
 
 			while (aCurX <= theEndX)
 			{
 				if (G > 0)
-				{					
+				{
 					G += DeltaG1;
 					aCurY += inc;
 					aDestPixels += aRowAdd;
@@ -1415,25 +1415,25 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				}
 				else
 					G += DeltaG2;
-				
+
 				dest = *aDestPixels;
 
 				r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 				b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*(aDestPixels++) = 
+				*(aDestPixels++) =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
 
-				aCurX++;				
+				aCurX++;
 			}
 		}
 		else
 		{
 			// Mostly vertical
-			if ( dv < 0 )
+			if (dv < 0)
 			{
 				dh = -dh;
 				dv = -dv;
@@ -1451,15 +1451,15 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				inc = -1;
 			}
 
-			ushort* aDestPixels = ((ushort*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * mLockedSurfaceDesc.lPitch/2) + (int) theStartX;
-			
+			ushort* aDestPixels = ((ushort*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * mLockedSurfaceDesc.lPitch / 2) + (int)theStartX;
+
 			ushort dest = *aDestPixels;
 
 			int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 			int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-			*aDestPixels = 
+			*aDestPixels =
 				(r << aRedShift) |
 				(g << aGreenShift) |
 				(b << aBlueShift);
@@ -1471,14 +1471,14 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 
 			G = 2 * dh - dv;
 			// minG = maxG = G; // unused
-			DeltaG1 = 2 * ( dh - dv );
-			DeltaG2 = 2 * dh;	
-			
-			G += DeltaG2 * (theStartX - (int) theStartX);
+			DeltaG1 = 2 * (dh - dv);
+			DeltaG2 = 2 * dh;
+
+			G += DeltaG2 * (theStartX - (int)theStartX);
 
 			while (aCurY <= theEndY)
 			{
-				if ( G > 0 )
+				if (G > 0)
 				{
 					G += DeltaG1;
 					aCurX += inc;
@@ -1489,14 +1489,14 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				}
 				else
 					G += DeltaG2;
-				
+
 				dest = *aDestPixels;
 
 				r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 				b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*aDestPixels = 
+				*aDestPixels =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
@@ -1508,9 +1508,9 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 	}
 	else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 	{
-		ulong rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8-mDDInterface->mRedBits);
-		ulong gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8-mDDInterface->mGreenBits);
-		ulong bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8-mDDInterface->mBlueBits);
+		ulong rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8 - mDDInterface->mRedBits);
+		ulong gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8 - mDDInterface->mGreenBits);
+		ulong bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8 - mDDInterface->mBlueBits);
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
@@ -1520,7 +1520,7 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 		int inc = 1;
 		int aCurX;
 		int aCurY;
-		int aRowWidth = mLockedSurfaceDesc.lPitch/4;
+		int aRowWidth = mLockedSurfaceDesc.lPitch / 4;
 		int aRowAdd = aRowWidth;
 
 		if (abs(dv) < abs(dh))
@@ -1545,14 +1545,14 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				aRowAdd = -aRowAdd;
 			}
 
-			ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * aRowWidth) + (int) theStartX;
+			ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 			ulong dest = *aDestPixels;
 
 			int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 			int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-			*(aDestPixels++) = 
+			*(aDestPixels++) =
 				(r << aRedShift) |
 				(g << aGreenShift) |
 				(b << aBlueShift);
@@ -1562,7 +1562,7 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 
 			G = 2 * dv - dh;
 			DeltaG1 = 2 * (dv - dh);
-			DeltaG2 = 2 * dv;			
+			DeltaG2 = 2 * dv;
 
 			while (aCurX <= theEndX)
 			{
@@ -1577,25 +1577,25 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				}
 				else
 					G += DeltaG2;
-				
+
 				dest = *aDestPixels;
 
 				r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 				b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*(aDestPixels++) = 
+				*(aDestPixels++) =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
 
-				aCurX++;				
+				aCurX++;
 			}
 		}
 		else
 		{
 			// Mostly vertical
-			if ( dv < 0 )
+			if (dv < 0)
 			{
 				dh = -dh;
 				dv = -dv;
@@ -1613,15 +1613,15 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				inc = -1;
 			}
 
-			ulong* aDestPixels = ((ulong*) mLockedSurfaceDesc.lpSurface) + ((int) theStartY * mLockedSurfaceDesc.lPitch/4) + (int) theStartX;
-			
+			ulong* aDestPixels = ((ulong*)mLockedSurfaceDesc.lpSurface) + ((int)theStartY * mLockedSurfaceDesc.lPitch / 4) + (int)theStartX;
+
 			ulong dest = *aDestPixels;
 
 			int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 			int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-			*aDestPixels = 
+			*aDestPixels =
 				(r << aRedShift) |
 				(g << aGreenShift) |
 				(b << aBlueShift);
@@ -1633,11 +1633,11 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 
 			G = 2 * dh - dv;
 			// minG = maxG = G; // unused
-			DeltaG1 = 2 * ( dh - dv );
+			DeltaG1 = 2 * (dh - dv);
 			DeltaG2 = 2 * dh;
 			while (aCurY <= theEndY)
 			{
-				if ( G > 0 )
+				if (G > 0)
 				{
 					G += DeltaG1;
 					aCurX += inc;
@@ -1648,14 +1648,14 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 				}
 				else
 					G += DeltaG2;
-				
+
 				dest = *aDestPixels;
 
 				r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
 				b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*aDestPixels = 
+				*aDestPixels =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
@@ -1670,25 +1670,25 @@ void DDImage::AdditiveDrawLine(double theStartX, double theStartY, double theEnd
 }
 
 void DDImage::DrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
-{	
+{
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->DrawLine(theStartX,theStartY,theEndX,theEndY,theColor,theDrawMode);
+		mDDInterface->mD3DInterface->DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
-	{
+	//if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
+	//{
 		MemoryImage::DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
-	}
+	//}
 
 	if (theStartY == theEndY)
 	{
 		int aStartX = std::min(theStartX, theEndX);
 		int aEndX = std::max(theStartX, theEndX);
 
-		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
+		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
@@ -1696,11 +1696,11 @@ void DDImage::DrawLine(double theStartX, double theStartY, double theEndX, doubl
 		int aStartY = std::min(theStartY, theEndY);
 		int aEndY = std::max(theStartY, theEndY);
 
-		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
+		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;
 	}
 
-	CommitBits();	
+	CommitBits();
 
 	switch (theDrawMode)
 	{
@@ -1727,8 +1727,8 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
 	ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 	ulong color = (((theColor.mRed * aRMask) >> 8) & aRMask) |
-					(((theColor.mGreen * aGMask) >> 8) & aGMask) |
-					(((theColor.mBlue * aBMask) >> 8) & aBMask);
+		(((theColor.mGreen * aGMask) >> 8) & aGMask) |
+		(((theColor.mBlue * aBMask) >> 8) & aBMask);
 
 	int aX0 = (int)theStartX, aX1 = (int)theEndX;
 	int aY0 = (int)theStartY, aY1 = (int)theEndY;
@@ -1760,70 +1760,70 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 		if (theColor.mAlpha != 255)
 		{
-			#define PIXEL_TYPE			ulong
-			#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ulong
+#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
+#define BLEND_PIXEL(p)		\
 						*(p) =			\
 								((((color & 0xFF00FF) * a + (dest & 0xFF00FF) * oma) >> 8) & 0xFF00FF) |\
 								((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00);
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-			#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-			#undef PIXEL_TYPE
-			#undef CALC_WEIGHT_A
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 		}
 		else
 		{
-			#define PIXEL_TYPE			ulong
-			#define CALC_WEIGHT_A(w)	(w)
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ulong
+#define CALC_WEIGHT_A(w)	(w)
+#define BLEND_PIXEL(p)		\
 						*(p) =			\
 								((((color & 0xFF00FF) * a + (dest & 0xFF00FF) * oma) >> 8) & 0xFF00FF) |\
 								((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00);
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-			#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-			#undef PIXEL_TYPE
-			#undef CALC_WEIGHT_A
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 		}
 #else
 		if (theColor.mAlpha != 255)
 		{
-			#define PIXEL_TYPE			ulong
-			#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ulong
+#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
+#define BLEND_PIXEL(p)		\
 						*(p) =			\
 								((((color & aRMask) * a + (dest & aRMask) * oma) >> 8) & aRMask) |\
 								((((color & aGMask) * a + (dest & aGMask) * oma) >> 8) & aGMask) |\
 								((((color & aBMask) * a + (dest & aBMask) * oma) >> 8) & aBMask);
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-			#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-			#undef PIXEL_TYPE
-			#undef CALC_WEIGHT_A
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 		}
 		else
 		{
-			#define PIXEL_TYPE			ulong
-			#define CALC_WEIGHT_A(w)	(w)
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ulong
+#define CALC_WEIGHT_A(w)	(w)
+#define BLEND_PIXEL(p)		\
 						*(p) =			\
 								((((color & aRMask) * a + (dest & aRMask) * oma) >> 8) & aRMask) |\
 								((((color & aGMask) * a + (dest & aGMask) * oma) >> 8) & aGMask) |\
 								((((color & aBMask) * a + (dest & aBMask) * oma) >> 8) & aBMask);
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-			#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-			#undef PIXEL_TYPE
-			#undef CALC_WEIGHT_A
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 		}
 #endif
 	}
@@ -1833,8 +1833,8 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 		if (aGMask == 0x3E0) // 5-5-5
 		{
-			#define PIXEL_TYPE			ushort
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ushort
+#define BLEND_PIXEL(p)		\
 			{\
 				a >>= 3;\
 				oma >>= 3;\
@@ -1845,23 +1845,23 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 			if (theColor.mAlpha != 255)
 			{
-				#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
-				#undef CALC_WEIGHT_A
+#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
+#include "inc_routines/GENERIC_DrawLineAA.inc"
+#undef CALC_WEIGHT_A
 			}
 			else
 			{
-				#define CALC_WEIGHT_A(w)	(w)
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
-				#undef CALC_WEIGHT_A
+#define CALC_WEIGHT_A(w)	(w)
+#include "inc_routines/GENERIC_DrawLineAA.inc"
+#undef CALC_WEIGHT_A
 			}
-			#undef PIXEL_TYPE
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef BLEND_PIXEL
 		}
 		else if (aGMask == 0x7E0) // 5-6-5
 		{
-			#define PIXEL_TYPE			ushort
-			#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ushort
+#define BLEND_PIXEL(p)		\
 			{\
 				a >>= 3;\
 				oma >>= 3;\
@@ -1872,55 +1872,55 @@ void DDImage::NormalDrawLineAA(double theStartX, double theStartY, double theEnd
 			const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 			if (theColor.mAlpha != 255)
 			{
-				#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
-				#undef CALC_WEIGHT_A
+#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
+#include "inc_routines/GENERIC_DrawLineAA.inc"
+#undef CALC_WEIGHT_A
 			}
 			else
 			{
-				#define CALC_WEIGHT_A(w)	(w)
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
-				#undef CALC_WEIGHT_A
+#define CALC_WEIGHT_A(w)	(w)
+#include "inc_routines/GENERIC_DrawLineAA.inc"
+#undef CALC_WEIGHT_A
 			}
-			#undef PIXEL_TYPE
-			#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef BLEND_PIXEL
 		}
 		else
 		{
 #endif
 			if (theColor.mAlpha != 255)
 			{
-				#define PIXEL_TYPE			ushort
-				#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
-				#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ushort
+#define CALC_WEIGHT_A(w)	(((w) * (theColor.mAlpha+1)) >> 8)
+#define BLEND_PIXEL(p)		\
 							*(p) =			\
 									((((color & aRMask) * a + (dest & aRMask) * oma) >> 8) & aRMask) |\
 									((((color & aGMask) * a + (dest & aGMask) * oma) >> 8) & aGMask) |\
 									((((color & aBMask) * a + (dest & aBMask) * oma) >> 8) & aBMask);
 				const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-				#undef PIXEL_TYPE
-				#undef CALC_WEIGHT_A
-				#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 			}
 			else
 			{
-				#define PIXEL_TYPE			ushort
-				#define CALC_WEIGHT_A(w)	(w)
-				#define BLEND_PIXEL(p)		\
+#define PIXEL_TYPE			ushort
+#define CALC_WEIGHT_A(w)	(w)
+#define BLEND_PIXEL(p)		\
 							*(p) =			\
 									((((color & aRMask) * a + (dest & aRMask) * oma) >> 8) & aRMask) |\
 									((((color & aGMask) * a + (dest & aGMask) * oma) >> 8) & aGMask) |\
 									((((color & aBMask) * a + (dest & aBMask) * oma) >> 8) & aBMask);
 				const int STRIDE = mLockedSurfaceDesc.lPitch / sizeof(PIXEL_TYPE);
 
-				#include "inc_routines/GENERIC_DrawLineAA.inc"
+#include "inc_routines/GENERIC_DrawLineAA.inc"
 
-				#undef PIXEL_TYPE
-				#undef CALC_WEIGHT_A
-				#undef BLEND_PIXEL
+#undef PIXEL_TYPE
+#undef CALC_WEIGHT_A
+#undef BLEND_PIXEL
 			}
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 		}
@@ -1940,22 +1940,22 @@ void DDImage::DrawLineAA(double theStartX, double theStartY, double theEndX, dou
 {
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->DrawLine(theStartX,theStartY,theEndX,theEndY,theColor,theDrawMode);
+		mDDInterface->mD3DInterface->DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
-	{
+	//if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
+	//{
 		MemoryImage::DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
-	}
+	//}
 
 	if (theStartY == theEndY)
 	{
 		int aStartX = std::min(theStartX, theEndX);
 		int aEndX = std::max(theStartX, theEndX);
 
-		FillRect(Rect(aStartX, theStartY, aEndX-aStartX+1, theEndY-theStartY+1), theColor, theDrawMode);
+		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
@@ -1963,11 +1963,11 @@ void DDImage::DrawLineAA(double theStartX, double theStartY, double theEndX, dou
 		int aStartY = std::min(theStartY, theEndY);
 		int aEndY = std::max(theStartY, theEndY);
 
-		FillRect(Rect(theStartX, aStartY, theEndX-theStartX+1, aEndY-aStartY+1), theColor, theDrawMode);
+		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;
 	}
 
-	CommitBits();	
+	CommitBits();
 
 	NormalDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor);
 
@@ -1985,14 +1985,14 @@ void DDImage::CommitBits()
 
 void DDImage::Create(int theWidth, int theHeight)
 {
-	delete [] mBits;
+	delete[] mBits;
 
 	mWidth = theWidth;
 	mHeight = theHeight;
 
 	mBits = NULL;
 
-	BitsChanged();	
+	BitsChanged();
 }
 
 void DDImage::BitsChanged()
@@ -2020,8 +2020,8 @@ ulong* DDImage::GetBits()
 		if (!LockSurface())
 			return NULL;
 
-		mBits = new ulong[mWidth*mHeight + 1];
-		mBits[mWidth*mHeight] = MEMORYCHECK_ID;
+		mBits = new ulong[mWidth * mHeight + 1];
+		mBits[mWidth * mHeight] = MEMORYCHECK_ID;
 
 		// unused
 		//int aRRound = (1 << (7 - mDDInterface->mRedBits));
@@ -2030,11 +2030,11 @@ ulong* DDImage::GetBits()
 
 		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 		{
-			ushort* aSrcPixelsRow = (ushort*) mLockedSurfaceDesc.lpSurface;
+			ushort* aSrcPixelsRow = (ushort*)mLockedSurfaceDesc.lpSurface;
 			ulong* aDest = mBits;
 
 			for (int y = 0; y < mHeight; y++)
-			{				
+			{
 				ushort* aSrcPixels = aSrcPixelsRow;
 
 				for (int x = 0; x < mWidth; x++)
@@ -2044,20 +2044,20 @@ ulong* DDImage::GetBits()
 					int r = ((src >> mDDInterface->mRedShift << (8 - mDDInterface->mRedBits)) & 0xFF);
 					int g = ((src >> mDDInterface->mGreenShift << (8 - mDDInterface->mGreenBits)) & 0xFF);
 					int b = ((src >> mDDInterface->mBlueShift << (8 - mDDInterface->mBlueBits)) & 0xFF);
-					
+
 					*aDest++ = 0xFF000000 | (r << 16) | (g << 8) | (b);
 				}
-				
-				aSrcPixelsRow += mLockedSurfaceDesc.lPitch/2;
+
+				aSrcPixelsRow += mLockedSurfaceDesc.lPitch / 2;
 			}
 		}
 		else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 		{
-			ulong* aSrcPixelsRow = (ulong*) mLockedSurfaceDesc.lpSurface;
+			ulong* aSrcPixelsRow = (ulong*)mLockedSurfaceDesc.lpSurface;
 			ulong* aDest = mBits;
 
 			for (int y = 0; y < mHeight; y++)
-			{				
+			{
 				ulong* aSrcPixels = aSrcPixelsRow;
 
 				for (int x = 0; x < mWidth; x++)
@@ -2067,13 +2067,13 @@ ulong* DDImage::GetBits()
 					int r = (src >> mDDInterface->mRedShift << (8 - mDDInterface->mRedBits)) & 0xFF;
 					int g = (src >> mDDInterface->mGreenShift << (8 - mDDInterface->mGreenBits)) & 0xFF;
 					int b = (src >> mDDInterface->mBlueShift << (8 - mDDInterface->mBlueBits)) & 0xFF;
-					
+
 					*aDest++ = 0xFF000000 | (r << 16) | (g << 8) | (b);
 				}
-				
-				aSrcPixelsRow += mLockedSurfaceDesc.lPitch/4;
+
+				aSrcPixelsRow += mLockedSurfaceDesc.lPitch / 4;
 			}
-		}		
+		}
 
 		UnlockSurface();
 	}
@@ -2090,7 +2090,7 @@ void DDImage::NormalFillRect(const Rect& theRect, const Color& theColor)
 	(void)aSurface; // unused
 
 	if (!LockSurface())
-		return;	
+		return;
 
 	ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
@@ -2099,53 +2099,53 @@ void DDImage::NormalFillRect(const Rect& theRect, const Color& theColor)
 	ulong aRRoundAdd = aRMask;
 	ulong aGRoundAdd = aGMask;
 	ulong aBRoundAdd = aBMask;
-	
+
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{
 		if (theColor.mAlpha == 255)
 		{
-			ushort aColor = 
+			ushort aColor =
 				((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
 				((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
 				((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask);
 
-			ushort* aDestPixelsRow = ((ushort*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/2) + theRect.mX;
-			
+			ushort* aDestPixelsRow = ((ushort*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 2) + theRect.mX;
+
 			for (int y = 0; y < theRect.mHeight; y++)
 			{
-				ushort* aDestPixels = aDestPixelsRow;			
+				ushort* aDestPixels = aDestPixelsRow;
 
-				for (int x = 0; x < theRect.mWidth; x++)			
+				for (int x = 0; x < theRect.mWidth; x++)
 					*(aDestPixels++) = aColor;
 
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/2;			
+				aDestPixelsRow += mLockedSurfaceDesc.lPitch / 2;
 			}
 		}
 		else
 		{
-			ushort src = 
+			ushort src =
 				((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) +
 				((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) +
 				((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
 			int oma = 256 - theColor.mAlpha;
 
-			ushort* aDestPixelsRow = ((ushort*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/2) + theRect.mX;
-					
+			ushort* aDestPixelsRow = ((ushort*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 2) + theRect.mX;
+
 			for (int y = 0; y < theRect.mHeight; y++)
 			{
-				ushort* aDestPixels = aDestPixelsRow;			
+				ushort* aDestPixels = aDestPixelsRow;
 
-				for (int x = 0; x < theRect.mWidth; x++)			
+				for (int x = 0; x < theRect.mWidth; x++)
 				{
 					ushort dest = *aDestPixels;
 
-					*(aDestPixels++) = src + 
+					*(aDestPixels++) = src +
 						(((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 						(((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 				}
 
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/2;			
+				aDestPixelsRow += mLockedSurfaceDesc.lPitch / 2;
 			}
 		}
 	}
@@ -2153,48 +2153,48 @@ void DDImage::NormalFillRect(const Rect& theRect, const Color& theColor)
 	{
 		if (theColor.mAlpha == 255)
 		{
-			ulong aColor = 
+			ulong aColor =
 				((((theColor.mRed * aRMask)) >> 8) & aRMask) |
 				((((theColor.mGreen * aGMask)) >> 8) & aGMask) |
 				((((theColor.mBlue * aBMask)) >> 8) & aBMask);
 
-			ulong* aDestPixelsRow = ((ulong*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/4) + theRect.mX;
-			
+			ulong* aDestPixelsRow = ((ulong*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 4) + theRect.mX;
+
 			for (int y = 0; y < theRect.mHeight; y++)
 			{
-				ulong* aDestPixels = aDestPixelsRow;			
+				ulong* aDestPixels = aDestPixelsRow;
 
-				for (int x = 0; x < theRect.mWidth; x++)			
+				for (int x = 0; x < theRect.mWidth; x++)
 					*(aDestPixels++) = aColor;
 
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/4;
+				aDestPixelsRow += mLockedSurfaceDesc.lPitch / 4;
 			}
 		}
 		else
 		{
-			ulong src = 
+			ulong src =
 				((((((theColor.mRed * theColor.mAlpha + 0x7F) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) +
 				((((((theColor.mGreen * theColor.mAlpha + 0x7F) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) +
 				((((((theColor.mBlue * theColor.mAlpha + 0x7F) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
 			int oma = 256 - theColor.mAlpha;
 
-			ulong* aDestPixelsRow = ((ulong*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/4) + theRect.mX;
-					
+			ulong* aDestPixelsRow = ((ulong*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 4) + theRect.mX;
+
 			for (int y = 0; y < theRect.mHeight; y++)
 			{
-				ulong* aDestPixels = aDestPixelsRow;			
+				ulong* aDestPixels = aDestPixelsRow;
 
-				for (int x = 0; x < theRect.mWidth; x++)			
+				for (int x = 0; x < theRect.mWidth; x++)
 				{
 					ulong dest = *aDestPixels;
 
-					*(aDestPixels++) = src + 
+					*(aDestPixels++) = src +
 						(((((dest & aRMask) * oma)) >> 8) & aRMask) +
 						(((((dest & aGMask) * oma)) >> 8) & aGMask) +
 						(((((dest & aBMask) * oma)) >> 8) & aBMask);
 				}
 
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/4;
+				aDestPixelsRow += mLockedSurfaceDesc.lPitch / 4;
 			}
 		}
 	}
@@ -2211,7 +2211,7 @@ void DDImage::AdditiveFillRect(const Rect& theRect, const Color& theColor)
 	(void)aSurface; // unused
 
 	if (!LockSurface())
-		return;	
+		return;
 
 	ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
@@ -2220,71 +2220,71 @@ void DDImage::AdditiveFillRect(const Rect& theRect, const Color& theColor)
 	// ulong aRRoundAdd = aRMask >> 1;
 	// ulong aGRoundAdd = aGMask >> 1;
 	// ulong aBRoundAdd = aBMask >> 1;
-	
+
 	int aRedShift = mDDInterface->mRedShift;
 	int aGreenShift = mDDInterface->mGreenShift;
 	int aBlueShift = mDDInterface->mBlueShift;
 
 	int* aMaxRedTable = mDDInterface->mRedAddTable;
 	int* aMaxGreenTable = mDDInterface->mGreenAddTable;
-	int* aMaxBlueTable = mDDInterface->mBlueAddTable;	
+	int* aMaxBlueTable = mDDInterface->mBlueAddTable;
 
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{
-		ushort rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8-mDDInterface->mRedBits);
-		ushort gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8-mDDInterface->mGreenBits);
-		ushort bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8-mDDInterface->mBlueBits);
+		ushort rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8 - mDDInterface->mRedBits);
+		ushort gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8 - mDDInterface->mGreenBits);
+		ushort bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8 - mDDInterface->mBlueBits);
 
-		ushort* aDestPixelsRow = ((ushort*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/2) + theRect.mX;
-				
+		ushort* aDestPixelsRow = ((ushort*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 2) + theRect.mX;
+
 		for (int y = 0; y < theRect.mHeight; y++)
 		{
-			ushort* aDestPixels = aDestPixelsRow;			
+			ushort* aDestPixels = aDestPixelsRow;
 
-			for (int x = 0; x < theRect.mWidth; x++)			
+			for (int x = 0; x < theRect.mWidth; x++)
 			{
 				ushort dest = *aDestPixels;
 
 				int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
-				int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];				
+				int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*(aDestPixels++) = 
+				*(aDestPixels++) =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
-			}				
+			}
 
-			aDestPixelsRow += mLockedSurfaceDesc.lPitch/2;			
+			aDestPixelsRow += mLockedSurfaceDesc.lPitch / 2;
 		}
 	}
 	else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 	{
-		ulong rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8-mDDInterface->mRedBits);
-		ulong gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8-mDDInterface->mGreenBits);
-		ulong bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8-mDDInterface->mBlueBits);
+		ulong rc = ((theColor.mRed * theColor.mAlpha) / 255) >> (8 - mDDInterface->mRedBits);
+		ulong gc = ((theColor.mGreen * theColor.mAlpha) / 255) >> (8 - mDDInterface->mGreenBits);
+		ulong bc = ((theColor.mBlue * theColor.mAlpha) / 255) >> (8 - mDDInterface->mBlueBits);
 
-		ulong* aDestPixelsRow = ((ulong*) mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch/4) + theRect.mX;
-		
+		ulong* aDestPixelsRow = ((ulong*)mLockedSurfaceDesc.lpSurface) + (theRect.mY * mLockedSurfaceDesc.lPitch / 4) + theRect.mX;
+
 		for (int y = 0; y < theRect.mHeight; y++)
 		{
-			ulong* aDestPixels = aDestPixelsRow;			
+			ulong* aDestPixels = aDestPixelsRow;
 
-			for (int x = 0; x < theRect.mWidth; x++)			
+			for (int x = 0; x < theRect.mWidth; x++)
 			{
 				ulong dest = *aDestPixels;
 
 				int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + rc];
 				int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + gc];
-				int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];				
+				int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + bc];
 
-				*(aDestPixels++) = 
+				*(aDestPixels++) =
 					(r << aRedShift) |
 					(g << aGreenShift) |
 					(b << aBlueShift);
-			}				
+			}
 
-			aDestPixelsRow += mLockedSurfaceDesc.lPitch/4;
+			aDestPixelsRow += mLockedSurfaceDesc.lPitch / 4;
 		}
 	}
 
@@ -2296,95 +2296,95 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 	theImage->mDrawn = true;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
-	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);	
+	DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);
 
 	if (aMemoryImage != NULL)
 	{
-		aMemoryImage->CommitBits();		
+		aMemoryImage->CommitBits();
 
-		RECT aDestRect = {theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-		RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
+		RECT aDestRect = { theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+		RECT aSrcRect = { theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight };
 
 		//TODO:
-		if ((aMemoryImage->mIsVolatile) && ((aDDImage == NULL) || (aDDImage->mSurface == NULL)) && 
+		if ((aMemoryImage->mIsVolatile) && ((aDDImage == NULL) || (aDDImage->mSurface == NULL)) &&
 			(!mNoLock) && (theColor == Color::White))
 		{
 			if (aMemoryImage->mColorTable == NULL)
 			{
-				ulong* aSrcBits = aMemoryImage->GetBits();			
+				ulong* aSrcBits = aMemoryImage->GetBits();
 
-				#define SRC_TYPE ulong
-				#define NEXT_SRC_COLOR (*(aSrcPixels++))
-				#include "inc_routines/DDI_NormalBlt_Volatile.inc"
-				#undef	SRC_TYPE
-				#undef NEXT_SRC_COLOR
+#define SRC_TYPE ulong
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#include "inc_routines/DDI_NormalBlt_Volatile.inc"
+#undef	SRC_TYPE
+#undef NEXT_SRC_COLOR
 			}
 			else
-			{			
+			{
 				ulong* aColorTable = aMemoryImage->mColorTable;
 				uchar* aSrcBits = aMemoryImage->mColorIndices;
 
-				#define SRC_TYPE uchar
-				#define NEXT_SRC_COLOR (aColorTable[*(aSrcPixels++)])
-				
-				#include "inc_routines/DDI_NormalBlt_Volatile.inc"
+#define SRC_TYPE uchar
+#define NEXT_SRC_COLOR (aColorTable[*(aSrcPixels++)])
 
-				#undef SRC_TYPE
-				#undef NEXT_SRC_COLOR
+#include "inc_routines/DDI_NormalBlt_Volatile.inc"
+
+#undef SRC_TYPE
+#undef NEXT_SRC_COLOR
 			}
 		}
 		else if ((aMemoryImage->mHasAlpha) || (theColor != Color::White))
 		{
 			if (mNoLock)
-				return;			
+				return;
 
 			LPDIRECTDRAWSURFACE aSurface = GetSurface();
 			(void)aSurface; // unused
 
- 			if (!LockSurface())
+			if (!LockSurface())
 				return;
 
 			// Ensure NativeAlphaData is calculated
-			void *aNativeData = aMemoryImage->GetNativeAlphaData(mDDInterface);
+			void* aNativeData = aMemoryImage->GetNativeAlphaData(mDDInterface);
 
 			// Ensure RunLength data is calculated
 			uchar* aSrcRLAlphaData = aMemoryImage->GetRLAlphaData();
 
-			#define _PLUSPLUS ++
-			#define _PLUSEQUALS +=
+#define _PLUSPLUS ++
+#define _PLUSEQUALS +=
 			if (aMemoryImage->mColorTable == NULL)
 			{
-				ulong* aSrcPixelsRow = ((ulong*) aNativeData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+				ulong* aSrcPixelsRow = ((ulong*)aNativeData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 				ulong* aSrcPixels;
-				
-				#define NEXT_SRC_COLOR (*(aSrcPixels++))
-				#define PEEK_SRC_COLOR (*aSrcPixels)
 
-				#include "inc_routines/DDI_AlphaBlt.inc"
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#define PEEK_SRC_COLOR (*aSrcPixels)
 
-				#undef NEXT_SRC_COLOR
-				#undef PEEK_SRC_COLOR
+#include "inc_routines/DDI_AlphaBlt.inc"
+
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 			}
 			else
 			{
-				ulong* aNativeColorTable = (ulong*) aNativeData;
+				ulong* aNativeColorTable = (ulong*)aNativeData;
 
 				uchar* aSrcPixelsRow = aMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 				uchar* aSrcPixels;
 
-				#define NEXT_SRC_COLOR (aNativeColorTable[*(aSrcPixels++)])
-				#define PEEK_SRC_COLOR (aNativeColorTable[*aSrcPixels])
+#define NEXT_SRC_COLOR (aNativeColorTable[*(aSrcPixels++)])
+#define PEEK_SRC_COLOR (aNativeColorTable[*aSrcPixels])
 
-				#include "inc_routines/DDI_AlphaBlt.inc"
+#include "inc_routines/DDI_AlphaBlt.inc"
 
-				#undef NEXT_SRC_COLOR
-				#undef PEEK_SRC_COLOR
-			}		
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
+			}
 
-			#undef _PLUSPLUS
-			#undef _PLUSEQUALS 
+#undef _PLUSPLUS
+#undef _PLUSEQUALS 
 			UnlockSurface();
-		}		
+		}
 		else if ((aDDImage == NULL) || (aDDImage->mSurface == NULL) || ((!mVideoMemory) && (aDDImage->mVideoMemory)))
 		{
 			if (mNoLock)
@@ -2401,32 +2401,32 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 
 			if (aMemoryImage->mColorTable == NULL)
 			{
-				ulong* aSrcPixelsRow = ((ulong*) aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+				ulong* aSrcPixelsRow = ((ulong*)aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 				ulong* aSrcPixels;
-				
-				#define NEXT_SRC_COLOR (*(aSrcPixels++))
-				#define PEEK_SRC_COLOR (*aSrcPixels)
 
-				#include "inc_routines/DDI_FastBlt_NoAlpha.inc"
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#define PEEK_SRC_COLOR (*aSrcPixels)
 
-				#undef NEXT_SRC_COLOR
-				#undef PEEK_SRC_COLOR
+#include "inc_routines/DDI_FastBlt_NoAlpha.inc"
+
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 			}
 			else
 			{
-				ulong* aNativeAlphaColorTable = (ulong*) aNativeAlphaData;
+				ulong* aNativeAlphaColorTable = (ulong*)aNativeAlphaData;
 
 				uchar* aSrcPixelsRow = aMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 				uchar* aSrcPixels;
 
-				#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
-				#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
+#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
+#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
 
-				#include "inc_routines/DDI_FastBlt_NoAlpha.inc"
+#include "inc_routines/DDI_FastBlt_NoAlpha.inc"
 
-				#undef NEXT_SRC_COLOR
-				#undef PEEK_SRC_COLOR
-			}		
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
+			}
 		}
 		else
 		{
@@ -2436,7 +2436,7 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 			DDBLTFX aBltFX;
 			ZeroMemory(&aBltFX, sizeof(aBltFX));
 			aBltFX.dwSize = sizeof(aBltFX);
-    
+
 			DWORD aFlags = DDBLT_WAIT;
 
 			if (aDDImage->mHasTrans)
@@ -2444,7 +2444,7 @@ void DDImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcR
 
 			HRESULT aResult = GetSurface()->Blt(&aDestRect, aDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
 			(void)aResult; // unused
-		
+
 			if (mLockCount > 0)
 			{
 				if (mSurface->Lock(NULL, &mLockedSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL) != DD_OK)
@@ -2459,15 +2459,15 @@ void DDImage::NormalBltMirror(Image* theImage, int theX, int theY, const Rect& t
 	theImage->mDrawn = true;
 
 	Rect theSrcRect = theSrcRectOrig;
-//	theSrcRect.mX = (theSrcRect.mX+theSrcRect.mWidth)*-1 + theImage->mWidth;
-	theX += theSrcRect.mWidth-1;
+	//	theSrcRect.mX = (theSrcRect.mX+theSrcRect.mWidth)*-1 + theImage->mWidth;
+	theX += theSrcRect.mWidth - 1;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
 	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
 
 	if (aMemoryImage != NULL)
 	{
-		aMemoryImage->CommitBits();		
+		aMemoryImage->CommitBits();
 
 		if (mNoLock)
 			return;
@@ -2475,48 +2475,48 @@ void DDImage::NormalBltMirror(Image* theImage, int theX, int theY, const Rect& t
 		LPDIRECTDRAWSURFACE aSurface = GetSurface();
 		(void)aSurface; // unused
 
- 		if (!LockSurface())
+		if (!LockSurface())
 			return;
 
 		// Ensure NativeAlphaData is calculated
-		void *aNativeData = aMemoryImage->GetNativeAlphaData(mDDInterface);
+		void* aNativeData = aMemoryImage->GetNativeAlphaData(mDDInterface);
 
 		// Ensure RunLength data is calculated
 		uchar* aSrcRLAlphaData = aMemoryImage->GetRLAlphaData();
 
-		#define _PLUSPLUS --
-		#define _PLUSEQUALS -=
+#define _PLUSPLUS --
+#define _PLUSEQUALS -=
 		if (aMemoryImage->mColorTable == NULL)
 		{
-			ulong* aSrcPixelsRow = ((ulong*) aNativeData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			ulong* aSrcPixelsRow = ((ulong*)aNativeData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			ulong* aSrcPixels;
-			
-			#define NEXT_SRC_COLOR (*(aSrcPixels++))
-			#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#include "inc_routines/DDI_AlphaBlt.inc"
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
+#include "inc_routines/DDI_AlphaBlt.inc"
+
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 		}
 		else
 		{
-			ulong* aNativeColorTable = (ulong*) aNativeData;
+			ulong* aNativeColorTable = (ulong*)aNativeData;
 
 			uchar* aSrcPixelsRow = aMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			uchar* aSrcPixels;
 
-			#define NEXT_SRC_COLOR (aNativeColorTable[*(aSrcPixels++)])
-			#define PEEK_SRC_COLOR (aNativeColorTable[*aSrcPixels])
+#define NEXT_SRC_COLOR (aNativeColorTable[*(aSrcPixels++)])
+#define PEEK_SRC_COLOR (aNativeColorTable[*aSrcPixels])
 
-			#include "inc_routines/DDI_AlphaBlt.inc"
+#include "inc_routines/DDI_AlphaBlt.inc"
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
-		}		
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
+		}
 
-		#undef _PLUSPLUS
-		#undef _PLUSEQUALS 
+#undef _PLUSPLUS
+#undef _PLUSEQUALS 
 		UnlockSurface();
 	}
 }
@@ -2540,38 +2540,38 @@ void DDImage::AdditiveBlt(Image* theImage, int theX, int theY, const Rect& theSr
 		// Ensure NativeAlphaData is calculated
 		void* aNativeAlphaData = aMemoryImage->GetNativeAlphaData(mDDInterface);
 
-		#define _PLUSPLUS ++
-		#define _PLUSEQUALS +=
+#define _PLUSPLUS ++
+#define _PLUSEQUALS +=
 		if (aMemoryImage->mColorTable == NULL)
 		{
-			ulong* aSrcPixelsRow = ((ulong*) aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			ulong* aSrcPixelsRow = ((ulong*)aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			ulong* aSrcPixels;
-			
-			#define NEXT_SRC_COLOR (*(aSrcPixels++))
-			#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#include "inc_routines/DDI_Additive.inc"
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
+#include "inc_routines/DDI_Additive.inc"
+
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 		}
 		else
 		{
-			ulong* aNativeAlphaColorTable = (ulong*) aNativeAlphaData;
+			ulong* aNativeAlphaColorTable = (ulong*)aNativeAlphaData;
 
 			uchar* aSrcPixelsRow = aMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			uchar* aSrcPixels;
 
-			#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
-			#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
+#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
+#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
 
-			#include "inc_routines/DDI_Additive.inc"
+#include "inc_routines/DDI_Additive.inc"
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 		}
-		#undef _PLUSPLUS
-		#undef _PLUSEQUALS
+#undef _PLUSPLUS
+#undef _PLUSEQUALS
 
 		UnlockSurface();
 	}
@@ -2585,8 +2585,8 @@ void DDImage::AdditiveBltMirror(Image* theImage, int theX, int theY, const Rect&
 		return;
 
 	Rect theSrcRect = theSrcRectOrig;
-//	theSrcRect.mX = (theSrcRect.mX+theSrcRect.mWidth)*-1 + theImage->mWidth;
-	theX += theSrcRect.mWidth-1;
+	//	theSrcRect.mX = (theSrcRect.mX+theSrcRect.mWidth)*-1 + theImage->mWidth;
+	theX += theSrcRect.mWidth - 1;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
 	// DDImage* aDDImage = dynamic_cast<DDImage*>(theImage); // unused
@@ -2599,38 +2599,38 @@ void DDImage::AdditiveBltMirror(Image* theImage, int theX, int theY, const Rect&
 		// Ensure NativeAlphaData is calculated
 		void* aNativeAlphaData = aMemoryImage->GetNativeAlphaData(mDDInterface);
 
-		#define _PLUSPLUS --
-		#define _PLUSEQUALS -=
+#define _PLUSPLUS --
+#define _PLUSEQUALS -=
 		if (aMemoryImage->mColorTable == NULL)
 		{
-			ulong* aSrcPixelsRow = ((ulong*) aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			ulong* aSrcPixelsRow = ((ulong*)aNativeAlphaData) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			ulong* aSrcPixels;
-			
-			#define NEXT_SRC_COLOR (*(aSrcPixels++))
-			#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#include "inc_routines/DDI_Additive.inc"
+#define NEXT_SRC_COLOR (*(aSrcPixels++))
+#define PEEK_SRC_COLOR (*aSrcPixels)
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
+#include "inc_routines/DDI_Additive.inc"
+
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 		}
 		else
 		{
-			ulong* aNativeAlphaColorTable = (ulong*) aNativeAlphaData;
+			ulong* aNativeAlphaColorTable = (ulong*)aNativeAlphaData;
 
 			uchar* aSrcPixelsRow = aMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 			uchar* aSrcPixels;
 
-			#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
-			#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
+#define NEXT_SRC_COLOR (aNativeAlphaColorTable[*(aSrcPixels++)])
+#define PEEK_SRC_COLOR (aNativeAlphaColorTable[*aSrcPixels])
 
-			#include "inc_routines/DDI_Additive.inc"
+#include "inc_routines/DDI_Additive.inc"
 
-			#undef NEXT_SRC_COLOR
-			#undef PEEK_SRC_COLOR
+#undef NEXT_SRC_COLOR
+#undef PEEK_SRC_COLOR
 		}
-		#undef _PLUSPLUS
-		#undef _PLUSEQUALS
+#undef _PLUSPLUS
+#undef _PLUSEQUALS
 
 		UnlockSurface();
 	}
@@ -2648,16 +2648,16 @@ void DDImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, c
 	DBG_ASSERTE((theColor.mBlue >= 0) && (theColor.mBlue <= 255));
 	DBG_ASSERTE((theColor.mAlpha >= 0) && (theColor.mAlpha <= 255));
 
-	CommitBits();	
-	
+	CommitBits();
+
 	if (Check3D(this))
 	{
-		DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);	
+		DDImage* aDDImage = dynamic_cast<DDImage*>(theImage);
 
 		// Special short-circuit 
 		if ((aDDImage != NULL) && (aDDImage->mSurface != NULL) &&
-			(mDDInterface->mD3DInterface->mTransformStack.empty()) && 
-			(theDrawMode == Graphics::DRAWMODE_NORMAL) && 
+			(mDDInterface->mD3DInterface->mTransformStack.empty()) &&
+			(theDrawMode == Graphics::DRAWMODE_NORMAL) &&
 			(theColor == Color::White) && (!aDDImage->mHasAlpha))
 		{
 			if (mLockCount > 0)
@@ -2672,12 +2672,12 @@ void DDImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, c
 			if (aDDImage->mHasTrans)
 				aFlags |= DDBLT_KEYSRC;
 
-			RECT aDestRect = {theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-			RECT aSrcRect = {theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight};	
+			RECT aDestRect = { theX, theY, theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+			RECT aSrcRect = { theSrcRect.mX, theSrcRect.mY, theSrcRect.mX + theSrcRect.mWidth, theSrcRect.mY + theSrcRect.mHeight };
 
 			HRESULT aResult = GetSurface()->Blt(&aDestRect, aDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
 			(void)aResult; // unused
-		
+
 			if (mLockCount > 0)
 			{
 				if (mSurface->Lock(NULL, &mLockedSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL) != DD_OK)
@@ -2687,19 +2687,19 @@ void DDImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, c
 			return;
 		}
 
-		mDDInterface->mD3DInterface->Blt(theImage,theX,theY,theSrcRect,theColor,theDrawMode);
+		mDDInterface->mD3DInterface->Blt(theImage, theX, theY, theSrcRect, theColor, theDrawMode);
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (mDDInterface->mIs3D && this!=mDDInterface->mNewCursorAreaImage && this!=mDDInterface->mOldCursorAreaImage))
+	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (this != mDDInterface->mNewCursorAreaImage && this != mDDInterface->mOldCursorAreaImage))
 	{
 		MemoryImage::Blt(theImage, theX, theY, theSrcRect, theColor, theDrawMode);
 		return;
-	}	
+	}
 
 	switch (theDrawMode)
 	{
-	case Graphics::DRAWMODE_NORMAL:		
+	case Graphics::DRAWMODE_NORMAL:
 		NormalBlt(theImage, theX, theY, theSrcRect, theColor);
 		break;
 	case Graphics::DRAWMODE_ADDITIVE:
@@ -2717,17 +2717,17 @@ void DDImage::BltMirror(Image* theImage, int theX, int theY, const Rect& theSrcR
 	DBG_ASSERTE((theColor.mBlue >= 0) && (theColor.mBlue <= 255));
 	DBG_ASSERTE((theColor.mAlpha >= 0) && (theColor.mAlpha <= 255));
 
-	CommitBits();	
+	CommitBits();
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->BltMirror(theImage,theX,theY,theSrcRect,theColor,theDrawMode);
+		mDDInterface->mD3DInterface->BltMirror(theImage, theX, theY, theSrcRect, theColor, theDrawMode);
 		return;
 	}
 
 	switch (theDrawMode)
 	{
-	case Graphics::DRAWMODE_NORMAL:		
+	case Graphics::DRAWMODE_NORMAL:
 		NormalBltMirror(theImage, theX, theY, theSrcRect, theColor);
 		break;
 	case Graphics::DRAWMODE_ADDITIVE:
@@ -2738,55 +2738,55 @@ void DDImage::BltMirror(Image* theImage, int theX, int theY, const Rect& theSrcR
 	DeleteAllNonSurfaceData();
 }
 
-void DDImage::BltF(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect &theClipRect, const Color& theColor, int theDrawMode)
+void DDImage::BltF(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode)
 {
 	theImage->mDrawn = true;
 
 	if (Check3D(this))
 	{
-		FRect aClipRect(theClipRect.mX,theClipRect.mY,theClipRect.mWidth,theClipRect.mHeight);
-		FRect aDestRect(theX,theY,theSrcRect.mWidth,theSrcRect.mHeight);
+		FRect aClipRect(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight);
+		FRect aDestRect(theX, theY, theSrcRect.mWidth, theSrcRect.mHeight);
 
 		FRect anIntersect = aDestRect.Intersection(aClipRect);
-		if (anIntersect.mWidth!=aDestRect.mWidth || anIntersect.mHeight!=aDestRect.mHeight)
+		if (anIntersect.mWidth != aDestRect.mWidth || anIntersect.mHeight != aDestRect.mHeight)
 		{
-			if (anIntersect.mWidth!=0 && anIntersect.mHeight!=0)
-				mDDInterface->mD3DInterface->BltClipF(theImage,theX,theY,theSrcRect,&theClipRect,theColor,theDrawMode);
+			if (anIntersect.mWidth != 0 && anIntersect.mHeight != 0)
+				mDDInterface->mD3DInterface->BltClipF(theImage, theX, theY, theSrcRect, &theClipRect, theColor, theDrawMode);
 		}
 		else
-			mDDInterface->mD3DInterface->Blt(theImage,theX,theY,theSrcRect,theColor,theDrawMode,true);
+			mDDInterface->mD3DInterface->Blt(theImage, theX, theY, theSrcRect, theColor, theDrawMode, true);
 
 		return;
 	}
 	else
-		BltRotated(theImage,theX,theY,theSrcRect,theClipRect,theColor,theDrawMode,0,0,0);
+		BltRotated(theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode, 0, 0, 0);
 }
 
 //0x57A610
-void DDImage::BltRotated(Image* theImage, float theX, float theY, const Rect &theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, double theRot, float theRotCenterX, float theRotCenterY)
+void DDImage::BltRotated(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, double theRot, float theRotCenterX, float theRotCenterY)
 {
 	theImage->mDrawn = true;
 
 	if (mNoLock)
-		return;	
+		return;
 
 	CommitBits();
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->BltRotated(theImage,theX,theY,&theClipRect,theColor,theDrawMode,theRot,theRotCenterX,theRotCenterY,theSrcRect);
+		mDDInterface->mD3DInterface->BltRotated(theImage, theX, theY, &theClipRect, theColor, theDrawMode, theRot, theRotCenterX, theRotCenterY, theSrcRect);
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (mDDInterface->mIs3D))
-	{
+	//if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)) || (mDDInterface->mIs3D))
+	//{
 		MemoryImage::BltRotated(theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode, theRot, theRotCenterX, theRotCenterY);
 		return;
-	}	
+	//}
 
 	// This BltRotatedClipHelper clipping used to happen in Graphics::DrawImageRotated
 	FRect aDestRect;
-	if (!BltRotatedClipHelper(theX, theY, theSrcRect, theClipRect, theRot, aDestRect,theRotCenterX,theRotCenterY))
+	if (!BltRotatedClipHelper(theX, theY, theSrcRect, theClipRect, theRot, aDestRect, theRotCenterX, theRotCenterY))
 		return;
 
 	MemoryImage* aMemoryImage = dynamic_cast<MemoryImage*>(theImage);
@@ -2800,58 +2800,58 @@ void DDImage::BltRotated(Image* theImage, float theX, float theY, const Rect &th
 		{
 			if (aMemoryImage->mColorTable == NULL)
 			{
-				ulong* aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY*aMemoryImage->GetWidth();			
+				ulong* aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY * aMemoryImage->GetWidth();
 
-				#define SRC_TYPE ulong
-				#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-				#include "inc_routines/DDI_BltRotated.inc"
+#include "inc_routines/DDI_BltRotated.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 
 			}
 			else
-			{			
+			{
 				ulong* aColorTable = aMemoryImage->mColorTable;
-				uchar* aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY*aMemoryImage->GetWidth();
+				uchar* aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY * aMemoryImage->GetWidth();
 
-				#define SRC_TYPE uchar
-				#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-				#include "inc_routines/DDI_BltRotated.inc"
+#include "inc_routines/DDI_BltRotated.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 		}
 		else
 		{
 			if (aMemoryImage->mColorTable == NULL)
 			{
-				ulong* aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY*aMemoryImage->GetWidth();			
+				ulong* aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY * aMemoryImage->GetWidth();
 
-				#define SRC_TYPE ulong
-				#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-				#include "inc_routines/DDI_BltRotated_Additive.inc"
+#include "inc_routines/DDI_BltRotated_Additive.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 
 			}
 			else
-			{			
+			{
 				ulong* aColorTable = aMemoryImage->mColorTable;
-				uchar* aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY*aMemoryImage->GetWidth();
+				uchar* aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY * aMemoryImage->GetWidth();
 
-				#define SRC_TYPE uchar
-				#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-				#include "inc_routines/DDI_BltRotated_Additive.inc"
+#include "inc_routines/DDI_BltRotated_Additive.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 		}
 	}
@@ -2870,18 +2870,18 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->StretchBlt(theImage,theDestRectOrig,theSrcRectOrig,&theClipRect,theColor,theDrawMode,fastStretch);
+		mDDInterface->mD3DInterface->StretchBlt(theImage, theDestRectOrig, theSrcRectOrig, &theClipRect, theColor, theDrawMode, fastStretch);
 		return;
 	}
 
 	Rect theDestRect;
 	FRect theSrcRect;
-	if (!StretchBltClipHelper(theSrcRectOrig,theClipRect,theDestRectOrig,theSrcRect,theDestRect))
+	if (!StretchBltClipHelper(theSrcRectOrig, theClipRect, theDestRectOrig, theSrcRect, theDestRect))
 		return;
 
 	if (fastStretch)
 	{
-		if ((aSrcDDImage != NULL) && (theColor == Color::White) && (theDrawMode == Graphics::DRAWMODE_NORMAL) && 
+		if ((aSrcDDImage != NULL) && (theColor == Color::White) && (theDrawMode == Graphics::DRAWMODE_NORMAL) &&
 			(!aSrcDDImage->mHasAlpha) && (aSrcDDImage->GetSurface() != NULL))
 		{
 			LPDIRECTDRAWSURFACE aSrcSurface = aSrcDDImage->GetSurface();
@@ -2892,28 +2892,28 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 			DDBLTFX aBltFX;
 			ZeroMemory(&aBltFX, sizeof(aBltFX));
 			aBltFX.dwSize = sizeof(aBltFX);
-    
+
 			DWORD aFlags = DDBLT_WAIT;
 
 			if (aSrcDDImage->mHasTrans)
 				aFlags |= DDBLT_KEYSRC;
 
-			RECT aDestRect = {theDestRect.mX, theDestRect.mY, theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-			RECT aSrcRect = {(LONG)theSrcRect.mX, (LONG)theSrcRect.mY, (LONG)(theSrcRect.mX + theSrcRect.mWidth), (LONG)(theSrcRect.mY + theSrcRect.mHeight)};	
-			
+			RECT aDestRect = { theDestRect.mX, theDestRect.mY, theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight };
+			RECT aSrcRect = { (LONG)theSrcRect.mX, (LONG)theSrcRect.mY, (LONG)(theSrcRect.mX + theSrcRect.mWidth), (LONG)(theSrcRect.mY + theSrcRect.mHeight) };
+
 			if (mLockCount > 0)
 			{
 				mSurface->Unlock(NULL);
 			}
-			
+
 			HRESULT aResult = GetSurface()->Blt(&aDestRect, aSrcDDImage->GetSurface(), &aSrcRect, aFlags, &aBltFX);
 			(void)aResult; // unused
-		
+
 			if (mLockCount > 0)
 			{
 				if (mSurface->Lock(NULL, &mLockedSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL) != DD_OK)
 					return;
-			}			
+			}
 		}
 		else
 		{
@@ -2921,37 +2921,37 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 			{
 				aSrcMemoryImage->CommitBits();
 
-			// Ensure NativeAlphaData is calculated
-				void *aNativeAlphaData = aSrcMemoryImage->GetNativeAlphaData(mDDInterface);
+				// Ensure NativeAlphaData is calculated
+				void* aNativeAlphaData = aSrcMemoryImage->GetNativeAlphaData(mDDInterface);
 
-				#define _PLUSPLUS ++
+#define _PLUSPLUS ++
 				if (theDrawMode == Graphics::DRAWMODE_NORMAL)
 				{
 					if (aSrcMemoryImage->mColorTable == NULL)
 					{
 						//ulong* aSrcBits = aSrcMemoryImage->GetBits();		
-						ulong* aSrcBits = ((ulong*) aNativeAlphaData);	
+						ulong* aSrcBits = ((ulong*)aNativeAlphaData);
 
-						#define SRC_TYPE ulong
-						#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-						#include "inc_routines/DDI_FastStretch.inc"
+#include "inc_routines/DDI_FastStretch.inc"
 
-						#undef SRC_TYPE
-						#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 					}
 					else
 					{
-						ulong* aColorTable = (ulong*) aNativeAlphaData;
+						ulong* aColorTable = (ulong*)aNativeAlphaData;
 						uchar* aSrcBits = aSrcMemoryImage->mColorIndices;
 
-						#define SRC_TYPE uchar
-						#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-						#include "inc_routines/DDI_FastStretch.inc"
+#include "inc_routines/DDI_FastStretch.inc"
 
-						#undef SRC_TYPE
-						#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 					}
 				}
 				else
@@ -2959,47 +2959,47 @@ void DDImage::StretchBlt(Image* theImage, const Rect& theDestRectOrig, const Rec
 					if (aSrcMemoryImage->mColorTable == NULL)
 					{
 						//ulong* aSrcBits = aSrcMemoryImage->GetBits();		
-						ulong* aSrcBits = ((ulong*) aNativeAlphaData);	
+						ulong* aSrcBits = ((ulong*)aNativeAlphaData);
 
-						#define SRC_TYPE ulong
-						#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-						#include "inc_routines/DDI_FastStretch_Additive.inc"
+#include "inc_routines/DDI_FastStretch_Additive.inc"
 
-						#undef SRC_TYPE
-						#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 					}
 					else
 					{
-						ulong* aColorTable = (ulong*) aNativeAlphaData;
+						ulong* aColorTable = (ulong*)aNativeAlphaData;
 						uchar* aSrcBits = aSrcMemoryImage->mColorIndices;
 
-						#define SRC_TYPE uchar
-						#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-						#include "inc_routines/DDI_FastStretch_Additive.inc"
+#include "inc_routines/DDI_FastStretch_Additive.inc"
 
-						#undef SRC_TYPE
-						#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 					}
 				}
-				#undef _PLUSPLUS
+#undef _PLUSPLUS
 			}
 		}
 	}
 	else
 	{
-		if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
-		{
+		//if ((mDrawToBits) || (mHasAlpha) || (mHasTrans) || (mDDInterface->mIs3D))
+		//{
 			MemoryImage::StretchBlt(theImage, theDestRectOrig, theSrcRectOrig, theClipRect, theColor, theDrawMode, fastStretch);
 			return;
-		}
+		//}
 
 		// Stretch it to a temporary image
 		MemoryImage aTempImage(mApp);
 		Rect aTempRect(0, 0, theDestRect.mWidth, theDestRect.mHeight);
 
-		aTempImage.Create(theDestRect.mWidth, theDestRect.mHeight);			
+		aTempImage.Create(theDestRect.mWidth, theDestRect.mHeight);
 		if (fastStretch)
 			aTempImage.FastStretchBlt(theImage, aTempRect, theSrcRect, theColor, 0);
 		else
@@ -3023,54 +3023,54 @@ void DDImage::StretchBltMirror(Image* theImage, const Rect& theDestRectOrig, con
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->StretchBlt(theImage,theDestRectOrig,theSrcRectOrig,&theClipRect,theColor,theDrawMode,fastStretch,true);
+		mDDInterface->mD3DInterface->StretchBlt(theImage, theDestRectOrig, theSrcRectOrig, &theClipRect, theColor, theDrawMode, fastStretch, true);
 		return;
 	}
 
 	FRect theSrcRect;
 	Rect theDestRect;
 
-	if (!StretchBltMirrorClipHelper(theSrcRectOrig,theClipRect,theDestRectOrig,theSrcRect,theDestRect))
+	if (!StretchBltMirrorClipHelper(theSrcRectOrig, theClipRect, theDestRectOrig, theSrcRect, theDestRect))
 		return;
 
-	theDestRect.mX += theDestRect.mWidth-1;
+	theDestRect.mX += theDestRect.mWidth - 1;
 
 
 	if (aSrcMemoryImage != NULL)
 	{
 		aSrcMemoryImage->CommitBits();
 
-	// Ensure NativeAlphaData is calculated
-		void *aNativeAlphaData = aSrcMemoryImage->GetNativeAlphaData(mDDInterface);
+		// Ensure NativeAlphaData is calculated
+		void* aNativeAlphaData = aSrcMemoryImage->GetNativeAlphaData(mDDInterface);
 
-		#define _PLUSPLUS --
+#define _PLUSPLUS --
 		if (theDrawMode == Graphics::DRAWMODE_NORMAL)
 		{
 			if (aSrcMemoryImage->mColorTable == NULL)
 			{
 				//ulong* aSrcBits = aSrcMemoryImage->GetBits();		
-				ulong* aSrcBits = ((ulong*) aNativeAlphaData);	
+				ulong* aSrcBits = ((ulong*)aNativeAlphaData);
 
-				#define SRC_TYPE ulong
-				#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-				#include "inc_routines/DDI_FastStretch.inc"
+#include "inc_routines/DDI_FastStretch.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 			else
 			{
-				ulong* aColorTable = (ulong*) aNativeAlphaData;
+				ulong* aColorTable = (ulong*)aNativeAlphaData;
 				uchar* aSrcBits = aSrcMemoryImage->mColorIndices;
 
-				#define SRC_TYPE uchar
-				#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-				#include "inc_routines/DDI_FastStretch.inc"
+#include "inc_routines/DDI_FastStretch.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 		}
 		else
@@ -3078,49 +3078,49 @@ void DDImage::StretchBltMirror(Image* theImage, const Rect& theDestRectOrig, con
 			if (aSrcMemoryImage->mColorTable == NULL)
 			{
 				//ulong* aSrcBits = aSrcMemoryImage->GetBits();		
-				ulong* aSrcBits = ((ulong*) aNativeAlphaData);	
+				ulong* aSrcBits = ((ulong*)aNativeAlphaData);
 
-				#define SRC_TYPE ulong
-				#define READ_COLOR(ptr) (*(ptr))
+#define SRC_TYPE ulong
+#define READ_COLOR(ptr) (*(ptr))
 
-				#include "inc_routines/DDI_FastStretch_Additive.inc"
+#include "inc_routines/DDI_FastStretch_Additive.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 			else
 			{
-				ulong* aColorTable = (ulong*) aNativeAlphaData;
+				ulong* aColorTable = (ulong*)aNativeAlphaData;
 				uchar* aSrcBits = aSrcMemoryImage->mColorIndices;
 
-				#define SRC_TYPE uchar
-				#define READ_COLOR(ptr) (aColorTable[*(ptr)])
+#define SRC_TYPE uchar
+#define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
-				#include "inc_routines/DDI_FastStretch_Additive.inc"
+#include "inc_routines/DDI_FastStretch_Additive.inc"
 
-				#undef SRC_TYPE
-				#undef READ_COLOR
+#undef SRC_TYPE
+#undef READ_COLOR
 			}
 		}
-		#undef _PLUSPLUS
+#undef _PLUSPLUS
 	}
 
 	DeleteAllNonSurfaceData();  //0x56C560
 }
 
-void DDImage::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3 &theMatrix, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect &theSrcRect, bool blend)
+void DDImage::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3& theMatrix, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect, bool blend)
 {
 	theImage->mDrawn = true;
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->BltTransformed(theImage,&theClipRect,theColor,theDrawMode,theSrcRect,theMatrix,blend,x,y,true);
+		mDDInterface->mD3DInterface->BltTransformed(theImage, &theClipRect, theColor, theDrawMode, theSrcRect, theMatrix, blend, x, y, true);
 		return;
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
 	(void)aSurface; // unused
- 	if (!LockSurface())
+	if (!LockSurface())
 		return;
 
 	int aPixelFormat = 0;
@@ -3133,7 +3133,7 @@ void DDImage::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3 &th
 	else
 		DBG_ASSERTE(FALSE);
 
-	BltMatrixHelper(theImage,x,y,theMatrix,theClipRect,theColor,theDrawMode,theSrcRect,mLockedSurfaceDesc.lpSurface,mLockedSurfaceDesc.lPitch,aPixelFormat,blend);
+	BltMatrixHelper(theImage, x, y, theMatrix, theClipRect, theColor, theDrawMode, theSrcRect, mLockedSurfaceDesc.lpSurface, mLockedSurfaceDesc.lPitch, aPixelFormat, blend);
 
 	UnlockSurface();
 
@@ -3141,19 +3141,19 @@ void DDImage::BltMatrix(Image* theImage, float x, float y, const SexyMatrix3 &th
 
 }
 
-void DDImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3], int theNumTriangles, const Rect& theClipRect, const Color &theColor, int theDrawMode, float tx, float ty, bool blend)
+void DDImage::BltTrianglesTex(Image* theTexture, const TriVertex theVertices[][3], int theNumTriangles, const Rect& theClipRect, const Color& theColor, int theDrawMode, float tx, float ty, bool blend)
 {
 	theTexture->mDrawn = true;
 
 	if (Check3D(this))
 	{
-		mDDInterface->mD3DInterface->DrawTrianglesTex(theVertices,theNumTriangles,theColor,theDrawMode,theTexture,tx,ty,blend);
+		mDDInterface->mD3DInterface->DrawTrianglesTex(theVertices, theNumTriangles, theColor, theDrawMode, theTexture, tx, ty, blend);
 		return;
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
 	(void)aSurface; // unused
- 	if (!LockSurface())
+	if (!LockSurface())
 		return;
 
 	int aPixelFormat = 0;
@@ -3166,7 +3166,7 @@ void DDImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3
 	else
 		DBG_ASSERTE(FALSE);
 
-	BltTrianglesTexHelper(theTexture,theVertices,theNumTriangles,theClipRect,theColor,theDrawMode,mLockedSurfaceDesc.lpSurface,mLockedSurfaceDesc.lPitch,aPixelFormat,tx,ty,blend);
+	BltTrianglesTexHelper(theTexture, theVertices, theNumTriangles, theClipRect, theColor, theDrawMode, mLockedSurfaceDesc.lpSurface, mLockedSurfaceDesc.lPitch, aPixelFormat, tx, ty, blend);
 	UnlockSurface();
 
 	DeleteAllNonSurfaceData();
@@ -3182,7 +3182,7 @@ bool DDImage::Palletize()
 		return true;
 	}
 	else
-	{		
+	{
 		return false;
 	}
 }
@@ -3195,30 +3195,30 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 	{ // ugh!#@$
 		int l = theSpans[0].mX, t = theSpans[0].mY;
 		int r = l + theSpans[0].mWidth, b = t;
-		for (int i = 1; i < theSpanCount; ++i)  //此循环结束后，Rect(l, t, r - l + 1, b - t + 1) 即为包含所有 Span 的最小矩形区域
+		for (int i = 1; i < theSpanCount; ++i)  //???????Rect(l, t, r - l + 1, b - t + 1) ?????? Span ???????
 		{
 			l = std::min(theSpans[i].mX, l);
 			r = std::max(theSpans[i].mX + theSpans[i].mWidth - 1, r);
 			t = std::min(theSpans[i].mY, t);
 			b = std::max(theSpans[i].mY, b);
 		}
-		for (int i = 0; i < theSpanCount; ++i)  //此循环将所有 Span 的绝对坐标更改为在上述矩形区域内的相对坐标
+		for (int i = 0; i < theSpanCount; ++i)  //?????? Span ?????????????????????
 		{
 			theSpans[i].mX -= l;
 			theSpans[i].mY -= t;
 		}
 
 		MemoryImage aTempImage;
-		aTempImage.Create(r-l+1, b-t+1);  //创建一个与最小矩形区域相同大小的 MemoryImage
-		//theCoverX - l 和 theCoverY - t 分别将绝对坐标转化为 MemoryImage 上的相对坐标
+		aTempImage.Create(r - l + 1, b - t + 1);  //???????????????? MemoryImage
+		//theCoverX - l ? theCoverY - t ?????????? MemoryImage ??????
 		aTempImage.FillScanLinesWithCoverage(theSpans, theSpanCount, theColor, theDrawMode, theCoverage, theCoverX - l, theCoverY - t, theCoverWidth, theCoverHeight);
-		Blt(&aTempImage, l, t, Rect(0, 0, r-l+1, b-t+1), Color::White, theDrawMode);
+		Blt(&aTempImage, l, t, Rect(0, 0, r - l + 1, b - t + 1), Color::White, theDrawMode);
 		return;
 	}
 
 	LPDIRECTDRAWSURFACE aSurface = GetSurface();
 	(void)aSurface; // unused
-	
+
 	if (!LockSurface())
 		return;
 
@@ -3230,34 +3230,34 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 	// ulong aRRoundAdd = aRMask >> 1;
 	// ulong aGRoundAdd = aGMask >> 1;
 	// ulong aBRoundAdd = aBMask >> 1;
-	
+
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
 	{
 		//ushort src_red		= (((theColor.mRed * (theColor.mAlpha+1)) >> 8) * aRMask) & aRMask;
 		//ushort src_green	= (((theColor.mGreen * (theColor.mAlpha+1)) >> 8) * aGMask) & aGMask;
 		//ushort src_blue		= (((theColor.mBlue * (theColor.mAlpha+1)) >> 8) * aBMask) & aBMask;
-		ushort src = 
+		ushort src =
 			(((theColor.mRed * aRMask) >> 8) & aRMask) |
 			(((theColor.mGreen * aGMask) >> 8) & aGMask) |
 			(((theColor.mBlue * aBMask) >> 8) & aBMask);
 		ushort* theBits = (ushort*)mLockedSurfaceDesc.lpSurface;
-		
+
 		for (int i = 0; i < theSpanCount; ++i)
 		{
 			Span* aSpan = &theSpans[i];
 			int x = aSpan->mX - theCoverX;
 			int y = aSpan->mY - theCoverY;
 
-			ushort* aDestPixels = &theBits[aSpan->mY*mWidth + aSpan->mX];
-			const BYTE* aCoverBits = &theCoverage[y*theCoverWidth+x];
+			ushort* aDestPixels = &theBits[aSpan->mY * mWidth + aSpan->mX];
+			const BYTE* aCoverBits = &theCoverage[y * theCoverWidth + x];
 			for (int w = 0; w < aSpan->mWidth; ++w)
 			{
 				int cover = *aCoverBits++;
-				int a = ((cover+1) * theColor.mAlpha) >> 8;
+				int a = ((cover + 1) * theColor.mAlpha) >> 8;
 				int oma = 256 - a;
 				ushort dest = *aDestPixels;
-				
-				*(aDestPixels++) = 
+
+				*(aDestPixels++) =
 					((((dest & aRMask) * oma + (src & aRMask) * a) >> 8) & aRMask) |
 					((((dest & aGMask) * oma + (src & aGMask) * a) >> 8) & aGMask) |
 					((((dest & aBMask) * oma + (src & aBMask) * a) >> 8) & aBMask);
@@ -3269,28 +3269,28 @@ void DDImage::FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const 
 		//ulong src_red		= (((theColor.mRed * (theColor.mAlpha+1)) >> 8) * aRMask) & aRMask;
 		//ulong src_green		= (((theColor.mGreen * (theColor.mAlpha+1)) >> 8) * aGMask) & aGMask;
 		//ulong src_blue		= (((theColor.mBlue * (theColor.mAlpha+1)) >> 8) * aBMask) & aBMask;
-		ulong src = 
+		ulong src =
 			(((theColor.mRed * aRMask) >> 8) & aRMask) |
 			(((theColor.mGreen * aGMask) >> 8) & aGMask) |
 			(((theColor.mBlue * aBMask) >> 8) & aBMask);
 		ulong* theBits = (ulong*)mLockedSurfaceDesc.lpSurface;
-		
+
 		for (int i = 0; i < theSpanCount; ++i)
 		{
 			Span* aSpan = &theSpans[i];
 			int x = aSpan->mX - theCoverX;
 			int y = aSpan->mY - theCoverY;
 
-			ulong* aDestPixels = &theBits[aSpan->mY*mWidth + aSpan->mX];
-			const BYTE* aCoverBits = &theCoverage[y*theCoverWidth+x];
+			ulong* aDestPixels = &theBits[aSpan->mY * mWidth + aSpan->mX];
+			const BYTE* aCoverBits = &theCoverage[y * theCoverWidth + x];
 			for (int w = 0; w < aSpan->mWidth; ++w)
 			{
 				int cover = *aCoverBits++;
-				int a = ((cover+1) * theColor.mAlpha) >> 8;
+				int a = ((cover + 1) * theColor.mAlpha) >> 8;
 				int oma = 256 - a;
 				ulong dest = *aDestPixels;
-				
-				*(aDestPixels++) = 
+
+				*(aDestPixels++) =
 					((((dest & aRMask) * oma + (src & aRMask) * a) >> 8) & aRMask) |
 					((((dest & aGMask) * oma + (src & aGMask) * a) >> 8) & aGMask) |
 					((((dest & aBMask) * oma + (src & aBMask) * a) >> 8) & aBMask);

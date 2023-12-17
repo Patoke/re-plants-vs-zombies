@@ -149,8 +149,8 @@ void WidgetManager::FlushDeferredOverlayWidgets(int theMaxPriority)
 					Graphics g(*mCurG);
 					g.Translate(-mMouseDestRect.mX, -mMouseDestRect.mY);
 					g.Translate(aWidget->mX, aWidget->mY);
-					g.SetFastStretch(!g.Is3D());
-					g.SetLinearBlend(g.Is3D());
+					g.SetFastStretch(false);
+					g.SetLinearBlend(true);
 
 					aWidget->DrawOverlay(&g, aPriority);
 					mDeferredOverlayWidgets[i].first = NULL;

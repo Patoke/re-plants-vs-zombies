@@ -258,6 +258,7 @@ static HRESULT WINAPI EnumZBufferCallback( DDPIXELFORMAT* pddpf, VOID* pddpfDesi
 ///////////////////////////////////////////////////////////////////////////////
 bool D3DInterface::InitD3D()
 {	
+	// @Patoke: remove d3d7 code and replace for GLFW (OpenGl)
 	if(CheckDXError(mDD->QueryInterface(IID_IDirect3D7, (LPVOID*) &mD3D),"QueryInterface IID_IDirect3D7"))
 		return false;
 

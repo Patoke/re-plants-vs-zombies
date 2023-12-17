@@ -3,7 +3,6 @@
 #include "DDInterface.h"
 #include "DDImage.h"
 #include "D3DInterface.h"
-#include "D3DTester.h"
 #include "SexyAppBase.h"
 #include "misc/AutoCrit.h"
 #include "Graphics.h"
@@ -60,9 +59,6 @@ DDInterface::DDInterface(SexyAppBase* theApp)
 	mMillisecondsPerFrame = 1000/mRefreshRate;
 
 	mD3DInterface = new D3DInterface;
-	mIs3D = false;
-
-	mD3DTester = NULL;
 
 	gDirectDrawCreateFunc = (DirectDrawCreateFunc)GetProcAddress(gDDrawDLL,"DirectDrawCreate");
 	gDirectDrawCreateExFunc = (DirectDrawCreateExFunc)GetProcAddress(gDDrawDLL,"DirectDrawCreateEx");
@@ -77,7 +73,6 @@ DDInterface::~DDInterface()
 	Cleanup();
 
 	delete mD3DInterface;
-	delete mD3DTester;
 }
 
 std::string DDInterface::ResultToString(int theResult)
@@ -205,32 +200,6 @@ void DDInterface::ClearSurface(LPDIRECTDRAWSURFACE theSurface)
 	}
 }
 
-bool DDInterface::Do3DTest(HWND theHWND)
-{
-	if (mD3DTester == NULL)
-	{
-		if (mApp->mTest3D || mApp->mAutoEnable3D)
-		{
-			mD3DTester = new D3DTester;
-			mD3DTester->SetVidMemoryConstraints(mApp->mMinVidMemory3D, mApp->mRecommendedVidMemory3D);
-			mD3DTester->TestD3D(theHWND, mDD7);
-
-			if (mApp->mAutoEnable3D && mD3DTester->Is3DRecommended())
-				mIs3D = true;
-
-			if (!mD3DTester->Is3DSupported())
-				mIs3D = false;
-
-			if (mD3DTester->ResultsChanged() && !mD3DTester->Is3DRecommended())
-				mIs3D = false;
-
-			return true;
-		}
-	}
-
-	return false;
-}
-
 int DDInterface::Init(HWND theWindow, bool IsWindowed)
 {
 	AutoCrit anAutoCrit(mCritSect);
@@ -271,12 +240,6 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 	else 
 	{
 		aResult = gDirectDrawCreateFunc(NULL, &mDD, NULL); 		
-	}
-
-	if (Do3DTest(theWindow))
-	{
-		if (mD3DTester->ResultsChanged())
-			mApp->Done3dTesting();
 	}
 
 	RECT aRect;
@@ -364,8 +327,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		aDesc.dwFlags = DDSD_CAPS;
     
 		aDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
-		if (mIs3D)
-			aDesc.ddsCaps.dwCaps |= DDSCAPS_3DDEVICE;
+		aDesc.ddsCaps.dwCaps |= DDSCAPS_3DDEVICE;
 		
 		aDesc.dwBackBufferCount = 1;
 		aResult = CreateSurface(&aDesc, &mPrimarySurface, NULL);
@@ -378,8 +340,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		aDesc.dwSize = sizeof(aDesc);
 		aDesc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
 		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-		if (mIs3D)
-			aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE;
+		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE;
 
 		aDesc.dwWidth = mWidth;
 		aDesc.dwHeight = mHeight;
@@ -403,7 +364,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 	{
 		OutputDebug(_S("Desktop is           %4lu x %4lu [%2d:%2d]\n"), mDesktopWidth, mDesktopHeight, mDesktopAspect.mNumerator, mDesktopAspect.mDenominator);
 
-		if ( mIs3D && mAspect < mDesktopAspect )
+		if ( mAspect < mDesktopAspect )
 		{
 			mIsWidescreen = true;
 
@@ -455,8 +416,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 							  ,DDSCAPS_FRONTBUFFER*/;
 		aDesc.dwBackBufferCount = 1;
 
-		if (mIs3D)
-			aDesc.ddsCaps.dwCaps |= DDSCAPS_3DDEVICE;
+		aDesc.ddsCaps.dwCaps |= DDSCAPS_3DDEVICE;
 
 
 		aResult = CreateSurface(&aDesc, &mPrimarySurface, NULL);
@@ -481,8 +441,7 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 		aDesc.dwSize = sizeof(aDesc);
 		aDesc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
 		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-		if (mIs3D)
-			aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE;
+		aDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE;
 
 		aDesc.dwWidth = mWidth;
 		aDesc.dwHeight = mHeight;		
@@ -650,14 +609,11 @@ int DDInterface::Init(HWND theWindow, bool IsWindowed)
 	}*/
 
 	SetVideoOnlyDraw(mVideoOnlyDraw);
-	if(mIs3D)
+	if(!mD3DInterface->InitFromDDInterface(this))
 	{
-		if(!mD3DInterface->InitFromDDInterface(this))
-		{
-			mErrorString = "3D init error: ";
-			mErrorString += D3DInterface::mErrorString;
-			return RESULT_3D_FAIL;
-		}
+		mErrorString = "3D init error: ";
+		mErrorString += D3DInterface::mErrorString;
+		return RESULT_3D_FAIL;
 	}
 
 	mInitCount++;
@@ -895,17 +851,13 @@ bool DDInterface::Redraw(Rect* theClipRect)
 
 	mInRedraw = true;
 
-	if(mIs3D)
+	if (!mD3DInterface->mErrorString.empty())
 	{
-		if (!mD3DInterface->mErrorString.empty())
-		{
-			mInRedraw = false;
-			mIs3D = false;
-			return false;
-		}
+		mInRedraw = false;
+		return false;
+	}
 
-		mD3DInterface->Flush();
-	}	
+	mD3DInterface->Flush();
 
 	RECT aDestRect;
 	RECT aSrcRect;
@@ -1214,29 +1166,17 @@ void DDInterface::DrawCursorTo(LPDIRECTDRAWSURFACE theSurface, bool adjust)
 		
 		mHasOldCursorArea = aResult == DD_OK;
 
-		// Kindof a hack, since we only use this for mDrawSurace
-		if (theSurface == mDrawSurface && !mIs3D)
-		{
-			// Draw directly to the screen image, instead of indirectly through mNewCursorArea
-			Graphics g(mScreenImage);
-			g.DrawImage(mCursorImage, 
-				mCursorX - (mCursorWidth / 2) + (mCursorWidth - mCursorImage->mWidth)/2, 
-				mCursorY - (mCursorHeight / 2) + (mCursorHeight - mCursorImage->mHeight)/2);				
-		}
-		else
-		{
-			// From mOldCursorArea to mNewCursorArea
-			aResult = mNewCursorArea->Blt(&aLocalRect, mOldCursorArea, &aLocalRect, DDBLT_WAIT, &aBltFX);
+		// From mOldCursorArea to mNewCursorArea
+		aResult = mNewCursorArea->Blt(&aLocalRect, mOldCursorArea, &aLocalRect, DDBLT_WAIT, &aBltFX);
 
-			// Draw image to mNewCursorAreaImage
-			Graphics aNewCursorAreaG(mNewCursorAreaImage);
-			aNewCursorAreaG.DrawImage(mCursorImage, 
-				(mCursorWidth - mCursorImage->mWidth)/2, 
-				(mCursorHeight - mCursorImage->mHeight)/2);
+		// Draw image to mNewCursorAreaImage
+		Graphics aNewCursorAreaG(mNewCursorAreaImage);
+		aNewCursorAreaG.DrawImage(mCursorImage,
+			(mCursorWidth - mCursorImage->mWidth) / 2,
+			(mCursorHeight - mCursorImage->mHeight) / 2);
 
-			// From mNewCursorArea to theSurface
-			aResult = theSurface->Blt(&aScreenRect, mNewCursorArea, &aLocalRect, DDBLT_WAIT, &aBltFX);
-		}
+		// From mNewCursorArea to theSurface
+		aResult = theSurface->Blt(&aScreenRect, mNewCursorArea, &aLocalRect, DDBLT_WAIT, &aBltFX);
 	}
 	else
 		mHasOldCursorArea = false;
