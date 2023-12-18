@@ -55,6 +55,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     Color.h
     GLInterface.cpp
     GLInterface.h
+    GLImage.cpp
+    GLImage.h
     D3DInterface.cpp
     D3DInterface.h
     DDImage.cpp

@@ -17,55 +17,7 @@
 
 	if (theColor == Color::White)
 	{
-		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
-		{
-			ushort* aDestPixelsRow = ((ushort*) mLockedSurfaceDesc.lpSurface) + (theDestRect.mY * mLockedSurfaceDesc.lPitch/2) + theDestRect.mX;
-
-			ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
-			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
-			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
-
-			// unused
-			// ulong aRRoundAdd = aRMask >> 1;
-			// ulong aGRoundAdd = aGMask >> 1;
-			// ulong aBRoundAdd = aBMask >> 1;					
-	
-			for (int y = 0; y < theDestRect.mHeight; y++)
-			{
-				int aFPSrcX = theSrcRect.mX * 0x10000;
-
-				ushort* aDestPixels = aDestPixelsRow;
-				SRC_TYPE* aSrcPixelsRow = aSrcBits + (aSrcMemoryImage->mWidth * (aFPSrcY >> 16));
-
-				for (int x = 0; x < theDestRect.mWidth; x++)
-				{
-					SRC_TYPE* aSrcPixels = aSrcPixelsRow + (aFPSrcX >> 16);
-					
-					ulong src = READ_COLOR(aSrcPixels);
-					ulong dest = *aDestPixels;										
-					
-					if (src != 0)
-					{											
-						int r = aMaxRedTable[((dest & aRMask) + (src & aRMask)) >> aRedShift];
-						int g = aMaxGreenTable[((dest & aGMask) + (src & aGMask)) >> aGreenShift];
-						int b = aMaxBlueTable[((dest & aBMask) + (src & aBMask)) >> aBlueShift];
-
-						*(aDestPixels _PLUSPLUS) = 
-							(r << aRedShift) |
-							(g << aGreenShift) |
-							(b << aBlueShift);
-					}
-					else
-						aDestPixels _PLUSPLUS;
-						
-					aFPSrcX += anAddX;
-				}
-
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/2;
-				aFPSrcY += anAddY;
-			}		
-		}
-		else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
+		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 		{
 			ulong* aDestPixelsRow = ((ulong*) mLockedSurfaceDesc.lpSurface) + (theDestRect.mY * mLockedSurfaceDesc.lPitch/4) + theDestRect.mX;
 
@@ -121,55 +73,7 @@
 		int cg = (theColor.mGreen * ca) / 255;
 		int cb = (theColor.mBlue * ca) / 255;
 	
-		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 16)
-		{
-			ushort* aDestPixelsRow = ((ushort*) mLockedSurfaceDesc.lpSurface) + (theDestRect.mY * mLockedSurfaceDesc.lPitch/2) + theDestRect.mX;
-
-			ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
-			ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;
-			ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
-
-			// unused
-			// ulong aRRoundAdd = aRMask >> 1;
-			// ulong aGRoundAdd = aGMask >> 1;
-			// ulong aBRoundAdd = aBMask >> 1;					
-	
-			for (int y = 0; y < theDestRect.mHeight; y++)
-			{
-				int aFPSrcX = theSrcRect.mX * 0x10000;
-
-				ushort* aDestPixels = aDestPixelsRow;
-				SRC_TYPE* aSrcPixelsRow = aSrcBits + (aSrcMemoryImage->mWidth * (aFPSrcY >> 16));
-
-				for (int x = 0; x < theDestRect.mWidth; x++)
-				{
-					SRC_TYPE* aSrcPixels = aSrcPixelsRow + (aFPSrcX >> 16);
-					
-					ulong src = READ_COLOR(aSrcPixels);
-					ulong dest = *aDestPixels;										
-					
-					if (src != 0)
-					{
-						int r = aMaxRedTable[((dest & aRMask) >> aRedShift) + ((((src & aRMask) >> aRedShift) * cr) >> 8)];
-						int g = aMaxGreenTable[((dest & aGMask) >> aGreenShift) + ((((src & aGMask) >> aGreenShift) * cg) >> 8)];
-						int b = aMaxBlueTable[((dest & aBMask) >> aBlueShift) + ((((src & aBMask) >> aBlueShift) * cb) >> 8)];
-
-						*(aDestPixels _PLUSPLUS) = 
-							(r << aRedShift) |
-							(g << aGreenShift) |
-							(b << aBlueShift);
-					}
-					else
-						aDestPixels _PLUSPLUS;
-
-					aFPSrcX += anAddX;
-				}
-
-				aDestPixelsRow += mLockedSurfaceDesc.lPitch/2;
-				aFPSrcY += anAddY;
-			}		
-		}
-		else if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
+		if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 		{
 			ulong* aDestPixelsRow = ((ulong*) mLockedSurfaceDesc.lpSurface) + (theDestRect.mY * mLockedSurfaceDesc.lPitch/4) + theDestRect.mX;
 
