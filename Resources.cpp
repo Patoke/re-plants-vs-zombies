@@ -3235,17 +3235,17 @@ Sexy::ResourceId Sexy::GetIdBySound(intptr_t theSound)
 //0x47FBC0
 Sexy::ResourceId Sexy::GetIdByVariable(void* theVariable)
 {
-	static std::map<intptr_t, intptr_t> aMap;
+	static std::map<void*, int> aMap;
 
 	if (gNeedRecalcVariableToIdMap)
 	{
 		gNeedRecalcVariableToIdMap = false;
 		aMap.clear();
 		for (int i = 0; i < (int)ResourceId::RESOURCE_ID_MAX; i++)
-			aMap[*(intptr_t*)gResources[i]] = i;
+			aMap[gResources[i]] = i;
 	}
 
-	auto anIter = aMap.find((intptr_t)theVariable);
+	auto anIter = aMap.find(theVariable);
 	return anIter == aMap.end() ? ResourceId::RESOURCE_ID_MAX : (ResourceId)anIter->second;
 }
 /*
