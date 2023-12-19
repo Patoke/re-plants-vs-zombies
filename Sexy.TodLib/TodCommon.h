@@ -58,14 +58,14 @@ class TodResourceManager : public ResourceManager
 {
 public:
 	bool				FindImagePath(Image* theImage, std::string* thePath);
-	void				AddImageToMap(SharedImageRef* theImage, const std::string& thePath);
+	void				AGLImageToMap(SharedImageRef* theImage, const std::string& thePath);
 	bool				TodLoadNextResource();
 	bool				TodLoadResources(const std::string& theGroup);
 };
 
 /*inline*/ bool			TodLoadResources(const std::string& theGroup);
 /*inline*/ bool			TodLoadNextResource();
-void					TodAddImageToMap(SharedImageRef* theImage, const std::string& thePath);
+void					TodAGLImageToMap(SharedImageRef* theImage, const std::string& thePath);
 bool					TodFindImagePath(Image* theImage, std::string* thePath);
 bool					TodFindFontPath(_Font* theFont, std::string* thePath);
 

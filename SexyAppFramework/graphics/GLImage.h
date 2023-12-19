@@ -8,7 +8,7 @@
 namespace Sexy
 {
 
-	class DDInterface;
+	class GLInterface;
 	class SysFont;
 
 	class GLImage : public MemoryImage

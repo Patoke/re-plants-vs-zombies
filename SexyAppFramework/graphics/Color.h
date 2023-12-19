@@ -7,39 +7,39 @@ namespace Sexy
 {
 
 #pragma pack(push,1)
-struct SexyRGBA {unsigned char b,g,r,a;};
+struct SexyRGBA {uint8_t b,g,r,a;};
 #pragma pack(pop)
 
 class Color
 {
 public:
-	int mRed;
-	int mGreen;
-	int mBlue;
-	int mAlpha;
+	int32_t mRed;
+	int32_t mGreen;
+	int32_t mBlue;
+	int32_t mAlpha;
 
 	static Color Black;
 	static Color White;
 
 public:
 	Color();
-	Color(int theColor);
-	Color(int theColor, int theAlpha);
-	Color(int theRed, int theGreen, int theBlue);
-	Color(int theRed, int theGreen, int theBlue, int theAlpha);
+	Color(uint32_t theColor);
+	Color(uint32_t theColor, int32_t theAlpha);
+	Color(int32_t theRed, int32_t theGreen, int32_t theBlue);
+	Color(int32_t theRed, int32_t theGreen, int32_t theBlue, int32_t theAlpha);
 	Color(const SexyRGBA &theColor);
 	Color(const uchar* theElements);	
 	Color(const int* theElements);
 
-	int						GetRed() const;
-	int						GetGreen() const;
-	int						GetBlue() const;
-	int						GetAlpha() const;
-	ulong					ToInt() const;
+	int32_t					GetRed() const;
+	int32_t					GetGreen() const;
+	int32_t					GetBlue() const;
+	int32_t					GetAlpha() const;
+	uint32_t				ToInt() const;
 	SexyRGBA				ToRGBA() const;
 
-	int&					operator[](int theIdx);
-	int						operator[](int theIdx) const;	
+	int32_t&				operator[](int theIdx);
+	int32_t					operator[](int theIdx) const;
 };
 
 bool operator==(const Color& theColor1, const Color& theColor2);

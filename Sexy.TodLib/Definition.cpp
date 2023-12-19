@@ -340,7 +340,7 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
             if ((Image*)aImageRef != nullptr)
             {
                 TodHesitationTrace("Load Image '%s'", theName.c_str());
-                TodAddImageToMap(&aImageRef, theName);
+                TodAGLImageToMap(&aImageRef, theName);
                 TodMarkImageForSanding((Image*)aImageRef);
                 *theImage = (Image*)aImageRef;
                 return true;

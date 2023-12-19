@@ -8,13 +8,12 @@
 #include "../GameConstants.h"
 #include "graphics/Font.h"
 #include "misc/Debug.h"
-#include "graphics/DDImage.h"
+#include "graphics/GLImage.h"
 #include "graphics/Graphics.h"
+#include "graphics/GLInterface.h"
 #include "graphics/ImageFont.h"
 #include "misc/PerfTimer.h"
 #include "misc/SexyMatrix.h"
-#include "graphics/DDInterface.h"
-#include "graphics/D3DInterface.h"
 
 //0x510BC0
 void Tod_SWTri_AddAllDrawTriFuncs()
@@ -734,16 +733,11 @@ void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform,
 	{
 		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, theClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
 	}
-	else if (DDImage::Check3D(g->mDestImage))
-	{
-		theImage->mDrawn = true;
-		D3DInterface* aInterface = ((DDImage*)g->mDestImage)->mDDInterface->mD3DInterface;
-		aInterface->BltTransformed(theImage, nullptr, theColor, theDrawMode, theSrcRect, theTransform, g->mLinearBlend, aOffsetX, aOffsetY, true);
-	}
 	else
 	{
-		Rect aBufFixClipRect(0, 0, BOARD_WIDTH + 1, BOARD_HEIGHT + 1);
-		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, aBufFixClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
+		theImage->mDrawn = true;
+		GLInterface* aInterface = ((GLImage*)g->mDestImage)->mGLInterface;
+		aInterface->BltTransformed(theImage, nullptr, theColor, theDrawMode, theSrcRect, theTransform, g->mLinearBlend, aOffsetX, aOffsetY, true);
 	}
 
 	gTodTriangleDrawAdditive = false;
@@ -1109,13 +1103,13 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 	return true;
 }
 
-void TodAddImageToMap(SharedImageRef* theImage, const std::string& thePath)
+void TodAGLImageToMap(SharedImageRef* theImage, const std::string& thePath)
 { 
-	((TodResourceManager*)gSexyAppBase->mResourceManager)->AddImageToMap(theImage, thePath);
+	((TodResourceManager*)gSexyAppBase->mResourceManager)->AGLImageToMap(theImage, thePath);
 }
 
 //0x513230
-void TodResourceManager::AddImageToMap(SharedImageRef* theImage, const std::string& thePath)
+void TodResourceManager::AGLImageToMap(SharedImageRef* theImage, const std::string& thePath)
 {
 	TOD_ASSERT(mImageMap.find(thePath) == mImageMap.end());
 
@@ -1147,7 +1141,7 @@ bool TodResourceManager::TodLoadNextResource()
 		case ResType_Image:
 		{
 			ImageRes* anImageRes = (ImageRes*)aRes;
-			if ((DDImage*)anImageRes->mImage != nullptr)
+			if ((GLImage*)anImageRes->mImage != nullptr)
 			{
 				mCurResGroupListItr++;
 				continue;

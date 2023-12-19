@@ -8,7 +8,7 @@
 	if (!LockSurface())
 		return;
 
-	uchar* aSrcRLAdditiveData = aMemoryImage->GetRLAdditiveData(mDDInterface);
+	uchar* aSrcRLAdditiveData = aMemoryImage->GetRLAdditiveData(mGLInterface);
 
 	if (mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 	{
@@ -20,17 +20,17 @@
 		ulong aBMask = mLockedSurfaceDesc.ddpfPixelFormat.dwBBitMask;
 		
 		// unused
-		// int aMaxR = (1<<mDDInterface->mRedBits) - 1;
-		// int aMaxG = (1<<mDDInterface->mGreenBits) - 1;
-		// int aMaxB = (1<<mDDInterface->mBlueBits) - 1;
+		// int aMaxR = (1<<mGLInterface->mRedBits) - 1;
+		// int aMaxG = (1<<mGLInterface->mGreenBits) - 1;
+		// int aMaxB = (1<<mGLInterface->mBlueBits) - 1;
 
-		int aRedShift = mDDInterface->mRedShift;
-		int aGreenShift = mDDInterface->mGreenShift;
-		int aBlueShift = mDDInterface->mBlueShift;
+		int aRedShift = mGLInterface->mRedShift;
+		int aGreenShift = mGLInterface->mGreenShift;
+		int aBlueShift = mGLInterface->mBlueShift;
 
-		int* aMaxRedTable = mDDInterface->mRedAddTable;
-		int* aMaxGreenTable = mDDInterface->mGreenAddTable;
-		int* aMaxBlueTable = mDDInterface->mBlueAddTable;
+		int* aMaxRedTable = mGLInterface->mRedAddTable;
+		int* aMaxGreenTable = mGLInterface->mGreenAddTable;
+		int* aMaxBlueTable = mGLInterface->mBlueAddTable;
 
 		if (theColor == Color::White)
 		{

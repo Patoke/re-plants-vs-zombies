@@ -15,17 +15,17 @@
 	if (!LockSurface())
 		return;
 
-	int* aMaxRedTable = mDDInterface->mRedAddTable;
-	int* aMaxGreenTable = mDDInterface->mGreenAddTable;
-	int* aMaxBlueTable = mDDInterface->mBlueAddTable;
+	int* aMaxRedTable = mGLInterface->mRedAddTable;
+	int* aMaxGreenTable = mGLInterface->mGreenAddTable;
+	int* aMaxBlueTable = mGLInterface->mBlueAddTable;
 
-	int aRedShift = mDDInterface->mRedShift;
-	int aGreenShift = mDDInterface->mGreenShift;
-	int aBlueShift = mDDInterface->mBlueShift;
+	int aRedShift = mGLInterface->mRedShift;
+	int aGreenShift = mGLInterface->mGreenShift;
+	int aBlueShift = mGLInterface->mBlueShift;
 
-	int aRedRightShift = 32 - mDDInterface->mRedBits;
-	int aGreenRightShift = 24 - mDDInterface->mGreenBits;
-	int aBlueRightShift = 16 - mDDInterface->mBlueBits;
+	int aRedRightShift = 32 - mGLInterface->mRedBits;
+	int aGreenRightShift = 24 - mGLInterface->mGreenBits;
+	int aBlueRightShift = 16 - mGLInterface->mBlueBits;
 
 	ulong aRMask = mLockedSurfaceDesc.ddpfPixelFormat.dwRBitMask;
 	ulong aGMask = mLockedSurfaceDesc.ddpfPixelFormat.dwGBitMask;

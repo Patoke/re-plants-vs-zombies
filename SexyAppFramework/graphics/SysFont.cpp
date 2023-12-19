@@ -1,11 +1,10 @@
 #include "SysFont.h"
-#include "DDImage.h"
+#include "GLImage.h"
 #include "SexyAppBase.h"
 #include "Graphics.h"
 #include "ImageFont.h"
 #include "MemoryImage.h"
-#include "D3DInterface.h"
-#include "graphics/DDInterface.h"
+#include "graphics/GLInterface.h"
 #include "widget/WidgetManager.h"
 #include <stdlib.h>
 
@@ -188,20 +187,20 @@ int	SysFont::StringWidth(const SexyString& theString)
 
 void SysFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect)
 {
-	DDImage* aDDImage = dynamic_cast<DDImage*>(g->mDestImage);
+	GLImage* aGLImage = dynamic_cast<GLImage*>(g->mDestImage);
 
-	if (aDDImage != NULL)
+	if (aGLImage != NULL)
 	{
-		LPDIRECTDRAWSURFACE aSurface = aDDImage->GetSurface();
+		LPDIRECTDRAWSURFACE aSurface = aGLImage->GetSurface();
 		if (aSurface != NULL)
 		{
 			HDC aDC;
 
-			if (aDDImage->mLockCount > 0)
-				aDDImage->mSurface->Unlock(NULL);
+			if (aGLImage->mLockCount > 0)
+				aGLImage->mSurface->Unlock(NULL);
 
 			if ((g->mDestImage == gSexyAppBase->mWidgetManager->mImage) && (gSexyAppBase->Is3DAccelerated()))
-				gSexyAppBase->mDDInterface->mD3DInterface->Flush();				
+				gSexyAppBase->mGLInterface->Flush();				
 			
 			if (aSurface->GetDC(&aDC) == DD_OK)
 			{				
@@ -223,11 +222,11 @@ void SysFont::DrawString(Graphics* g, int theX, int theY, const SexyString& theS
 
 				::SelectObject(aDC, anOldFont);
 				aSurface->ReleaseDC(aDC);
-				aDDImage->DeleteAllNonSurfaceData();				
+				aGLImage->DeleteAllNonSurfaceData();				
 			}			
 
-			if (aDDImage->mLockCount > 0)
-				aDDImage->mSurface->Lock(NULL, &aDDImage->mLockedSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL);			
+			if (aGLImage->mLockCount > 0)
+				aGLImage->mSurface->Lock(NULL, &aGLImage->mLockedSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL);			
 		}
 	}
 	else if (g->mDestImage != &Graphics::mStaticImage) // DrawString can be called when not drawing onto an image.

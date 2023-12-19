@@ -1,7 +1,7 @@
 #include "Graphics.h"
 #include "Image.h"
 #include "Font.h"
-#include "DDImage.h"
+#include "GLImage.h"
 #include "MemoryImage.h"
 #include "misc/Rect.h"
 #include "misc/Debug.h"

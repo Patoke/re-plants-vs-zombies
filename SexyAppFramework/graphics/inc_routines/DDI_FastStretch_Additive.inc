@@ -2,13 +2,13 @@
 	if (!LockSurface())
 		return;	
 	
-	int* aMaxRedTable = mDDInterface->mRedAddTable;
-	int* aMaxGreenTable = mDDInterface->mGreenAddTable;
-	int* aMaxBlueTable = mDDInterface->mBlueAddTable;
+	int* aMaxRedTable = mGLInterface->mRedAddTable;
+	int* aMaxGreenTable = mGLInterface->mGreenAddTable;
+	int* aMaxBlueTable = mGLInterface->mBlueAddTable;
 	
-	int aRedShift = mDDInterface->mRedShift;
-	int aGreenShift = mDDInterface->mGreenShift;
-	int aBlueShift = mDDInterface->mBlueShift;
+	int aRedShift = mGLInterface->mRedShift;
+	int aGreenShift = mGLInterface->mGreenShift;
+	int aBlueShift = mGLInterface->mBlueShift;
 	
 	int aFPSrcY = theSrcRect.mY * 0x10000;
 

@@ -4,7 +4,7 @@
 #include "EffectSystem.h"
 #include "../GameConstants.h"
 #include "graphics/Graphics.h"
-#include "graphics/D3DInterface.h"
+#include "graphics/GLInterface.h"
 
 int gParticleDefCount;                      // [0x6A9F08]
 TodParticleDefinition* gParticleDefArray;   // [0x6A9F0C]

@@ -1,7 +1,6 @@
 #include "MemoryImage.h"
 
-#include "D3DInterface.h"
-#include "DDInterface.h"
+#include "GLInterface.h"
 #include "SexyAppBase.h"
 #include "Graphics.h"
 #include "NativeDisplay.h"
@@ -54,7 +53,7 @@ MemoryImage::MemoryImage(const MemoryImage& theMemoryImage) :
 
 	if ((theMemoryImage.mBits == NULL) && (theMemoryImage.mColorTable == NULL))
 	{
-		// Must be a DDImage with only a DDSurface
+		// Must be a GLImage with only a DDSurface
 		aNonConstMemoryImage->GetBits();
 		deleteBits = true;
 	}
@@ -1126,7 +1125,7 @@ void MemoryImage::PurgeBits()
 		if ((mBits == NULL) && (mColorIndices == NULL))
 			return;
 		
-		GetNativeAlphaData(gSexyAppBase->mDDInterface);		
+		GetNativeAlphaData(gSexyAppBase->mGLInterface);		
 	}		
 	
 	delete [] mBits;
@@ -1256,7 +1255,7 @@ ulong* MemoryImage::GetBits()
 		}
 		else if (mNativeAlphaData != NULL)
 		{
-			NativeDisplay* aDisplay = gSexyAppBase->mDDInterface;
+			NativeDisplay* aDisplay = gSexyAppBase->mGLInterface;
 
 			const int rMask = aDisplay->mRedMask;
 			const int gMask = aDisplay->mGreenMask;
@@ -1283,7 +1282,7 @@ ulong* MemoryImage::GetBits()
 				*(aDestPtr++) = (r << 16) | (g << 8) | (b) | (anAlpha << 24);
 			}
 		}
-		else if ((mD3DData == NULL) || (!mApp->mDDInterface->mD3DInterface->RecoverBits(this)))
+		else if ((mD3DData == NULL) || (!mApp->mGLInterface->RecoverBits(this)))
 		{
 			ZeroMemory(mBits, aSize*sizeof(ulong));
 		}

@@ -32,6 +32,14 @@
 #include <glfw/glfw3.h>
 #include <glfw/glfw3native.h>
 
+#if INTPTR_MAX == INT32_MAX
+#define IS_X64 0
+#elif INTPTR_MAX == INT64_MAX
+#define IS_X64 1
+#else
+#error "Architecture not supported, please create an issue in the repository"
+#endif
+
 // fallback if NOMINMAX fails (somehow?)
 #undef min
 #undef max

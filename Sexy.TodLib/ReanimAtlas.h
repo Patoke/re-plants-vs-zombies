@@ -40,7 +40,7 @@ public:
 
     void                            ReanimAtlasCreate(ReanimatorDefinition* theReanimDef);
     void                            ReanimAtlasDispose();
-    /*inline*/ void                 AddImage(Image* theImage);
+    /*inline*/ void                 AGLImage(Image* theImage);
     /*inline*/ int                  FindImage(Image* theImage);
     bool                            ImageFits(int theImageCount, const Rect& rectTest, int theMaxWidth);
     bool                            ImageFindPlaceOnSide(ReanimAtlasImage* theAtlasImageToPlace, int theImageCount, int theMaxWidth, bool theToRight);
