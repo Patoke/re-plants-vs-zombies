@@ -22,7 +22,7 @@
 	ulong* aNewHorzPixels = new ulong[aTempDestWidth*aSrcHeightI*4];
 
 	ulong* aNewHorzPixelsEnd = aNewHorzPixels + (aTempDestWidth*aSrcHeightI*4);
-
+	(void)aNewHorzPixelsEnd; // unused in Release mode
 	ZeroMemory(aNewHorzPixels, aTempDestWidth*aSrcHeightI*4*4);
 
 	int aSrcImageWidth = theImage->GetWidth();
@@ -135,6 +135,7 @@
 	ulong* aNewPixels = new ulong[aTempDestWidth*aTempDestHeight*4];
 
 	ulong* aNewPixelsEnd = aNewPixels + (aTempDestWidth*aTempDestHeight*4);
+	(void)aNewPixelsEnd; // Unused in Release mode
 
 	ZeroMemory(aNewPixels, aTempDestWidth*aTempDestHeight*4*4);
 

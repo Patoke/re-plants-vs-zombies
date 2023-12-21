@@ -1,6 +1,8 @@
+#include "TodCommon.h"
 #include "TodParticle.h"
 #include "Trail.h"
 #include <assert.h>
+#include <cstring>
 #include <stddef.h>
 #include "TodDebug.h"
 #include "Definition.h"
@@ -244,11 +246,11 @@ void* ReanimatorDefinitionConstructor(void* thePointer)
 
 // @Patoke implement
 unsigned int DefGetSizeString(char** theValue) {
-    return strlen(*theValue) + sizeof(intptr_t);
+    return strlen(*theValue) + sizeof(unsigned int);
 }
 
 unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, DefMap* theDefMap) {
-    unsigned int aResult = theValue->mArrayCount * theDefMap->mDefSize + sizeof(intptr_t);
+    unsigned int aResult = theValue->mArrayCount * theDefMap->mDefSize + sizeof(unsigned int);
     for (int i = 0; theValue->mArrayCount > i; ++i) {
         aResult += DefinitionGetDeepSize(theDefMap, (void*)((intptr_t)theValue->mArrayData + i * theDefMap->mDefSize));
     }
@@ -256,11 +258,14 @@ unsigned int DefinitionGetArraySize(DefinitionArrayDef* theValue, DefMap* theDef
 }
 
 unsigned int DefGetSizeFloatTrack(FloatParameterTrack* theValue) {
-    return sizeof(FloatParameterTrackNode) * theValue->mCountNodes + sizeof(intptr_t);
+    return sizeof(FloatParameterTrackNode) * theValue->mCountNodes + sizeof(unsigned int);
 }
 
-unsigned int DefGetSizeImage(Image* theValue) {
-    return sizeof(theValue);
+unsigned int DefGetSizeImage(Image** theValue) {
+    std::string aImagePath{};
+    if (*theValue)
+        TodFindImagePath(*theValue, &aImagePath);
+    return aImagePath.length() + sizeof(unsigned int);
 }
 
 unsigned int DefGetSizeFont(_Font** theValue) {
@@ -285,7 +290,7 @@ unsigned int DefinitionGetDeepSize(DefMap* theDefMap, void* theDefinition) {
             aResult += DefGetSizeFloatTrack((FloatParameterTrack*)aDest);
             break;
         case DefFieldType::DT_IMAGE:
-            aResult += DefGetSizeImage((Image*)aDest);
+            aResult += DefGetSizeImage((Image**)aDest);
             break;
         case DefFieldType::DT_FONT:
             aResult += DefGetSizeFont((_Font**)aDest);
@@ -328,6 +333,7 @@ bool DefinitionLoadImage(Image** theImage, const SexyString& theName)
         return true;
     }
 
+    // This for loop's performance is HORRIBLE
     // 从可能的贴图路径中手动加载贴图
     for (const DefLoadResPath& aLoadResPath : gDefLoadResPaths)
     {
@@ -364,7 +370,7 @@ bool DefinitionLoadXML(const SexyString& theFileName, DefMap* theDefMap, void* t
 }
 
 //0x444020
-bool DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefMap* theDefMap)
+inline bool DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefMap* theDefMap)
 {
     int aDefSize;
     SMemR(theReadPtr, &aDefSize, sizeof(int));  // 先读取一个整数表示 theDefMap 描述的定义结构类的大小
@@ -377,17 +383,16 @@ bool DefReadFromCacheArray(void*& theReadPtr, DefinitionArrayDef* theArray, DefM
         return true;
 
     int aArraySize = aDefSize * theArray->mArrayCount;
-    void* pData = DefinitionAlloc(aArraySize);  // 申请内存并初始化填充为 0
-    theArray->mArrayData = pData;
-    SMemR(theReadPtr, pData, aArraySize);  // 仍然是粗略读取全部数据，然后再根据 theDefMap 的结构字段数组修复指针
+    theArray->mArrayData = DefinitionAlloc(aArraySize);  // 申请内存并初始化填充为 0
+    SMemR(theReadPtr, theArray->mArrayData, aArraySize);  // 仍然是粗略读取全部数据，然后再根据 theDefMap 的结构字段数组修复指针
     for (int i = 0; i < theArray->mArrayCount; i++)
-        if (!DefMapReadFromCache(theReadPtr, theDefMap, (void*)((intptr_t)pData + theDefMap->mDefSize * i)))  // 最后一个参数表示 pData[i]
+        if (!DefMapReadFromCache(theReadPtr, theDefMap, (void*)((intptr_t)theArray->mArrayData + theDefMap->mDefSize * i)))  // 最后一个参数表示 pData[i]
             return false;
     return true;
 }
 
 //0x4440B0
-bool DefReadFromCacheFloatTrack(void*& theReadPtr, FloatParameterTrack* theTrack)
+inline bool DefReadFromCacheFloatTrack(void*& theReadPtr, FloatParameterTrack* theTrack)
 {
     int& aCountNodes = theTrack->mCountNodes;
     SMemR(theReadPtr, &aCountNodes, sizeof(int));
@@ -402,7 +407,7 @@ bool DefReadFromCacheFloatTrack(void*& theReadPtr, FloatParameterTrack* theTrack
 }
 
 //0x444110
-bool DefReadFromCacheString(void*& theReadPtr, char** theString)
+inline bool DefReadFromCacheString(void*& theReadPtr, char** theString)
 {
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));
@@ -420,7 +425,7 @@ bool DefReadFromCacheString(void*& theReadPtr, char** theString)
 }
 
 //0x444180
-bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
+inline bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
 {
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取贴图标签字符数组的长度
@@ -433,7 +438,7 @@ bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
 }
 
 //0x444220
-bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
+inline bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
 {
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取字体标签字符数组的长度
@@ -567,60 +572,58 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
     PerfTimer aTimer;
     aTimer.Start();
     PFILE* pFile = p_fopen(theCompiledFilePath.c_str(), _S("rb"));
-    if (pFile)
-    {
-        p_fseek(pFile, 0, 2);  // 将读取位置的指针移动至文件末尾
-        size_t aCompressedSize = p_ftell(pFile);  // 此时获取到的偏移量即为整个文件的大小
-        p_fseek(pFile, 0, 0);  // 再把读取位置的指针移回文件开头
-        void* aCompressedBuffer = DefinitionAlloc(aCompressedSize);
-        // 读取文件，并判断实际读取的大小是否为完整的文件大小，若不等则判断为读取失败
-        bool aReadCompressedFailed = p_fread(aCompressedBuffer, sizeof(char), aCompressedSize, pFile) != aCompressedSize;
-        p_fclose(pFile);  // 关闭资源文件流并释放 pFile 占用的内存
-        if (aReadCompressedFailed)  // 判断是否读取成功
-        {
-            TodTrace(_S("Failed to read compiled file: %s\n"), theCompiledFilePath.c_str());
-            free(aCompressedBuffer);
-        }
-        else
-        {
-            size_t aUncompressedSize;
-            void* aUncompressedBuffer = DefinitionUncompressCompiledBuffer(aCompressedBuffer, aCompressedSize, aUncompressedSize, theCompiledFilePath);
-            delete[] (char *)aCompressedBuffer;
-            if (aUncompressedBuffer)
-            {
-                uint aDefHash = DefinitionCalcHash(theDefMap);  // 计算 CRC 校验值，后将用于检测数据的完整性
-                if (aUncompressedSize < theDefMap->mDefSize + sizeof(uint))  // 检测解压数据的长度是否足够“定义数据 + 一个校验值记录数据”的长度
-                    TodTrace(_S("Compiled file size too small: %s\n"), theCompiledFilePath.c_str());
-                else
-                {
-                    // 复制一份解压数据的指针用于读取时移动，原指针后续要用于计算读取区域大小及 delete[] 操作
-                    void* aBufferPtr = aUncompressedBuffer;
-                    uint aCashHash;
-                    SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // 读取记录的 CRC 校验值
-                    if (aCashHash != aDefHash)  // 判断校验值是否一致，若不一致则说明数据发生错误
-                        TodTrace(_S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
-                    
-                    else
-                    {
-                        // ☆ 正式开始读取定义数据 ☆
-                        // 初次粗略读取 theDefinition 原类型的定义数据，囫囵吞枣地将所有记录的数据全部读入到 theDefinition 中
-                        // 此时 theDefinition 原本的非指针类型的数据将全部被正确读取，但其指针类型的变量会被读取并赋值为野指针
-                        // 这些野指针的问题后续将会在 DefMapReadFromCache() 中借助相应 DefField 的 mExtraData 进行修复
-                        SMemR(aBufferPtr, theDefinition, theDefMap->mDefSize);
-                        // 修复野指针及标志型数据，并保存是否成功的结果，后续作为返回值
-                        bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
-                        size_t aReadMemSize = (uintptr_t)aBufferPtr - (uintptr_t)aUncompressedBuffer;
-                        delete[] (char *)aUncompressedBuffer;
-                        if (aResult && aReadMemSize != aUncompressedSize)
-                            TodTrace(_S("Compiled file wrong size: %s\n"), theCompiledFilePath.c_str());
-                        return aResult;
-                    }
-                }
-            }
-            delete[] (char *)aUncompressedBuffer;
-        }
+    if (!pFile) return false;
+
+    p_fseek(pFile, 0, 2);  // 将读取位置的指针移动至文件末尾
+    size_t aCompressedSize = p_ftell(pFile);  // 此时获取到的偏移量即为整个文件的大小
+    p_fseek(pFile, 0, 0);  // 再把读取位置的指针移回文件开头
+    void* aCompressedBuffer = DefinitionAlloc(aCompressedSize);
+    // 读取文件，并判断实际读取的大小是否为完整的文件大小，若不等则判断为读取失败
+    bool aReadCompressedFailed = p_fread(aCompressedBuffer, sizeof(char), aCompressedSize, pFile) != aCompressedSize;
+    p_fclose(pFile);  // 关闭资源文件流并释放 pFile 占用的内存
+    if (aReadCompressedFailed) { // 判断是否读取成功
+        TodTrace(_S("Failed to read compiled file: %s\n"), theCompiledFilePath.c_str());
+        free(aCompressedBuffer);
+        return false;
     }
-    return false;
+
+    size_t aUncompressedSize;
+    void* aUncompressedBuffer = DefinitionUncompressCompiledBuffer(aCompressedBuffer, aCompressedSize, aUncompressedSize, theCompiledFilePath);
+    delete[] (char *)aCompressedBuffer;
+    if (!aUncompressedBuffer) return false;
+    
+    uint aDefHash = DefinitionCalcHash(theDefMap);  // 计算 CRC 校验值，后将用于检测数据的完整性
+    if (aUncompressedSize < theDefMap->mDefSize + sizeof(uint)) {
+        TodTrace(_S("Compiled file size too small: %s\n"), theCompiledFilePath.c_str());
+        delete[] (char *)aUncompressedBuffer;
+        return false;
+    } // 检测解压数据的长度是否足够“定义数据 + 一个校验值记录数据”的长度
+
+
+    // 复制一份解压数据的指针用于读取时移动，原指针后续要用于计算读取区域大小及 delete[] 操作
+    void* aBufferPtr = aUncompressedBuffer;
+    uint aCashHash;
+    SMemR(aBufferPtr, &aCashHash, sizeof(uint));  // 读取记录的 CRC 校验值
+    if (aCashHash != aDefHash) {
+        TodTrace(_S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
+        delete[] (char *)aUncompressedBuffer;
+        return false;
+    } // 判断校验值是否一致，若不一致则说明数据发生错误
+
+    // ☆ 正式开始读取定义数据 ☆
+    // 初次粗略读取 theDefinition 原类型的定义数据，囫囵吞枣地将所有记录的数据全部读入到 theDefinition 中
+    // 此时 theDefinition 原本的非指针类型的数据将全部被正确读取，但其指针类型的变量会被读取并赋值为野指针
+    // 这些野指针的问题后续将会在 DefMapReadFromCache() 中借助相应 DefField 的 mExtraData 进行修复
+    SMemR(aBufferPtr, theDefinition, theDefMap->mDefSize);
+    // 修复野指针及标志型数据，并保存是否成功的结果，后续作为返回值
+    bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
+    size_t aReadMemSize = (uintptr_t)aBufferPtr - (uintptr_t)aUncompressedBuffer;
+    delete[] (char *)aUncompressedBuffer;
+    if (aResult && aReadMemSize != aUncompressedSize) {
+        TodTrace(_S("Compiled file wrong size: %s\n"), theCompiledFilePath.c_str());
+        return false;
+    }
+    return aResult;
 }
 
 //0x444770
@@ -1173,46 +1176,50 @@ bool DefinitionLoadMap(XMLParser* theXmlParser, DefMap* theDefMap, void* theDefi
 }
 
 // @Patoke implemented
-void DefWriteToCacheString(void* theWritePtr, char** theValue) {
+void DefWriteToCacheString(void*& theWritePtr, char** theValue) {
     unsigned int aStringSize = strlen(*theValue);
     SMemW(theWritePtr, &aStringSize, sizeof(unsigned int));
     if (aStringSize > 0)
-        SMemW(theWritePtr, theValue, aStringSize);
+        SMemW(theWritePtr, *theValue, aStringSize);
 }
 
-void DefWriteToCacheArray(void* theWritePtr, DefinitionArrayDef* theValue, DefMap* theDefMap) {
+void DefWriteToCacheArray(void*& theWritePtr, DefinitionArrayDef* theValue, DefMap* theDefMap) {
 	SMemW(theWritePtr, &theDefMap->mDefSize, sizeof(unsigned int));
 	SMemW(theWritePtr, theValue->mArrayData, theDefMap->mDefSize * theValue->mArrayCount);
-	for (int i = 0; theValue->mArrayCount > i; ++i)
+	for (int i = 0; i < theValue->mArrayCount; ++i)
 		DefMapWriteToCache(theWritePtr, theDefMap, (void*)((intptr_t)theValue->mArrayData + i * theDefMap->mDefSize));
 }
 
-void DefWriteToCacheFloatTrack(void* theWritePtr, FloatParameterTrack* theValue) {
+void DefWriteToCacheFloatTrack(void*& theWritePtr, FloatParameterTrack* theValue) {
     SMemW(theWritePtr, &theValue->mCountNodes, sizeof(unsigned int));
     if (theValue->mCountNodes > 0)
         SMemW(theWritePtr, theValue->mNodes, theValue->mCountNodes * sizeof(FloatParameterTrackNode));
 }
 
-void DefWriteToCacheImage(void* theWritePtr, Image* theValue) {
-    ResourceId aImageId{};
-    if (theValue)
-        aImageId = GetIdByImage(theValue);
-    else
-        aImageId = (ResourceId)(0xFFFFFFFF); // -1
-    SMemW(theWritePtr, &aImageId, sizeof(unsigned int));
+void DefWriteToCacheImage(void*& theWritePtr, Image** theValue) {
+    std::string aImageName{};
+    if (*theValue)
+        TodFindImagePath(*theValue, &aImageName);
+
+    unsigned int aImageSize = aImageName.length();
+    SMemW(theWritePtr, &aImageSize, sizeof(unsigned int));
+    if (aImageSize > 0)
+        SMemW(theWritePtr, aImageName.c_str(), aImageSize);
 }
 
-void DefWriteToCacheFont(void* theWritePtr, _Font** theValue) {
+void DefWriteToCacheFont(void*& theWritePtr, _Font** theValue) {
     std::string aFontName{};
-    if (*theValue)
+    if (*theValue) {
         TodFindFontPath(*theValue, &aFontName);
+    }
+
     unsigned int aFontSize = aFontName.length();
     SMemW(theWritePtr, &aFontSize, sizeof(unsigned int));
     if (aFontSize > 0)
         SMemW(theWritePtr, aFontName.c_str(), aFontSize);
 }
 
-void DefMapWriteToCache(void* theWritePtr, DefMap* theDefMap, void* theDefinition) {
+void DefMapWriteToCache(void*& theWritePtr, DefMap* theDefMap, void* theDefinition) {
 	for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++) {
 		void* aDest = (void*)((intptr_t)theDefinition + aField->mFieldOffset);
 		switch (aField->mFieldType) {
@@ -1226,13 +1233,13 @@ void DefMapWriteToCache(void* theWritePtr, DefMap* theDefMap, void* theDefinitio
 			DefWriteToCacheFloatTrack(theWritePtr, (FloatParameterTrack*)aDest);
 			break;
 		case DefFieldType::DT_IMAGE:
-			DefWriteToCacheImage(theWritePtr, (Image*)aDest);
+			DefWriteToCacheImage(theWritePtr, (Image**)aDest);
 			break;
 		case DefFieldType::DT_FONT:
 			DefWriteToCacheFont(theWritePtr, (_Font**)aDest);
 			break;
 		default:
-			continue;
+			break;
 		}
 	}
 }
@@ -1250,16 +1257,16 @@ void* DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSi
 bool DefinitionWriteCompiledFile(const SexyString& theCompiledFilePath, DefMap* theDefMap, void* theDefinition) {
     unsigned int aCompressedSize = 0;
     unsigned int aDefSize = DefinitionGetSize(theDefMap, theDefinition) + sizeof(unsigned int);
-    void* aDef = DefinitionAlloc(aDefSize);
+    void* aDefBasePtr = DefinitionAlloc(aDefSize);
+    void* aDef = aDefBasePtr;
     uint aDefHash = DefinitionCalcHash(theDefMap);
 
     SMemW(aDef, &aDefHash, sizeof(uint));
     SMemW(aDef, theDefinition, theDefMap->mDefSize);
     DefMapWriteToCache(aDef, theDefMap, theDefinition);
-    void* aCompressedDef = DefinitionCompressCompiledBuffer(aDef, aDefSize, &aCompressedSize);
+    void* aCompressedDef = DefinitionCompressCompiledBuffer(aDefBasePtr, aDefSize, &aCompressedSize);
 
-    // @Patoke todo: intentionally causing a memory leak, this causes a critical breakpoint when executed (softlock?)
-    delete[] (uint *)aDef; // already compressed, no need to keep this instance alive
+    delete[] (uint *)aDefBasePtr; // already compressed, no need to keep this instance alive
 
     std::string aFilePath = GetFileDir(theCompiledFilePath);
     MkDir(aFilePath);
@@ -1289,8 +1296,7 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString& th
     else if (!DefinitionLoadMap(&aXMLParser, theDefMap, theDefinition))
         return false;
     
-    DefinitionWriteCompiledFile(theCompiledFilePath, theDefMap, theDefinition);
-    return true;
+    return DefinitionWriteCompiledFile(theCompiledFilePath, theDefMap, theDefinition);
 }
 
 //0x4447F0 : (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC

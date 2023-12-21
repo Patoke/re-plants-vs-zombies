@@ -792,6 +792,7 @@ void SexyAppBase::DemoRegisterHandle(HANDLE theHandle)
 		//  we can match up the auto-incrementing numbers with the handle
 		//  later on, as handles may not be the same between executions
 		std::pair<HandleToIntMap::iterator, bool> aPair = mHandleToIntMap.insert(HandleToIntMap::value_type(theHandle, mCurHandleNum));
+		(void)aPair; // unused in Release mode
 		DBG_ASSERT(aPair.second);
 		mCurHandleNum++;
 	}
@@ -889,6 +890,7 @@ void SexyAppBase::DemoAssertIntEqual(int theInt)
 		DBG_ASSERTE(mDemoCmdNum == DEMO_ASSERT_INT_EQUAL);
 
 		int anInt = mDemoBuffer.ReadLong();
+		(void)anInt; // unused in Release mode
 		DBG_ASSERTE(anInt == theInt);
 	}
 	else if (mRecordingDemoBuffer)
@@ -3808,7 +3810,8 @@ int aNumBigMoveMessages = 0;
 int aNumSmallMoveMessages = 0;
 int aNumTimerMessages = 0;
 
-bool SexyAppBase::PrepareDemoCommand(bool required)
+// Required unused in release mode
+bool SexyAppBase::PrepareDemoCommand([[maybe_unused]] bool required)
 {
 	if (mDemoNeedsCommand)
 	{
@@ -6121,101 +6124,52 @@ void SexyAppBase::Init()
 		}
 	}
 
-	 
 	srand(GetTickCount());
 
-	if (CheckFor98Mill())
-	{
-		mIsWideWindow = false;
+	mIsWideWindow = sizeof(SexyChar) == sizeof(wchar_t);
 
-		WNDCLASSA wc;
-		wc.style = CS_DBLCLKS;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hbrBackground = NULL;
-		wc.hCursor = NULL;
-		wc.hIcon = ::LoadIconA(gHInstance, "IDI_MAIN_ICON");
-		wc.hInstance = gHInstance;
-		wc.lpfnWndProc = WindowProc;
-		wc.lpszClassName = "MainWindow";
-		wc.lpszMenuName = NULL;	
-		bool success = RegisterClassA(&wc) != 0;
-		DBG_ASSERTE(success);
-		
-		wc.style = 0;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hbrBackground = NULL;
-		wc.hCursor = NULL;
-		wc.hIcon = NULL;
-		wc.hInstance = gHInstance;
-		wc.lpfnWndProc = WindowProc;
-		wc.lpszClassName = "InvisWindow";
-		wc.lpszMenuName = NULL;	
-		success = RegisterClassA(&wc) != 0;
-		DBG_ASSERTE(success);
+	WNDCLASS wc;
+	wc.style = CS_DBLCLKS;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hbrBackground = NULL;
+	wc.hCursor = NULL;
+	wc.hIcon = ::LoadIconA(gHInstance, "IDI_MAIN_ICON");
+	wc.hInstance = gHInstance;
+	wc.lpfnWndProc = WindowProc;
+	wc.lpszClassName = _S("MainWindow");
+	wc.lpszMenuName = NULL;	
+	bool success = RegisterClass(&wc) != 0;
+	(void)success; // success unused in release mode
+	DBG_ASSERTE(success);
 
-		mInvisHWnd = CreateWindowExA(
-				0,
-				"InvisWindow",
-				SexyStringToStringFast(mTitle).c_str(),
-				0,
-				0,
-				0,
-				0,
-				0,
-				NULL,
-				NULL,
-				gHInstance,
-				0);	
-		SetWindowLongPtr(mInvisHWnd, GWLP_USERDATA, (intptr_t) this);
-	}
-	else
-	{
-		mIsWideWindow = sizeof(SexyChar) == sizeof(wchar_t);
+	wc.style = 0;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hbrBackground = NULL;
+	wc.hCursor = NULL;
+	wc.hIcon = NULL;
+	wc.hInstance = gHInstance;
+	wc.lpfnWndProc = WindowProc;
+	wc.lpszClassName = _S("InvisWindow");
+	wc.lpszMenuName = NULL;	
+	success = RegisterClass(&wc) != 0;
+	DBG_ASSERTE(success);
 
-		WNDCLASS wc;
-		wc.style = CS_DBLCLKS;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hbrBackground = NULL;
-		wc.hCursor = NULL;
-		wc.hIcon = ::LoadIconA(gHInstance, "IDI_MAIN_ICON");
-		wc.hInstance = gHInstance;
-		wc.lpfnWndProc = WindowProc;
-		wc.lpszClassName = _S("MainWindow");
-		wc.lpszMenuName = NULL;	
-		bool success = RegisterClass(&wc) != 0;
-		DBG_ASSERTE(success);
-		
-		wc.style = 0;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hbrBackground = NULL;
-		wc.hCursor = NULL;
-		wc.hIcon = NULL;
-		wc.hInstance = gHInstance;
-		wc.lpfnWndProc = WindowProc;
-		wc.lpszClassName = _S("InvisWindow");
-		wc.lpszMenuName = NULL;	
-		success = RegisterClass(&wc) != 0;
-		DBG_ASSERTE(success);
-
-		mInvisHWnd = CreateWindowEx(
-				0,
-				_S("InvisWindow"),
-				mTitle.c_str(),
-				0,
-				0,
-				0,
-				0,
-				0,
-				NULL,
-				NULL,
-				gHInstance,
-				0);	
-		SetWindowLongPtr(mInvisHWnd, GWLP_USERDATA, (intptr_t) this);
-	}
+	mInvisHWnd = CreateWindowEx(
+			0,
+			_S("InvisWindow"),
+			mTitle.c_str(),
+			0,
+			0,
+			0,
+			0,
+			0,
+			NULL,
+			NULL,
+			gHInstance,
+			0);	
+	SetWindowLongPtr(mInvisHWnd, GWLP_USERDATA, (intptr_t) this);
 		
 	mHandCursor = CreateCursor(gHInstance, 11, 4, 32, 32, gFingerCursorData, gFingerCursorData+sizeof(gFingerCursorData)/2); 
 	mDraggingCursor = CreateCursor(gHInstance, 15, 10, 32, 32, gDraggingCursorData, gDraggingCursorData+sizeof(gDraggingCursorData)/2); 
@@ -6399,7 +6353,7 @@ Sexy::DDImage* SexyAppBase::GetImage(const std::string& theFileName, bool commit
 	
 	if (aLoadedImage == NULL)
 		return NULL;	
-
+	
 	DDImage* anImage = new DDImage(mDDInterface);
 	anImage->mFilePath = theFileName;
 	anImage->SetBits(aLoadedImage->GetBits(), aLoadedImage->GetWidth(), aLoadedImage->GetHeight(), commitBits);	

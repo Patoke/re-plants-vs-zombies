@@ -89,8 +89,8 @@ public:
 extern unsigned int gReanimationParamArraySize;              //[0x6A9EEC]
 extern ReanimationParams* gReanimationParamArray;   //[0x6A9EF0]
 
-/*inline*/ void                     ReanimationFillInMissingData(float& thePrev, float& theValue);
-/*inline*/ void                     ReanimationFillInMissingData(void*& thePrev, void*& theValue);
+inline void                         ReanimationFillInMissingData(float& thePrev, float& theValue);
+inline void                         ReanimationFillInMissingData(void*& thePrev, void*& theValue);
 bool                                ReanimationLoadDefinition(const SexyString& theFileName, ReanimatorDefinition* theDefinition);
 void                                ReanimationFreeDefinition(ReanimatorDefinition* theDefinition);
 void _cdecl	                        ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);

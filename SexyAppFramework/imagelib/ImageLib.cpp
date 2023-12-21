@@ -69,7 +69,7 @@ Image* GetPNGImage(const std::string& theFileName)
 	png_infop info_ptr;
 	//unsigned int sig_read = 0;
 	png_uint_32 width, height;
-	int bit_depth, color_type, interlace_type;
+	//int bit_depth, color_type, interlace_type;
 	PFILE *fp;
 
 	if ((fp = p_fopen(theFileName.c_str(), "rb")) == NULL)
@@ -112,8 +112,8 @@ Image* GetPNGImage(const std::string& theFileName)
 	//png_ptr->io_ptr = (png_voidp)fp;
 
 	png_read_info(png_ptr, info_ptr);
-	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
-       &interlace_type, NULL, NULL);
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, NULL, NULL,
+       NULL, NULL, NULL);
 
 	/* Add filler (or alpha) byte (before/after each RGB triplet) */
 	png_set_expand(png_ptr);
@@ -124,13 +124,19 @@ Image* GetPNGImage(const std::string& theFileName)
 	png_set_bgr(png_ptr);
 
 //	int aNumBytes = png_get_rowbytes(png_ptr, info_ptr) * height / 4;
+    png_bytep row_pointers[height];
 	unsigned long* aBits = new unsigned long[width*height];
+    for (uint i = 0; i < height; i++) {
+        row_pointers[i] = (png_bytep)(aBits + i*width);
+    }
+    png_read_image(png_ptr, row_pointers);
+    /*
 	unsigned long* anAddr = aBits;
 	for (unsigned int i = 0; i < height; i++)
 	{
 		png_read_rows(png_ptr, (png_bytepp) &anAddr, NULL, 1);
 		anAddr += width;
-	}
+	}*/
 
 	/* read rest of file, and get additional chunks in info_ptr - REQUIRED */
 	png_read_end(png_ptr, info_ptr);
@@ -1241,16 +1247,16 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 	Image* anImage = NULL;
 
 	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".tga") == 0) || (anExt.length() == 0)))
-		 anImage = GetTGAImage(aFilename + ".tga");
+		anImage = GetTGAImage(aFilename + ".tga");
 
 	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".jpg") == 0) || (anExt.length() == 0)))
-		 anImage = GetJPEGImage(aFilename + ".jpg");
+		anImage = GetJPEGImage(aFilename + ".jpg");
 
 	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".png") == 0) || (anExt.length() == 0)))
-		 anImage = GetPNGImage(aFilename + ".png");
+		anImage = GetPNGImage(aFilename + ".png");
 
 	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".gif") == 0) || (anExt.length() == 0)))
-		 anImage = GetGIFImage(aFilename + ".gif");
+		anImage = GetGIFImage(aFilename + ".gif");
 
 	if ((anImage == NULL) && (stricmp(anExt.c_str(), ".j2k") == 0))
 		unreachable(); // There are no JPEG2000 files in the project

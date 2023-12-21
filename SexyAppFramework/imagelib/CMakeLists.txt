@@ -90,6 +90,8 @@ ExternalProject_Add(libpng-src
     CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
                             "-DCMAKE_INSTALL_PREFIX=${libpng_dir}"
                             "-DCMAKE_C_FLAGS=${universal_cflags}"
+                            "-DPNG_HARDWARE_OPTIMIZATIONS=yes"
+                            "-DPNG_INTEL_SSE=on"
                             "-DPNG_SHARED=OFF"
                             "-DPNG_EXECUTABLES=OFF"
                             "-DPNG_TESTS=OFF"

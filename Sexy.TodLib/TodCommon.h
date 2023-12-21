@@ -58,6 +58,7 @@ class TodResourceManager : public ResourceManager
 {
 public:
 	bool				FindImagePath(Image* theImage, std::string* thePath);
+	bool 				FindFontPath(_Font* theFont, std::string* thePath);
 	void				AddImageToMap(SharedImageRef* theImage, const std::string& thePath);
 	bool				TodLoadNextResource();
 	bool				TodLoadResources(const std::string& theGroup);

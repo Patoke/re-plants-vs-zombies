@@ -409,4 +409,5 @@ gdb_run-start
 main.pak
 main.unpak
 tools/res/
+tools/res-bak/
 tools/read-compiled/target

@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "misc/Rect.h"
 #include "Color.h"
+#include <string>
 
 namespace Sexy
 {
@@ -17,7 +18,6 @@ public:
 	int						mAscentPadding; // How much space is above the avg uppercase char
 	int						mHeight;
 	int						mLineSpacingOffset; // This plus height should get added between lines
-	
 public:
 	_Font();
 	_Font(const _Font& theFont);

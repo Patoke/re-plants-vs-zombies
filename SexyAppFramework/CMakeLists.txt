@@ -234,8 +234,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG            "${CMAKE_CURRENT_SOURCE_DIR}/./Debug"
-    OUTPUT_DIRECTORY_RELEASE          "${CMAKE_CURRENT_SOURCE_DIR}/./Release"
+    OUTPUT_DIRECTORY_DEBUG            "${CMAKE_BINARY_DIR}/"
+    OUTPUT_DIRECTORY_RELEASE          "${CMAKE_BINARY_DIR}/"
 )
 
 ################################################################################
@@ -251,6 +251,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     ">"
     "$<$<CONFIG:Release>:"
         "NDEBUG;"
+        "RELEASEFINAL;"
         #"_WINDOWS;"
         #"_VISUALC_;"
         #"_JPEGLIB_"

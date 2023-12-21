@@ -196,6 +196,7 @@ ChallengeDefinition& GetChallengeDefinition(int theChallengeMode)
 	TOD_ASSERT(theChallengeMode >= 0 && theChallengeMode < NUM_CHALLENGE_MODES);
 
 	ChallengeDefinition& aDef = gChallengeDefs[theChallengeMode];
+	(void)aDef; // Unused in Release mode
 	TOD_ASSERT(aDef.mChallengeMode == theChallengeMode + GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
 
 	return gChallengeDefs[theChallengeMode];

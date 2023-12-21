@@ -30,7 +30,7 @@
 #include "widget/WidgetManager.h"
 #include "sound/SoundInstance.h"
 
-#define SEXY_PERF_ENABLED
+//#define SEXY_PERF_ENABLED
 #include "misc/PerfTimer.h"
 #include "Widget/AchievementsScreen.h"
 

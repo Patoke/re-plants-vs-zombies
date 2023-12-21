@@ -1,3 +1,4 @@
+#include "SexyAppBase.h"
 #include "TodList.h"
 #include "TodDebug.h"
 #include "TodCommon.h"
@@ -1210,29 +1211,22 @@ bool TodFindImagePath(Image* theImage, std::string* thePath)
 
 // @Patoke implemented
 bool TodFindFontPath(_Font* theFont, std::string* thePath) {
-	std::string aFontName = "FONT_";
+	return ((TodResourceManager*)gSexyAppBase->mResourceManager)->FindFontPath(theFont, thePath);
+}
 
-	// @Patoke todo: i'm absolutely flabbergasted as to what this is
-	// fonts come from the mFontMap which is populated at runtime (i think?)
-	// therefore all fonts are actually part of a FontRes map
-	// if we get the address of theFont we actually get the FontRes definition
-	// by doing that and then accessing the mPath we can theoretically get the font path
-	auto aFontRes = (Sexy::ResourceManager::FontRes*)(*(uint32_t*)(theFont + sizeof(_Font)) + sizeof(Sexy::ResourceManager::BaseRes));
-	std::string& aFontPath = aFontRes->mPath;
-
-	if (aFontPath.find("fonts\\") != std::string::npos || aFontPath.find("fonts/") != std::string::npos) {
-		aFontName += StringToUpper(aFontPath.substr(6));
+bool TodResourceManager::FindFontPath(_Font* theFont, std::string* thePath)
+{
+	for (auto anItr = mFontMap.begin(); anItr != mFontMap.end(); anItr++)
+	{
+		FontRes* aFontRes = (FontRes*)anItr->second;
+		_Font* aFont = (_Font*)aFontRes->mFont;
+		if (aFont == theFont)
+		{
+			*thePath = anItr->first;
+			return true;
+		}
 	}
-	else if (aFontPath.find("data\\") != std::string::npos || aFontPath.find("data/") != std::string::npos) {
-		aFontName += StringToUpper(aFontPath.substr(5));
-	}
-	else {
-		aFontName += StringToUpper(aFontPath.substr(0));
-	}
-
-	*thePath = aFontName;
-
-	return true;
+	return false;
 }
 
 bool TodResourceManager::FindImagePath(Image* theImage, std::string* thePath)
