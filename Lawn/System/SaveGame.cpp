@@ -335,7 +335,7 @@ void SyncReanimation(Board* theBoard, Reanimation* theReanimation, SaveGameConte
 			}
 			else
 			{
-				TOD_ASSERT(aTrackInstance.mBlendTransform.mText[0] == NULL);
+				TOD_ASSERT(aTrackInstance.mBlendTransform.mText[0] == '\0');
 				TOD_ASSERT(aTrackInstance.mBlendTransform.mFont == nullptr);
 				TOD_ASSERT(aTrackInstance.mBlendTransform.mImage == nullptr);
 			}

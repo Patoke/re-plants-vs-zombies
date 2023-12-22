@@ -202,14 +202,14 @@ public:
 	bool							mSukhbirMode;											//+0x5767
 	BoardResult						mPrevBoardResult;										//+0x5768
 	int								mTriggeredLawnMowers;									//+0x576C
-	int								mPlayTimeActiveLevel;									//+0x5770
-	int								mPlayTimeInactiveLevel;									//+0x5774
+	std::chrono::high_resolution_clock::duration	mPlayTimeActiveLevel;					//+0x5770
+	std::chrono::high_resolution_clock::duration	mPlayTimeInactiveLevel;					//+0x5774
 	int								mMaxSunPlants;											//+0x5778
 	DWORD							mStartDrawTime;											//+0x577C
 	DWORD							mIntervalDrawTime;										//+0x5780
 	int								mIntervalDrawCountStart;								//+0x5784
 	float							mMinFPS;												//+0x5788
-	int								mPreloadTime;											//+0x578C
+	std::chrono::high_resolution_clock::duration	mPreloadTime;							//+0x578C
 	intptr_t						mGameID;												//+0x5790
 	int								mGravesCleared;											//+0x5794
 	int								mPlantsEaten;											//+0x5798

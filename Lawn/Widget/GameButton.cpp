@@ -125,8 +125,10 @@ void GameButton::Draw(Graphics* g)
 
 	g->mTransX += mX;
 	g->mTransY += mY;
+	/*
 	if (!mFont && mLabel.size() > 0)
 		mFont = new SysFont(mApp, "Arial Unicode MS", 10);
+	*/
 	
 	int aFontX = mTextOffsetX;
 	int aFontY = mTextOffsetY;

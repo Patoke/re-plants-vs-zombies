@@ -3,8 +3,9 @@
 
 #include "../../ConstEnums.h"
 #include "widget/Widget.h"
-#include "misc/PerfTimer.h"
+//#include "misc/PerfTimer.h"
 #include "widget/ButtonListener.h"
+#include <chrono>
 
 using namespace Sexy;
 
@@ -51,11 +52,12 @@ public:
 	CreditBrainType			mBrainType;					//+0xC
 };
 
+/*
 class TodsHackyUnprotectedPerfTimer : public PerfTimer
 {
 public:
 	void					SetStartTime(int theTimeMillisecondsAgo);
-};
+};*/
 
 class GameButton;
 class LawnApp;
@@ -88,7 +90,7 @@ public:
 	float					mBrainPosY;					//+0xBC
 	int						mUpdateCount;				//+0xC0
 	int						mDrawCount;					//+0xC4
-	PerfTimer				mTimerSinceStart;			//+0xC8
+	std::chrono::high_resolution_clock::time_point		mTimerSinceStart;	//+0xC8
 	bool					mDontSync;					//+0xE0
 	bool					mCreditsPaused;				//+0xE1
 	double					mOriginalMusicVolume;		//+0xE8

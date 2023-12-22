@@ -23,8 +23,9 @@
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/TodParticle.h"
 #include "../Sexy.TodLib/TodStringFile.h"
-#include "misc/PerfTimer.h"
+//#include "misc/PerfTimer.h"
 #include "widget/WidgetManager.h"
+#include <chrono>
 
 static const int	TimePanRightStart				= 1500;
 static const int	TimePanRightEnd					= 3500;		//[0x6A4FFC]
@@ -328,8 +329,10 @@ void CutScene::PreloadResources()
 	}
 	mPreloaded = true;
 
+	/*
 	PerfTimer aTimer;
-	aTimer.Start();
+	aTimer.Start();*/
+	auto aTimer = std::chrono::high_resolution_clock::now();
 
 	for (int aWave = 0; aWave < mBoard->mNumWaves; aWave++)
 	{
@@ -477,7 +480,8 @@ void CutScene::PreloadResources()
 
 	PlaceStreetZombies();
 
-	mBoard->mPreloadTime = std::max(aTimer.GetDuration(), 0.0);
+	//mBoard->mPreloadTime = std::max(aTimer.GetDuration(), 0.0);
+	mBoard->mPreloadTime = std::chrono::high_resolution_clock::now() - aTimer;
 	TodTrace("preloading: %d ms", mBoard->mPreloadTime);
 	TodHesitationTrace("CutScene::PreloadResources");
 }

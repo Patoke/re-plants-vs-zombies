@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <cfloat>
+#include <cstdint>
 #include "../Lawn/LawnCommon.h"
 #include "../SexyAppFramework/Common.h"
 #include "misc/ResourceManager.h"

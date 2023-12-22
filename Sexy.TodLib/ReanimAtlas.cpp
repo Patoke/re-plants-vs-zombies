@@ -4,6 +4,7 @@
 #include "ReanimAtlas.h"
 #include "misc/PerfTimer.h"
 #include "graphics/MemoryImage.h"
+#include <chrono>
 
 //0x470250
 ReanimAtlas::ReanimAtlas()
@@ -38,7 +39,7 @@ MemoryImage* ReanimAtlasMakeBlankMemoryImage(int theWidth, int theHeight)
 	MemoryImage* aImage = new MemoryImage();
 
 	int aBitsCount = theWidth * theHeight;
-	aImage->mBits = new unsigned long[aBitsCount + 1];
+	aImage->mBits = new uint32_t[aBitsCount + 1];
 	aImage->mWidth = theWidth;
 	aImage->mHeight = theHeight;
 	aImage->mHasTrans = true;
@@ -214,9 +215,6 @@ int ReanimAtlas::FindImage(Image* theImage)
 //0x470680
 void ReanimAtlas::ReanimAtlasCreate(ReanimatorDefinition* theReanimDef)
 {
-	PerfTimer aTimer;
-	aTimer.Start();
-
 	for (int aTrackIndex = 0; aTrackIndex < theReanimDef->mTracks.count; aTrackIndex++)
 	{
 		ReanimatorTrack* aTrack = &theReanimDef->mTracks.tracks[aTrackIndex];

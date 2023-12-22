@@ -125,10 +125,10 @@ std::string GetSavedGameName(GameMode theGameMode, int theProfileId)
 //0x456980
 int GetCurrentDaysSince2000()
 {
-    __time64_t aNow = _time64(nullptr);
-    tm aNowTM;
-    _localtime64_s(&aNowTM, &aNow);
+    time_t aNow = time(nullptr);
+    tm *aNowTM;
+    aNowTM = localtime(&aNow);
 
-    int dy = aNowTM.tm_year - 100;
-    return dy * 365 + (dy - 1) / 400 - (dy - 1) / 100 + (dy - 1) / 4 + aNowTM.tm_yday + 1;
+    int dy = aNowTM->tm_year - 100;
+    return dy * 365 + (dy - 1) / 400 - (dy - 1) / 100 + (dy - 1) / 4 + aNowTM->tm_yday + 1;
 }

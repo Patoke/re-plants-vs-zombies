@@ -4,6 +4,7 @@
 #include "ConstEnums.h"
 #include "SexyAppFramework/SexyApp.h"
 #include "Sexy.TodLib/TodFoley.h"
+#include <chrono>
 
 class Board;
 class GameSelector;
@@ -97,11 +98,11 @@ public:
 	int								mCrazyDaveMessageIndex;							//+0x850
 	SexyString						mCrazyDaveMessageText;							//+0x854
 	int								mAppRandSeed;									//+0x870
-	HICON							mBigArrowCursor;								//+0x874
+//	HICON							mBigArrowCursor;								//+0x874
 	PopDRMComm*						mDRM;											//+0x878
 	intptr_t						mSessionID;										//+0x87C
-	int								mPlayTimeActiveSession;							//+0x880
-	int								mPlayTimeInactiveSession;						//+0x884
+	std::chrono::high_resolution_clock::duration	mPlayTimeActiveSession;			//+0x880
+	std::chrono::high_resolution_clock::duration	mPlayTimeInactiveSession;		//+0x884
 	BoardResult						mBoardResult;									//+0x888
 	bool							mSawYeti;										//+0x88C
 	TypingCheck*					mKonamiCheck;									//+0x890

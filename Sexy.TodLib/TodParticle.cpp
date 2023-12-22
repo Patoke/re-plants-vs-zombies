@@ -4,7 +4,7 @@
 #include "EffectSystem.h"
 #include "../GameConstants.h"
 #include "graphics/Graphics.h"
-#include "graphics/D3DInterface.h"
+//#include "graphics/D3DInterface.h"
 
 int gParticleDefCount;                      // [0x6A9F08]
 TodParticleDefinition* gParticleDefArray;   // [0x6A9F0C]
@@ -173,8 +173,10 @@ bool TodParticleLoadADef(TodParticleDefinition* theParticleDef, const char* theP
 			FloatTrackSetDefault(aDef.mClipLeft, 0.0f);
 			FloatTrackSetDefault(aDef.mClipRight, 0.0f);
 			FloatTrackSetDefault(aDef.mAnimationRate, 0.0f);
+			/* FIXME
 			if (aDef.mImage)
 				((MemoryImage*)aDef.mImage)->mD3DFlags |= D3DImageFlags::D3DImageFlag_MinimizeNumSubdivisions;
+			*/
 		}
 		return true;
 	}
@@ -533,12 +535,12 @@ void TodParticleEmitter::UpdateParticleField(TodParticle* theParticle, ParticleF
 		if (aLastRandSeed == -1)
 			aLastRandSeed = theParticle->mParticleDuration - 1;
 		srand(aLastRandSeed * (uintptr_t)theParticle);
-		theParticle->mPosition.x -= aLastX * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
-		theParticle->mPosition.y -= aLastY * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
+		theParticle->mPosition.x -= aLastX * ((float)rand() / (float)RAND_MAX * 2.0 - 1.0);
+		theParticle->mPosition.y -= aLastY * ((float)rand() / (float)RAND_MAX * 2.0 - 1.0);
 		// 再随机取得当前帧的震动效果
 		srand(theParticle->mParticleAge * (uintptr_t)theParticle);
-		theParticle->mPosition.x += x * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
-		theParticle->mPosition.y += y * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
+		theParticle->mPosition.x += x * ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f);
+		theParticle->mPosition.y += y * ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f);
 		break;
 	}
 	case ParticleFieldType::FIELD_CIRCLE:  // 圆周
@@ -1107,7 +1109,7 @@ void TodParticleSystem::OverrideColor(const char* theEmitterName, const Color& t
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (theEmitterName == nullptr || stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (theEmitterName == nullptr || strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			aEmitter->mColorOverride = theColor;
 	}
 }
@@ -1118,7 +1120,7 @@ void TodParticleSystem::OverrideExtraAdditiveDraw(const char* theEmitterName, bo
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (theEmitterName == nullptr || stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (theEmitterName == nullptr || strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			aEmitter->mExtraAdditiveDrawOverride = theEnableExtraAdditiveDraw;
 	}
 }
@@ -1130,7 +1132,7 @@ void TodParticleSystem::OverrideImage(const char* theEmitterName, Image* theImag
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (theEmitterName == nullptr || stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (theEmitterName == nullptr || strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			aEmitter->mImageOverride = theImage;
 	}
 }
@@ -1140,7 +1142,7 @@ void TodParticleSystem::OverrideFrame(const char* theEmitterName, int theFrame)
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (theEmitterName == nullptr || stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (theEmitterName == nullptr || strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			aEmitter->mFrameOverride = theFrame;
 	}
 }
@@ -1151,7 +1153,7 @@ void TodParticleSystem::OverrideScale(const char* theEmitterName, float theScale
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (theEmitterName == nullptr || stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (theEmitterName == nullptr || strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			aEmitter->mScaleOverride = theScale;
 	}
 }
@@ -1161,7 +1163,7 @@ TodParticleEmitter* TodParticleSystem::FindEmitterByName(const char* theEmitterN
 	for (TodListNode<ParticleEmitterID>* aNode = mEmitterList.mHead; aNode != nullptr; aNode = aNode->mNext)
 	{
 		TodParticleEmitter* aEmitter = mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
-		if (stricmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
+		if (strcasecmp(theEmitterName, aEmitter->mEmitterDef->mName) == 0)
 			return aEmitter;
 	}
 	return nullptr;
@@ -1173,7 +1175,7 @@ TodEmitterDefinition* TodParticleSystem::FindEmitterDefByName(const char* theEmi
 	for (int i = 0; i < mParticleDef->mEmitterDefCount; i++)
 	{
 		TodEmitterDefinition* aEmitterDef = &mParticleDef->mEmitterDefs[i];
-		if (stricmp(theEmitterName, aEmitterDef->mName) == 0)
+		if (strcasecmp(theEmitterName, aEmitterDef->mName) == 0)
 			return aEmitterDef;
 	}
 	return nullptr;

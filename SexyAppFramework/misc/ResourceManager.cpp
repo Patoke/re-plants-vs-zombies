@@ -1,9 +1,10 @@
 #include <memory>
+#include "Common.h"
 #include "ResourceManager.h"
 #include "XMLParser.h"
 #include "sound/SoundManager.h"
-#include "graphics/DDImage.h"
-#include "graphics/D3DInterface.h"
+//#include "graphics/DDImage.h"
+//#include "graphics/D3DInterface.h"
 #include "graphics/ImageFont.h"
 #include "graphics/SysFont.h"
 #include "imagelib/ImageLib.h"
@@ -308,7 +309,7 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 	aRes->mAlphaColor = 0xFFFFFF;
 	anItr = theElement.mAttributes.find(_S("alphacolor"));
 	if (anItr != theElement.mAttributes.end())
-		sexysscanf(anItr->second.c_str(),_S("%lx"),&aRes->mAlphaColor);
+		sexysscanf(anItr->second.c_str(),_S("%x"),&aRes->mAlphaColor);
 
 	anItr = theElement.mAttributes.find(_S("variant"));
 	if (anItr != theElement.mAttributes.end())
@@ -625,8 +626,10 @@ bool ResourceManager::ReparseResourcesFile(const std::string& theFilename)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage)
-{	
+bool ResourceManager::LoadAlphaGridImage(ImageRes */*theRes*/, DDImage */*theImage*/)
+{
+	unreachable();
+	/*
 	ImageLib::Image* anAlphaImage = ImageLib::GetImage(theRes->mAlphaGridImage,true);	
 	if (anAlphaImage==NULL)
 		return Fail(StrFormat("Failed to load image: %s",theRes->mAlphaGridImage.c_str()));
@@ -669,13 +672,15 @@ bool ResourceManager::LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage)
 	}
 
 	theImage->BitsChanged();
-	return true;
+	return true;*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::LoadAlphaImage(ImageRes *theRes, DDImage *theImage)
+bool ResourceManager::LoadAlphaImage(ImageRes */*theRes*/, DDImage */*theImage*/)
 {
+	unreachable();
+	/*
 	SEXY_PERF_BEGIN("ResourceManager::GetImage");
 	ImageLib::Image* anAlphaImage = ImageLib::GetImage(theRes->mAlphaImage,true);
 	SEXY_PERF_END("ResourceManager::GetImage");
@@ -700,13 +705,15 @@ bool ResourceManager::LoadAlphaImage(ImageRes *theRes, DDImage *theImage)
 	}
 
 	theImage->BitsChanged();
-	return true;
+	return true;*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::DoLoadImage(ImageRes *theRes)
+bool ResourceManager::DoLoadImage(ImageRes */*theRes*/)
 {
+	unreachable();
+	/*
 	//bool lookForAlpha = theRes->mAlphaImage.empty() && theRes->mAlphaGridImage.empty() && theRes->mAutoFindAlpha; // unused
 	
 	SEXY_PERF_BEGIN("ResourceManager:GetImage");
@@ -787,7 +794,7 @@ bool ResourceManager::DoLoadImage(ImageRes *theRes)
 		aDDImage->PurgeBits();
 
 	ResourceLoadedHook(theRes);
-	return true;
+	return true;*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -848,8 +855,10 @@ bool ResourceManager::DoLoadSound(SoundRes* theRes)
 #include <../Sexy.TodLib/TodCommon.h>
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::DoLoadFont(FontRes* theRes)
+bool ResourceManager::DoLoadFont(FontRes* /*theRes*/)
 {
+	unreachable();
+	/*
 	_Font *aFont = NULL;
 
 	SEXY_PERF_BEGIN("ResourceManager:DoLoadFont");
@@ -919,7 +928,7 @@ bool ResourceManager::DoLoadFont(FontRes* theRes)
 	SEXY_PERF_END("ResourceManager:DoLoadFont");
 
 	ResourceLoadedHook(theRes);
-	return true;
+	return true;*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////

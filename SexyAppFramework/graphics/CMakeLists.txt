@@ -1,16 +1,16 @@
 target_sources(${PROJECT_NAME} PRIVATE
     Color.cpp
     Color.h
-    D3D8Helper.cpp
-    D3D8Helper.h
-    D3DInterface.cpp
-    D3DInterface.h
-    D3DTester.cpp
-    D3DTester.h
-    DDImage.cpp
-    DDImage.h
-    DDInterface.cpp
-    DDInterface.h
+#    D3D8Helper.cpp
+#    D3D8Helper.h
+#    D3DInterface.cpp
+#    D3DInterface.h
+#    D3DTester.cpp
+#    D3DTester.h
+#    DDImage.cpp
+#    DDImage.h
+#    DDInterface.cpp
+#    DDInterface.h
     Font.cpp
     Font.h
     Graphics.cpp
@@ -30,8 +30,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     SharedImage.h
     SWTri.cpp
     SWTri.h
-    SysFont.cpp
-    SysFont.h
+#   SysFont.cpp
+#   SysFont.h
     inc_routines/DDI_Additive.inc
     inc_routines/DDI_AlphaBlt.inc
     inc_routines/DDI_BltRotated_Additive.inc

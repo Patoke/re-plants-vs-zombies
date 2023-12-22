@@ -14,7 +14,7 @@
 #include "SeedChooserScreen.h"
 #include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
-#include "../System/PopDRMComm.h"
+//#include "../System/PopDRMComm.h"
 #include "misc/Debug.h"
 #include "widget/Dialog.h"
 #include "misc/MTRand.h"
@@ -1067,10 +1067,11 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 					Dialog::BUTTONS_YES_NO
 				) == Dialog::ID_YES)
 				{
+					/*
 					if (mApp->mDRM)
 					{
 						mApp->mDRM->BuyGame();
-					}
+					}*/
 					mApp->DoBackToMain();
 				}
 			}

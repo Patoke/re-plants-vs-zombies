@@ -70,8 +70,10 @@ void ButtonWidget::Draw(Graphics* g)
 	if (mBtnNoDraw)
 		return;
 
+	/* FIXME
 	if ((mFont == NULL) && (mLabel.length() > 0))
 		mFont = new SysFont(mWidgetManager->mApp, "Arial Unicode MS", 10);
+	*/
 
 	bool isDown = mIsDown && mIsOver && !mDisabled;
 	isDown ^= mInverted;

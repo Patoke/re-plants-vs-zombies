@@ -3,7 +3,7 @@
 
 #define POLYNOMIAL 0x04c11db7L
 
-static BOOL 	     bCrcTableGenerated = FALSE;
+static bool 	     bCrcTableGenerated = false;
 static unsigned long crc_table[256];
 
 using namespace Sexy;
@@ -31,7 +31,7 @@ static int gWebDecodeMap[256] =
 //----------------------------------------------------------------------------
 static void GenerateCRCTable(void)
 {
-	bCrcTableGenerated = TRUE;
+	bCrcTableGenerated = true;
 
 	int i, j;
 	unsigned long crc_accum;

@@ -62,7 +62,7 @@ set(Lawn__System__System_Include
     "../Lawn/System/Music.h"
     "../Lawn/System/PlayerInfo.h"
     "../Lawn/System/PoolEffect.h"
-    "../Lawn/System/PopDRMComm.h"
+#   "../Lawn/System/PopDRMComm.h"
     "../Lawn/System/ProfileMgr.h"
     "../Lawn/System/ReanimationLawn.h"
     "../Lawn/System/SaveGame.h"
@@ -75,7 +75,7 @@ set(Lawn__System__System_Source
     "../Lawn/System/Music.cpp"
     "../Lawn/System/PlayerInfo.cpp"
     "../Lawn/System/PoolEffect.cpp"
-    "../Lawn/System/PopDRMComm.cpp"
+#   "../Lawn/System/PopDRMComm.cpp"
     "../Lawn/System/ProfileMgr.cpp"
     "../Lawn/System/ReanimationLawn.cpp"
     "../Lawn/System/SaveGame.cpp"
@@ -198,7 +198,7 @@ add_subdirectory(sound)
 add_subdirectory(widget)
 add_subdirectory(misc)
 add_subdirectory(paklib)
-add_subdirectory(ogg)
+#add_subdirectory(ogg)
 add_subdirectory(imagelib)
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -210,14 +210,14 @@ target_sources(${PROJECT_NAME} PRIVATE
     "SexyAppBase.h"
 
     # No group sources
-    "../Cursor13.cur"
+    #"../Cursor13.cur"
     "../LawnApp.cpp"
     "../LawnApp.h"
     "../main.cpp"
     ".gitattributes"
     ".gitignore"
     "resource.h"
-    "LawnProject.rc"
+    #"LawnProject.rc"
 )
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
@@ -227,8 +227,8 @@ set(ROOT_NAMESPACE SexyAppBase)
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    TARGET_NAME_DEBUG            "SexyAppFramework"
-    TARGET_NAME_RELEASE          "SexyAppFramework"
+    TARGET_NAME_DEBUG            "PlantsVsZombies"
+    TARGET_NAME_RELEASE          "PlantsVsZombies"
 )
 ################################################################################
 # Output directory
@@ -265,13 +265,13 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
-        "winmm;"
-        "ws2_32;"
+        #"winmm;"
+        #"ws2_32;"
         #"ddraw;"
     ">"
     "$<$<CONFIG:Release>:"
-        "winmm;"
-        "ws2_32;"
+        #"winmm;"
+        #"ws2_32;"
 	    #"ddraw;"
 	#"ucrt;"
     ">"
@@ -281,11 +281,13 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
 #add_dependencies(libjpeg ImageLib__JPEG)
 #add_dependencies(${PROJECT_NAME} ImageLib__JPEG)
 
-add_library(d8vk STATIC IMPORTED)
-set_target_properties(d8vk
-    PROPERTIES IMPORTED_LOCATION ../lib/d3d8.dll.a
+add_library(bass SHARED IMPORTED)
+set_target_properties(bass
+    PROPERTIES IMPORTED_LOCATION ../lib/libbass.so
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE )
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ".") # SexyAppFramework
-target_link_libraries(${PROJECT_NAME} PRIVATE -static -static-libgcc -static-libstdc++ "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PRIVATE -Wl,-Bdynamic bass -Wl,-Bstatic -static -static-libgcc -static-libstdc++ "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

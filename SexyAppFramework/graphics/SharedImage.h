@@ -2,6 +2,7 @@
 #define __SHARED_IMAGE_H__
 
 #include "Common.h"
+#include "MemoryImage.h"
 
 namespace Sexy
 {

@@ -10,12 +10,13 @@
 #include "misc/CritSect.h"
 #include "graphics/SharedImage.h"
 #include "misc/Ratio.h"
+#include <chrono>
 
-extern HMODULE gDDrawDLL;
-extern HMODULE gDSoundDLL;
-extern HMODULE gVersionDLL;
+//extern HMODULE gDDrawDLL;
+//extern HMODULE gDSoundDLL;
+//extern HMODULE gVersionDLL;
 
-extern bool gD3DInterfacePreDrawError;
+//extern bool gD3DInterfacePreDrawError;
 
 namespace ImageLib
 {
@@ -50,7 +51,7 @@ typedef std::list<WidgetSafeDeleteInfo> WidgetSafeDeleteList;
 typedef std::set<MemoryImage*> MemoryImageSet;
 typedef std::map<int, Dialog*> DialogMap;
 typedef std::list<Dialog*> DialogList;
-typedef std::list<MSG> WindowsMessageList;
+//typedef std::list<MSG> WindowsMessageList;
 typedef std::vector<std::string> StringVector;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
@@ -123,7 +124,7 @@ enum
 	UPDATESTATE_PROCESS_DONE
 };
 
-typedef std::map<HANDLE, int> HandleToIntMap;
+//typedef std::map<HANDLE, int> HandleToIntMap;
 
 class SexyAppBase : public ButtonListener, public DialogListener
 {
@@ -155,7 +156,7 @@ public:
 	bool					mStandardWordWrap;
 	bool					mbAllowExtendedChars;
 
-	HANDLE					mMutex;
+//	HANDLE					mMutex;
 	bool					mOnlyAllowOneCopyToRun;
 	UINT					mNotifyGameMessage;
 	CritSect				mCritSect;	
@@ -164,8 +165,8 @@ public:
 	WidgetManager*			mWidgetManager;
 	DialogMap				mDialogMap;
 	DialogList				mDialogList;
-	DWORD					mPrimaryThreadId;
-	bool					mSEHOccured;
+	pthread_t				mPrimaryThreadId;
+//	bool					mSEHOccured;
 	bool					mShutdown;
 	bool					mExitToTop;
 	bool					mIsWindowed;
@@ -175,12 +176,12 @@ public:
 	bool					mForceWindowed;	
 	bool					mInitialized;	
 	bool					mProcessInTimer;
-	DWORD					mTimeLoaded;
-	HWND					mHWnd;
-	HWND					mInvisHWnd;
+	std::chrono::high_resolution_clock::time_point	mTimeLoaded;
+//	HWND					mHWnd;
+//	HWND					mInvisHWnd;
 	bool					mIsScreenSaver;
 	bool					mAllowMonitorPowersave;
-	WindowsMessageList		mDeferredMessages;
+//	WindowsMessageList		mDeferredMessages;
 	bool					mNoDefer;	
 	bool					mFullScreenPageFlip;	
 	bool					mTabletPC;
@@ -189,14 +190,14 @@ public:
 	MusicInterface*			mMusicInterface;	
 	bool					mReadFromRegistry;
 	std::string				mRegisterLink;
-	std::string				mProductVersion;	
+	//std::string			mProductVersion;	
 	Image*					mCursorImages[NUM_CURSORS];
-	HCURSOR					mOverrideCursor;
+//	HCURSOR					mOverrideCursor;
 	bool					mIsOpeningURL;
 	bool					mShutdownOnURLOpen;
 	std::string				mOpeningURL;
-	DWORD					mOpeningURLTime;
-	DWORD					mLastTimerTime;
+	clock_t					mOpeningURLTime;
+	std::chrono::high_resolution_clock::time_point	mLastTimerTime;
 	DWORD					mLastBigDelayTime;	
 	double					mUnmutedMusicVolume;
 	double					mUnmutedSfxVolume;	
@@ -209,16 +210,16 @@ public:
 	bool					mCleanupSharedImages;
 	
 	int						mNonDrawCount;
-	int						mFrameTime;
+	std::chrono::high_resolution_clock::duration	mFrameTime;
 
 	bool					mIsDrawing;
 	bool					mLastDrawWasEmpty;
 	bool					mHasPendingDraw;
 	double					mPendingUpdatesAcc;
-	double					mUpdateFTimeAcc;
-	DWORD					mLastTimeCheck;
-	DWORD					mLastTime;
-	DWORD					mLastUserInputTick;
+	std::chrono::high_resolution_clock::duration	mUpdateFTimeAcc;
+	std::chrono::high_resolution_clock::time_point	mLastTimeCheck;
+	std::chrono::high_resolution_clock::time_point	mLastTime;
+	std::chrono::high_resolution_clock::time_point	mLastUserInputTick;
 
 	int						mSleepCount;
 	int						mDrawCount;
@@ -230,14 +231,14 @@ public:
 	int						mFastForwardToUpdateNum;
 	bool					mFastForwardToMarker;
 	bool					mFastForwardStep;
-	DWORD					mLastDrawTick;
-	DWORD					mNextDrawTick;
+	std::chrono::high_resolution_clock::time_point	mLastDrawTick;
+	std::chrono::high_resolution_clock::time_point	mNextDrawTick;
 	int						mStepMode;  // 0 = off, 1 = step, 2 = waiting for step
 
 	int						mCursorNum;
 	SoundManager*			mSoundManager;
-	HCURSOR					mHandCursor;
-	HCURSOR					mDraggingCursor;
+//	HCURSOR					mHandCursor;
+//	HCURSOR					mDraggingCursor;
 	WidgetSafeDeleteList	mSafeDeleteList;
 	bool					mMouseIn;	
 	bool					mRunning;
@@ -246,15 +247,15 @@ public:
 	bool					mPhysMinimized;
 	bool					mIsDisabled;
 	bool					mHasFocus;
-	int						mDrawTime;
-	ulong					mFPSStartTick;
+	std::chrono::high_resolution_clock::duration	mDrawTime;
+	std::chrono::high_resolution_clock::time_point	mFPSStartTick;
 	int						mFPSFlipCount;
 	int						mFPSDirtyCount;
-	int						mFPSTime;
+	std::chrono::high_resolution_clock::duration	mFPSTime;
 	int						mFPSCount;
 	bool					mShowFPS;
 	int						mShowFPSMode;
-	int						mScreenBltTime;
+	std::chrono::high_resolution_clock::duration	mScreenBltTime;
 	bool					mAutoStartLoadingThread;
 	bool					mLoadingThreadStarted;
 	bool					mLoadingThreadCompleted;
@@ -290,7 +291,7 @@ public:
 	int						mDemoCmdOrder;
 	int						mDemoCmdBitPos;
 	bool					mDemoLoadingComplete;
-	HandleToIntMap			mHandleToIntMap; // For waiting on handles
+//	HandleToIntMap			mHandleToIntMap; // For waiting on handles
 	int						mCurHandleNum;
 
 	typedef std::pair<std::string, int> DemoMarker;
@@ -307,7 +308,7 @@ public:
 	bool					mVSyncUpdates;
 	bool					mVSyncBroken;
 	int						mVSyncBrokenCount;
-	DWORD					mVSyncBrokenTestStartTick;
+	std::chrono::high_resolution_clock::time_point	mVSyncBrokenTestStartTick;
 	DWORD					mVSyncBrokenTestUpdates;
 	bool					mWaitForVSync;
 	bool					mSoftVSyncWait;
@@ -352,7 +353,7 @@ protected:
 	
 	// Loading thread methods	
 	virtual void			LoadingThreadCompleted();
-	static void				LoadingThreadProcStub(void *theArg);	
+	static void	*			LoadingThreadProcStub(void *theArg);	
 
 	// Cursor thread methods
 	void					CursorThreadProc();
@@ -369,9 +370,9 @@ protected:
 	void					ShowMemoryUsage();			
 
 	// Registry helpers
-	bool					RegistryRead(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength);
-	bool					RegistryReadKey(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength, HKEY theMainKey = HKEY_CURRENT_USER);
-	bool					RegistryWrite(const std::string& theValueName, ulong theType, const uchar* theValue, ulong theLength);
+//	bool					RegistryRead(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength);
+//	bool					RegistryReadKey(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength, HKEY theMainKey = HKEY_CURRENT_USER);
+//	bool					RegistryWrite(const std::string& theValueName, ulong theType, const uchar* theValue, ulong theLength);
 
 	// Demo recording helpers	
 	void					ProcessDemo();
@@ -394,8 +395,8 @@ public:
 	// Public methods
 	virtual void			BeginPopup();
 	virtual void			EndPopup();
-	virtual int				MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = MB_OK);
-	virtual int				MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = MB_OK);
+//	virtual int				MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = MB_OK);
+//	virtual int				MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = MB_OK);
 	virtual void			Popup(const std::string& theString);
 	virtual void			Popup(const std::wstring& theString);
 	virtual void			LogScreenSaverError(const std::string &theError);
@@ -406,8 +407,8 @@ public:
 	virtual bool			OpenURL(const std::string& theURL, bool shutdownOnOpen = false);	
 	virtual std::string		GetProductVersion(const std::string& thePath);	
 
-	virtual void			SEHOccured();
-	virtual std::string		GetGameSEHInfo();
+	//virtual void			SEHOccured();
+	//virtual std::string		GetGameSEHInfo();
 	virtual void			GetSEHWebParams(DefinesMap* theDefinesMap);
 	virtual void			Shutdown();	
 
@@ -491,7 +492,7 @@ public:
 
 	virtual void			GotFocus();
 	virtual void			LostFocus();	
-	virtual bool			IsAltKeyUsed(WPARAM wParam);
+//	virtual bool			IsAltKeyUsed(WPARAM wParam);
 	virtual bool			DebugKeyDown(int theKey);	
 //	virtual bool			DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
 	virtual void			CloseRequestAsync();
@@ -544,9 +545,9 @@ public:
 	void					DemoAssertStringEqual(const std::string& theString);
 	void					DemoAssertIntEqual(int theInt);
 	void					DemoAddMarker(const std::string& theString);
-	void					DemoRegisterHandle(HANDLE theHandle);
-	void					DemoWaitForHandle(HANDLE theHandle);
-	bool					DemoCheckHandle(HANDLE theHandle);
+//	void					DemoRegisterHandle(HANDLE theHandle);
+//	void					DemoWaitForHandle(HANDLE theHandle);
+//	bool					DemoCheckHandle(HANDLE theHandle);
 	
 
 	// Registry access methods
@@ -577,7 +578,7 @@ public:
 	void					ClearUpdateBacklog(bool relaxForASecond = false);
 	bool					IsScreenSaver();
 	virtual bool			AppCanRestore();
-	static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
+//	static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
 };
 
 extern SexyAppBase* gSexyAppBase;

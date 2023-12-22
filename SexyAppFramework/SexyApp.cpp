@@ -1,11 +1,12 @@
 #include "SexyApp.h"
+#include "Common.h"
 
 //#include "..\Crypt\RegKey.h"
-#include "misc/SEHCatcher.h"
+//#include "misc/SEHCatcher.h"
 //#include "InternetManager.h"
 #include <time.h>
 #include <fstream>
-#include <direct.h>
+//#include <direct.h>
 //#include "BetaSupport.h"
 
 using namespace Sexy;
@@ -112,6 +113,8 @@ bool SexyApp::Validate(const std::string& theUserName, const std::string& theReg
 
 void SexyApp::ReadFromRegistry()
 {
+	unreachable(); // FIXME
+	/*
 	SexyAppBase::ReadFromRegistry();
 
 	if (!mPlayingDemoBuffer)
@@ -215,17 +218,20 @@ void SexyApp::ReadFromRegistry()
 	if (RegistryReadString("RegName", &mRegUserName))
 		mUserName = mRegUserName;
 	
-	RegistryReadString("RegCode", &mRegCode);		
+	RegistryReadString("RegCode", &mRegCode);*/	
 
-	mIsRegistered |= true /*Validate(mRegUserName, mRegCode)*/;	
-
+	//mIsRegistered |= true /*Validate(mRegUserName, mRegCode)*/;	
+	/*
 	// Override registry values with partner.xml values
 	mRegisterLink = GetString("RegisterLink", mRegisterLink);
 	mDontUpdate = GetBoolean("DontUpdate", mDontUpdate);
+	*/
 }
 
 void SexyApp::WriteToRegistry()
 {
+	unreachable(); // FIXME
+	/*
 	SexyAppBase::WriteToRegistry();
 
 	if (!mPlayingDemoBuffer)
@@ -295,10 +301,13 @@ void SexyApp::WriteToRegistry()
 
 	if (mRegCode.length() > 0)
 		RegistryWriteString("RegCode", mRegCode);
+	*/
 }
 
-bool SexyApp::OpenHTMLTemplate(const std::string& theTemplateFile, const DefinesMap& theDefinesMap)
+bool SexyApp::OpenHTMLTemplate(const std::string& /*theTemplateFile*/, const DefinesMap& /*theDefinesMap*/)
 {
+	unreachable(); // FIXME
+	/*
 	std::fstream anInStream(theTemplateFile.c_str(), std::ios::in);
 
 	if (!anInStream.is_open())
@@ -337,7 +346,7 @@ bool SexyApp::OpenHTMLTemplate(const std::string& theTemplateFile, const Defines
 		anOutStream << aNewString.c_str() << std::endl;
 	}
 	
-	return OpenURL(GetFullPath(anOutFilename));
+	return OpenURL(GetFullPath(anOutFilename));*/
 }
 
 bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
@@ -352,7 +361,7 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	
 	aDefinesMap.insert(DefinesMap::value_type("Src", mRegSource));
 	aDefinesMap.insert(DefinesMap::value_type("ProdName", mProdName));
-	aDefinesMap.insert(DefinesMap::value_type("Version", mProductVersion));
+	//aDefinesMap.insert(DefinesMap::value_type("Version", mProductVersion));
 	aDefinesMap.insert(DefinesMap::value_type("Variation", mVariation));
 	aDefinesMap.insert(DefinesMap::value_type("ReferId", mReferId));
 	aDefinesMap.insert(DefinesMap::value_type("DownloadId", StrFormat("%d", mDownloadId)));
@@ -518,11 +527,11 @@ void SexyApp::HandleCmdLineParam(const std::string& theParamName, const std::str
 		
 		std::string aVersionString = 
 			"Product: " + mProdName + "\r\n" +
-			"Version: " + mProductVersion + "\r\n" +
+			//"Version: " + mProductVersion + "\r\n" +
 			"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
 			"Build Date: " + mBuildDate;
 
-		MessageBox(NULL, aVersionString.c_str(), "Version Info", MB_ICONINFORMATION | MB_OK);
+		printf("%s", aVersionString.c_str());
 		DoExit(0);
 	}
 	else
@@ -531,6 +540,8 @@ void SexyApp::HandleCmdLineParam(const std::string& theParamName, const std::str
 
 std::string SexyApp::GetGameSEHInfo()
 {
+	unreachable();
+	/* TODO
 	char aGamesPlayedStr[16];
 	sprintf(aGamesPlayedStr, "%d", mTimesPlayed);
 
@@ -545,7 +556,7 @@ std::string SexyApp::GetGameSEHInfo()
 			"ReferId: " + mReferId + "\r\n";
 	}
 
-	return anInfoString;
+	return anInfoString;*/
 }
 
 void SexyApp::GetSEHWebParams(DefinesMap* theDefinesMap)
@@ -583,8 +594,8 @@ void SexyApp::InitPropertiesHook()
 	mIsWindowed = GetBoolean("DefaultWindowed", mIsWindowed);	
 
 	std::string aNewTitle = GetString("Title", "");
-	if (aNewTitle.length() > 0)
-		mTitle = aNewTitle + " " + mProductVersion;	
+	/*if (aNewTitle.length() > 0)
+		mTitle = aNewTitle + " " + mProductVersion;*/	
 		
 	//mInternetManager->Init();
 	mBetaSupport = nullptr;//new BetaSupport(this);
@@ -597,6 +608,7 @@ void SexyApp::InitPropertiesHook()
 
 void SexyApp::Init()
 {
+	/*
 	SEHCatcher::mCrashMessage = 
 		L"An unexpected error has occured!  Pressing 'Send Report' "
 		"will send us helpful debugging information that may help "
@@ -615,10 +627,11 @@ void SexyApp::Init()
 		"If you are on a dial-up connection, you may have to manually connect to your ISP.";
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
+	*/
 
-	OutputDebugString(StrFormat("Product: %s\r\n", mProdName.c_str()).c_str());	
-	OutputDebugString(StrFormat("BuildNum: %d\r\n", mBuildNum).c_str());
-	OutputDebugString(StrFormat("BuildDate: %s\r\n", mBuildDate.c_str()).c_str());	
+	printf("Product: %s\n", mProdName.c_str());	
+	printf("BuildNum: %d\n", mBuildNum);
+	printf("BuildDate: %s\n", mBuildDate.c_str());
 
 	SexyAppBase::Init();
 

@@ -1,3 +1,4 @@
+#include "Common.h"
 #include "GameButton.h"
 #include "CreditScreen.h"
 #include "../../LawnApp.h"
@@ -12,6 +13,8 @@
 #include "widget/Dialog.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
+#include <bits/chrono.h>
+#include <chrono>
 
 static CreditsTiming gCreditsTiming[] = {  //0x6A1AD8
     {  128.5f,      CreditWordType::WORD_AW ,         0,     CreditBrainType::BRAIN_OFF       },
@@ -1068,7 +1071,7 @@ void CreditScreen::Update()
         PlayReanim(1);
         mApp->mMusic->MakeSureMusicIsPlaying(MusicTune::MUSIC_TUNE_CREDITS_ZOMBIES_ON_YOUR_LAWN);
         mApp->ClearUpdateBacklog(false);
-        mTimerSinceStart.Start();
+        mTimerSinceStart = std::chrono::high_resolution_clock::now();
     }
     else if (mDontSync || mCreditsPhase == CreditsPhase::CREDITS_END)
     {
@@ -1077,7 +1080,7 @@ void CreditScreen::Update()
     else if (mUpdateCount > 1)
     {
         Reanimation* aCreditsReanim = mApp->ReanimationGet(mCreditsReanimID);
-        int aDurationSinceStart = mTimerSinceStart.GetDuration();
+        int aDurationSinceStart = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimerSinceStart).count();
         int aDurationReanimation = (aCreditsReanim->mDefinition->mTracks.tracks->mTransforms.count * aCreditsReanim->mAnimTime / aCreditsReanim->mAnimRate) * 1000.0f;
         if (mCreditsPhase == CreditsPhase::CREDITS_MAIN2)
         {
@@ -1428,7 +1431,7 @@ void CreditScreen::TurnOffTongues(Reanimation* theReanim, int aParentTrack)
     {
         ReanimatorTrackInstance* aTrackInstance = &theReanim->mTrackInstances[aTrackIndex];
         if (theReanim->mReanimationType == ReanimationType::REANIM_ZOMBIE_CREDITS_DANCE &&
-            aParentTrack % 4 != 1 && stricmp(theReanim->mDefinition->mTracks.tracks[aTrackIndex].mName, "anim_tongue") == 0)
+            aParentTrack % 4 != 1 && strcasecmp(theReanim->mDefinition->mTracks.tracks[aTrackIndex].mName, "anim_tongue") == 0)
         {
             aTrackInstance->mRenderGroup = RENDER_GROUP_HIDDEN;
         }
@@ -1441,14 +1444,16 @@ void CreditScreen::TurnOffTongues(Reanimation* theReanim, int aParentTrack)
     }
 }
 
+
 //0x437FC0
+/*
 void TodsHackyUnprotectedPerfTimer::SetStartTime(int theTimeMillisecondsAgo)
 {
     QueryPerformanceCounter(&mStart);
     LARGE_INTEGER aFreq;
     QueryPerformanceFrequency(&aFreq);
     mStart.QuadPart += theTimeMillisecondsAgo * aFreq.QuadPart / -1000;
-}
+}*/
 
 //0x438010
 void CreditScreen::JumpToFrame(CreditsPhase thePhase, float theFrame)
@@ -1471,6 +1476,7 @@ void CreditScreen::JumpToFrame(CreditsPhase thePhase, float theFrame)
     float aFrameFactor = 1.0f / (aReanim->mDefinition->mTracks.tracks->mTransforms.count - 1);
     int aMusicOffset = theFrame * 12142.0f;
     int aJumpMilliseconds = theFrame * 1000.0f / 7.0f;
+    (void)aJumpMilliseconds; // unused, because of stub
     if (thePhase == CreditsPhase::CREDITS_MAIN1)
     {
         if (theFrame >= 368.0f)
@@ -1566,7 +1572,9 @@ void CreditScreen::JumpToFrame(CreditsPhase thePhase, float theFrame)
     }
 
     mCreditsPhase = thePhase;
-    ((TodsHackyUnprotectedPerfTimer*)&mTimerSinceStart)->SetStartTime(aJumpMilliseconds);
+    unreachable();
+    /* TODO
+    ((TodsHackyUnprotectedPerfTimer*)&mTimerSinceStart)->SetStartTime(aJumpMilliseconds);*/
 }
 
 void CreditScreen::KeyChar(SexyChar theChar)
@@ -1657,7 +1665,9 @@ void CreditScreen::PauseCredits()
     mApp->mSoundSystem->StopFoley(FoleyType::FOLEY_SCREAM);
     mApp->PlaySample(SOUND_PAUSE);
     mCreditsPaused = true;
-    int aDurationOnPause = mTimerSinceStart.GetDuration();
+    unreachable();
+    /* TODO
+    int aDurationOnPause = mTimerSinceStart.GetDuration();*/
     mApp->mMusic->GameMusicPause(true);
 
     if (mApp->LawnMessageBox(
@@ -1674,7 +1684,9 @@ void CreditScreen::PauseCredits()
 
     mCreditsPaused = false;
     mApp->mMusic->GameMusicPause(false);
-    ((TodsHackyUnprotectedPerfTimer*)&mTimerSinceStart)->SetStartTime(aDurationOnPause);
+    unreachable();
+    /* TODO
+    ((TodsHackyUnprotectedPerfTimer*)&mTimerSinceStart)->SetStartTime(aDurationOnPause);*/
 }
 
 //0x438530

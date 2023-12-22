@@ -150,10 +150,13 @@ void Dialog::SetLinesFont(_Font* theFont)
 
 void Dialog::EnsureFonts()
 {
+	unreachable();
+	/* FIXME
 	if (mHeaderFont == NULL)
 		mHeaderFont = new SysFont(gSexyAppBase, "Arial Unicode MS", 14);
 	if (mLinesFont == NULL)
 		mLinesFont = new SysFont(gSexyAppBase, "Arial Unicode MS", 12);
+	*/
 }
 
 int	Dialog::GetPreferredHeight(int theWidth)

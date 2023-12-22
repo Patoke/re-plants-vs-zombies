@@ -11,6 +11,9 @@
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../GameConstants.h"
 #include "../System/Music.h"
+#include <bits/chrono.h>
+#include <chrono>
+#include <ctime>
 
 //0x48D4B0
 // GOTY @Patoke: 0x498220
@@ -70,7 +73,10 @@ void TitleScreen::Draw(Graphics* g)
 
 		if (!mDrawnYet)
 		{
-			TodTraceAndLog("First Draw Time: %d ms\n", GetTickCount() - mApp->mTimeLoaded);
+			TodTraceAndLog("First Draw Time: %d ms\n",
+				std::chrono::duration_cast<std::chrono::milliseconds>(
+					std::chrono::high_resolution_clock::now() - mApp->mTimeLoaded
+				).count());
 			TodHesitationTrace("TitleScreen First Draw");
 			mDrawnYet = true;
 		}

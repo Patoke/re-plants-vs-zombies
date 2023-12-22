@@ -9,26 +9,19 @@ namespace Sexy
 
 class AutoCrit
 {
-	LPCRITICAL_SECTION		mCritSec;
+    CritSect *mCritSec;
 public:
-	AutoCrit(LPCRITICAL_SECTION theCritSec) : 
-		mCritSec(theCritSec)
-	{ 
-		EnterCriticalSection(mCritSec); 
-	}
+    AutoCrit(CritSect& theCritSect) :
+        mCritSec(&theCritSect)
+    {
+        mCritSec->Lock();
+    }
 
-	AutoCrit(const CritSect& theCritSect) : 
-		mCritSec((LPCRITICAL_SECTION) &theCritSect.mCriticalSection)
-	{ 
-		EnterCriticalSection(mCritSec); 
-	}
-
-	~AutoCrit()
-	{ 
-		LeaveCriticalSection(mCritSec); 
-	}
+    ~AutoCrit()
+    {
+        mCritSec->Unlock();
+    }
 };
-
 }
 
 #endif //__AUTOCRIT_INCLUDED__

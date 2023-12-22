@@ -157,7 +157,7 @@ class TodDSoundInstance : public DSoundInstance
     friend class TodFoley;
 
 public:
-    TodDSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound) : DSoundInstance(theSoundManager, theSourceSound) { }
+    //TodDSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound) : DSoundInstance(theSoundManager, theSourceSound) { }
 
     /*inline*/ int      GetSoundPosition();
     /*inline*/ void     SetSoundPosition(int thePosition);

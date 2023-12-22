@@ -11,7 +11,7 @@ if(MSVC)
     set(libpng_binary "libpng16_staticd.lib")
 else() # linux
     set(libjpeg_binary "libjpeg.a")
-    set(zlib_binary "libzlibstatic.a")
+    set(zlib_binary "libz.a")
     set(libpng_binary "libpng.a")
 endif()
 

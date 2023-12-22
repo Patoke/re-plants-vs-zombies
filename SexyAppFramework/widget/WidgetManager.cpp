@@ -1,9 +1,11 @@
 #include "WidgetManager.h"
+#include "Common.h"
 #include "Widget.h"
 #include "graphics/Graphics.h"
 #include "graphics/Image.h"
 #include "misc/KeyCodes.h"
-#include "graphics/DDImage.h"
+//#include "graphics/DDImage.h"
+#include "graphics/MemoryImage.h"
 #include "SexyAppBase.h"
 #include "misc/PerfTimer.h"
 #include "misc/Debug.h"
@@ -426,10 +428,13 @@ bool WidgetManager::DrawScreen()
 	Graphics aScrG(mImage);
 	mCurG = &aScrG;
 
+	unreachable();
+	/* FIXME
 	DDImage* aDDImage = dynamic_cast<DDImage*>(mImage);
 	bool surfaceLocked = false;
 	if (aDDImage != NULL)
 		surfaceLocked = aDDImage->LockSurface();
+	*/
 
 	if (aDirtyCount > 0)
 	{
@@ -464,8 +469,11 @@ bool WidgetManager::DrawScreen()
 	
 	FlushDeferredOverlayWidgets(0x7FFFFFFF);
 
+	unreachable();
+	/* FIXME
 	if (aDDImage != NULL && surfaceLocked)
 		aDDImage->UnlockSurface();
+	*/
 
 	mCurG = NULL;
 
