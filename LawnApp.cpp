@@ -146,7 +146,7 @@ LawnApp::LawnApp()
 	mCrazyDaveBlinkCounter = 0;
 	mCrazyDaveBlinkReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveMessageIndex = -1;
-	unreachable();
+	//unreachable();
 	/* TODO
 	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));*/
 	mDRM = nullptr;
@@ -1243,7 +1243,6 @@ void BetaSubmitFunc()
 // GOTY @Patoke: 0x454C60
 void LawnApp::Init()
 {
-	DoParseCmdLine();
 	if (!mTodCheatKeys)
 	{
 		mOnlyAllowOneCopyToRun = true;

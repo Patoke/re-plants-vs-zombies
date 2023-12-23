@@ -321,7 +321,7 @@ void Buffer::WriteShort(short theShort)
 	WriteByte((uchar)(theShort >> 8));
 }
 
-void Buffer::WriteLong(long theLong)
+void Buffer::WriteLong(int32_t theLong)
 {
 	WriteByte((uchar)theLong);
 	WriteByte((uchar)(theLong >> 8));
@@ -467,12 +467,12 @@ short Buffer::ReadShort() const
 	return aShort;	
 }
 
-long Buffer::ReadLong() const
+int32_t Buffer::ReadLong() const
 {
-	long aLong = ReadByte();
-	aLong |= ((long) ReadByte()) << 8;
-	aLong |= ((long) ReadByte()) << 16;
-	aLong |= ((long) ReadByte()) << 24;
+	int32_t aLong = ReadByte();
+	aLong |= ((int32_t) ReadByte()) << 8;
+	aLong |= ((int32_t) ReadByte()) << 16;
+	aLong |= ((int32_t) ReadByte()) << 24;
 
 	return aLong;
 }

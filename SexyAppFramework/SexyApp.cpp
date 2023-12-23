@@ -113,8 +113,7 @@ bool SexyApp::Validate(const std::string& theUserName, const std::string& theReg
 
 void SexyApp::ReadFromRegistry()
 {
-	unreachable(); // FIXME
-	/*
+	//RegistryEmulatorTest();
 	SexyAppBase::ReadFromRegistry();
 
 	if (!mPlayingDemoBuffer)
@@ -122,13 +121,14 @@ void SexyApp::ReadFromRegistry()
 		mTimesPlayed = 0;
 		mTimesExecuted = 0;
 
-		char aFileName[256];
-		GetWindowsDirectory(aFileName, 256);
-		if (aFileName[strlen(aFileName)-1] != '\\')
-			strcat(aFileName, "\\");
-		strcat(aFileName, "popcinfo.dat");
+		//char aFileName[256];
+		//GetWindowsDirectory(aFileName, 256);
+		//if (aFileName[strlen(aFileName)-1] != '\\')
+		//	strcat(aFileName, "\\");
+		//strcat(aFileName, "popcinfo.dat");
 
-		FILE* fp = fopen(aFileName, "rb");
+		// read popcinfo.dat from current directory instead
+		FILE* fp = fopen("popcinfo.dat", "rb");
 		if (fp != NULL)
 		{
 			for (;;)
@@ -218,7 +218,7 @@ void SexyApp::ReadFromRegistry()
 	if (RegistryReadString("RegName", &mRegUserName))
 		mUserName = mRegUserName;
 	
-	RegistryReadString("RegCode", &mRegCode);*/	
+	RegistryReadString("RegCode", &mRegCode);
 
 	//mIsRegistered |= true /*Validate(mRegUserName, mRegCode)*/;	
 	/*
