@@ -410,4 +410,6 @@ main.pak
 main.unpak
 tools/res/
 tools/res-bak/
+tools/run/
 tools/read-compiled/target
+*.sublime-workspace
