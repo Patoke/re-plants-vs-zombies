@@ -57,6 +57,7 @@ int						TodPickFromSmoothArray(TodSmoothArray* theArray, int theCount);
 
 class TodResourceManager : public ResourceManager
 {
+	using ResourceManager::ResourceManager; // Use base class constructor
 public:
 	bool				FindImagePath(Image* theImage, std::string* thePath);
 	bool 				FindFontPath(_Font* theFont, std::string* thePath);

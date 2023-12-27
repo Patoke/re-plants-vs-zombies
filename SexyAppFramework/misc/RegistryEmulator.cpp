@@ -1,10 +1,6 @@
 #include "RegistryEmulator.h"
 
-#include <cstdint>
-#include <cstring>
 #include <filesystem>
-#include <string>
-#include <vector>
 
 RegistryEmulator::RegistryEmulator(const std::string theFileName) : mREG_FILENAME{theFileName} {
     FILE *aRegFile;

@@ -2,6 +2,7 @@
 #include <chrono>
 #include <cstdarg>
 
+#include "Common.h"
 #include "SexyAppBase.h"
 #include "TodList.h"
 #include "TodDebug.h"
@@ -1073,6 +1074,13 @@ Color ColorsMultiply(const Color& theColor1, const Color& theColor2)
 // GOTY @Patoke: inlined 0x51D4C0
 bool TodLoadResources(const std::string& theGroup)
 {
+	// It's fixed now.. but still, wtf
+	/* For everything that is mighty, this is so not okay. This code promotes the base class
+	 * ResourceManager to the derived class TodResourceManager and just yolo raw dogs it
+	 * and hopes for the best. It does work but Address sanitizer is having an aneurism.
+	 * Honestly I don't even know what the best way to do this is. Probably implement a
+	 * constructor in TodResourceManager and use that instead?
+	 */
 	return ((TodResourceManager*)gSexyAppBase->mResourceManager)->TodLoadResources(theGroup);
 }
 
@@ -1150,6 +1158,8 @@ bool TodResourceManager::TodLoadNextResource()
 		{
 		case ResType_Image:
 		{
+			unreachable();
+			/* TODO
 			ImageRes* anImageRes = (ImageRes*)aRes;
 			if ((DDImage*)anImageRes->mImage != nullptr)
 			{
@@ -1157,7 +1167,7 @@ bool TodResourceManager::TodLoadNextResource()
 				continue;
 			}
 
-			break;
+			break;*/
 		}
 
 		case ResType_Sound:

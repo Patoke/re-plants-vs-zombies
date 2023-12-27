@@ -40,7 +40,6 @@ public:
 	virtual void			StopAllSounds() = 0;
 	virtual int				GetFreeSoundId() = 0;
 	virtual int				GetNumSounds() = 0;
-
 };
 
 

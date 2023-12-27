@@ -65,7 +65,7 @@ public: // @Patoke todo: revert to protected
 		bool mPurgeBits;
 		bool mMinimizeSubdivisions;
 		int mRows;
-		int mCols;	
+		int mCols;
 		DWORD mAlphaColor;
 		AnimInfo mAnimInfo;
 
@@ -142,8 +142,8 @@ public: // @Patoke todo: revert to protected
 	void					DeleteMap(ResMap &theMap);
 	virtual void			DeleteResources(ResMap &theMap, const std::string &theGroup);
 
-	bool					LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage);
-	bool					LoadAlphaImage(ImageRes *theRes, DDImage *theImage);
+//	bool					LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage);
+//	bool					LoadAlphaImage(ImageRes *theRes, DDImage *theImage);
 	virtual bool			DoLoadImage(ImageRes *theRes);
 	virtual bool			DoLoadFont(FontRes* theRes);
 	virtual bool			DoLoadSound(SoundRes* theRes);

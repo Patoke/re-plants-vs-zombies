@@ -128,21 +128,23 @@ FoleyTypeData::FoleyTypeData()
 	mLastVariationPlayed = -1;
 }
 
+/* TODO
 int TodDSoundInstance::GetSoundPosition()
 {
 	unreachable();
-	/* FIXME
+
 	unsigned long dwCurrentPlayerCursor;
 	mSoundBuffer->GetCurrentPosition(&dwCurrentPlayerCursor, nullptr);
-	return dwCurrentPlayerCursor;*/
-}
+	return dwCurrentPlayerCursor;
+}*/
 
-void TodDSoundInstance::SetSoundPosition(int /*thePosition*/)
+/* TODO
+void TodDSoundInstance::SetSoundPosition(int thePosition)
 {
 	unreachable();
-	// FIXME
+	
 	//mSoundBuffer->SetCurrentPosition(thePosition);
-}
+}*/
 
 void TodFoleyInitialize(FoleyParams* theFoleyParamArray, int theFoleyParamArraySize)
 {
@@ -317,7 +319,7 @@ void TodFoley::StopFoley(FoleyType theFoleyType)
 }
 
 //0x5152D0
-void TodFoley::GamePause(bool theEnteringPause)
+void TodFoley::GamePause(bool /*theEnteringPause*/)
 {
 	SoundSystemReleaseFinishedInstances(this);
 	for (int aFoleyType = 0; aFoleyType < gFoleyParamArraySize; aFoleyType++)
@@ -331,12 +333,13 @@ void TodFoley::GamePause(bool theEnteringPause)
 				FoleyInstance* aFoleyInstance = &aFoleyData->mFoleyInstances[i];
 				if (aFoleyInstance->mRefCount != 0)  // 如果音效实例存在引用
 				{
+					unreachable();
+					/* TODO
 					TodDSoundInstance* aSoundInstance = (TodDSoundInstance*)aFoleyInstance->mInstance;
 					if (theEnteringPause)
 					{
 						aFoleyInstance->mPaused = true;
-						unreachable();
-						/* FIXME
+						
 						if (aSoundInstance->mSoundBuffer == nullptr)
 						{
 							aFoleyInstance->mPauseOffset = 0;
@@ -346,19 +349,17 @@ void TodFoley::GamePause(bool theEnteringPause)
 						{
 							aFoleyInstance->mPauseOffset = aSoundInstance->GetSoundPosition();  // 备份暂停时的播放进度
 							aSoundInstance->Stop();
-						}*/
+						}
 					}
 					else if (aFoleyInstance->mPaused)
 					{
 						aFoleyInstance->mPaused = false;
 						bool aIsLooping = TestBit(aFoleyParams->mFoleyFlags, FoleyFlags::FOLEYFLAGS_LOOP);
 						aSoundInstance->Play(aIsLooping, false);
-						unreachable();
-						/* FIXME
+
 						if (aSoundInstance->mSoundBuffer != nullptr)
 							aSoundInstance->SetSoundPosition(aFoleyInstance->mPauseOffset);  // 还原暂停前的播放进度
-						*/
-					}
+					}*/
 				}
 			}
 		}

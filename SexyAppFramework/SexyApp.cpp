@@ -581,7 +581,7 @@ void SexyApp::InitPropertiesHook()
 {
 	// Load properties if we need to
 	bool checkSig = !IsScreenSaver();
-	LoadProperties("properties\\partner.xml", false, checkSig);
+	LoadProperties("properties/partner.xml", false, checkSig);
 
 	// Check to see if this build is unlocked.
 	if (GetBoolean("NoReg", false))

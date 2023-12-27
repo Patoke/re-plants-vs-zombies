@@ -6,7 +6,7 @@ using namespace Sexy;
 
 SharedImage::SharedImage()
 {
-	mImage = NULL;
+	//mImage = NULL;
 	mRefCount = 0;
 }
 
@@ -100,10 +100,11 @@ SharedImageRef::operator MemoryImage*()
 		*/
 }
 
+/*
 SharedImageRef::operator DDImage*()
 {
 	if (mSharedImage != NULL)
 		return mSharedImage->mImage;
 	else
 		return NULL;
-}
+}*/

@@ -547,8 +547,9 @@ std::string Sexy::GetPathFrom(const std::string& theRelPath, const std::string& 
 
 	char aSlashChar = '/';
 
+	/* This test doesn't work on linux and it fails to create our delicious folder.
 	if ((theRelPath.find('\\') != (size_t)-1) || (theDir.find('\\') != (size_t)-1))
-		aSlashChar = '\\';	
+		aSlashChar = '\\';*/
 
 	if ((aNewPath.length() >= 2) && (aNewPath[1] == ':'))
 	{

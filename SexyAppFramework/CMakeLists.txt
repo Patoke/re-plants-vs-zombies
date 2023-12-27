@@ -305,11 +305,11 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
 
 add_library(bass SHARED IMPORTED)
 set_target_properties(bass
-    PROPERTIES IMPORTED_LOCATION ../lib/libbass.so
+    PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/lib/libbass.so
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE )
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ".") # SexyAppFramework
-target_link_libraries(${PROJECT_NAME} PRIVATE -Wl,-Bdynamic bass -Wl,-Bstatic -static -static-libgcc -static-libstdc++ "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PRIVATE bass "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

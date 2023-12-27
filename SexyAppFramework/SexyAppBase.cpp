@@ -5,6 +5,9 @@
 #include "SexyAppBase.h"
 //#include "misc/SEHCatcher.h"
 #include "Common.h"
+#include "graphics/VkInterface.h"
+#include "graphics/WindowInterface.h"
+#include "sound/DummySoundManager.h"
 #include "sound/SoundManager.h"
 #include "widget/WidgetManager.h"
 #include "widget/Widget.h"
@@ -19,7 +22,7 @@
 #include "widget/Dialog.h"
 #include "imagelib/ImageLib.h"
 //#include "sound/DSoundManager.h"
-#include "sound/DSoundInstance.h"
+//#include "sound/DSoundInstance.h"
 #include "misc/Rect.h"
 #include "sound/FModMusicInterface.h"
 #include "misc/PropertiesParser.h"
@@ -32,7 +35,7 @@
 #include <bits/iterator_concepts.h>
 #include <filesystem>
 #include <fstream>
-#include <pthread.h>
+//#include <pthread.h>
 #include <thread>
 #include <time.h>
 #include <math.h>
@@ -50,6 +53,9 @@
 #include "sound/DummyMusicInterface.h"
 
 #include "misc/memmgr.h"
+
+// For TodResourceManager, since inheratance goes the other way lol.
+#include "../Sexy.TodLib/TodCommon.h"
 
 using namespace Sexy;
 
@@ -119,7 +125,7 @@ unsigned char gDraggingCursorData[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00
 };
-static DDImage* gFPSImage = NULL; 
+//static DDImage* gFPSImage = NULL; 
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -339,9 +345,9 @@ SexyAppBase::SexyAppBase()
 	mDemoCmdBitPos = 0;
 
 	mWidgetManager = new WidgetManager(this);
-	mResourceManager = new ResourceManager(this);
+	mResourceManager = new TodResourceManager(this);
 
-	mPrimaryThreadId = 0;
+	//mPrimaryThreadId = 0;
 	/*
 	if (GetSystemMetrics(86)) // check for tablet pc
 	{
@@ -459,7 +465,7 @@ SexyAppBase::~SexyAppBase()
 	delete mResourceManager;
 	unreachable(); // FIXME
 	//delete gFPSImage;
-	gFPSImage = NULL;
+	//gFPSImage = NULL;
 	
 	SharedImageMap::iterator aSharedImageItr = mSharedImageMap.begin();
 	while (aSharedImageItr != mSharedImageMap.end())
@@ -472,6 +478,7 @@ SexyAppBase::~SexyAppBase()
 	}
 	
 	//delete mDDInterface;
+	delete mWindowInterface;
 	delete mMusicInterface;
 	delete mSoundManager;			
 
@@ -2168,7 +2175,7 @@ void SexyAppBase::ShutdownHook()
 
 void SexyAppBase::Shutdown()
 {
-	if ((mPrimaryThreadId != 0) && (pthread_self() != mPrimaryThreadId))
+	if (/*(mPrimaryThreadId != 0) && */(std::this_thread::get_id() != mPrimaryThreadId))
 	{
 		mLoadingFailed = true;
 	}
@@ -3839,8 +3846,7 @@ void SexyAppBase::RehupFocus()
 			mWidgetManager->LostFocus();
 			LostFocus();
 
-			unreachable(); // TODO
-			//ReleaseCapture();
+			mWindowInterface->ReleaseMouseCapture();
 			mWidgetManager->DoMouseUps();
 		}
 	}
@@ -3860,7 +3866,7 @@ void SexyAppBase::ClearKeysDown()
 void SexyAppBase::WriteDemoTimingBlock()
 {
 	// Demo writing functions can only be called from the main thread and after SexyAppBase::Init
-	DBG_ASSERTE(pthread_self() == mPrimaryThreadId);
+	DBG_ASSERTE(std::this_thread::get_id() == mPrimaryThreadId);
 
 	while (mUpdateCount - mLastDemoUpdateCnt > 15)
 	{
@@ -4719,138 +4725,43 @@ std::string	SexyAppBase::NotifyCrashHook()
 
 void SexyAppBase::MakeWindow()
 {
-	unreachable();
-	/* TODO
-	//OutputDebugString("MAKING WINDOW\r\n");
-	if (mHWnd != NULL)
-	{
-		SetWindowLongPtr(mHWnd, GWLP_USERDATA, 0);
-		HWND anOldWindow = mHWnd;
-		mHWnd = NULL;		
-		DestroyWindow(anOldWindow);	
-		mWidgetManager->mImage = NULL;
-	}
-
+	mWindowInterface = new VkInterface(mWidth, mHeight);
 
 	if ((mPlayingDemoBuffer) || (mIsWindowed && !mFullScreenWindow))
 	{
-		DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		if (mEnableMaximizeButton)
-			aWindowStyle |= WS_MAXIMIZEBOX;
-
-		RECT aRect;
-		aRect.left = 0;
-		aRect.top = 0;
-		aRect.right = mWidth;
-		aRect.bottom = mHeight;
-		
-		BOOL worked = AdjustWindowRect(&aRect, aWindowStyle, FALSE);
-		(void)worked; // Unused. Naughty not checking if it worked
-
-		int aWidth = aRect.right - aRect.left;
-		int aHeight = aRect.bottom - aRect.top;
-
-		// Get the work area of the desktop to allow us to center
-		RECT aDesktopRect;
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &aDesktopRect, 0);
-
-		int aPlaceX = 64;
-		int aPlaceY = 64;
-		
-		if (mPreferredX != -1)
-		{
-			aPlaceX = mPreferredX;
-			aPlaceY = mPreferredY;
-
-			int aSpacing = 4;
-
-			if (aPlaceX < aDesktopRect.left + aSpacing)
-				aPlaceX = aDesktopRect.left + aSpacing;
-
-			if (aPlaceY < aDesktopRect.top + aSpacing)
-				aPlaceY = aDesktopRect.top + aSpacing;
-
-			if (aPlaceX + aWidth >= aDesktopRect.right - aSpacing)
-				aPlaceX = aDesktopRect.right - aWidth - aSpacing;
-			
-			if (aPlaceY + aHeight >= aDesktopRect.bottom - aSpacing)
-				aPlaceY = aDesktopRect.bottom - aHeight - aSpacing;
-		}
-
-		// @Patoke: removed unnecessary if checks for win98
-		mHWnd = CreateWindowEx(
-			0,
-			_S("MainWindow"),
-			SexyStringToStringFast(mTitle).c_str(),
-			aWindowStyle,
-			aPlaceX,
-			aPlaceY,
-			aWidth,
-			aHeight,
-			NULL,
-			NULL,
-			gHInstance,
-			0);
-
-		if (mPreferredX == -1)
-		{
-			::MoveWindow(mHWnd,
-				aDesktopRect.left + ((aDesktopRect.right - aDesktopRect.left) - aWidth) / 2,
-				aDesktopRect.top + (int)(((aDesktopRect.bottom - aDesktopRect.top) - aHeight) * 0.382),
-				aWidth, aHeight, FALSE);
-		}
-
 		mIsPhysWindowed = true;
 	}
 	else
 	{
-
-		mHWnd = CreateWindowEx(
-			WS_EX_TOPMOST,
-			_S("MainWindow"),
-			SexyStringToStringFast(mTitle).c_str(),
-			WS_POPUP | WS_VISIBLE,
-			0,
-			0,
-			mWidth,
-			mHeight,
-			NULL,
-			NULL,
-			gHInstance,
-			0);
-
 		mIsPhysWindowed = false;
-	}*/
+	}
 
 	/*char aStr[256];
 	sprintf(aStr, "HWND: %d\r\n", mHWnd);
 	OutputDebugString(aStr);*/
 
-/*
-	SetWindowLongPtr(mHWnd, GWLP_USERDATA, (intptr_t) this);	
 
-	if (mDDInterface == NULL)
+	// SetWindowLongPtr(mHWnd, GWLP_USERDATA, (intptr_t) this);	
+
+
+	// Enable 3d setting
+	bool is3D = false;
+	bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
+	if (is3DOptionSet)
 	{
-		mDDInterface = new DDInterface(this);
-
-		// Enable 3d setting
-		bool is3D = false;
-		bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
-		if (is3DOptionSet)
+		if (mAutoEnable3D)
 		{
-			if (mAutoEnable3D)
-			{
-				mAutoEnable3D = false;
-				mTest3D = true;
-			}
-
-			if (is3D)
-				mTest3D = true;
-
-			mDDInterface->mIs3D = is3D;
+			mAutoEnable3D = false;
+			mTest3D = true;
 		}
+
+		if (is3D)
+			mTest3D = true;
+
+		//mDDInterface->mIs3D = is3D;
 	}
 
+	/* DD init code, unnecesary, we do this in the WindowInterface
 	int aResult = InitDDInterface();
 
 	if (mDDInterface->mD3DTester!=NULL && mDDInterface->mD3DTester->ResultsChanged())
@@ -4895,9 +4806,10 @@ void SexyAppBase::MakeWindow()
 			DoExit(1);
 		}
 	}
+	*/
 
 	bool isActive = mActive;
-	mActive = GetActiveWindow() == mHWnd;
+	mActive = mWindowInterface->IsFocused();
 
 	mPhysMinimized = false;
 	if (mMinimized)
@@ -4914,11 +4826,11 @@ void SexyAppBase::MakeWindow()
 		RehupFocus();
 
 	ReInitImages();
-
-	mWidgetManager->mImage = mDDInterface->GetScreenImage();
+	
+	//mWidgetManager->mImage = mDDInterface->GetScreenImage();
 	mWidgetManager->MarkAllDirty();
 
-	SetTimer(mHWnd, 100, mFrameTime, NULL);*/
+	//SetTimer(mHWnd, 100, mFrameTime, NULL);
 }
 
 void SexyAppBase::DeleteNativeImageData()
@@ -4966,8 +4878,10 @@ void SexyAppBase::LoadingThreadCompleted()
 {
 }
 
-void* SexyAppBase::LoadingThreadProcStub(void *theArg)
+void* SexyAppBase::LoadingThreadProcStub(void */*theArg*/)
 {
+	unreachable();
+	/* TODO
 	SexyAppBase* aSexyApp = (SexyAppBase*) theArg;
 	
 	aSexyApp->LoadingThreadProc();		
@@ -4981,11 +4895,13 @@ void* SexyAppBase::LoadingThreadProcStub(void *theArg)
 	printf("%s", aStr);
 
 	aSexyApp->mLoadingThreadCompleted = true;
-	pthread_exit(NULL);
+	pthread_exit(NULL);*/
 }
 
 void SexyAppBase::StartLoadingThread()
-{	
+{
+	unreachable();
+	/* TODO
 	if (!mLoadingThreadStarted)
 	{
 		mYieldMainThread = true; 
@@ -4998,7 +4914,7 @@ void SexyAppBase::StartLoadingThread()
 
 		pthread_t ptid;
 		pthread_create(&ptid, &attr, &LoadingThreadProcStub, this);
-	}
+	}*/
 }
 void SexyAppBase::CursorThreadProc()
 {
@@ -5355,7 +5271,7 @@ bool SexyAppBase::Process(bool allowSleep)
 				bool hadRealUpdate = DoUpdateFrames();
 
 				if (hadRealUpdate)
-				{					
+				{
 					mPendingUpdatesAcc += anUpdatesPerUpdateF;
 					mPendingUpdatesAcc -= 1.0;
 					ProcessSafeDeleteList();
@@ -5841,12 +5757,12 @@ bool SexyAppBase::LoadProperties(const std::string& theFileName, bool required, 
 bool SexyAppBase::LoadProperties()
 {
 	// Load required language-file properties
-	return LoadProperties("properties\\default.xml", true, false);
+	return LoadProperties("properties/default.xml", true, false);
 }
 
 void SexyAppBase::LoadResourceManifest()
 {
-	if (!mResourceManager->ParseResourcesFile("properties\\resources.xml"))
+	if (!mResourceManager->ParseResourcesFile("properties/resources.xml"))
 		ShowResourceError(true);
 }
 
@@ -6195,7 +6111,7 @@ void SexyAppBase::InitHook()
 
 void SexyAppBase::Init()
 {
-	mPrimaryThreadId = pthread_self();	
+	mPrimaryThreadId = std::this_thread::get_id();	
 	
 	if (mShutdown)
 		return;
@@ -6348,23 +6264,23 @@ void SexyAppBase::Init()
 	// NOTE: Moved call to PreDisplayHook above mIsWindowed and GetSystemsMetrics
 	// checks because the checks below use values that could change in PreDisplayHook.
 	// PreDisplayHook must call mWidgetManager->Resize if it changes mWidth or mHeight.
+
 	PreDisplayHook();
 
 	mWidgetManager->Resize(Rect(0, 0, mWidth, mHeight), Rect(0, 0, mWidth, mHeight));
 
 	// Check to see if we CAN run windowed or not...
+	/* @Minerscale: We can. It's <current year>
 	if (mIsWindowed && !mFullScreenWindow)
 	{
-		unreachable();
-		/* TODO
 		// How can we be windowed if our screen isn't even big enough?
 		if ((mWidth >= GetSystemMetrics(SM_CXFULLSCREEN)) ||
 			(mHeight >= GetSystemMetrics(SM_CYFULLSCREEN)))
 		{
 			mIsWindowed = false;
 			mForceFullscreen = true;
-		}*/
-	}
+		}
+	}*/
 
 	if (mFullScreenWindow) // change resoultion using ChangeDisplaySettings
 	{
@@ -6411,11 +6327,8 @@ void SexyAppBase::Init()
 		mSyncRefreshRate = mDemoBuffer.ReadByte();
 	}
 
-	unreachable();
-	/* TODO
-	if (mSoundManager == NULL)		
-		mSoundManager = new DSoundManager(mNoSoundNeeded?NULL:mHWnd, mWantFMod);
-	*/
+	if (mSoundManager == NULL)
+		mSoundManager = new DummySoundManager();
 
 	SetSfxVolume(mSfxVolume);
 	
@@ -6532,29 +6445,26 @@ void SexyAppBase::EnableCustomCursors(bool enabled)
 	EnforceCursor();
 }
 
-Sexy::DDImage* SexyAppBase::GetImage(const std::string& theFileName, bool /*commitBits*/)
+/*
+Sexy::DDImage* SexyAppBase::GetImage(const std::string& theFileName, bool commitBits)
 {	
 	ImageLib::Image* aLoadedImage = ImageLib::GetImage(theFileName, true);
 	
 	if (aLoadedImage == NULL)
 		return NULL;	
 	
-	unreachable();
-	/* TODO
 	DDImage* anImage = new DDImage(mDDInterface);
 	anImage->mFilePath = theFileName;
 	anImage->SetBits(aLoadedImage->GetBits(), aLoadedImage->GetWidth(), aLoadedImage->GetHeight(), commitBits);	
-	anImage->mFilePath = theFileName;*/
+	anImage->mFilePath = theFileName;
 	delete aLoadedImage;
 	
-	// TODO
-	//return anImage;
-}
+	return anImage;
+}*/
 
-Sexy::DDImage* SexyAppBase::CreateCrossfadeImage(Sexy::Image* /*theImage1*/, const Rect& /*theRect1*/, Sexy::Image* /*theImage2*/, const Rect& /*theRect2*/, double /*theFadeFactor*/)
+/*
+Sexy::DDImage* SexyAppBase::CreateCrossfadeImage(Sexy::Image* theImage1, const Rect& theRect1, Sexy::Image* theImage2, const Rect& theRect2, double theFadeFactor)
 {
-	unreachable();
-	/* TODO
 	MemoryImage* aMemoryImage1 = dynamic_cast<MemoryImage*>(theImage1);
 	MemoryImage* aMemoryImage2 = dynamic_cast<MemoryImage*>(theImage2);
 
@@ -6616,8 +6526,8 @@ Sexy::DDImage* SexyAppBase::CreateCrossfadeImage(Sexy::Image* /*theImage1*/, con
 
 	anImage->BitsChanged();
 	
-	return anImage;*/
-}
+	return anImage;
+}*/
 
 void SexyAppBase::ColorizeImage(Image* /*theImage*/, const Color& /*theColor*/)
 {
@@ -6683,10 +6593,9 @@ void SexyAppBase::ColorizeImage(Image* /*theImage*/, const Color& /*theColor*/)
 	aSrcMemoryImage->BitsChanged();*/
 }
 
-DDImage* SexyAppBase::CreateColorizedImage(Image* /*theImage*/, const Color& /*theColor*/)
+/*
+DDImage* SexyAppBase::CreateColorizedImage(Image* theImage, const Color& theColor)
 {
-	unreachable();
-	/* TODO
 	MemoryImage* aSrcMemoryImage = dynamic_cast<MemoryImage*>(theImage);
 
 	if (aSrcMemoryImage == NULL)
@@ -6756,13 +6665,12 @@ DDImage* SexyAppBase::CreateColorizedImage(Image* /*theImage*/, const Color& /*t
 
 	anImage->BitsChanged();
 
-	return anImage;*/
-}
+	return anImage;
+}*/
 
-DDImage* SexyAppBase::CopyImage(Image* /*theImage*/, const Rect& /*theRect*/)
+/*
+DDImage* SexyAppBase::CopyImage(Image* theImage, const Rect& theRect)
 {
-	unreachable();
-	/* TODO
 	DDImage* anImage = new DDImage(mDDInterface);
 
 	anImage->Create(theRect.mWidth, theRect.mHeight);
@@ -6772,13 +6680,14 @@ DDImage* SexyAppBase::CopyImage(Image* /*theImage*/, const Rect& /*theRect*/)
 
 	anImage->CopyAttributes(theImage);
 
-	return anImage;*/
-}
+	return anImage;
+}*/
 
+/*
 DDImage* SexyAppBase::CopyImage(Image* theImage)
 {
 	return CopyImage(theImage, Rect(0, 0, theImage->GetWidth(), theImage->GetHeight()));
-}
+}*/
 
 void SexyAppBase::MirrorImage(Image* theImage)
 {
@@ -7001,30 +6910,34 @@ void SexyAppBase::PrecacheNative(MemoryImage* /*theImage*/)
 }
 
 
-void SexyAppBase::PlaySample(int theSoundNum)
+void SexyAppBase::PlaySample(int /*theSoundNum*/)
 {
 	if (!mSoundManager)
 		return;
-
+	
+	unreachable();
+	/* TODO
 	SoundInstance* aSoundInstance = mSoundManager->GetSoundInstance(theSoundNum);
 	if (aSoundInstance != NULL)
 	{
 		aSoundInstance->Play(false, true);
-	}
+	}*/
 }
 
 
-void SexyAppBase::PlaySample(int theSoundNum, int thePan)
+void SexyAppBase::PlaySample(int /*theSoundNum*/, int /*thePan*/)
 {
 	if (!mSoundManager)
 		return;
 
+	unreachable();
+	/* TODO
 	SoundInstance* aSoundInstance = mSoundManager->GetSoundInstance(theSoundNum);
 	if (aSoundInstance != NULL)
 	{
 		aSoundInstance->SetPan(thePan);
 		aSoundInstance->Play(false, true);
-	}
+	}*/
 }
 
 bool SexyAppBase::IsMuted()
@@ -7124,7 +7037,8 @@ void SexyAppBase::Remove3DData(MemoryImage* /*theMemoryImage*/)
 
 bool SexyAppBase::Is3DAccelerated()
 {
-	unreachable();
+	// It is almost 2024.
+	return true;
 	/* TODO
 	return mDDInterface->mIs3D;*/
 }
@@ -7198,6 +7112,7 @@ void SexyAppBase::Set3DAcclerated(bool /*is3D*/, bool /*reinit*/)
 	}*/
 }
 
+/*
 SharedImageRef SexyAppBase::SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew)
 {
 	std::string anUpperFileName = StringToUpper(theFileName);
@@ -7207,9 +7122,7 @@ SharedImageRef SexyAppBase::SetSharedImage(const std::string& theFileName, const
 	SharedImageRef aSharedImageRef;
 	
 	{
-		unreachable();
-		/* TODO
-		AutoCrit anAutoCrit(mDDInterface->mCritSect);*/
+		AutoCrit anAutoCrit(mDDInterface->mCritSect);
 		aResultPair = mSharedImageMap.insert(SharedImageMap::value_type(SharedImageMap::key_type(anUpperFileName, anUpperVariant), SharedImage()));
 		aSharedImageRef = &aResultPair.first->second;
 	}
@@ -7223,7 +7136,7 @@ SharedImageRef SexyAppBase::SetSharedImage(const std::string& theFileName, const
 	}
 
 	return aSharedImageRef;
-}
+}*/
 
 SharedImageRef SexyAppBase::GetSharedImage(const std::string& theFileName, const std::string& theVariant, bool* isNew)
 {	
@@ -7247,14 +7160,14 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string& theFileName, const
 	if (aResultPair.second)
 	{
 		// Pass in a '!' as the first char of the file name to create a new image
+		unreachable();
+		/* TODO
 		if ((theFileName.length() > 0) && (theFileName[0] == '!')) {
-			unreachable();
-			/* TODO
-			aSharedImageRef.mSharedImage->mImage = new DDImage(mDDInterface);*/
+			aSharedImageRef.mSharedImage->mImage = new DDImage(mDDInterface);
 		}
 		else {
 			aSharedImageRef.mSharedImage->mImage = GetImage(theFileName,false);
-		}
+		}*/
 	}
 
 	return aSharedImageRef;

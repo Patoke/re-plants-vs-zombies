@@ -2,6 +2,8 @@
 #define __SEXYAPPBASE_H__
 
 #include "Common.h"
+#include "graphics/VkInterface.h"
+#include "graphics/WindowInterface.h"
 #include "misc/Rect.h"
 #include "graphics/Color.h"
 #include "misc/RegistryEmulator.h"
@@ -12,6 +14,7 @@
 #include "graphics/SharedImage.h"
 #include "misc/Ratio.h"
 #include <chrono>
+#include <thread>
 
 //extern HMODULE gDDrawDLL;
 //extern HMODULE gDSoundDLL;
@@ -30,7 +33,7 @@ namespace Sexy
 class WidgetManager;
 class DDInterface;
 class Image;
-class DDImage;
+//class DDImage;
 class Widget;
 class SoundManager;
 class MusicInterface;
@@ -166,7 +169,7 @@ public:
 	WidgetManager*			mWidgetManager;
 	DialogMap				mDialogMap;
 	DialogList				mDialogList;
-	pthread_t				mPrimaryThreadId;
+	std::thread::id			mPrimaryThreadId;
 //	bool					mSEHOccured;
 	bool					mShutdown;
 	bool					mExitToTop;
@@ -333,6 +336,8 @@ public:
 
 	RegistryEmulator		mRegHandle;
 
+	WindowInterface<VkInterface> *mWindowInterface;
+
 #ifdef ZYLOM
 	uint					mZylomGameId;
 #endif
@@ -449,8 +454,8 @@ public:
 	void					SetCursor(int theCursorNum);
 	int						GetCursor();
 	void					EnableCustomCursors(bool enabled);	
-	virtual DDImage*		GetImage(const std::string& theFileName, bool commitBits = true);	
-	virtual SharedImageRef	SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew);
+//	virtual DDImage*		GetImage(const std::string& theFileName, bool commitBits = true);	
+//	virtual SharedImageRef	SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew);
 	virtual SharedImageRef	GetSharedImage(const std::string& theFileName, const std::string& theVariant = "", bool* isNew = NULL);
 
 	void					CleanSharedImages();
@@ -459,11 +464,11 @@ public:
 	void					PrecacheNative(MemoryImage* theImage);
 	void					SetCursorImage(int theCursorNum, Image* theImage);
 
-	DDImage*				CreateCrossfadeImage(Image* theImage1, const Rect& theRect1, Image* theImage2, const Rect& theRect2, double theFadeFactor);
+//	DDImage*				CreateCrossfadeImage(Image* theImage1, const Rect& theRect1, Image* theImage2, const Rect& theRect2, double theFadeFactor);
 	void					ColorizeImage(Image* theImage, const Color& theColor);
-	DDImage*				CreateColorizedImage(Image* theImage, const Color& theColor);
-	DDImage*				CopyImage(Image* theImage, const Rect& theRect);
-	DDImage*				CopyImage(Image* theImage);
+//	DDImage*				CreateColorizedImage(Image* theImage, const Color& theColor);
+//	DDImage*				CopyImage(Image* theImage, const Rect& theRect);
+//	DDImage*				CopyImage(Image* theImage);
 	void					MirrorImage(Image* theImage);
 	void					FlipImage(Image* theImage);
 	void					RotateImageHue(Sexy::MemoryImage *theImage, int theDelta);

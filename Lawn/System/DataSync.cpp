@@ -9,7 +9,7 @@ DataReader::DataReader()
 	mOwnData = false;
 }
 
-//0x441B20°¢0x441B80
+//0x441B20„ÄÅ0x441B80
 DataReader::~DataReader()
 {
 	if (mFile)
@@ -498,7 +498,7 @@ DataWriter::DataWriter()
 	mCapacity = 0;
 }
 
-//0x4436A0°¢0x4436F0
+//0x4436A0„ÄÅ0x4436F0
 DataWriter::~DataWriter()
 {
 	if (mFile)
@@ -533,14 +533,14 @@ void DataWriter::EnsureCapacity(uint32_t theNumBytes)
 {
 	if (mCapacity < theNumBytes)
 	{
-		// √ø¥ŒΩ´»›¡ø≥À 2 ÷±µΩ»›¡ø¥ÔµΩ theNumBytes ªÚ∏¸∂‡
+		// ÊØèÊ¨°Â∞ÜÂÆπÈáè‰πò 2 Áõ¥Âà∞ÂÆπÈáèËææÂà∞ theNumBytes ÊàñÊõ¥Â§ö
 		do { mCapacity <<= 1; } while (mCapacity < theNumBytes);
 
-		// …Í«Î–¬ƒ⁄¥Ê
+		// Áî≥ËØ∑Êñ∞ÂÜÖÂ≠ò
 		char* aData = new char[mCapacity];
-		// Ω´‘≠ ˝æ›«®“∆÷¡–¬ƒ⁄¥Ê«¯”Ú÷–
+		// Â∞ÜÂéüÊï∞ÊçÆËøÅÁßªËá≥Êñ∞ÂÜÖÂ≠òÂå∫Âüü‰∏≠
 		memcpy(aData, mData, mDataLen);
-		//  Õ∑≈æ…”–ƒ⁄¥Ê«¯”Ú
+		// ÈáäÊîæÊóßÊúâÂÜÖÂ≠òÂå∫Âüü
 		delete[] mData;
 		mData = aData;
 	}

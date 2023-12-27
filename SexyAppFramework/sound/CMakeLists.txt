@@ -56,6 +56,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     #"FModSoundInstance.h"
     #"FModSoundManager.h"
     "DummyMusicInterface.h"
+    "DummySoundManager.h"
+    "DummySoundInstance.h"
     "MusicInterface.h"
     "SoundInstance.h"
     "SoundManager.h"

@@ -626,10 +626,9 @@ bool ResourceManager::ReparseResourcesFile(const std::string& theFilename)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::LoadAlphaGridImage(ImageRes */*theRes*/, DDImage */*theImage*/)
+/*
+bool ResourceManager::LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage)
 {
-	unreachable();
-	/*
 	ImageLib::Image* anAlphaImage = ImageLib::GetImage(theRes->mAlphaGridImage,true);	
 	if (anAlphaImage==NULL)
 		return Fail(StrFormat("Failed to load image: %s",theRes->mAlphaGridImage.c_str()));
@@ -672,15 +671,14 @@ bool ResourceManager::LoadAlphaGridImage(ImageRes */*theRes*/, DDImage */*theIma
 	}
 
 	theImage->BitsChanged();
-	return true;*/
-}
+	return true;
+}*/
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::LoadAlphaImage(ImageRes */*theRes*/, DDImage */*theImage*/)
+/*
+bool ResourceManager::LoadAlphaImage(ImageRes *theRes, DDImage *theImage)
 {
-	unreachable();
-	/*
 	SEXY_PERF_BEGIN("ResourceManager::GetImage");
 	ImageLib::Image* anAlphaImage = ImageLib::GetImage(theRes->mAlphaImage,true);
 	SEXY_PERF_END("ResourceManager::GetImage");
@@ -705,15 +703,13 @@ bool ResourceManager::LoadAlphaImage(ImageRes */*theRes*/, DDImage */*theImage*/
 	}
 
 	theImage->BitsChanged();
-	return true;*/
-}
+	return true;
+}*/
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::DoLoadImage(ImageRes */*theRes*/)
+bool ResourceManager::DoLoadImage(ImageRes *theRes)
 {
-	unreachable();
-	/*
 	//bool lookForAlpha = theRes->mAlphaImage.empty() && theRes->mAlphaGridImage.empty() && theRes->mAutoFindAlpha; // unused
 	
 	SEXY_PERF_BEGIN("ResourceManager:GetImage");
@@ -726,6 +722,9 @@ bool ResourceManager::DoLoadImage(ImageRes */*theRes*/)
 	SharedImageRef aSharedImageRef = gSexyAppBase->GetSharedImage(theRes->mPath, theRes->mVariant, &isNew);
 	ImageLib::gAlphaComposeColor = 0xFFFFFF;
 
+	unreachable();
+
+	/*
 	DDImage* aDDImage = (DDImage*) aSharedImageRef;
 	
 	if (aDDImage == NULL)
@@ -793,8 +792,8 @@ bool ResourceManager::DoLoadImage(ImageRes */*theRes*/)
 	if (aDDImage->mPurgeBits)
 		aDDImage->PurgeBits();
 
-	ResourceLoadedHook(theRes);
-	return true;*/
+	ResourceLoadedHook(theRes);*/
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -813,8 +812,10 @@ SharedImageRef ResourceManager::LoadImage(const std::string &theName)
 		return NULL;
 
 	ImageRes *aRes = (ImageRes*)anItr->second;
+	unreachable();
+	/* TODO
 	if ((DDImage*) aRes->mImage != NULL)
-		return aRes->mImage;
+		return aRes->mImage;*/
 
 	if (aRes->mFromProgram)
 		return NULL;
@@ -980,8 +981,10 @@ bool ResourceManager::LoadNextResource()
 			case ResType_Image: 
 			{
 				ImageRes *anImageRes = (ImageRes*)aRes;
+				unreachable();
+				/* TODO
 				if ((DDImage*)anImageRes->mImage!=NULL)
-					continue;
+					continue;*/
 
 				return DoLoadImage(anImageRes); 
 			}

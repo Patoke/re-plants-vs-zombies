@@ -46,7 +46,7 @@ public:
 	
 	Graphics*				mCurG;
 	SexyAppBase*			mApp;
-	MemoryImage*			mImage;	
+	//MemoryImage*			mImage;	
 	MemoryImage*			mTransientImage;
 	bool					mLastHadTransients;	
 	Widget*					mPopupCommandWidget;	

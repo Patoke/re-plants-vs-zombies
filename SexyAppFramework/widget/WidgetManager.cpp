@@ -21,7 +21,7 @@ WidgetManager::WidgetManager(SexyAppBase* theApp)
 	mWidgetManager = this;	
 	mMouseIn = false;
 	mDefaultTab = NULL;
-	mImage = NULL;
+	//mImage = NULL;
 	mLastHadTransients = false;
 	mPopupCommandWidget = NULL;
 	mFocusWidget = NULL;
@@ -407,7 +407,7 @@ bool WidgetManager::DrawScreen()
 
 	bool drewStuff = false;	
 	
-	int aDirtyCount = 0;
+	int aDirtyCount = 0;(void)aDirtyCount;
 	// unused
 	//bool hasTransients = false;
 	//bool hasDirtyTransients = false;
@@ -425,16 +425,17 @@ bool WidgetManager::DrawScreen()
 	mMinDeferredOverlayPriority = 0x7FFFFFFF;
 	mDeferredOverlayWidgets.resize(0);
 
-	Graphics aScrG(mImage);
-	mCurG = &aScrG;
-
 	unreachable();
 	/* FIXME
+	unreachable();
+	Graphics aScrG(mImage);
+	mCurG = &aScrG;
+	
 	DDImage* aDDImage = dynamic_cast<DDImage*>(mImage);
 	bool surfaceLocked = false;
 	if (aDDImage != NULL)
 		surfaceLocked = aDDImage->LockSurface();
-	*/
+	
 
 	if (aDirtyCount > 0)
 	{
@@ -465,7 +466,7 @@ bool WidgetManager::DrawScreen()
 
 			++anItr;
 		}
-	}
+	}*/
 	
 	FlushDeferredOverlayWidgets(0x7FFFFFFF);
 
