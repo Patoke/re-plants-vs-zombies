@@ -109,8 +109,6 @@ bool DescParser::GetValues(ListDataElement* theSource, ListDataElement* theValue
 					theValues->mElementVector.push_back(anItr->second->Duplicate());
 				}
 			}
-
-			
 		}
 	}
 

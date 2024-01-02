@@ -2,6 +2,7 @@
 #define __IMAGELIB_H__
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 namespace ImageLib
@@ -10,17 +11,25 @@ namespace ImageLib
 class Image
 {
 public:
-	int						mWidth;
-	int						mHeight;
-	uint32_t*				mBits;
+	int							mWidth = 0;
+	int							mHeight = 0;
+	std::unique_ptr<uint32_t[]>	mBits = nullptr;
 
-public:
-	Image();
-	virtual ~Image();
+	Image(int width, int height) :
+		mWidth(width),
+		mHeight(height),
+		mBits(std::make_unique<uint32_t[]>(mWidth*mHeight)) {
+			for (int i = 0; i < mHeight; ++i) {
+				for (int j = 0; j < mWidth; ++j) {
+					mBits[i*mWidth + j] = (((i/16)&1) ^ ((j/16)&1))?0x00FF00FF:0x00000000;
+				}
+			}
+		}
 
-	int						GetWidth();
-	int						GetHeight();
-	uint32_t*				GetBits();
+	Image(int width, int height, std::unique_ptr<uint32_t[]> bits) :
+		mWidth(width),
+		mHeight(height),
+		mBits(std::move(bits)) {}
 };
 
 bool WriteJPEGImage(const std::string& theFileName, Image* theImage);
@@ -32,7 +41,7 @@ extern bool gAutoLoadAlpha;
 extern bool gIgnoreJPEG2000Alpha;  // I've noticed alpha in jpeg2000's that shouldn't have alpha so this defaults to true
 
 
-Image* GetImage(const std::string& theFileName, bool lookForAlphaImage = true);
+std::unique_ptr<Image> GetImage(const std::string& theFileName, bool lookForAlphaImage = true);
 
 //void InitJPEG2000();
 //void CloseJPEG2000();

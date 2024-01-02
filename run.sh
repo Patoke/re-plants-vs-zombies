@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
+rm -f tools/run/PlantsVsZombies
+
 ./install.sh
 cd tools/run
-if [[ $1 = "-g" ]]
+
+if test -f ./PlantsVsZombies
 then
-	gdb ./PlantsVsZombies
-else
-	./PlantsVsZombies
+	if [[ $1 = "-g" ]]
+	then
+		gdb ./PlantsVsZombies
+	else
+		./PlantsVsZombies
+	fi
 fi

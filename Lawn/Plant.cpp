@@ -4098,6 +4098,8 @@ void Plant::Draw(Graphics* g)
             Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
             if (aBodyReanim)
             {
+                aBodyReanim->Draw(g);
+                /*
                 if (!mApp->Is3DAccelerated() && mSeedType == SeedType::SEED_FLOWERPOT && IsOnBoard() && 
                     aBodyReanim->mAnimRate == 0.0f && aBodyReanim->IsAnimPlaying("anim_idle"))
                 {
@@ -4106,7 +4108,7 @@ void Plant::Draw(Graphics* g)
                 else
                 {
                     aBodyReanim->Draw(g);
-                }
+                }*/
             }
         }
         else

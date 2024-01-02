@@ -1,5 +1,6 @@
 #include "SharedImage.h"
 //#include "graphics/DDImage.h"
+#include "Common.h"
 #include "SexyAppBase.h"
 
 using namespace Sexy;
@@ -15,14 +16,16 @@ SharedImageRef::SharedImageRef(const SharedImageRef& theSharedImageRef)
 	mSharedImage = theSharedImageRef.mSharedImage;
 	if (mSharedImage != NULL)
 		mSharedImage->mRefCount++;
-	mUnsharedImage = theSharedImageRef.mUnsharedImage;	
+	unreachable();
+	//mUnsharedImage = theSharedImageRef.mUnsharedImage;	
 	mOwnsUnshared = false;
 }
 
 SharedImageRef::SharedImageRef()
 {
 	mSharedImage = NULL;
-	mUnsharedImage = NULL;
+	unreachable();
+	//mUnsharedImage = NULL;
 	mOwnsUnshared = false;
 }
 
@@ -32,7 +35,8 @@ SharedImageRef::SharedImageRef(SharedImage* theSharedImage)
 	if (theSharedImage != NULL)
 		mSharedImage->mRefCount++;
 
-	mUnsharedImage = NULL;
+	unreachable();
+	//mUnsharedImage = NULL;
 	mOwnsUnshared = false;
 }
 
@@ -42,10 +46,12 @@ SharedImageRef::~SharedImageRef()
 }
 
 void SharedImageRef::Release()
-{	
+{
+	unreachable();
+	/*
 	if (mOwnsUnshared)
 		delete mUnsharedImage;
-	mUnsharedImage = NULL;
+	mUnsharedImage = NULL;*/
 	if (mSharedImage != NULL)
 	{
 		if (--mSharedImage->mRefCount == 0)
@@ -71,6 +77,7 @@ SharedImageRef&	SharedImageRef::operator=(SharedImage* theSharedImage)
 	return *this;
 }
 
+/*
 SharedImageRef& SharedImageRef::operator=(MemoryImage* theUnsharedImage)
 {
 	Release();
@@ -81,24 +88,24 @@ SharedImageRef& SharedImageRef::operator=(MemoryImage* theUnsharedImage)
 MemoryImage* SharedImageRef::operator->()
 {
 	return (MemoryImage*) *this;
-}
+}*/
 
 
 SharedImageRef::operator Image*()
 {
-	return (MemoryImage*) *this;
+	// FIXME
+	unreachable();
+	//return (MemoryImage*) *this;
 }
 
+/*
 SharedImageRef::operator MemoryImage*()
 {
 	if (mUnsharedImage != NULL)
 		return mUnsharedImage;
 	else
-		unreachable();
-		/* FIXME
 		return (DDImage*) *this;
-		*/
-}
+}*/
 
 /*
 SharedImageRef::operator DDImage*()

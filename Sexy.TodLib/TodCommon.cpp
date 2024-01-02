@@ -13,7 +13,6 @@
 #include "TodStringFile.h"
 #include "../GameConstants.h"
 #include "graphics/Font.h"
-#include "misc/Debug.h"
 //#include "graphics/DDImage.h"
 #include "graphics/Graphics.h"
 #include "graphics/ImageFont.h"
@@ -23,6 +22,7 @@
 //#include "graphics/D3DInterface.h"
 
 //0x510BC0
+/*
 void Tod_SWTri_AddAllDrawTriFuncs()
 {
 	SWTri_AddDrawTriFunc(true, false, false, false, 0x8888, false, TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB0_BLEND0);	//0x4A59B0
@@ -96,7 +96,7 @@ void Tod_SWTri_AddAllDrawTriFuncs()
 	SWTri_AddDrawTriFunc(true, true, true, false, 0x0555, true, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB0_BLEND1);		//0x50B230
 	SWTri_AddDrawTriFunc(true, true, true, true, 0x0555, false, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND0);		//0x50D2F0
 	SWTri_AddDrawTriFunc(true, true, true, true, 0x0555, true, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND1);		//0x50EA10
-}
+}*/
 
 //0x5114E0
 SexyString TodGetCurrentLevelName()
@@ -702,21 +702,27 @@ void SexyMatrix3ExtractScale(const SexyMatrix3& m, float& theScaleX, float& theS
 	}
 }
 
-void TodMarkImageForSanding(Image* theImage)
+void TodMarkImageForSanding(Image* /*theImage*/)
 {
-	((MemoryImage*)theImage)->mD3DFlags |= D3DIMAGEFLAG_SANDING;
+	static bool madeWarning = false;
+	if(!madeWarning) printf("warning:  Image Sanding is Skipped\n");
+	madeWarning = true;
+	//unreachable();
+	//((MemoryImage*)theImage)->mD3DFlags |= D3DIMAGEFLAG_SANDING;
 }
 
-void TodSandImageIfNeeded(Image* theImage)
+void TodSandImageIfNeeded(Image* /*theImage*/)
 {
+	static bool madeWarning = false;
+	if(!madeWarning) printf("warning:  Tried to sand Image but it didn't exist!\n");
+	madeWarning = true;
+	/* TODO
 	MemoryImage* aImage = (MemoryImage*)theImage;
-	/*if (TestBit(aImage->mD3DFlags, D3DIMAGEFLAG_SANDING))*/ // UB shift by a billion
 	if (aImage->mD3DFlags & D3DIMAGEFLAG_SANDING)
 	{
 		FixPixelsOnAlphaEdgeForBlending(theImage);
 		((MemoryImage*)theImage)->mD3DFlags &= ~D3DIMAGEFLAG_SANDING; // Unset the sanding flag
-		//SetBit((unsigned int&)aImage->mD3DFlags, D3DIMAGEFLAG_SANDING, false);  // 清除标记 Also UB!?!
-	}
+	}*/
 }
 
 //0x512650
@@ -724,15 +730,16 @@ void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform,
 {
 	float aOffsetX = 0.0f;
 	float aOffsetY = 0.0f;
-	if (gSexyAppBase->Is3DAccelerated())
-	{
-		aOffsetX -= 0.5f;
-		aOffsetY -= 0.5f;
-	}
+	//if (gSexyAppBase->Is3DAccelerated())
+	//{
+	aOffsetX -= 0.5f;
+	aOffsetY -= 0.5f;
+	//}
+	/*
 	else if (theDrawMode == Graphics::DRAWMODE_ADDITIVE)
 	{
 		gTodTriangleDrawAdditive = true;
-	}
+	}*/
 
 	TodSandImageIfNeeded(theImage);
 
@@ -878,6 +885,7 @@ void TodDrawImageCenterScaledF(Graphics* g, Image* theImage, float thePosX, floa
 }
 
 //0x512AC0
+/*
 uint32_t AverageNearByPixels(MemoryImage* theImage, uint32_t* thePixel, int x, int y)
 {
 	int aRed = 0;
@@ -918,9 +926,10 @@ uint32_t AverageNearByPixels(MemoryImage* theImage, uint32_t* thePixel, int x, i
 	aBlue /= aBitsCount;
 	aBlue = std::min(aBlue, 255);
 	return (aRed << 16) | (aGreen << 8) | (aBlue);
-}
+}*/
 
 //0x512C60
+/*
 void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 {
 	MemoryImage* aImage = (MemoryImage*)theImage;
@@ -954,7 +963,7 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	{
 		TodTraceAndLog("LOADING:Long sanding '%s' %d ms on %s", theImage->mFilePath.c_str(), aDuration, gGetCurrentLevelName().c_str());
 	}
-}
+}*/
 
 void SexyMatrix3Transpose(const SexyMatrix3& m, SexyMatrix3 &r)
 {
@@ -1121,18 +1130,18 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 	return true;
 }
 
-void TodAddImageToMap(SharedImageRef* theImage, const std::string& thePath)
-{ 
+void TodAddImageToMap(Image* theImage, const std::string& thePath)
+{
 	((TodResourceManager*)gSexyAppBase->mResourceManager)->AddImageToMap(theImage, thePath);
 }
 
 //0x513230
-void TodResourceManager::AddImageToMap(SharedImageRef* theImage, const std::string& thePath)
+void TodResourceManager::AddImageToMap(Image* theImage, const std::string& thePath)
 {
 	TOD_ASSERT(mImageMap.find(thePath) == mImageMap.end());
 
 	ImageRes* aImageRes = new ImageRes();
-	aImageRes->mImage = *theImage;
+	aImageRes->mImage = theImage;
 	aImageRes->mPath = thePath;
 	mImageMap.insert(ResMap::value_type(thePath, aImageRes));
 }
@@ -1158,16 +1167,14 @@ bool TodResourceManager::TodLoadNextResource()
 		{
 		case ResType_Image:
 		{
-			unreachable();
-			/* TODO
 			ImageRes* anImageRes = (ImageRes*)aRes;
-			if ((DDImage*)anImageRes->mImage != nullptr)
+			if (anImageRes->mImage != nullptr)
 			{
 				mCurResGroupListItr++;
 				continue;
 			}
 
-			break;*/
+			break;
 		}
 
 		case ResType_Sound:
@@ -1232,7 +1239,7 @@ bool TodResourceManager::FindFontPath(_Font* theFont, std::string* thePath)
 	for (auto anItr = mFontMap.begin(); anItr != mFontMap.end(); anItr++)
 	{
 		FontRes* aFontRes = (FontRes*)anItr->second;
-		_Font* aFont = (_Font*)aFontRes->mFont;
+		_Font* aFont = aFontRes->mFont;
 		if (aFont == theFont)
 		{
 			*thePath = anItr->first;

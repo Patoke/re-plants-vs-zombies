@@ -42,4 +42,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     "RegistryEmulator.cpp"
     "RegistryEmulator.h"
+
+    "fcaseopen.c"
 )

@@ -6,7 +6,6 @@
 #include "Graphics.h"
 #include "NativeDisplay.h"
 #include "misc/Debug.h"
-#include "Quantize.h"
 #include "misc/PerfTimer.h"
 #include "SWTri.h"
 
@@ -1176,7 +1175,7 @@ void MemoryImage::ReInit()
 	// Fix any un-palletizing
 	if (mWantPal)
 		Palletize();
-			
+
 	if (mPurgeBits)
 		PurgeBits();
 }

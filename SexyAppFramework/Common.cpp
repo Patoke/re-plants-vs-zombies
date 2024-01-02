@@ -3,10 +3,15 @@
 #include "misc/Debug.h"
 //#include <direct.h>
 //#include <io.h>
+#include <codecvt>
 #include <cstdarg>
 #include <chrono>
+#include <cstdio>
 #include <cwchar>
 #include <filesystem>
+#include <iostream>
+#include <locale>
+#include <stdexcept>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -1348,9 +1353,11 @@ bool Sexy::StrPrefixNoCase(const char *theStr, const char *thePrefix, int maxLen
 	return c2==0 || i==maxLength;
 }
 
-std::wstring Sexy::UTF8StringToWString(const std::string /*theString*/)
+std::wstring Sexy::UTF8StringToWString(const std::string theString)
 {
-	unreachable(); // FIXME
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
+	return cv.from_bytes(theString);
+
 	/*
 	int size = MultiByteToWideChar(CP_UTF8, 0, theString.c_str(), theString.length() + 1, nullptr, 0);
 	wchar_t* buffer = new wchar_t[size];

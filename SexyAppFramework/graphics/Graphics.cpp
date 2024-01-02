@@ -3,7 +3,6 @@
 #include "Image.h"
 #include "Font.h"
 //#include "DDImage.h"
-#include "MemoryImage.h"
 #include "misc/Rect.h"
 #include "misc/Debug.h"
 #include "misc/SexyMatrix.h"
@@ -11,7 +10,7 @@
 
 using namespace Sexy;
 
-Image GraphicsState::mStaticImage;
+DummyImage GraphicsState::mStaticImage;
 const Point* Graphics::mPFPoints;
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,7 +32,7 @@ void GraphicsState::CopyStateFrom(const GraphicsState* theState)
 	mScaleY = theState->mScaleY;
 	mScaleOrigX = theState->mScaleOrigX;
 	mScaleOrigY = theState->mScaleOrigY;
-	mIs3D = theState->mIs3D;
+//	mIs3D = theState->mIs3D;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,16 +58,7 @@ Graphics::Graphics(Image* theDestImage)
 	mWriteColoredString = true;
 	mLinearBlend = false;
 
-	if (mDestImage == NULL)
-	{
-		mDestImage = &mStaticImage;
-		mIs3D = false;
-	}
-	else
-	{
-		unreachable(); // FIXME
-		//mIs3D = DDImage::Check3D(theDestImage);
-	}
+	if (mDestImage == NULL) mDestImage = &mStaticImage;
 
 	mClipRect = Rect(0, 0, mDestImage->GetWidth(), mDestImage->GetHeight());
 }
@@ -844,13 +834,11 @@ void Graphics::DrawImageMatrix(Image* theImage, const SexyMatrix3 &theMatrix, co
 
 void Graphics::DrawImageTransformHelper(Image* theImage, const Transform &theTransform, const Rect &theSrcRect, float x, float y, bool useFloat)
 {
-	unreachable(); // FIXME
-	/*
-	if (theTransform.mComplex || (DDImage::Check3D(mDestImage) && useFloat))
+	if (theTransform.mComplex || useFloat)
 	{
 		DrawImageMatrix(theImage,theTransform.GetMatrix(),theSrcRect,x,y);
 		return;
-	}*/
+	}
 
 	// Translate into appropriate graphics call
 	float w2 = theSrcRect.mWidth/2.0f;
@@ -1183,13 +1171,8 @@ static int WriteWordWrappedHelper(Graphics *g, const SexyString& theString, int 
 
 int	Graphics::WriteWordWrapped(const Rect& theRect, const SexyString& theLine, int theLineSpacing, int theJustification, int *theMaxWidth, int theMaxChars, int *theLastWidth)
 {
-	/*
-	正式版中，删去了 *theLastWidth、theMaxChars 和 *theMaxWidth 参数，此函数形式可以简化为：
-	Graphics::自动换行的文字绘制(const Rect& 绘制区域矩形, const SexyString& 文字内容, int 行距 = -1, int 对齐方式 = -1)
-	当行距 = -1 时，默认使用 Graphics 字体的行距；对齐方式：左对齐 = -1；居中对齐 = 0；右对齐 = 1。
-	*/
 	Color anOrigColor = GetColor();
-	int anOrigColorInt = anOrigColor.ToInt();  //颜色数组转化为 ARGB 颜色
+	int anOrigColorInt = anOrigColor.ToInt();
 	if ((anOrigColorInt&0xFF000000)==0xFF000000)
 		anOrigColorInt &= ~0xFF000000;
 	
@@ -1198,7 +1181,6 @@ int	Graphics::WriteWordWrapped(const Rect& theRect, const SexyString& theLine, i
 
 	_Font* aFont = GetFont();						
 
-	//纵向偏移值 = 字体主要部分高度 - 字体内边距
 	int aYOffset = aFont->GetAscent() - aFont->GetAscentPadding();
 
 	if (theLineSpacing == -1)
@@ -1340,7 +1322,6 @@ int	Graphics::WriteWordWrapped(const Rect& theRect, const SexyString& theLine, i
 	if (theMaxWidth!=NULL)
 		*theMaxWidth = aMaxWidth;
 
-	//返回时，aYOffset 增量为 (行数 + 1) * 行距。以 aYOffset 减去末行多算的一次行距，再加上字体下沉部分的高度，得到文本底部的纵向偏移值，即文本区域高度。
 	return aYOffset + aFont->GetDescent() - theLineSpacing;
 }
 
@@ -1351,7 +1332,6 @@ int	Graphics::DrawStringColor(const SexyString& theLine, int theX, int theY, int
 
 int	Graphics::DrawStringWordWrapped(const SexyString& theLine, int theX, int theY, int theWrapWidth, int theLineSpacing, int theJustification, int *theMaxWidth)
 {
-	/*这个函数在正式版中被删得只剩前三个参数了……*/
 	int aYOffset = mFont->GetAscent() - mFont->GetAscentPadding();
 
 	Rect aRect(theX,theY-aYOffset,theWrapWidth,0);

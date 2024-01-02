@@ -3,7 +3,9 @@
 
 #include "Common.h"
 #include "graphics/Image.h"
+#include "graphics/Font.h"
 #include "SexyAppBase.h"
+#include <memory>
 #include <string>
 #include <map>
 
@@ -53,7 +55,7 @@ public: // @Patoke todo: revert to protected
 
 	struct ImageRes : public BaseRes
 	{
-		SharedImageRef mImage;
+		Image* mImage = nullptr;
 		std::string mAlphaImage;
 		std::string mAlphaGridImage;
 		std::string mVariant;
@@ -177,12 +179,12 @@ public:
 	bool					ReplaceFont(const std::string &theId, _Font *theFont);
 
 	void					DeleteImage(const std::string &theName);
-	SharedImageRef			LoadImage(const std::string &theName);
+	Image*					LoadImage(const std::string &theName);
 
 	void					DeleteFont(const std::string &theName);
 	_Font*					LoadFont(const std::string &theName);
 
-	SharedImageRef			GetImage(const std::string &theId);
+	Image*					GetImage(const std::string &theId);
 	int						GetSound(const std::string &theId);
 	_Font*					GetFont(const std::string &theId);
 	
@@ -190,7 +192,7 @@ public:
 	const XMLParamMap&		GetImageAttributes(const std::string &theId);
 
 	// These throw a ResourceManagerException if the resource is not found
-	virtual SharedImageRef	GetImageThrow(const std::string &theId);
+	virtual Image*			GetImageThrow(const std::string &theId);
 	virtual int				GetSoundThrow(const std::string &theId);
 	virtual _Font*			GetFontThrow(const std::string &theId);
 
@@ -215,5 +217,3 @@ struct ResourceManagerException : public std::exception
 }
 
 #endif //__PROPERTIESPARSER_H__
-
-

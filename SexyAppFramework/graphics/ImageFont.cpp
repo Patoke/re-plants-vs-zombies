@@ -3,9 +3,8 @@
 #include "Graphics.h"
 #include "Image.h"
 #include "SexyAppBase.h"
-#include "MemoryImage.h"
+//#include "MemoryImage.h"
 //#include "graphics/DDImage.h"
-#include "misc/AutoCrit.h"
 
 using namespace Sexy;
 
@@ -584,13 +583,10 @@ bool FontData::HandleCommand(const ListDataElement& theParams)
 			{
 				std::string aFileName = GetPathFrom(aFileNameString, GetFileDir(mSourceFile));
 
-				bool isNew;
-				SharedImageRef anImage = mApp->GetSharedImage(aFileName, "", &isNew);
+				Image *anImage = mApp->GetSharedImage(aFileName, "");
 
 				if ((Image*)anImage != NULL)
 				{
-					if (isNew)
-						anImage->Palletize();
 					aLayer->mImage = anImage;
 				}
 				else
@@ -1060,7 +1056,7 @@ bool FontData::Load(SexyAppBase* theSexyApp, const std::string& theFontDescFileN
 	return !hasErrors;
 }
 
-bool FontData::LoadLegacy(Image* theFontImage, const std::string& theFontDescFileName)
+bool FontData::LoadLegacy(Image* /*theFontImage*/, const std::string& /*theFontDescFileName*/)
 {
 	if (mInitialized)
 		return false;
@@ -1072,6 +1068,8 @@ bool FontData::LoadLegacy(Image* theFontImage, const std::string& theFontDescFil
 	if (anItr == mFontLayerMap.end())
 		return false;
 
+	unreachable();
+	/*
 	aFontLayer->mImage = (MemoryImage*)theFontImage;
 	aFontLayer->mDefaultHeight = aFontLayer->mImage->GetHeight();
 	aFontLayer->mAscent = aFontLayer->mImage->GetHeight();
@@ -1124,7 +1122,7 @@ bool FontData::LoadLegacy(Image* theFontImage, const std::string& theFontDescFil
 	mInitialized = true;
 	fclose(aStream);
 
-	return true;
+	return true;*/
 }
 
 ////
@@ -1140,11 +1138,12 @@ ActiveFontLayer::ActiveFontLayer(const ActiveFontLayer& theActiveFontLayer) :
 	mScaledImage(theActiveFontLayer.mScaledImage),
 	mOwnsImage(theActiveFontLayer.mOwnsImage)
 {
-	unreachable(); // FIXME
-	/*
-	if (mOwnsImage)
-		mScaledImage = mBaseFontLayer->mFontData->mApp->CopyImage(mScaledImage);
-	*/
+	if (mOwnsImage) {
+		unreachable();
+		/* FIXME
+		mScaledImage = mBaseFontLayer->mFontData->mApp->CopyImage(mScaledImage);*/
+	}
+
 	//for (int aCharNum = 0; aCharNum < 256; aCharNum++)
 	//	mScaledCharImageRects[aCharNum] = theActiveFontLayer.mScaledCharImageRects[aCharNum];
 	
@@ -1174,7 +1173,7 @@ ImageFont::ImageFont(SexyAppBase* theSexyApp, const std::string& theFontDescFile
 	mForceScaledImagesWhite = false;
 }
 
-ImageFont::ImageFont(Image* theFontImage)
+ImageFont::ImageFont(Image* /*theFontImage*/)
 {
 	mScale = 1.0;
 	mFontData = new FontData();
@@ -1191,9 +1190,11 @@ ImageFont::ImageFont(Image* theFontImage)
 	// Weird stray .first
 	(void)mFontData->mFontLayerMap.insert(FontLayerMap::value_type("", aFontLayer)).first;
 
+	unreachable();
+	/* TODO
 	aFontLayer->mImage = (MemoryImage*)theFontImage;
 	aFontLayer->mDefaultHeight = aFontLayer->mImage->GetHeight();
-	aFontLayer->mAscent = aFontLayer->mImage->GetHeight();
+	aFontLayer->mAscent = aFontLayer->mImage->GetHeight();*/
 }
 
 ImageFont::ImageFont(const ImageFont& theImageFont) :
@@ -1313,7 +1314,10 @@ void ImageFont::GenerateActiveFontLayers()
 					// Resize font elements
 					int aCharNum = 0;
 
+					unreachable();
+					/* TODO
 					MemoryImage* aMemoryImage = new MemoryImage(mFontData->mApp);
+					*/
 
 					int aCurX = 0;
 					int aMaxHeight = 0;
@@ -1350,6 +1354,8 @@ void ImageFont::GenerateActiveFontLayers()
 						aCurX += aScaledRect.mWidth;
 					}
 
+					unreachable();
+					/* TODO
 					anActiveFontLayer->mScaledImage = aMemoryImage;
 					anActiveFontLayer->mOwnsImage = true;
 
@@ -1385,7 +1391,7 @@ void ImageFont::GenerateActiveFontLayers()
 						}
 					}
 
-					aMemoryImage->Palletize();
+					aMemoryImage->Palletize();*/
 				}
 
 				int aLayerAscent = (aFontLayer->mAscent * aPointSize) / aLayerPointSize;
@@ -1506,7 +1512,7 @@ int ImageFont::CharWidth(SexyChar theChar)
 	return CharWidthKern(theChar, 0);
 }
 
-CritSect gRenderCritSec;
+//CritSect gRenderCritSec;
 static const int POOL_SIZE = 4096;
 static RenderCommand gRenderCommandPool[POOL_SIZE];
 static RenderCommand* gRenderTail[256];
@@ -1514,7 +1520,7 @@ static RenderCommand* gRenderHead[256];
 
 void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, RectList* theDrawnAreas, int* theWidth)
 {
-	AutoCrit anAutoCrit(gRenderCritSec);
+	//AutoCrit anAutoCrit(gRenderCritSec);
 
 	int aPoolIdx;
 

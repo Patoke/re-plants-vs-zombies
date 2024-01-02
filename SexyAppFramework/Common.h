@@ -27,7 +27,6 @@
 //#include <windows.h>
 //#include <shellapi.h> 
 //#include <mmsystem.h>
-#include "misc/ModVal.h"
 
 // fallback if NOMINMAX fails (somehow?)
 #undef min
@@ -84,6 +83,7 @@ typedef unsigned int UINT;
 typedef std::map<std::string, std::string>		DefinesMap;
 typedef std::map<std::wstring, std::wstring>	WStringWStringMap;
 typedef SexyString::value_type					SexyChar;
+
 #define HAS_SEXYCHAR
 
 namespace Sexy

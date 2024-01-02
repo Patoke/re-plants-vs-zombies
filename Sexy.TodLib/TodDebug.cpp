@@ -15,11 +15,7 @@ static char gDebugDataFolder[MAX_PATH];
 //0x514EA0
 void TodErrorMessageBox(const char* theMessage, const char* theTitle)
 {
-	printf("===ERROR BOX===%s\n%s\n===============\n", theMessage, theTitle);
-	/*
-	HWND hWnd = (gSexyAppBase && gSexyAppBase->mHWnd) ? gSexyAppBase->mHWnd : GetActiveWindow();
-	TodTraceAndLog("%s.%s", theMessage, theTitle);
-	MessageBoxA(hWnd, theMessage, theTitle, MB_ICONEXCLAMATION);*/
+	throw std::runtime_error("Error Box\n--" + std::string(theTitle) + "--\n" + theMessage);
 }
 
 void TodTraceMemory()

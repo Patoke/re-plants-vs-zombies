@@ -1,7 +1,8 @@
+#include "Common.h"
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "FilterEffect.h"
-#include "graphics/MemoryImage.h"
+//#include "graphics/MemoryImage.h"
 
 //0x446B80
 void RGB_to_HSL(float r, float g, float b, float& h, float& s, float& l)
@@ -89,6 +90,7 @@ void FilterEffectDisposeForApp()
 }
 
 //0x446FD0
+/*
 void FilterEffectDoLumSat(MemoryImage* theImage, float theLum, float theSat)
 {
 	uint32_t* ptr = theImage->mBits;
@@ -111,8 +113,9 @@ void FilterEffectDoLumSat(MemoryImage* theImage, float theLum, float theSat)
 			ptr++;
 		}
 	}
-}
+}*/
 
+/*
 void FilterEffectDoWashedOut(MemoryImage* theImage)
 {
 	FilterEffectDoLumSat(theImage, 1.8f, 0.2f);
@@ -163,7 +166,7 @@ MemoryImage* FilterEffectCreateImage(Image* theImage, FilterEffect theFilterEffe
 	aImage->mNumCols = theImage->mNumCols;
 	aImage->mNumRows = theImage->mNumRows;
 	return aImage;
-}
+}*/
 
 //0x447340
 Image* FilterEffectGetImage(Image* theImage, FilterEffect theFilterEffect)
@@ -175,7 +178,9 @@ Image* FilterEffectGetImage(Image* theImage, FilterEffect theFilterEffect)
 	if (it != aFilterMap.end())
 		return it->second;
 
+	unreachable();
+	/* TODO
 	MemoryImage* aImage = FilterEffectCreateImage(theImage, theFilterEffect);
 	aFilterMap.insert(ImageFilterMap::value_type(theImage, aImage));
-	return aImage;
+	return aImage;*/
 }

@@ -9,7 +9,7 @@ endif()
 set(libglfw-dir "${CMAKE_BINARY_DIR}/libglfw")
 ExternalProject_Add(glfw-src
     GIT_REPOSITORY      https://github.com/glfw/glfw.git
-    GIT_TAG             3.3.9
+    #GIT_TAG             3.3.9
     SOURCE_DIR          "${libglfw-dir}"
     BINARY_DIR          "${libglfw-dir}"
     CMAKE_ARGS          "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
@@ -18,9 +18,9 @@ ExternalProject_Add(glfw-src
                         "-DGLFW_BUILD_DOCS=OFF"
                         "-DGLFW_BUILD_TESTS=OFF"
                         "-DGLFW_BUILD_EXAMPLES=OFF"
-                        #"-DGLFW_BUILD_X11=OFF"
-                        #"-DGLFW_BUILD_WAYLAND=${glfw_use_wayland}"
-                        "-DGLFW_USE_WAYLAND=ON"
+                        "-DGLFW_BUILD_X11=OFF"
+                        "-DGLFW_BUILD_WAYLAND=${glfw_use_wayland}"
+                        #"-DGLFW_USE_WAYLAND=ON"
                         "-Wno-dev"
 
     BUILD_BYPRODUCTS    "${libglfw-dir}/install/lib/libglfw3.a"
@@ -107,38 +107,38 @@ target_sources(${PROJECT_NAME} PRIVATE
     ImageFont.h
     Image.h
     inc_routines
-    MemoryImage.cpp
-    MemoryImage.h
-    NativeDisplay.cpp
-    NativeDisplay.h
+#    MemoryImage.cpp
+#    MemoryImage.h
+#    NativeDisplay.cpp
+#    NativeDisplay.h
     Quantize.cpp
     Quantize.h
-    SharedImage.cpp
-    SharedImage.h
-    SWTri.cpp
-    SWTri.h
-#   SysFont.cpp
-#   SysFont.h
-    inc_routines/DDI_Additive.inc
-    inc_routines/DDI_AlphaBlt.inc
-    inc_routines/DDI_BltRotated_Additive.inc
-    inc_routines/DDI_BltRotated.inc
-    inc_routines/DDI_FastBlt_NoAlpha.inc
-    inc_routines/DDI_FastStretch_Additive.inc
-    inc_routines/DDI_FastStretch.inc
-    inc_routines/DDI_NormalBlt_Volatile.inc
-    inc_routines/GENERIC_DrawLineAA.inc
-    inc_routines/MI_AdditiveBlt.inc
-    inc_routines/MI_BltRotated_Additive.inc
-    inc_routines/MI_BltRotated.inc
-    inc_routines/MI_GetNativeAlphaData.inc
-    inc_routines/MI_GetRLAlphaData.inc
-    inc_routines/MI_NormalBlt.inc
-    inc_routines/MI_SlowStretchBlt.inc
+#    SharedImage.cpp
+#    SharedImage.h
+#    SWTri.cpp
+#    SWTri.h
+#    SysFont.cpp
+#    SysFont.h
+#    inc_routines/DDI_Additive.inc
+#    inc_routines/DDI_AlphaBlt.inc
+#    inc_routines/DDI_BltRotated_Additive.inc
+#    inc_routines/DDI_BltRotated.inc
+#    inc_routines/DDI_FastBlt_NoAlpha.inc
+#    inc_routines/DDI_FastStretch_Additive.inc
+#    inc_routines/DDI_FastStretch.inc
+#    inc_routines/DDI_NormalBlt_Volatile.inc
+#    inc_routines/GENERIC_DrawLineAA.inc
+#    inc_routines/MI_AdditiveBlt.inc
+#    inc_routines/MI_BltRotated_Additive.inc
+#    inc_routines/MI_BltRotated.inc
+#    inc_routines/MI_GetNativeAlphaData.inc
+#    inc_routines/MI_GetRLAlphaData.inc
+#    inc_routines/MI_NormalBlt.inc
+#    inc_routines/MI_SlowStretchBlt.inc
 
     WindowInterface.h
     VkInterface.h
     VkInterface.cpp
-    VulkImage.cpp
-    VulkImage.h
+    VkImage.cpp
+    VkImage.h
 )

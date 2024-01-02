@@ -2,7 +2,7 @@
 #include "SexyAppBase.h"
 #include "Graphics.h"
 #include "ImageFont.h"
-#include "MemoryImage.h"
+//#include "MemoryImage.h"
 #include "widget/WidgetManager.h"
 #include <stdlib.h>
 

@@ -29,7 +29,7 @@ class Graphics;
 class GraphicsState
 {
 public:
-	static Image			mStaticImage;
+	static DummyImage		mStaticImage;
 	Image*					mDestImage;
 	float					mTransX;
 	float					mTransY;
@@ -45,7 +45,7 @@ public:
 	bool					mFastStretch;
 	bool					mWriteColoredString;
 	bool					mLinearBlend;
-	bool					mIs3D;
+//	bool					mIs3D;
 
 public:
 	void					CopyStateFrom(const GraphicsState* theState);
@@ -174,7 +174,7 @@ public:
 	int						DrawStringWordWrapped(const SexyString& theLine, int theX, int theY, int theWrapWidth = 10000000, int theLineSpacing = -1, int theJustification = -1, int *theMaxWidth = NULL); //works like DrawString but also word wraps
 	int						GetWordWrappedHeight(int theWidth, const SexyString& theLine, int theLineSpacing = -1, int *theMaxWidth = NULL);
 
-	bool					Is3D() { return mIs3D; }
+//	bool					Is3D() { return mIs3D; }
 };
 
 class GraphicsAutoState

@@ -2,14 +2,14 @@
 #define __SHARED_IMAGE_H__
 
 #include "Common.h"
-#include "MemoryImage.h"
+//#include "MemoryImage.h"
 
 namespace Sexy
 {
 
 class Image;
 //class DDImage;
-class MemoryImage;
+//class MemoryImage;
 
 class SharedImage
 {
@@ -26,7 +26,7 @@ class SharedImageRef
 {
 public:
 	SharedImage*			mSharedImage;
-	MemoryImage*			mUnsharedImage;
+	//MemoryImage*			mUnsharedImage;
 	bool					mOwnsUnshared;
 
 public:
@@ -39,10 +39,10 @@ public:
 
 	SharedImageRef&			operator=(const SharedImageRef& theSharedImageRef);
 	SharedImageRef&			operator=(SharedImage* theSharedImage);
-	SharedImageRef&			operator=(MemoryImage* theUnsharedImage);
-	MemoryImage*			operator->();
+	//SharedImageRef&			operator=(MemoryImage* theUnsharedImage);
+	//MemoryImage*			operator->();
 	operator Image*();
-	operator MemoryImage*();
+	//operator MemoryImage*();
 	//operator DDImage*();
 };
 

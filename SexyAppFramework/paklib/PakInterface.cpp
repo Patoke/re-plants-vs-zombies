@@ -1,4 +1,5 @@
 #include "PakInterface.h"
+#include "misc/fcaseopen.h"
 #include <cstdio>
 #include <fstream>
 #include <unistd.h>
@@ -221,7 +222,7 @@ PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 		}
 	}
 
-	FILE* aFP = fopen(theFileName, anAccess);
+	FILE* aFP = fcaseopen(theFileName, anAccess);
 	if (aFP == NULL)
 		return NULL;
 	PFILE* aPFP = new PFILE;

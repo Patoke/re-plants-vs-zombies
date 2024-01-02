@@ -23,7 +23,7 @@ void TypingCheck::AddKeyCode(Sexy::KeyCode theKeyCode)
 void TypingCheck::AddChar(char theChar)
 {
 	theChar = (char)tolower(theChar);
-	std::string aCharString(&theChar);
+	std::string aCharString{theChar};
 	AddKeyCode(GetKeyCodeFromName(aCharString));
 }
 

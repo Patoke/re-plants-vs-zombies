@@ -1,6 +1,9 @@
 #ifndef WINDOW_INTERFACE_H
 #define WINDOW_INTERFACE_H
 
+#include "graphics/Image.h"
+using namespace Sexy;
+
 /*
  * This looks  cursed but what it actually  is  is an attempt  to avoid using
  * runtime  polymorphism to implement a simple  interface.  This  is mostly a
@@ -13,10 +16,13 @@
 template <class T>
 class WindowInterface {
 public:
-	bool IsFocused() { return static_cast<T*>(this)->IsFocused(); }
-	bool ShouldClose() { return static_cast<T*>(this)->ShouldClose(); }
-	void ReleaseMouseCapture() { return static_cast<T*>(this)->ReleaseMouseCapture(); }
-	void Draw() { static_cast<T*>(this)->Draw(); }
+    Image* GetScreenImage()    { return static_cast<T*>(this)->GetScreenImage();      }
+    void ShowWindow()          {        static_cast<T*>(this)->ShowWindow();          }
+    void PollEvents()          {        static_cast<T*>(this)->PollEvents();          }
+    bool IsFocused()           { return static_cast<T*>(this)->IsFocused();           }
+    bool ShouldClose()         { return static_cast<T*>(this)->ShouldClose();         }
+    void ReleaseMouseCapture() {        static_cast<T*>(this)->ReleaseMouseCapture(); }
+    void Draw()                {        static_cast<T*>(this)->Draw();                }
 };
 
 #endif // WINDOW_INTERFACE_H

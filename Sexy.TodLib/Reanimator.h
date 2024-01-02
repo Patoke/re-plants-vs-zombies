@@ -20,7 +20,7 @@ namespace Sexy
     class _Font;
     class Image;
     class Graphics;
-    class MemoryImage;
+//    class MemoryImage;
 };
 
 // ######################################################################################################################################################
