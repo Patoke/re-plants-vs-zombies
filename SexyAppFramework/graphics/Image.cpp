@@ -14,7 +14,7 @@ Image::Image()
 	mAnimInfo = NULL;
 	mDrawn = false;
 }
-
+/*
 Image::Image(const Image& theImage) :
 	mWidth(theImage.mWidth),
 	mHeight(theImage.mHeight),
@@ -26,7 +26,7 @@ Image::Image(const Image& theImage) :
 		mAnimInfo = new AnimInfo(*theImage.mAnimInfo);
 	else
 		mAnimInfo = NULL;
-}
+}*/
 
 Image::~Image()
 {

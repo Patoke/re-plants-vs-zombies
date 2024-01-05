@@ -47,7 +47,7 @@
 
 #include "widget/Checkbox.h"
 #include "widget/Dialog.h"
-#include "SexyAppFramework/resource.h"
+#include "graphics/WindowInterface.h"
 
 bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659
 bool gSlowMo = false;  //0x6A9EAA
@@ -385,9 +385,7 @@ void LawnApp::WriteToRegistry()
 {
 	if (mPlayerInfo)
 	{
-		unreachable();
-		/* TODO
-		RegistryWriteString("CurUser", SexyStringToStringFast(mPlayerInfo->mName));*/
+		RegistryWriteString("CurUser", SexyStringToStringFast(mPlayerInfo->mName));
 		mPlayerInfo->SaveDetails();
 	}
 
@@ -620,7 +618,7 @@ void LawnApp::KillStoreScreen()
 	if (GetDialog(Dialogs::DIALOG_STORE))
 	{
 		KillDialog(Dialogs::DIALOG_STORE);
-		ClearUpdateBacklog(false);
+		//ClearUpdateBacklog(false);
 	}
 }
 
@@ -1141,7 +1139,7 @@ bool LawnApp::KillNewOptionsDialog()
 	SwitchScreenMode(wantWindowed, want3D, false);
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
-	ClearUpdateBacklog();
+	//ClearUpdateBacklog();
 	return true;
 }
 
@@ -1151,7 +1149,7 @@ bool LawnApp::KillAlmanacDialog()
 	if (GetDialog(Dialogs::DIALOG_ALMANAC))
 	{
 		KillDialog(Dialogs::DIALOG_ALMANAC);
-		ClearUpdateBacklog(false);
+		//ClearUpdateBacklog(false);
 		return true;
 	}
 
@@ -1921,9 +1919,8 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
-			unreachable();
-			/* TODO
-			SendMessage(mHWnd, WM_CLOSE, 0, 0);*/
+			CloseRequestAsync();
+			//SendMessage(mHWnd, WM_CLOSE, 0, 0);
 			return;
 
 		case Dialogs::DIALOG_NAG:
@@ -2348,9 +2345,7 @@ bool LawnApp::UpdateApp()
 //0x453A70
 void LawnApp::CloseRequestAsync()
 {
-	unreachable();
-	/* TODO
-	mDeferredMessages.clear();*/
+	//mDeferredMessages.clear();
 	mExitToTop = true;
 	mCloseRequest = true;
 }
@@ -3234,83 +3229,6 @@ void LawnApp::PreloadForUser()
 	}
 }
 
-//0x455930
-void LawnApp::EnforceCursor()
-{
-	unreachable();
-	/* TODO
-	if (!mMouseIn)
-	{
-		::SetCursor(LoadCursor(NULL, IDC_ARROW));
-		return;
-	}
-
-	if (mOverrideCursor)
-	{
-		::SetCursor(mOverrideCursor);
-		return;
-	}
-
-	switch (mCursorNum)
-	{
-	case CURSOR_POINTER:
-		::SetCursor(LoadCursor(GetModuleHandle(NULL), MAKEINTRESOURCE(IDC_CURSOR1)));
-		return;
-
-	case CURSOR_HAND:
-		::SetCursor(mHandCursor);
-		return;
-
-	case CURSOR_TEXT:
-		::SetCursor(LoadCursor(NULL, IDC_IBEAM));
-		return;
-
-	case CURSOR_DRAGGING:
-		::SetCursor(mDraggingCursor);
-		return;
-
-	case CURSOR_CIRCLE_SLASH:
-		::SetCursor(LoadCursor(NULL, IDC_NO));
-		return;
-
-	case CURSOR_SIZEALL:
-		::SetCursor(LoadCursor(NULL, IDC_SIZEALL));
-		return;
-
-	case CURSOR_SIZENESW:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENESW));
-		return;
-
-	case CURSOR_SIZENS:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENS));
-		return;
-
-	case CURSOR_SIZENWSE:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENWSE));
-		return;
-
-	case CURSOR_SIZEWE:
-		::SetCursor(LoadCursor(NULL, IDC_SIZEWE));
-		return;
-
-	case CURSOR_WAIT:
-		::SetCursor(LoadCursor(NULL, IDC_WAIT));
-		return;
-
-	case CURSOR_CUSTOM:
-		::SetCursor(NULL);
-		return;
-
-	case CURSOR_NONE:
-		::SetCursor(NULL);
-		return;
-
-	default:
-		::SetCursor(LoadCursor(NULL, IDC_ARROW));
-		return;
-	}*/
-}
-
 //0x455AA0
 SexyString LawnApp::Pluralize(int theCount, const SexyChar* theSingular, const SexyChar* thePlural)
 {
@@ -3375,6 +3293,8 @@ bool LawnApp::IsTrialStageLocked()
 //0x455CC0
 void LawnApp::InitHook()
 {
+	mDRM = nullptr;
+	/*
 #ifdef _DEBUG
 	mDRM = nullptr;
 #else
@@ -3389,7 +3309,7 @@ void LawnApp::InitHook()
 	{
 		mTrialType = TrialType::TRIALTYPE_NONE;
 	}
-#endif
+#endif*/
 }
 
 //0x455E10

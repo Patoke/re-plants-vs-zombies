@@ -18,9 +18,10 @@ ExternalProject_Add(glfw-src
                         "-DGLFW_BUILD_DOCS=OFF"
                         "-DGLFW_BUILD_TESTS=OFF"
                         "-DGLFW_BUILD_EXAMPLES=OFF"
-                        "-DGLFW_BUILD_X11=OFF"
+                        #"-DGLFW_BUILD_X11=ON"
+                        #"-DGLFW_BUILD_WAYLAND=OFF"
                         "-DGLFW_BUILD_WAYLAND=${glfw_use_wayland}"
-                        #"-DGLFW_USE_WAYLAND=ON"
+                        "-DGLFW_USE_WAYLAND=ON"
                         "-Wno-dev"
 
     BUILD_BYPRODUCTS    "${libglfw-dir}/install/lib/libglfw3.a"

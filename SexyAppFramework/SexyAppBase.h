@@ -32,7 +32,7 @@ namespace Sexy
 {
 
 class WidgetManager;
-class DDInterface;
+//class DDInterface;
 class Image;
 //class DDImage;
 class Widget;
@@ -67,24 +67,6 @@ typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, int> StringIntMap;
 typedef std::map<std::string, double> StringDoubleMap;
 typedef std::map<std::string, StringVector> StringStringVectorMap;
-
-enum
-{
-	CURSOR_POINTER,
-	CURSOR_HAND,
-	CURSOR_DRAGGING,
-	CURSOR_TEXT,
-	CURSOR_CIRCLE_SLASH,
-	CURSOR_SIZEALL,
-	CURSOR_SIZENESW,
-	CURSOR_SIZENS,
-	CURSOR_SIZENWSE,
-	CURSOR_SIZEWE,	
-	CURSOR_WAIT,
-	CURSOR_NONE,
-	CURSOR_CUSTOM,
-	NUM_CURSORS
-};
 
 enum
 {
@@ -123,10 +105,9 @@ enum {
 
 enum
 {
-	UPDATESTATE_MESSAGES,
+	UPDATESTATE_PROCESS_DONE,
 	UPDATESTATE_PROCESS_1,
 	UPDATESTATE_PROCESS_2,
-	UPDATESTATE_PROCESS_DONE
 };
 
 //typedef std::map<HANDLE, int> HandleToIntMap;
@@ -175,7 +156,7 @@ public:
 //	bool					mSEHOccured;
 	bool					mShutdown;
 	bool					mExitToTop;
-	bool					mIsWindowed;
+//	bool					mIsWindowed;
 	bool					mIsPhysWindowed;
 	bool					mFullScreenWindow; // uses ChangeDisplaySettings to run fullscreen with mIsWindowed true
 	bool					mForceFullscreen;
@@ -191,13 +172,13 @@ public:
 	bool					mNoDefer;	
 	bool					mFullScreenPageFlip;	
 	bool					mTabletPC;
-	DDInterface*			mDDInterface;
+//	DDInterface*			mDDInterface;
 	bool					mAlphaDisabled;
 	MusicInterface*			mMusicInterface;	
 	bool					mReadFromRegistry;
 	std::string				mRegisterLink;
 	//std::string			mProductVersion;	
-	Image*					mCursorImages[NUM_CURSORS];
+//	Image*					mCursorImages[NUM_CURSORS];
 //	HCURSOR					mOverrideCursor;
 	bool					mIsOpeningURL;
 	bool					mShutdownOnURLOpen;
@@ -215,15 +196,15 @@ public:
 	SharedImageMap			mSharedImageMap;
 	bool					mCleanupSharedImages;
 	
-	int						mNonDrawCount;
+//	int						mNonDrawCount;
 	std::chrono::high_resolution_clock::duration	mFrameTime;
 
 	bool					mIsDrawing;
 	bool					mLastDrawWasEmpty;
-	bool					mHasPendingDraw;
-	double					mPendingUpdatesAcc;
-	std::chrono::high_resolution_clock::duration	mUpdateFTimeAcc;
-	std::chrono::high_resolution_clock::time_point	mLastTimeCheck;
+//	bool					mHasPendingDraw;
+	int						mPendingUpdatesAcc;
+//	std::chrono::high_resolution_clock::duration	mUpdateFTimeAcc;
+//	std::chrono::high_resolution_clock::time_point	mLastTimeCheck;
 	std::chrono::high_resolution_clock::time_point	mLastTime;
 	std::chrono::high_resolution_clock::time_point	mLastUserInputTick;
 
@@ -232,7 +213,7 @@ public:
 	int						mUpdateCount;
 	int						mUpdateAppState;
 	int						mUpdateAppDepth;
-	double					mUpdateMultiplier;		
+//	double					mUpdateMultiplier;		
 	bool					mPaused;
 	int						mFastForwardToUpdateNum;
 	bool					mFastForwardToMarker;
@@ -243,12 +224,14 @@ public:
 
 	int						mCursorNum;
 	SoundManager*			mSoundManager;
-//	HCURSOR					mHandCursor;
-//	HCURSOR					mDraggingCursor;
+	size_t					mHandCursor;
+	size_t					mDraggingCursor;
 	WidgetSafeDeleteList	mSafeDeleteList;
 	bool					mMouseIn;	
 	bool					mRunning;
-	bool					mActive;
+//	bool					mActive;
+	bool 					mActive;
+    bool 					mIsWindowed;
 	bool					mMinimized;
 	bool					mPhysMinimized;
 	bool					mIsDisabled;
@@ -268,7 +251,7 @@ public:
 	bool					mLoaded;
 	bool					mYieldMainThread;
 	bool					mLoadingFailed;
-	bool					mCursorThreadRunning;
+//	bool					mCursorThreadRunning;
 	bool					mSysCursor;	
 	bool					mCustomCursorsEnabled;
 	bool					mCustomCursorDirty;	
@@ -311,11 +294,6 @@ public:
 	bool					mAllowAltEnter;
 	
 	int						mSyncRefreshRate;
-	bool					mVSyncUpdates;
-	bool					mVSyncBroken;
-	int						mVSyncBrokenCount;
-	std::chrono::high_resolution_clock::time_point	mVSyncBrokenTestStartTick;
-	DWORD					mVSyncBrokenTestUpdates;
 	bool					mWaitForVSync;
 	bool					mSoftVSyncWait;
 	bool					mUserChanged3DSetting;
@@ -347,16 +325,15 @@ public:
 	LONG					mOldWndProc;
 
 protected:	
-	void					RehupFocus();
+//	void					RehupFocus();
 	void					ClearKeysDown();
 	bool					ProcessDeferredMessages(bool singleMessage);
-	void					UpdateFTimeAcc();
-	virtual bool			Process(bool allowSleep = true);		
+//	void					UpdateFTimeAcc();
+//	virtual bool			Process(bool allowSleep = true);		
 	virtual void			UpdateFrames();
-	virtual bool			DoUpdateFrames();
-	virtual void			DoUpdateFramesF(float theFrac);
+	virtual void			DoUpdateFrames();
 	virtual void			MakeWindow();
-	virtual void			EnforceCursor();
+//	virtual void			EnforceCursor();
 	virtual void			ReInitImages();
 	virtual void			DeleteNativeImageData();	
 	virtual void			DeleteExtraImageData();
@@ -366,9 +343,6 @@ protected:
 	static void				LoadingThreadProcStub(void *theArg);	
 
 	// Cursor thread methods
-	void					CursorThreadProc();
-	static void				CursorThreadProcStub(void *theArg);
-	void					StartCursorThread();
 	
 	void					WaitForLoadingThread();				
 	void					ProcessSafeDeleteList();	
@@ -430,8 +404,8 @@ public:
 
 	virtual void			Start();	
 	virtual void			Init();	
-	virtual void			PreDDInterfaceInitHook();
-	virtual void			PostDDInterfaceInitHook();
+//	virtual void			PreDDInterfaceInitHook();
+//	virtual void			PostDDInterfaceInitHook();
 	virtual bool			ChangeDirHook(const char *theIntendedPath);
 	virtual void			PlaySample(int theSoundNum);
 	virtual void			PlaySample(int theSoundNum, int thePan);
@@ -584,8 +558,8 @@ public:
 	virtual void			DoMainLoop();
 	virtual bool			UpdateAppStep(bool* updated);
 	virtual bool			UpdateApp();
-	int						InitDDInterface();
-	void					ClearUpdateBacklog(bool relaxForASecond = false);
+//	int						InitDDInterface();
+//	void					ClearUpdateBacklog(bool relaxForASecond = false);
 	bool					IsScreenSaver();
 	virtual bool			AppCanRestore();
 //	static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		

@@ -11,6 +11,8 @@
 
 using namespace Sexy;
 
+extern double gFramerate;
+
 namespace Vk {
 
 class VkImage : public Image
@@ -18,6 +20,8 @@ class VkImage : public Image
 public:
     VkImage(ImageLib::Image &theImage);
     VkImage(int width, int height) : VkImage(*std::make_unique<ImageLib::Image>(width, height)) {}
+    VkImage(const Image& theImage) = delete;
+    VkImage& operator= (const Image&) = delete;
     ~VkImage();
 
     bool mHasTrans = false;
@@ -27,6 +31,7 @@ public:
     ::VkImage image;
     VkImageView view;
     VkDeviceMemory memory;
+    VkFramebuffer framebuffer;
 
     void TransitionLayout(VkCommandBuffer commandBuffer, VkImageLayout newLayout);
 

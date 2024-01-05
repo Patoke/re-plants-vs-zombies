@@ -287,6 +287,14 @@ endforeach()
 add_custom_target(rc ALL DEPENDS ${RC_DEPENDS})
 
 ################################################################################
+# Precompiled headers
+################################################################################
+
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    "$<$<COMPILE_LANGUAGE:CXX>:Common.h>"
+)
+
+################################################################################
 # Dependencies
 ################################################################################
 set(ADDITIONAL_LIBRARY_DEPENDENCIES

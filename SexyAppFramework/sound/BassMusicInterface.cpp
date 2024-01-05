@@ -21,7 +21,7 @@ BassMusicInfo::BassMusicInfo()
 BassMusicInterface::BassMusicInterface(void *theHWnd)
 {
 	BOOL success;(void)success;
-
+	
 	success = BASS_Init(1, 44100, 0, theHWnd, NULL);
 	BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
 

@@ -1072,7 +1072,7 @@ void CreditScreen::Update()
         PreLoadCredits();
         PlayReanim(1);
         mApp->mMusic->MakeSureMusicIsPlaying(MusicTune::MUSIC_TUNE_CREDITS_ZOMBIES_ON_YOUR_LAWN);
-        mApp->ClearUpdateBacklog(false);
+        //mApp->ClearUpdateBacklog(false);
         mTimerSinceStart = std::chrono::high_resolution_clock::now();
     }
     else if (mDontSync || mCreditsPhase == CreditsPhase::CREDITS_END)

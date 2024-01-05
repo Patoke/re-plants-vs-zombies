@@ -1413,7 +1413,7 @@ void MemoryImage::AdditiveBlt(Image* theImage, int theX, int theY, const Rect& t
 		}
 
 		BitsChanged();
-	}	
+	}
 }
 
 void MemoryImage::NormalBlt(Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor)

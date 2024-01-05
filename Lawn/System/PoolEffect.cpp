@@ -48,7 +48,7 @@ void PoolEffect::PoolEffectInitialize()
 
 void PoolEffect::PoolEffectDispose()
 {
-    unreachable();
+    //unreachable();
     //delete mCausticImage;
     //delete[] mCausticGrayscaleImage;
 }

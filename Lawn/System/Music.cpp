@@ -39,8 +39,10 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName)
 {
 	HMUSIC aHMusic = 0;
 	HSTREAM aStream = 0;
-	BassMusicInterface* aBass = (BassMusicInterface*)mApp->mMusicInterface;
+	BassMusicInterface* aBass = dynamic_cast<BassMusicInterface*>(mApp->mMusicInterface);
 	std::string anExt;
+
+	if (!aBass) return false;
 
 	size_t aDot = theFileName.rfind('.');
 	if (aDot != std::string::npos)  // 文件名中不含“.”（文件无扩展名）

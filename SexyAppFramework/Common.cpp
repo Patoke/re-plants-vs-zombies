@@ -1355,7 +1355,7 @@ bool Sexy::StrPrefixNoCase(const char *theStr, const char *thePrefix, int maxLen
 
 std::wstring Sexy::UTF8StringToWString(const std::string theString)
 {
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> cv;
 	return cv.from_bytes(theString);
 
 	/*

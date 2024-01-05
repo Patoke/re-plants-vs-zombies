@@ -4,6 +4,13 @@
 //#pragma warning(disable:4786)
 //#pragma warning(disable:4503)
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <cstdint>
 #undef _WIN32_WINNT
 #undef WIN32_LEAN_AND_MEAN
