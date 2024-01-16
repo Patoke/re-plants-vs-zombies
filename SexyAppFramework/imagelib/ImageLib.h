@@ -21,7 +21,8 @@ public:
 		mBits(std::make_unique<uint32_t[]>(mWidth*mHeight)) {
 			for (int i = 0; i < mHeight; ++i) {
 				for (int j = 0; j < mWidth; ++j) {
-					mBits[i*mWidth + j] = (((i/16)&1) ^ ((j/16)&1))?0x00FF00FF:0x00000000;
+					//mBits[i*mWidth + j] = (((i/16)&1) ^ ((j/16)&1))?0x00FF00FF:0x00000000;
+					mBits[i*mWidth + j] = 0;
 				}
 			}
 		}

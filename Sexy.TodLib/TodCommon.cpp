@@ -691,12 +691,12 @@ void TodSandImageIfNeeded(Image* /*theImage*/)
 //0x512650
 void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect)
 {
-	float aOffsetX = 0.0f;
-	float aOffsetY = 0.0f;
+	//float aOffsetX = 0.0f;
+	//float aOffsetY = 0.0f;
 	//if (gSexyAppBase->Is3DAccelerated())
 	//{
-	aOffsetX -= 0.5f;
-	aOffsetY -= 0.5f;
+	//aOffsetX -= 0.5f;
+	//aOffsetY -= 0.5f;
 	//}
 	/*
 	else if (theDrawMode == Graphics::DRAWMODE_ADDITIVE)
@@ -706,23 +706,25 @@ void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform,
 
 	TodSandImageIfNeeded(theImage);
 
-	if (theClipRect.mX != 0 || theClipRect.mY != 0 || theClipRect.mWidth != BOARD_WIDTH || theClipRect.mHeight != BOARD_HEIGHT)
+	g->mDestImage->BltMatrix(theImage, 0.0f, 0.0f, theTransform, theClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
+
+	/*if (theClipRect.mX != 0 || theClipRect.mY != 0 || theClipRect.mWidth != BOARD_WIDTH || theClipRect.mHeight != BOARD_HEIGHT)
 	{
-		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, theClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
-	}/*
+		
+	}
 	else if (DDImage::Check3D(g->mDestImage))
 	{
 		theImage->mDrawn = true;
 		D3DInterface* aInterface = ((DDImage*)g->mDestImage)->mDDInterface->mD3DInterface;
 		aInterface->BltTransformed(theImage, nullptr, theColor, theDrawMode, theSrcRect, theTransform, g->mLinearBlend, aOffsetX, aOffsetY, true);
-	}*/
+	}
 	else
 	{
 		Rect aBufFixClipRect(0, 0, BOARD_WIDTH + 1, BOARD_HEIGHT + 1);
 		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, aBufFixClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
-	}
+	}*/
 
-	gTodTriangleDrawAdditive = false;
+	//gTodTriangleDrawAdditive = false;
 }
 
 //0x5127C0
@@ -892,9 +894,11 @@ uint32_t AverageNearByPixels(MemoryImage* theImage, uint32_t* thePixel, int x, i
 }*/
 
 //0x512C60
-/*
-void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
+
+void FixPixelsOnAlphaEdgeForBlending(Image* /*theImage*/)
 {
+	// TODO
+	/*
 	MemoryImage* aImage = (MemoryImage*)theImage;
 	if (aImage->mBits == nullptr)
 		return;
@@ -925,8 +929,8 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADING:Long sanding '%s' %d ms on %s", theImage->mFilePath.c_str(), aDuration, gGetCurrentLevelName().c_str());
-	}
-}*/
+	}*/
+}
 
 void SexyMatrix3Transpose(const SexyMatrix3& m, SexyMatrix3 &r)
 {

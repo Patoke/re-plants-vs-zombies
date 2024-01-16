@@ -2,6 +2,7 @@
 #define __REANIMATLAS_H__
 
 #include "misc/Rect.h"
+#include <memory>
 using namespace Sexy;
 
 #define MAX_REANIM_IMAGES 64
@@ -33,7 +34,7 @@ class ReanimAtlas
 public:
     ReanimAtlasImage                mImageArray[MAX_REANIM_IMAGES];     //+0x0
     int                             mImageCount;                        //+0x500
-    Image*                          mMemoryImage;                       //+0x504
+    std::unique_ptr<Image>          mMemoryImage;                       //+0x504
 
 public:
     ReanimAtlas();

@@ -1,5 +1,6 @@
 #include "RegistryEmulator.h"
 
+#include <cstdint>
 #include <filesystem>
 
 RegistryEmulator::RegistryEmulator(const std::string theFileName) : mREG_FILENAME{theFileName} {
@@ -55,6 +56,8 @@ size_t RegistryEmulator::GetNextKey(size_t theKeyIdx) {
     memcpy(&aLength, &mRegVec[theKeyIdx], sizeof(aLength));
     theKeyIdx += sizeof(uint32_t);                  // theLength
     theKeyIdx += aLength;                           // theValue
+
+    if (theKeyIdx == mRegVec.size()) return SIZE_MAX; // This was the last entry
 
     return theKeyIdx;
 }

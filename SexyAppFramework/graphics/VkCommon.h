@@ -1,10 +1,9 @@
 #ifndef VK_COMMON_H
 #define VK_COMMON_H
 
-#include "Common.h"
-
 #include <memory>
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 namespace Vk {
 
@@ -18,10 +17,12 @@ extern std::mutex renderMutex;
 
 extern VkQueue graphicsQueue;
 extern VkPipeline graphicsPipeline;
-extern std::array<VkDescriptorSet, num_image_swaps> imageDescriptors;
 extern std::array<VkCommandBuffer, num_image_swaps> imageCommandBuffers;
 extern VkRenderPass imagePass;
 extern VkFence imageFence;
+
+extern VkDescriptorPool descriptorPool;
+extern VkDescriptorSetLayout descriptorSetLayout;
 
 //extern std::vector<VkBuffer> uniformBuffers;
 //extern VkBuffer vertexBuffer;
@@ -31,11 +32,18 @@ extern VkPipelineLayout pipelineLayout;
 extern VkSampler textureSampler;
 
 extern uint32_t currentFrame;
-extern VkImage* cachedOtherImage;
+//extern VkImage* otherCachedImage;
 
 extern const std::vector<uint16_t> indices;
 
 VkImageView createImageView(::VkImage image, VkFormat format);
+
+struct ImagePushConstants {
+    glm::vec4 vertices[4];
+    uint32_t vertex_colors[4];
+    glm::vec4 render_color;
+    bool is_quad;
+};
 
 struct UniformBufferObject {
     glm::mat4 model;

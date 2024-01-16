@@ -314,7 +314,7 @@ public:
 	StringStringVectorMap	mStringVectorProperties;
 	ResourceManager*		mResourceManager;
 
-	RegistryEmulator		mRegHandle;
+	std::unique_ptr<RegistryEmulator> mRegHandle;
 
 	WindowInterface<Vk::VkInterface> *mWindowInterface;
 

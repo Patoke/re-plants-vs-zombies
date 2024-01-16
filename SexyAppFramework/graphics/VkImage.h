@@ -1,17 +1,15 @@
 #ifndef __VK_IMAGE_H__
 #define __VK_IMAGE_H__
 
+#include "Common.h"
+#include <cstdio>
 #include <memory>
 #include <vulkan/vulkan_core.h>
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 
 #include "Image.h"
 #include "imagelib/ImageLib.h"
 
 using namespace Sexy;
-
-extern double gFramerate;
 
 namespace Vk {
 
@@ -33,6 +31,11 @@ public:
     VkDeviceMemory memory;
     VkFramebuffer framebuffer;
 
+    VkDescriptorSet descriptor;
+
+    //glm::vec4 clipRect{};
+    //double scale = 1.0;
+
     void TransitionLayout(VkCommandBuffer commandBuffer, VkImageLayout newLayout);
 
     void FillRect(const Rect&, const Color&, int);
@@ -49,6 +52,11 @@ public:
     void BltTrianglesTex(Image*, const TriVertex (*)[3], int, const Rect&, const Color &, int, float, float, bool);
     void BltMirror(Image*, int, int, const Rect&, const Color&, int);
     void StretchBltMirror(Image*, const Rect&, const Rect&, const Rect&, const Color&, int, bool);
+
+private:
+    void BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4& theSrcRect, const glm::vec4& theClipRect, const Color&, int, bool);
+    void BeginDraw(Image* theImage);
+    void SetViewportAndScissor(const glm::vec4& theClipRect);
 };
 
 } // namespace Vk

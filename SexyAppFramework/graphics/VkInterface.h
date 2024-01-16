@@ -1,8 +1,6 @@
 #ifndef __VK_INTERFACE_H__
 #define __VK_INTERFACE_H__
 
-#include "Common.h"
-
 #include "graphics/WindowInterface.h"
 #include "widget/WidgetManager.h"
 #include <glm/fwd.hpp>

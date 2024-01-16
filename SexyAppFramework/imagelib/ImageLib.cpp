@@ -101,7 +101,7 @@ std::unique_ptr<Image> GetPNGImage(const std::string& theFileName)
 		row_pointers[i] = (png_bytep)(aBits.get() + i*width);
 	}
 	png_read_image(png_ptr, row_pointers);
-		/*
+	/*
 	unsigned long* anAddr = aBits;
 	for (unsigned int i = 0; i < height; i++)
 	{

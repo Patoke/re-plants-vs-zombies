@@ -728,7 +728,7 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	{
 		Rect aSrcRect(aAtlasImage->mX, aAtlasImage->mY, aAtlasImage->mWidth, aAtlasImage->mHeight);
 		
-		aImage = mDefinition->mReanimAtlas->mMemoryImage;
+		aImage = mDefinition->mReanimAtlas->mMemoryImage.get();
 		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // 如果动画存在滤镜
 		{
 			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // 取得滤镜后的贴图

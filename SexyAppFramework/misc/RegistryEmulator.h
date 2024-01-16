@@ -28,7 +28,7 @@
 class RegistryEmulator {
 public:
 	RegistryEmulator(const std::string);
-	RegistryEmulator() : mREG_FILENAME("registry.dat") {}
+	RegistryEmulator() : RegistryEmulator("registry.dat") {}
 	~RegistryEmulator();
 	bool Read(const std::string& theValueName, uint32_t &theType, std::vector<uint8_t> &theValue, uint32_t &theLength);
 	void Write(const std::string& theValueName, uint32_t theType, const uchar* theValue, uint32_t theLength);
