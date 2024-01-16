@@ -31,7 +31,7 @@
 #undef max
 
 // Define unreachable()
-#ifdef MSVC
+#ifdef _MSC_VER
 #define unreachable std::unreachable
 #else
 #define unreachable __builtin_unreachable
