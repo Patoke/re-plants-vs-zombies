@@ -653,19 +653,15 @@ bool DefinitionIsCompiled(const SexyString& theXMLFilePath)
         return true;
 
 #if !defined(_WIN32) // It should be abundantly clear that I didn't want to write this.
-    char *src_correct_name = (char *)malloc(theXMLFilePath.length() + 3);
-    char *compiled_correct_name = (char *)malloc(aCompiledFilePath.length() + 3);
-    bool src_exists = casepath(theXMLFilePath.c_str(), src_correct_name);
-    bool compiled_exists = casepath(aCompiledFilePath.c_str(), compiled_correct_name);
-    if (!src_exists) {
+    auto src_correct_name = casepath(theXMLFilePath);
+    auto compiled_correct_name = casepath(aCompiledFilePath);
+    if (src_correct_name == "") {
         throw std::runtime_error("Can't find source file to compile: " + theXMLFilePath);
         return false;
-    } else if (!compiled_exists) {
+    } else if (compiled_correct_name == "") {
         return false;
     }
     bool rebuild = std::filesystem::last_write_time(compiled_correct_name) > std::filesystem::last_write_time(src_correct_name);
-    free(src_correct_name);
-    free(compiled_correct_name);
     return rebuild;
 #else
     auto src = std::filesystem::path(theXMLFilePath);

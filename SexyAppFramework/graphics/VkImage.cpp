@@ -3,7 +3,7 @@
 #include "VkCommon.h"
 #include "misc/SexyMatrix.h"
 #include <chrono>
-#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/fwd.hpp>
 #include <iostream>
 #include <memory>
@@ -20,12 +20,12 @@ namespace Vk {
 int descriptorPoolSize = 0;
 VkImage::VkImage(ImageLib::Image &theImage)
 {
-    renderMutex.lock();
-
     mWidth = theImage.mWidth;
     mHeight = theImage.mHeight;
 
     if (!mWidth || !mHeight) throw std::runtime_error("Images with no size are not supported.");
+
+    renderMutex.lock();
 
     VkDeviceSize imageSize = mWidth * mHeight * sizeof(uint32_t);
 
@@ -116,6 +116,7 @@ VkImage::VkImage(ImageLib::Image &theImage)
         0,
         nullptr
     );
+
     renderMutex.unlock();
 }
 
@@ -191,6 +192,7 @@ void VkImage::TransitionLayout(VkCommandBuffer commandBuffer, VkImageLayout newL
 
 int imageBufferIdx = 0;
 bool inRenderpass = false;
+int cachedDrawMode = -1;
 int num_passes = 0;
 void endRenderPass() {
     if(inRenderpass) {
@@ -204,6 +206,8 @@ bool inRecording = false;
 auto begin_time = std::chrono::high_resolution_clock::now();
 void flushCommandBuffer() {
     if (inRecording) {
+        cachedDrawMode = -1;
+
         endRenderPass();
 
         vkEndCommandBuffer(imageCommandBuffers[imageBufferIdx]);
@@ -223,29 +227,35 @@ void flushCommandBuffer() {
     }
 }
 
-void VkImage::FillRect(const Rect& /*theRect*/, const Color& /*theColor*/, int /*theDrawMode*/){
-    //Blt(Sexy::IMAGE_BLANK, theRect.mX, theRect.mY, Rect{0, 0, theRect.mWidth, theRect.mHeight}, theColor, theDrawMode);
-
-/*
-    renderMutex.lock();
-
-    auto color = VkClearColorValue{ .float32 = {theColor.mRed/255.0f, theColor.mGreen/255.0f, theColor.mBlue/255.0f} };
-
-    auto subresourceRange = VkImageSubresourceRange { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-    vkCmdClearColorImage(imageCommandBuffers[imageBufferIdx], image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1, &subresourceRange);
-
-    renderMutex.unlock();
-*/
-}
-
 glm::vec4 RectToVec4(Rect a) {
     return glm::vec4(a.mX, a.mY, a.mWidth, a.mHeight);
+}
+
+std::unique_ptr<VkImage> blankImage;
+
+void VkImage::FillRect(const Rect& theRect, const Color& theColor, int theDrawMode) {
+    if (blankImage == nullptr) {
+        ImageLib::Image inputImage = ImageLib::Image(1, 1);
+        inputImage.mBits[0] = 0xFFFFFFFF;
+        blankImage = std::make_unique<VkImage>(inputImage);
+    }
+
+    glm::mat3 theMatrix = glm::translate(glm::mat3(1.0), glm::vec2(theRect.mX + 0.5, theRect.mY + 0.5));
+
+    glm::vec4 theClipRect = {
+        0,
+        0,
+        theRect.mWidth,
+        theRect.mHeight
+    };
+
+    VkImage::BltEx(blankImage.get(), theMatrix, glm::vec4(0,0,1,1), theClipRect, theColor, theDrawMode, false);
 }
 
 VkImage* otherCachedImage = nullptr;
 VkImage* thisCachedImage = nullptr;
 void VkImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode){
-    glm::mat4 theMatrix = glm::translate(glm::mat4(1.0), glm::vec3(theX + theSrcRect.mWidth/2.0, theY + theSrcRect.mHeight/2.0, 0.0));
+    glm::mat3 theMatrix = glm::translate(glm::mat3(1.0), glm::vec2(theX + theSrcRect.mWidth/2.0, theY + theSrcRect.mHeight/2.0));
     glm::vec4 theClipRect = {
         0,
         0,
@@ -258,38 +268,50 @@ void VkImage::Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, c
 void VkImage::BltF(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect &theClipRect, const Color& theColor, int theDrawMode){
     //glm::vec4 theDestRect = {theX, theY, theSrcRect.mWidth, theSrcRect.mHeight};
 
-    glm::mat4 theMatrix = glm::translate( glm::mat4(1.0), glm::vec3(theX + theSrcRect.mWidth/2.0, theY + theSrcRect.mHeight/2.0, 0.0));
+    glm::mat3 theMatrix = glm::translate( glm::mat3(1.0), glm::vec2(theX + theSrcRect.mWidth/2.0, theY + theSrcRect.mHeight/2.0));
 
     BltEx(theImage, theMatrix, RectToVec4(theSrcRect), RectToVec4(theClipRect), theColor, theDrawMode, true);
 }
 
 void VkImage::BltMatrix(Image* theImage, float /*x*/, float /*y*/, const SexyMatrix3 &theMatrix, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect &theSrcRect, bool blend){
-    glm::mat4 matrix = glm::mat4(
-        theMatrix.m00, theMatrix.m10, theMatrix.m20, 0,
-        theMatrix.m01, theMatrix.m11, theMatrix.m21, 0,
-        theMatrix.m02, theMatrix.m12, theMatrix.m22, 0,
-        0,             0,             0,             1
+    glm::mat3 matrix = glm::mat3(
+        theMatrix.m00, theMatrix.m10, theMatrix.m20,
+        theMatrix.m01, theMatrix.m11, theMatrix.m21,
+        theMatrix.m02, theMatrix.m12, theMatrix.m22
     );
 
     BltEx(theImage, matrix, RectToVec4(theSrcRect), RectToVec4(theClipRect), theColor, theDrawMode, blend);
 }
 
-void VkImage::BeginDraw(Image* theImage) {
-    VkImage *otherImage = dynamic_cast<VkImage*>(theImage);
-    bool thisCacheMiss = (this != thisCachedImage);
-    bool otherCacheMiss = (otherImage != otherCachedImage);
-    thisCachedImage = this;
+void VkImage::BeginDraw(Image* theImage, int theDrawMode) {
+    bool otherCacheMiss = false;
+    bool otherLayoutSuboptimal = false;
+    VkImage *otherImage = nullptr;
+
+    otherImage = dynamic_cast<VkImage*>(theImage);
+    otherCacheMiss = (otherImage != otherCachedImage);
     otherCachedImage = otherImage;
+    otherLayoutSuboptimal = (otherImage->layout != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+    bool thisCacheMiss = (this != thisCachedImage);
+    bool drawModeMiss = (theDrawMode != cachedDrawMode);
+    cachedDrawMode = theDrawMode;
+    thisCachedImage = this;
 
     bool thisLayoutSuboptimal =  (layout != VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-    bool otherLayoutSuboptimal = (otherImage->layout != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     if (!inRecording) { // Start recording the command buffer
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         vkBeginCommandBuffer(imageCommandBuffers[imageBufferIdx], &beginInfo);
-        vkCmdBindPipeline(imageCommandBuffers[imageBufferIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
         inRecording = true;
+    }
+
+    if (drawModeMiss) {
+        if (theDrawMode == 1)
+            vkCmdBindPipeline(imageCommandBuffers[imageBufferIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipelineAdditive);
+        else
+            vkCmdBindPipeline(imageCommandBuffers[imageBufferIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
     }
 
     if (thisCacheMiss || otherCacheMiss)
@@ -344,19 +366,30 @@ void VkImage::SetViewportAndScissor(const glm::vec4& theClipRect) {
     vkCmdSetScissor(imageCommandBuffers[imageBufferIdx], 0, 1, &scissor);
 }
 
-void VkImage::BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4& theSrcRect, const glm::vec4& theClipRect, const Color& theColor, int, bool) {
+glm::vec4 colorToVec4(const Color& theColor) {
+    return glm::vec4(theColor.mRed/255.0, theColor.mGreen/255.0, theColor.mBlue/255.0, theColor.mAlpha/255.0);
+}
+
+void VkImage::BltEx(Image* theImage, const glm::mat3& theMatrix, const glm::vec4& theSrcRect, const glm::vec4& theClipRect, const Color& theColor, int theDrawMode, bool blend) {
     if (theClipRect.z <= 0 || theClipRect.w <= 0) return; // Can't draw regions with negative size.
     renderMutex.lock();
 
-    VkImage::BeginDraw(theImage);
+    VkImage::BeginDraw(theImage, theDrawMode);
 
     float w2 = theSrcRect.z/2.0;
     float h2 = theSrcRect.w/2.0;
 
-    float u0 = theSrcRect.x/theImage->mWidth;
-    float v0 = theSrcRect.y/theImage->mHeight;
-    float u1 = (theSrcRect.x + theSrcRect.z)/theImage->mWidth;
-    float v1 = (theSrcRect.y + theSrcRect.w)/theImage->mHeight;
+    float u0 = 0;
+    float v0 = 0;
+    float u1 = 0;
+    float v1 = 0;
+
+    if (theImage) {
+        u0 = theSrcRect.x/theImage->mWidth;
+        v0 = theSrcRect.y/theImage->mHeight;
+        u1 = (theSrcRect.x + theSrcRect.z)/theImage->mWidth;
+        v1 = (theSrcRect.y + theSrcRect.w)/theImage->mHeight;
+    }
 
     glm::vec4 vertices[4] = {
         {-w2, -h2, u0, v0},
@@ -366,7 +399,7 @@ void VkImage::BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4
     };
 
     for (auto &vert : vertices) {
-        glm::vec4 v(vert.x, vert.y, 1, 1);
+        glm::vec3 v(vert.x, vert.y, 1);
         v = theMatrix*v;
         vert.x = 2*(v.x/mWidth)  - 1;
         vert.y = 2*(v.y/mHeight) - 1;
@@ -377,8 +410,9 @@ void VkImage::BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4
     ImagePushConstants constants = {
         {vertices[0], vertices[1], vertices[2], vertices[3]},
         {0, 0, 0, 0},
-        glm::vec4(theColor.mRed/255.0, theColor.mGreen/255.0, theColor.mBlue/255.0, theColor.mAlpha/255.0),
+        colorToVec4(theColor),
         true,
+        blend
     };
 
     vkCmdPushConstants(imageCommandBuffers[imageBufferIdx], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(ImagePushConstants), &constants);
@@ -389,19 +423,19 @@ void VkImage::BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4
 }
 
 void VkImage::StretchBlt(Image* theImage, const Rect& theDestRect, const Rect& theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, bool) {
-    glm::mat4 theMatrix = glm::scale(
-        glm::translate(glm::mat4(1.0), glm::vec3(theDestRect.mX + theSrcRect.mWidth/2.0, theDestRect.mY + theSrcRect.mHeight/2.0, 0.0)),
-        glm::vec3((float)theDestRect.mWidth/theSrcRect.mWidth, (float)theDestRect.mHeight/theSrcRect.mHeight, 1.0)
+    glm::mat3 theMatrix = glm::scale(
+        glm::translate(glm::mat3(1.0), glm::vec2(theDestRect.mX + theSrcRect.mWidth/2.0, theDestRect.mY + theSrcRect.mHeight/2.0)),
+        glm::vec2((float)theDestRect.mWidth/theSrcRect.mWidth, (float)theDestRect.mHeight/theSrcRect.mHeight)
         );
 
     BltEx(theImage, theMatrix, RectToVec4(theSrcRect),  RectToVec4(theClipRect), theColor, theDrawMode, true);
 }
 
-void VkImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3], int theNumTriangles, const Rect& theClipRect, const Color &theColor, int /*theDrawMode*/, float tx, float ty, bool /*blend*/){
+void VkImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3], int theNumTriangles, const Rect& theClipRect, const Color &theColor, int theDrawMode, float tx, float ty, bool blend){
     if (theClipRect.mWidth <= 0 || theClipRect.mHeight <= 0) return; // Can't draw regions with negative size.
     renderMutex.lock();
 
-    VkImage::BeginDraw(theTexture);
+    VkImage::BeginDraw(theTexture, theDrawMode);
 
     std::vector<glm::vec4> vertices;
     std::vector<uint32_t> colors;
@@ -429,6 +463,7 @@ void VkImage::BltTrianglesTex(Image *theTexture, const TriVertex theVertices[][3
         {colors[3*i], colors[3*i + 1], colors[3*i + 2]},
         glm::vec4(theColor.mRed/255.0, theColor.mGreen/255.0, theColor.mBlue/255.0, theColor.mAlpha/255.0),
             false,
+            blend,
         };
 
         vkCmdPushConstants(imageCommandBuffers[imageBufferIdx], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(ImagePushConstants), &constants);
@@ -492,13 +527,6 @@ bool VkImage::PolyFill3D(const Point*, int, const Rect*, const Color&,int ,int, 
 
     return false;
 }
-
-/*
-void VkImage::StretchBlt(Image*, const Rect&, const Rect&, const Rect&, const Color&, int, bool){
-    static bool has_shown = false;
-    if (!has_shown) printf("draw:     VkImage::StretchBlt is a stub.\n");
-    has_shown = true;
-}*/
 
 } // namespace Vk
 

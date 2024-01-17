@@ -189,6 +189,7 @@ VkPhysicalDevice physicalDevice;
 VkPhysicalDeviceProperties physicalDeviceProperties;
 VkDevice device;
 
+VkQueue imageQueue;
 VkQueue graphicsQueue;
 VkQueue presentQueue;
 
@@ -210,6 +211,7 @@ VkDescriptorSetLayout descriptorSetLayout;
 
 VkPipelineLayout pipelineLayout;
 VkPipeline graphicsPipeline;
+VkPipeline graphicsPipelineAdditive;
 
 VkCommandPool commandPool;
 std::array<VkCommandBuffer, MAX_FRAMES_IN_FLIGHT> commandBuffers;
@@ -388,6 +390,7 @@ void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
         {0, 0, 0, 0},
         glm::vec4(1.0, 1.0, 1.0, 1.0),
         true,
+        true,
     };
 
     vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(ImagePushConstants), &constants);
@@ -498,11 +501,11 @@ VkImageView createImageView(::VkImage image, VkFormat format) {
 void createTextureSampler() {
     VkSamplerCreateInfo samplerInfo{};
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerInfo.magFilter = VK_FILTER_LINEAR;
-    samplerInfo.minFilter = VK_FILTER_LINEAR;
-    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    samplerInfo.magFilter = VK_FILTER_NEAREST;
+    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     samplerInfo.anisotropyEnable = VK_FALSE;
     samplerInfo.maxAnisotropy = physicalDeviceProperties.limits.maxSamplerAnisotropy;
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
@@ -587,7 +590,7 @@ void createDescriptorSets() {
 void createDescriptorPool() {
     std::array<VkDescriptorPoolSize, 1> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[0].descriptorCount = descriptorSets.size() + 1300;
+    poolSizes[0].descriptorCount = descriptorSets.size() + 2000;
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -960,6 +963,17 @@ void createGraphicsPipeline() {
         throw std::runtime_error("failed to create graphics pipeline!");
     }
 
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
+    if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipelineAdditive) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create graphics pipeline!");
+    }
+
     vkDestroyShaderModule(device, fragShaderModule, nullptr);
     vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
@@ -1152,7 +1166,6 @@ void recreateSwapChain() {
         glfwWaitEvents(); // Pause the window
     }
 
-    renderMutex.lock();
     vkDeviceWaitIdle(device);
 
     cleanupSwapChain();
@@ -1161,7 +1174,6 @@ void recreateSwapChain() {
     createImageViews();
     createFramebuffers();
     setWindowDimensions();
-    renderMutex.unlock();
 }
 
 void createSurface() {
@@ -1440,6 +1452,7 @@ VkInterface::~VkInterface() {
     vkDestroyFence(device, imageFence, nullptr);
     vkDestroyCommandPool(device, commandPool, nullptr);
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
+    vkDestroyPipeline(device, graphicsPipelineAdditive, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
     vkDestroyRenderPass(device, renderPass, nullptr);
     vkDestroyRenderPass(device, imagePass, nullptr);
@@ -1734,8 +1747,8 @@ void VkInterface::Draw() {
     VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-        renderMutex.unlock();
         recreateSwapChain();
+        renderMutex.unlock();
         return;
     } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
@@ -1779,7 +1792,6 @@ void VkInterface::Draw() {
     presentInfo.pResults = nullptr; // Optional
 
     result = vkQueuePresentKHR(presentQueue, &presentInfo);
-    renderMutex.unlock();
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
         framebufferResized = false;
@@ -1789,6 +1801,8 @@ void VkInterface::Draw() {
     }
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+
+    renderMutex.unlock();
 }
 
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cmake --build build
+cmake --build build -j6
 if [ $? -eq 0 ]; then
 	cp build/PlantsVsZombies tools/run/PlantsVsZombies
 fi

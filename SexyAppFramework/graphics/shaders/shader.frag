@@ -12,13 +12,10 @@ layout(push_constant) uniform constants {
     uint colors[4];
     vec4 renderColor;
     bool isQuad;
+    bool toFilter;
 } PushConstants;
 
-void main() {
-    outColor = PushConstants.renderColor * fragColor * texture(texSampler, fragTexCoord);
-}
 
-/*
 // from http://www.java-gaming.org/index.php?topic=35123.0
 vec4 cubic(float v) {
     vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
@@ -28,6 +25,10 @@ vec4 cubic(float v) {
     float z = s.z - 4.0 * s.y + 6.0 * s.x;
     float w = 6.0 - x - y - z;
     return vec4(x, y, z, w) * (1.0/6.0);
+}
+
+vec4 premultiplyAlpha(vec4 c) {
+    return vec4(c.w*c.xyz, c.w);
 }
 
 vec4 textureBicubic(sampler2D samp, vec2 texCoords) {
@@ -51,13 +52,30 @@ vec4 textureBicubic(sampler2D samp, vec2 texCoords) {
     
     offset *= invTexSize.xxyy;
     
-    vec4 sample0 = texture(samp, offset.xz);
-    vec4 sample1 = texture(samp, offset.yz);
-    vec4 sample2 = texture(samp, offset.xw);
-    vec4 sample3 = texture(samp, offset.yw);
+    vec4 sample0 = premultiplyAlpha(texture(samp, offset.xz));
+    vec4 sample1 = premultiplyAlpha(texture(samp, offset.yz));
+    vec4 sample2 = premultiplyAlpha(texture(samp, offset.xw));
+    vec4 sample3 = premultiplyAlpha(texture(samp, offset.yw));
 
     float sx = s.x / (s.x + s.y);
     float sy = s.z / (s.z + s.w);
 
     return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);
-}*/
+}
+
+vec4 unpremultiplyAlpha(vec4 c) {
+    return vec4(c.w == 0 ? vec3(0.0f) : c.xyz/c.w, c.w);
+}
+
+void main() {
+    vec4 c = premultiplyAlpha(PushConstants.renderColor) * premultiplyAlpha(fragColor);
+
+    vec4 tex;
+
+    if (PushConstants.toFilter)
+        tex = textureBicubic(texSampler, fragTexCoord);
+    else
+        tex = premultiplyAlpha(texture(texSampler, fragTexCoord));
+
+    outColor = unpremultiplyAlpha(c * tex);
+}

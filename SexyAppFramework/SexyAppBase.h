@@ -430,9 +430,9 @@ public:
 	void					SetCursor(int theCursorNum);
 	int						GetCursor();
 	void					EnableCustomCursors(bool enabled);	
-	virtual std::unique_ptr<Image> GetImage(const std::string& theFileName);	
+	virtual std::unique_ptr<Image> GetImage(const std::string& theFileName, bool theDoImageSanding = false);	
 //	virtual SharedImageRef	SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew);
-	virtual Image*			GetSharedImage(const std::string& theFileName, const std::string& theVariant = "");
+	virtual Image*			GetSharedImage(const std::string& theFileName, const std::string& theVariant = "", bool theDoImageSanding = false);
 
 	void					CleanSharedImages();
 //	void					PrecacheAdditive(MemoryImage* theImage);

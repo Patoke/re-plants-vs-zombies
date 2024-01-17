@@ -49,19 +49,11 @@
 #)
 
 target_sources(${PROJECT_NAME} PRIVATE
-    "BassMusicInterface.h"
     #"DSoundManager.h"
     #"FModLoader.h"
     #"FModMusicInterface.h"
     #"FModSoundInstance.h"
     #"FModSoundManager.h"
-    "DummyMusicInterface.h"
-    "DummySoundManager.h"
-    "DummySoundInstance.h"
-    "MusicInterface.h"
-    "SoundInstance.h"
-    "SoundManager.h"
-    "BassMusicInterface.cpp"
     #"DSoundInstance.cpp"
     #"DSoundManager.cpp"
     #"FModLoader.cpp"
@@ -69,4 +61,21 @@ target_sources(${PROJECT_NAME} PRIVATE
     #"FModSoundInstance.cpp"
     #"FModSoundManager.cpp"
     #"SoundBuild.cpp"
+
+    "MusicInterface.h"
+    "SoundInstance.h"
+    "SoundManager.h"
+
+    "DummyMusicInterface.h"
+    "DummySoundManager.h"
+    "DummySoundInstance.h"
+
+    "BassMusicInterface.h"
+    "BassMusicInterface.cpp"
+
+    "BassSoundInstance.h"
+    "BassSoundInstance.cpp"
+
+    "BassSoundManager.h"
+    "BassSoundManager.cpp"
 )

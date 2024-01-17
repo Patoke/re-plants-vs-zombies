@@ -559,16 +559,17 @@ void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* the
 	TOD_ASSERT(theTrackIndex >= 0 && theTrackIndex < mDefinition->mTracks.count);
 	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[theTrackIndex];
 	TOD_ASSERT(aTrack->mTransforms.count == mDefinition->mTracks.tracks[0].mTransforms.count);
-	ReanimatorTransform& aTransBefore = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameBeforeInt];  // 前一帧的变换定义
-	ReanimatorTransform& aTransAfter = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameAfterInt];  // 后一帧的变换定义
+	ReanimatorTransform& aTransBefore = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameBeforeInt]; // 前一帧的变换定义
+	ReanimatorTransform& aTransAfter  = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameAfterInt];  // 后一帧的变换定义
 
-	theTransform->mTransX = FloatLerp(aTransBefore.mTransX, aTransAfter.mTransX, theFrameTime->mFraction);
-	theTransform->mTransY = FloatLerp(aTransBefore.mTransY, aTransAfter.mTransY, theFrameTime->mFraction);
-	theTransform->mSkewX = FloatLerp(aTransBefore.mSkewX, aTransAfter.mSkewX, theFrameTime->mFraction);
-	theTransform->mSkewY = FloatLerp(aTransBefore.mSkewY, aTransAfter.mSkewY, theFrameTime->mFraction);
-	theTransform->mScaleX = FloatLerp(aTransBefore.mScaleX, aTransAfter.mScaleX, theFrameTime->mFraction);
-	theTransform->mScaleY = FloatLerp(aTransBefore.mScaleY, aTransAfter.mScaleY, theFrameTime->mFraction);
-	theTransform->mAlpha = FloatLerp(aTransBefore.mAlpha, aTransAfter.mAlpha, theFrameTime->mFraction);
+	auto theFactor = theFrameTime->mFraction;
+	theTransform->mTransX = FloatLerp(aTransBefore.mTransX, aTransAfter.mTransX, theFactor);
+	theTransform->mTransY = FloatLerp(aTransBefore.mTransY, aTransAfter.mTransY, theFactor);
+	theTransform->mSkewX  = FloatLerp(aTransBefore.mSkewX,  aTransAfter.mSkewX,  theFactor);
+	theTransform->mSkewY  = FloatLerp(aTransBefore.mSkewY,  aTransAfter.mSkewY,  theFactor);
+	theTransform->mScaleX = FloatLerp(aTransBefore.mScaleX, aTransAfter.mScaleX, theFactor);
+	theTransform->mScaleY = FloatLerp(aTransBefore.mScaleY, aTransAfter.mScaleY, theFactor);
+	theTransform->mAlpha  = FloatLerp(aTransBefore.mAlpha,  aTransAfter.mAlpha,  theFactor);
 	theTransform->mImage = aTransBefore.mImage;
 	theTransform->mFont = aTransBefore.mFont;
 	theTransform->mText = aTransBefore.mText;

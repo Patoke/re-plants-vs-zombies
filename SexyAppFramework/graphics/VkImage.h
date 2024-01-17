@@ -54,8 +54,8 @@ public:
     void StretchBltMirror(Image*, const Rect&, const Rect&, const Rect&, const Color&, int, bool);
 
 private:
-    void BltEx(Image* theImage, const glm::mat4& theMatrix, const glm::vec4& theSrcRect, const glm::vec4& theClipRect, const Color&, int, bool);
-    void BeginDraw(Image* theImage);
+    void BltEx(Image* theImage, const glm::mat3& theMatrix, const glm::vec4& theSrcRect, const glm::vec4& theClipRect, const Color&, int, bool);
+    void BeginDraw(Image* theImage, int theDrawMode);
     void SetViewportAndScissor(const glm::vec4& theClipRect);
 };
 

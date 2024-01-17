@@ -8,6 +8,7 @@ layout(push_constant) uniform constants {
     uint colors[4];
     vec4 renderColor;
     bool isQuad;
+    bool toFilter;
 } PushConstants;
 
 int indexBuffer[6] = {
@@ -41,6 +42,8 @@ void main() {
         (c >> 24)/255.0
     );
 
-    if (is_color) fragColor = outColor;
-    else fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    if (is_color)
+        fragColor = outColor;
+    else
+        fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

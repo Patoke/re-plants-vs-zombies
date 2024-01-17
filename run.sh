@@ -9,8 +9,8 @@ if test -f ./PlantsVsZombies
 then
 	if [[ $1 = "-g" ]]
 	then
-		gdb ./PlantsVsZombies
+		lldb ./PlantsVsZombies
 	else
-		./PlantsVsZombies
+		gamemoderun ./PlantsVsZombies
 	fi
 fi

@@ -59,6 +59,7 @@ public: // @Patoke todo: revert to protected
 		std::string mAlphaImage;
 		std::string mAlphaGridImage;
 		std::string mVariant;
+		bool mImageSand = false;
 		bool mAutoFindAlpha;
 		bool mPalletize;
 		bool mA4R4G4B4;

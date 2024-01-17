@@ -727,7 +727,7 @@ bool ResourceManager::DoLoadImage(ImageRes *theRes)
 
 	//bool isNew;
 	ImageLib::gAlphaComposeColor = theRes->mAlphaColor;
-	Image *anImage = gSexyAppBase->GetSharedImage(theRes->mPath, theRes->mVariant);
+	Image *anImage = gSexyAppBase->GetSharedImage(theRes->mPath, theRes->mVariant, theRes->mImageSand);
 	ImageLib::gAlphaComposeColor = 0xFFFFFF;
 
 	//DDImage* aDDImage = (DDImage*) aSharedImageRef;

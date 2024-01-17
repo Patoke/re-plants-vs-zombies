@@ -6,6 +6,7 @@
 #include "graphics/WindowInterface.h"
 
 #include "misc/RegistryEmulator.h"
+#include "sound/BassSoundManager.h"
 #include "sound/DummySoundManager.h"
 #include "sound/SoundManager.h"
 
@@ -31,6 +32,7 @@
 #include <bits/iterator_concepts.h>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <memory>
 #include <thread>
@@ -2463,7 +2465,9 @@ bool SexyAppBase::DrawDirtyStuff()
 	}
 
 	mIsDrawing = true;
+	//auto wait_time = std::chrono::high_resolution_clock::now();
 	bool drewScreen = mWidgetManager->DrawScreen();
+	//std::cout << "update frames took: " << (std::chrono::high_resolution_clock::now() - wait_time)/std::chrono::duration<double>(1/60.0) << " frames."<< std::endl;
 	mIsDrawing = false;
 
 	if ((drewScreen || (aStartTime - mLastDrawTick >= std::chrono::milliseconds(1000)) || (mCustomCursorDirty)) &&
@@ -2551,7 +2555,7 @@ bool SexyAppBase::DrawDirtyStuff()
 	}
 	else
 	{
-		mLastDrawWasEmpty = true;		
+		mLastDrawWasEmpty = true;
 		return false;
 	}
 }
@@ -5055,25 +5059,24 @@ bool SexyAppBase::UpdateAppStep(bool* updated)
 
 		// Make sure we're not paused
 		if (!mPaused) {
-			double num_skipped_frames = (std::chrono::high_resolution_clock::now() - timer)/frame_length;
+			double delta_frames = (std::chrono::high_resolution_clock::now() - timer)/frame_length;
 
-			while (num_skipped_frames > 1) {
-				printf("skipped frame\n");
+			do {
 				timer = timer + frame_length;
 				DoUpdateFrames();
-				num_skipped_frames -= 1;
-			}
-			timer = timer + frame_length;
-			DoUpdateFrames();
+				delta_frames -= 1;
+			} while (delta_frames > 0);
+
 			DrawDirtyStuff();
 		}
 	} else if (mUpdateAppState == UPDATESTATE_PROCESS_2) {
 		mUpdateAppState = UPDATESTATE_PROCESS_DONE;
 		ProcessSafeDeleteList();
 
-    	if (std::chrono::high_resolution_clock::now() - timer < std::chrono::duration<double>(0)) {
+		constexpr auto time_offset = std::chrono::duration<double>(0);
+    	if (std::chrono::high_resolution_clock::now() - timer < time_offset) {
     		mSleepCount += 1;
-    		std::this_thread::sleep_until(timer - std::chrono::duration<double>(1/240.0));
+    		std::this_thread::sleep_until(timer - time_offset);
     	}
 	}
 
@@ -5799,7 +5802,7 @@ void SexyAppBase::Init()
 	}
 
 	if (mSoundManager == NULL)
-		mSoundManager = new DummySoundManager();
+		mSoundManager = new BassSoundManager();
 
 	SetSfxVolume(mSfxVolume);
 	
@@ -5915,9 +5918,9 @@ void SexyAppBase::EnableCustomCursors(bool enabled)
 	mCustomCursorsEnabled = enabled;
 }
 
-std::unique_ptr<Sexy::Image> SexyAppBase::GetImage(const std::string &theFileName)
+std::unique_ptr<Sexy::Image> SexyAppBase::GetImage(const std::string &theFileName, bool theDoImageSanding)
 {
-	std::unique_ptr<ImageLib::Image> aLoadedImage = ImageLib::GetImage(theFileName, true);
+	std::unique_ptr<ImageLib::Image> aLoadedImage = ImageLib::GetImage(theFileName, true, theDoImageSanding);
 	
 	if (aLoadedImage == nullptr)
 		return nullptr;
@@ -6536,7 +6539,7 @@ SharedImageRef SexyAppBase::SetSharedImage(const std::string& theFileName, const
 }*/
 
 
-Image* SexyAppBase::GetSharedImage(const std::string& theFileName, const std::string& theVariant)
+Image* SexyAppBase::GetSharedImage(const std::string& theFileName, const std::string& theVariant, bool theDoImageSanding)
 {
 	std::string anUpperFileName = StringToUpper(theFileName);
 	std::string anUpperVariant = StringToUpper(theVariant);
@@ -6547,7 +6550,7 @@ Image* SexyAppBase::GetSharedImage(const std::string& theFileName, const std::st
 	aResultPair = mSharedImageMap.insert(
 		SharedImageMap::value_type(
 			SharedImageMap::key_type(anUpperFileName, anUpperVariant),
-			GetImage(theFileName)
+			GetImage(theFileName, theDoImageSanding)
 		));
 
 	// This represents an old path which is not implemented.

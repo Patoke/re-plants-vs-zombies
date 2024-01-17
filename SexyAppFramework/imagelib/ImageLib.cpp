@@ -1217,7 +1217,49 @@ int ImageLib::gAlphaComposeColor = 0xFFFFFF;
 bool ImageLib::gAutoLoadAlpha = true;
 bool ImageLib::gIgnoreJPEG2000Alpha = true;
 
-std::unique_ptr<Image> ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage)
+uint32_t AverageNearByPixels(ImageLib::Image* theImage, uint32_t* thePixel, int x, int y)
+{
+    int aRed = 0;
+    int aGreen = 0;
+    int aBlue = 0;
+    int aBitsCount = 0;
+
+    for (int i = -1; i <= 1; i++)  // 依次循环上方、当前、下方的一行
+    {
+        if (i == 0)  // 排除当前行
+        {
+            continue;
+        }
+
+        for (int j = -1; j <= 1; j++)  // 依次循环左方、当前、右方的一列
+        {
+            if ((x != 0 || j != -1) && (x != theImage->mWidth - 1 || j != 1) && (y != 0 || i != -1) && (y != theImage->mHeight - 1 || i != 1))
+            {
+                unsigned long aPixel = *(thePixel + i * theImage->mWidth + j);
+                if (aPixel & 0xFF000000UL)  // 如果不是透明像素
+                {
+                    aRed += (aPixel >> 16) & 0x000000FFUL;
+                    aGreen += (aPixel >> 8) & 0x000000FFUL;
+                    aBlue += aPixel & 0x000000FFUL;
+                    aBitsCount++;
+                }
+            }
+        }
+    }
+
+    if (aBitsCount == 0)
+        return 0;
+
+    aRed /= aBitsCount;
+    aRed = std::min(aRed, 255);
+    aGreen /= aBitsCount;
+    aGreen = std::min(aGreen, 255);
+    aBlue /= aBitsCount;
+    aBlue = std::min(aBlue, 255);
+    return (aRed << 16) | (aGreen << 8) | (aBlue);
+}
+
+std::unique_ptr<Image> ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage, bool theDoImageSanding)
 {
 	if (!gAutoLoadAlpha)
 		lookForAlphaImage = false;
@@ -1316,6 +1358,25 @@ std::unique_ptr<Image> ImageLib::GetImage(const std::string& theFilename, bool l
 			{
 				*aBits1 = aColor | ((*aBits1 & 0xFF) << 24);
 				++aBits1;
+			}
+		}
+	}
+
+    // Image Sanding. We have to move it here to avoid moving the image
+    // between the CPU and GPU constantly. Sand once before uploading to
+    // the GPU and everyone is happy.
+	if (theDoImageSanding) {
+		uint32_t* aBitsPtr = anImage->mBits.get();
+		for (int y = 0; y < anImage->mHeight; y++)
+		{
+			for (int x = 0; x < anImage->mWidth; x++)
+			{
+				if ((*aBitsPtr & 0xFF000000UL) == 0)  // 如果像素的不透明度为 0
+				{
+					*aBitsPtr = AverageNearByPixels(anImage.get(), aBitsPtr, x, y);  // 计算该点周围非透明像素的平均颜色
+				}
+	
+				aBitsPtr++;
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 #include "Font.h"
 #include "misc/DescParser.h"
 #include "SexyAppBase.h"
+#include <unordered_map>
 //#include "SharedImage.h"
 
 namespace Sexy
@@ -12,7 +13,7 @@ namespace Sexy
 class SexyAppBase;
 class Image;
 
-typedef std::map<SexyChar, int> CharIntMap;
+typedef std::map<char32_t, int> CharIntMap;
 
 class CharData
 {
@@ -28,7 +29,7 @@ public:
 };
 
 class FontData;
-typedef std::map<SexyChar, CharData> CharDataMap;
+typedef std::unordered_map<char32_t, CharData> CharDataMap;
 
 class FontLayer
 {

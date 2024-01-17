@@ -2,7 +2,6 @@
 #define __DUMMY_MUSIC_INTERFACE_H__
 
 #include "MusicInterface.h"
-#include "SexyAppBase.h"
 
 using namespace Sexy;
 
