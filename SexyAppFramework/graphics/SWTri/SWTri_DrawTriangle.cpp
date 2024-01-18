@@ -1,7 +1,5 @@
 // This file is included by SWTri.cpp and should not be built directly by the project.
 
-#pragma warning(disable:4101)
-
 #if (TRI0==0)
 	#define PTYPE unsigned long
 	#define PIXEL_INCLUDE "SWTri_Pixel8888.cpp"

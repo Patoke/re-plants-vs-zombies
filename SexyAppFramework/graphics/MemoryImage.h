@@ -2,6 +2,7 @@
 #define __MEMORYIMAGE_H__
 
 #include "Image.h"
+#include <cstdint>
 
 #define OPTIMIZE_SOFTWARE_DRAWING
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
@@ -11,7 +12,7 @@ extern bool gOptimizeSoftwareDrawing;
 namespace Sexy
 {
 
-const ulong MEMORYCHECK_ID = 0x4BEEFADE;
+const uint32_t MEMORYCHECK_ID = 0x4BEEFADE;
 
 class NativeDisplay;
 class SexyAppBase;
@@ -19,12 +20,12 @@ class SexyAppBase;
 class MemoryImage : public Image
 {
 public:
-	ulong*					mBits;
+	uint32_t*				mBits;
 	int						mBitsChangedCount;
 	void*					mD3DData;
 	DWORD					mD3DFlags;	// see D3DInterface.h for possible values
 
-	ulong*					mColorTable;	
+	uint32_t*				mColorTable;	
 	uchar*					mColorIndices;
 	
 	bool					mForcedMode;
@@ -34,7 +35,7 @@ public:
 	bool					mPurgeBits;
 	bool					mWantPal;
 	
-	ulong*					mNativeAlphaData;
+	uint32_t*				mNativeAlphaData;
 	uchar*					mRLAlphaData;
 	uchar*					mRLAdditiveData;	
 
@@ -86,9 +87,9 @@ public:
 	virtual ~MemoryImage();
 
 	virtual void			Clear();
-	virtual void			SetBits(ulong* theBits, int theWidth, int theHeight, bool commitBits = true);
+	virtual void			SetBits(uint32_t* theBits, int theWidth, int theHeight, bool commitBits = true);
 	virtual void			Create(int theWidth, int theHeight);
-	virtual ulong*			GetBits();	
+	virtual uint32_t*		GetBits();	
 	
 	virtual void			FillRect(const Rect& theRect, const Color& theColor, int theDrawMode);
 	virtual void			ClearRect(const Rect& theRect);

@@ -1,3 +1,5 @@
+#include <limits.h>
+
 #include "Plant.h"
 #include "Board.h"
 #include "Zombie.h"
@@ -923,7 +925,7 @@ void Zombie::ReanimIgnoreClipRect(const char* theTrackName, bool theIgnoreClipRe
 
     for (int i = 0; i < aBodyReanim->mDefinition->mTracks.count; i++)
     {
-        if (stricmp(aBodyReanim->mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
+        if (strcasecmp(aBodyReanim->mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
         {
             aBodyReanim->mTrackInstances[i].mIgnoreClipRect = theIgnoreClipRect;
         }

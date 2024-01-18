@@ -8,7 +8,7 @@ constexpr const int CAUSTIC_IMAGE_HEIGHT = 64;
 
 namespace Sexy
 {
-	class MemoryImage;
+//	class MemoryImage;
 	class Graphics;
 };
 
@@ -16,8 +16,8 @@ class LawnApp;
 class PoolEffect
 {
 public:
-	unsigned char*		mCausticGrayscaleImage;
-	Sexy::MemoryImage*	mCausticImage;
+//	unsigned char*		mCausticGrayscaleImage;
+//	Sexy::MemoryImage*	mCausticImage;
 	LawnApp*			mApp;
 	int					mPoolCounter;
 

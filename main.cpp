@@ -8,7 +8,8 @@ bool (*gAppHasUsedCheatKeys)();			//[0x69E6A4]
 SexyString (*gGetCurrentLevelName)();
 
 //0x44E8F0
-int WINAPI WinMain(_In_ HINSTANCE /* hInstance */, _In_opt_ HINSTANCE /* hPrevInstance */, _In_ LPSTR /* lpCmdLine */, _In_ int /* nCmdShow */)
+//int WINAPI WinMain(_In_ HINSTANCE /* hInstance */, _In_opt_ HINSTANCE /* hPrevInstance */, _In_ LPSTR /* lpCmdLine */, _In_ int /* nCmdShow */)
+int main(int argc, char* argv[])
 {
 	TodStringListSetColors(gLawnStringFormats, gLawnStringFormatCount);
 	gGetCurrentLevelName = LawnGetCurrentLevelName;
@@ -16,7 +17,8 @@ int WINAPI WinMain(_In_ HINSTANCE /* hInstance */, _In_opt_ HINSTANCE /* hPrevIn
 	gAppHasUsedCheatKeys = LawnHasUsedCheatKeys;
 	gExtractResourcesByName = Sexy::ExtractResourcesByName;
 	gLawnApp = new LawnApp();
-	gLawnApp->mChangeDirTo = (!Sexy::FileExists("properties\\resources.xml") && Sexy::FileExists("..\\properties\\resources.xml")) ? ".." : ".";
+	gLawnApp->mChangeDirTo = (!Sexy::FileExists("properties/resources.xml") && Sexy::FileExists("../properties/resources.xml")) ? ".." : ".";
+	gLawnApp->DoParseCmdLine(argc, argv);
 	gLawnApp->Init();
 	gLawnApp->Start();
 	gLawnApp->Shutdown();

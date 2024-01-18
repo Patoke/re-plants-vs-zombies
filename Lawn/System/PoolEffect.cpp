@@ -3,10 +3,14 @@
 #include "../../Resources.h"
 #include "../../GameConstants.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "graphics/DDImage.h"
+//#include "graphics/DDImage.h"
+#include "Common.h"
 #include "graphics/Graphics.h"
-#include "graphics/DDInterface.h"
-#include "graphics/D3DInterface.h"
+//#include "graphics/MemoryImage.h"
+#include <cmath>
+#include <cstdio>
+//#include "graphics/DDInterface.h"
+//#include "graphics/D3DInterface.h"
 
 //0x469A60
 void PoolEffect::PoolEffectInitialize()
@@ -15,10 +19,15 @@ void PoolEffect::PoolEffectInitialize()
 
     mApp = gLawnApp;
 
+    static bool has_shown = false;
+    if(!has_shown) printf("warning:  PoolEffect totally doesn't exist lol\n");
+    has_shown = true;
+    //unreachable();
+    /* TODO
     mCausticImage = new MemoryImage(gSexyAppBase);
     mCausticImage->mWidth = CAUSTIC_IMAGE_WIDTH;
     mCausticImage->mHeight = CAUSTIC_IMAGE_HEIGHT;
-    mCausticImage->mBits = new unsigned long[CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT + 1];
+    mCausticImage->mBits = new uint32_t[CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT + 1];
     mCausticImage->mHasTrans = true;
     mCausticImage->mHasAlpha = true;
     memset(mCausticImage->mBits, 0xFF, CAUSTIC_IMAGE_WIDTH * CAUSTIC_IMAGE_HEIGHT * 4);
@@ -34,18 +43,21 @@ void PoolEffect::PoolEffectInitialize()
             mCausticGrayscaleImage[index] = (unsigned char)aCausticGrayscaleImage->mBits[index];
             index++;
         }
-    }
+    }*/
 }
 
 void PoolEffect::PoolEffectDispose()
 {
-    delete mCausticImage;
-    delete[] mCausticGrayscaleImage;
+    //unreachable();
+    //delete mCausticImage;
+    //delete[] mCausticGrayscaleImage;
 }
 
 //0x469BC0
-unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int u, unsigned int v)
+unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int /*u*/, unsigned int /*v*/)
 {
+    unreachable();
+    /* TODO
     unsigned int timeU = u & 0xFFFF0000;
     unsigned int timeV = v & 0xFFFF0000;
     unsigned int factorU1 = ((u - timeU) & 0x0000FFFE) + 1;
@@ -61,12 +73,14 @@ unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int u, unsigned int v
         ((((factorU0 * factorV1) / 65536) * mCausticGrayscaleImage[indexV1 * 256 + indexU0]) / 65536) +
         ((((factorU1 * factorV1) / 65536) * mCausticGrayscaleImage[indexV1 * 256 + indexU1]) / 65536) +
         ((((factorU0 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU0]) / 65536) +
-        ((((factorU1 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU1]) / 65536);
+        ((((factorU1 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU1]) / 65536);*/
 }
 
 //0x469CA0
 void PoolEffect::UpdateWaterEffect()
 {
+    unreachable();
+    /* TODO
     int idx = 0;
     for (int y = 0; y < CAUSTIC_IMAGE_HEIGHT; y++)
     {
@@ -75,7 +89,7 @@ void PoolEffect::UpdateWaterEffect()
 
         for (int x = 0; x < CAUSTIC_IMAGE_WIDTH; x++)
         {
-            unsigned long* pix = &mCausticImage->mBits[idx];
+            uint32_t* pix = &mCausticImage->mBits[idx];
 
             int timeU = x << 17;
             int timePool0 = mPoolCounter << 16;
@@ -103,12 +117,13 @@ void PoolEffect::UpdateWaterEffect()
         }
     }
 
-    ++mCausticImage->mBitsChangedCount;
+    ++mCausticImage->mBitsChangedCount;*/
 }
 
 //0x469DE0
 void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
 {
+    /*
     if (!mApp->Is3DAccelerated())
     {
         if (theIsNight)
@@ -120,7 +135,7 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
             g->DrawImage(IMAGE_POOL, 34, 278);
         }
         return;
-    }
+    }*/
 
     float aGridSquareX = IMAGE_POOL->GetWidth() / 15.0f;
     float aGridSquareY = IMAGE_POOL->GetHeight() / 5.0f;
@@ -227,12 +242,16 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics* g, bool theIsNight)
     }
 
     UpdateWaterEffect();
+
+    unreachable();
+    /* FIXME
     D3DInterface* anInterface = ((DDImage*)g->mDestImage)->mDDInterface->mD3DInterface;
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSU, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP), "DrawPool");
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSV, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP), "DrawPool");
     g->DrawTrianglesTex(mCausticImage, aVertArray[2], 150);
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSU, D3DTEXTUREADDRESS::D3DTADDRESS_CLAMP), "DrawPool");
     anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSV, D3DTEXTUREADDRESS::D3DTADDRESS_CLAMP), "DrawPool");
+    */
 }
 
 void PoolEffect::PoolEffectUpdate()

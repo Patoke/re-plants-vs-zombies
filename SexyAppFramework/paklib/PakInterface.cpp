@@ -1,7 +1,8 @@
 #include "PakInterface.h"
-#define NOMINMAX 1
-#include <windows.h>
-#include <direct.h>
+#include "misc/fcaseopen.h"
+#include <cstdio>
+#include <fstream>
+#include <unistd.h>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -25,9 +26,10 @@ static std::string StringToUpper(const std::string& theString)
 }
 
 PakInterface::PakInterface()
-{
+{/*
 	if (GetPakPtr() == NULL)
 		*gPakInterfaceP = this;
+*/
 }
 
 PakInterface::~PakInterface()
@@ -36,13 +38,16 @@ PakInterface::~PakInterface()
 
 bool PakInterface::AddPakFile(const std::string& theFileName)
 {
-	HANDLE aFileHandle = CreateFile(theFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	//HANDLE aFileHandle = CreateFile(theFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	FILE *aFileHandle = fopen("theFileName", "rb");
 
-	if (aFileHandle == INVALID_HANDLE_VALUE)
+	if (!aFileHandle)
 		return false;
 
-	int aFileSize = GetFileSize(aFileHandle, 0);
-
+	fseek(aFileHandle, 0, SEEK_END);
+	size_t aFileSize = ftell(aFileHandle);
+	fseek(aFileHandle, 0, SEEK_SET);
+	/*
 	HANDLE aFileMapping = CreateFileMapping(aFileHandle, NULL, PAGE_READONLY, 0, aFileSize, NULL);
 	if (aFileMapping == NULL)
 	{
@@ -57,13 +62,21 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 		CloseHandle(aFileHandle);
 		return false;
 	}
-
-	mPakCollectionList.push_back(PakCollection());
+	*/
+	mPakCollectionList.push_back(PakCollection(aFileSize));
 	PakCollection* aPakCollection = &mPakCollectionList.back();
-
+	/*
 	aPakCollection->mFileHandle = aFileHandle;
 	aPakCollection->mMappingHandle = aFileMapping;
 	aPakCollection->mDataPtr = aPtr;
+	*/
+
+	if (fread(aPakCollection->mDataPtr, aFileSize, 1, aFileHandle) != aFileSize) {
+		fclose(aFileHandle);
+		return false;
+	}
+
+	fclose(aFileHandle);
 	
 	PakRecordMap::iterator aRecordItr = mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(theFileName), PakRecord())).first;
 	PakRecord* aPakRecord = &(aRecordItr->second);
@@ -152,7 +165,7 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 		aDir[aLen] = 0;
 
 		// 判断 theFileName 文件是否位于当前目录下
-		if (strnicmp(aDir, theFileName, aLen) == 0)
+		if (strncasecmp(aDir, theFileName, aLen) == 0)
 			theFileName += aLen;  // 若是，则跳过从盘符到当前目录的部分，转化为相对路径
 	}
 
@@ -193,7 +206,7 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 //0x5D85C0
 PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 {
-	if ((stricmp(anAccess, "r") == 0) || (stricmp(anAccess, "rb") == 0) || (stricmp(anAccess, "rt") == 0))
+	if ((strcasecmp(anAccess, "r") == 0) || (strcasecmp(anAccess, "rb") == 0) || (strcasecmp(anAccess, "rt") == 0))
 	{
 		char anUpperName[256];
 		FixFileName(theFileName, anUpperName);
@@ -209,7 +222,7 @@ PFILE* PakInterface::FOpen(const char* theFileName, const char* anAccess)
 		}
 	}
 
-	FILE* aFP = fopen(theFileName, anAccess);
+	FILE* aFP = fcaseopen(theFileName, anAccess);
 	if (aFP == NULL)
 		return NULL;
 	PFILE* aPFP = new PFILE;
@@ -340,6 +353,7 @@ int PakInterface::FEof(PFILE* theFile)
 		return feof(theFile->mFP);
 }
 
+/*
 bool PakInterface::PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFileData)
 {
 	PakRecordMap::iterator anItr;
@@ -444,4 +458,4 @@ BOOL PakInterface::FindClose(HANDLE hFindFile)
 	delete aFindData;
 	return TRUE;
 }
-
+*/

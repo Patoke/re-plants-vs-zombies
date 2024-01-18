@@ -13,19 +13,19 @@
             "generator": "Ninja",
             "command_line_overrides":
             {
-                "CMAKE_TOOLCHAIN_FILE": "toolchain.cmake",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain.cmake"
             },
         },
     },
     "build_systems":
     [
 		{
-			"config": "Debug",
+			"config": "Release",
 			"env":
 			{
 			},
 			"generator": "Ninja",
-			"name": "Debug",
+			"name": "Release",
 			"target": "cmake_build",
 			"variants":
 			[
@@ -34,17 +34,21 @@
 					"name": "LawnProject"
 				},
 				{
-					"artifact": "/home/aaron/programming/re-plants-vs-zombies/SexyAppFramework/Debug/SexyAppFramework.exe",
+					"artifact": "PlantsVsZombies",
 					"build_target": "LawnProject",
 					"name": "Run: LawnProject",
 					"target": "cmake_run"
 				},
 				{
-					"artifact": "/home/aaron/programming/re-plants-vs-zombies/SexyAppFramework/Debug/SexyAppFramework.exe",
+					"artifact": "PlantsVsZombies",
 					"build_target": "LawnProject",
 					"debug": true,
 					"name": "Run under GDB: LawnProject",
 					"target": "cmake_run"
+				},
+				{
+					"build_target": "glfw-src",
+					"name": "glfw-src"
 				},
 				{
 					"build_target": "libjpeg-src",
@@ -53,6 +57,14 @@
 				{
 					"build_target": "libpng-src",
 					"name": "libpng-src"
+				},
+				{
+					"build_target": "rc",
+					"name": "rc"
+				},
+				{
+					"build_target": "shader",
+					"name": "shader"
 				},
 				{
 					"build_target": "zlib-src",

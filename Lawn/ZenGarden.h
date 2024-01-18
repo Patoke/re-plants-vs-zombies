@@ -2,7 +2,7 @@
 #define __ZENGARDEN_H__
 
 #include "../ConstEnums.h"
-#include <corecrt.h>
+#include <cstdint>
 
 #define ZEN_MAX_GRIDSIZE_X 8
 #define ZEN_MAX_GRIDSIZE_Y 4

@@ -6,6 +6,8 @@
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "misc/Buffer.h"
 #include "../../SexyAppFramework/SexyAppBase.h"
+#include <bits/chrono.h>
+#include <ratio>
 
 static int gUserVersion = 12;
 
@@ -49,8 +51,10 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
 	{
 		theSync.SyncLong(mPurchases[i]);
 	}
-	theSync.SyncLong(mPlayTimeActivePlayer);
-	theSync.SyncLong(mPlayTimeInactivePlayer);
+	int aDurationMSec = (int)std::chrono::duration_cast<std::chrono::milliseconds>(mPlayTimeActivePlayer).count();
+	theSync.SyncLong(aDurationMSec);
+	aDurationMSec = (int)std::chrono::duration_cast<std::chrono::milliseconds>(mPlayTimeInactivePlayer).count();
+	theSync.SyncLong(aDurationMSec);
 	theSync.SyncLong(mHasUsedCheatKeys);
 	theSync.SyncLong(mHasWokenStinky);
 	theSync.SyncLong(mDidntPurchasePacketUpgrade);
@@ -148,8 +152,8 @@ void PlayerInfo::Reset()
 	mFinishedAdventure = 0;
 	memset(mChallengeRecords, 0, sizeof(mChallengeRecords));
 	memset(mPurchases, 0, sizeof(mPurchases));
-	mPlayTimeActivePlayer = 0;
-	mPlayTimeInactivePlayer = 0;
+	mPlayTimeActivePlayer = std::chrono::milliseconds(0);
+	mPlayTimeInactivePlayer = std::chrono::milliseconds(0);
 	mHasUsedCheatKeys = 0;
 	mHasWokenStinky = 0;
 	mDidntPurchasePacketUpgrade = 0;

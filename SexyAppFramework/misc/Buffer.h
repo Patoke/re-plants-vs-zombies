@@ -30,7 +30,7 @@ public:
 	static int				GetBitsRequired(int theNum, bool isSigned);
 	void					WriteBoolean(bool theBool);
 	void					WriteShort(short theShort);
-	void					WriteLong(long theLong);
+	void					WriteLong(int32_t theLong);
 	void					WriteString(const std::string& theString);
 	void					WriteUTF8String(const std::wstring& theString);
 	void					WriteLine(const std::string& theString);	
@@ -45,7 +45,7 @@ public:
 	int						ReadNumBits(int theBits, bool isSigned) const;
 	bool					ReadBoolean() const;
 	short					ReadShort() const;
-	long					ReadLong() const;
+	int32_t					ReadLong() const;
 	std::string				ReadString() const;	
 	std::wstring			ReadUTF8String() const;
 	std::string				ReadLine() const;

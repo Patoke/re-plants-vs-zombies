@@ -1,3 +1,4 @@
+#include "Common.h"
 #include "Trail.h"
 #include "TodDebug.h"
 #include "Attachment.h"
@@ -5,9 +6,9 @@
 #include "TodParticle.h"
 #include "EffectSystem.h"
 #include "../GameConstants.h"
-#include "graphics/DDImage.h"
-#include "graphics/DDInterface.h"
-#include "graphics/D3DInterface.h"
+//#include "graphics/DDImage.h"
+//#include "graphics/DDInterface.h"
+//#include "graphics/D3DInterface.h"
 
 EffectSystem* gEffectSystem = nullptr;  //[0x6A9EB8]
 
@@ -390,11 +391,14 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
 {
 	if (mImage && mTriangleCount)
 	{
+		/*
 		// @Patoke: do we want this? if 3D acceleration is off then blending is messed up
 		if (!gSexyAppBase->Is3DAccelerated() && mDrawMode == Graphics::DRAWMODE_ADDITIVE)
-			gTodTriangleDrawAdditive = true;
+			gTodTriangleDrawAdditive = true;*/
 		TodSandImageIfNeeded(mImage);
 
+		//unreachable();
+		/* FIXME
 		if (DDImage::Check3D(g->mDestImage))
 		{
 			DDImage* anImage = (DDImage*)g->mDestImage;
@@ -404,7 +408,8 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
 		else
 		{
 			g->mDestImage->BltTrianglesTex(mImage, mVertArray, mTriangleCount, Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT), Color::White, mDrawMode, 0.0f, 0.0f, g->mLinearBlend);
-		}
+		}*/
+		g->mDestImage->BltTrianglesTex(mImage, mVertArray, mTriangleCount, Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT), Color::White, mDrawMode, 0.0f, 0.0f, g->mLinearBlend);
 
 		mTriangleCount = 0;
 		gTodTriangleDrawAdditive = false;
@@ -457,7 +462,7 @@ void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatri
 	if (mTriangleCount + 2 <= MAX_TRIANGLES)
 	{
 		if ((
-				theClipRect.mX == 0 && theClipRect.mY == 0 && theClipRect.mWidth == BOARD_WIDTH && theClipRect.mHeight == BOARD_HEIGHT && gSexyAppBase->Is3DAccelerated()
+				theClipRect.mX == 0 && theClipRect.mY == 0 && theClipRect.mWidth == BOARD_WIDTH && theClipRect.mHeight == BOARD_HEIGHT
 			) || (
 				theClipRect.mX <= tp[0].x && theClipRect.mX + theClipRect.mWidth >= tp[0].x && 
 				theClipRect.mX <= tp[1].x && theClipRect.mX + theClipRect.mWidth >= tp[1].x &&

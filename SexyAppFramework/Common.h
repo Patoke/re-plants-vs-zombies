@@ -1,9 +1,18 @@
 #ifndef __SEXYAPPFRAMEWORK_COMMON_H__
 #define __SEXYAPPFRAMEWORK_COMMON_H__
 
-#pragma warning(disable:4786)
-#pragma warning(disable:4503)
+//#pragma warning(disable:4786)
+//#pragma warning(disable:4503)
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+#define GLM_CONFIG_SWIZZLE GLM_SWIZZLE_OPERATOR
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <cstdint>
 #undef _WIN32_WINNT
 #undef WIN32_LEAN_AND_MEAN
 
@@ -13,6 +22,8 @@
 #undef UNICODE
 
 #include <string>
+#include <cstring>
+#include <cwctype>
 #include <vector>
 #include <set>
 #include <map>
@@ -20,11 +31,10 @@
 #include <algorithm>
 #include <cstdlib>
 
-#define NOMINMAX 1
-#include <windows.h>
-#include <shellapi.h> 
-#include <mmsystem.h>
-#include "misc/ModVal.h"
+//#define NOMINMAX 1
+//#include <windows.h>
+//#include <shellapi.h> 
+//#include <mmsystem.h>
 
 // fallback if NOMINMAX fails (somehow?)
 #undef min
@@ -37,13 +47,15 @@
 #define unreachable __builtin_unreachable
 #endif
 
+#define _MAX_PATH 260
+
 // Removed wide string support
 typedef std::string			SexyString;
 #define _S(x)				x
 
 #define sexystrncmp			strncmp
 #define sexystrcmp			strcmp
-#define sexystricmp			stricmp
+#define sexystricmp			strcasecmp
 #define sexysscanf			sscanf
 #define sexyatoi			atoi
 #define sexystrcpy			strcpy
@@ -68,11 +80,18 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;
-typedef __int64 int64;
+
+typedef unsigned char BYTE;
+typedef uint16_t 	 WORD;
+typedef unsigned int DWORD;
+typedef int LONG;
+typedef unsigned int UINT;
+//typedef __int64 int64;
 
 typedef std::map<std::string, std::string>		DefinesMap;
 typedef std::map<std::wstring, std::wstring>	WStringWStringMap;
 typedef SexyString::value_type					SexyChar;
+
 #define HAS_SEXYCHAR
 
 namespace Sexy
@@ -81,7 +100,7 @@ namespace Sexy
 const ulong SEXY_RAND_MAX = 0x7FFFFFFF;
 
 extern bool			gDebug;
-extern HINSTANCE	gHInstance;
+//extern HINSTANCE	gHInstance;
 
 int					Rand();
 int					Rand(int range);
@@ -164,7 +183,7 @@ inline void			inlineUpper(std::wstring &theData)
 	int aStrLen = (int) theData.length();
 	for (int i = 0; i < aStrLen; i++)
 	{
-		theData[i] = towupper(theData[i]);
+		theData[i] = std::towupper(theData[i]);
 	}
 }
 
@@ -200,7 +219,7 @@ inline void			inlineTrim(std::string &theData, const std::string& theChars = " \
 	inlineLTrim(theData, theChars);
 }
 
-struct StringLessNoCase { bool operator()(const std::string &s1, const std::string &s2) const { return _stricmp(s1.c_str(),s2.c_str())<0; } };
+struct StringLessNoCase { bool operator()(const std::string &s1, const std::string &s2) const { return strcasecmp(s1.c_str(),s2.c_str())<0; } };
 
 }
 

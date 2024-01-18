@@ -1,7 +1,8 @@
+#include "Common.h"
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "FilterEffect.h"
-#include "graphics/MemoryImage.h"
+//#include "graphics/MemoryImage.h"
 
 //0x446B80
 void RGB_to_HSL(float r, float g, float b, float& h, float& s, float& l)
@@ -89,9 +90,10 @@ void FilterEffectDisposeForApp()
 }
 
 //0x446FD0
+/*
 void FilterEffectDoLumSat(MemoryImage* theImage, float theLum, float theSat)
 {
-	unsigned long* ptr = theImage->mBits;
+	uint32_t* ptr = theImage->mBits;
 	for (int y = 0; y < theImage->mHeight; y++)
 	{
 		for (int x = 0; x < theImage->mWidth; x++)
@@ -111,8 +113,9 @@ void FilterEffectDoLumSat(MemoryImage* theImage, float theLum, float theSat)
 			ptr++;
 		}
 	}
-}
+}*/
 
+/*
 void FilterEffectDoWashedOut(MemoryImage* theImage)
 {
 	FilterEffectDoLumSat(theImage, 1.8f, 0.2f);
@@ -126,7 +129,7 @@ void FilterEffectDoLessWashedOut(MemoryImage* theImage)
 //0x447190
 void FilterEffectDoWhite(MemoryImage* theImage)
 {
-	unsigned long* ptr = theImage->mBits;
+	uint32_t* ptr = theImage->mBits;
 	for (int y = 0; y < theImage->mHeight; y++)
 		for (int x = 0; x < theImage->mWidth; x++)
 			*ptr++ |= 0x00FFFFFF;
@@ -139,7 +142,7 @@ MemoryImage* FilterEffectCreateImage(Image* theImage, FilterEffect theFilterEffe
 	aImage->mWidth = theImage->mWidth;
 	aImage->mHeight = theImage->mHeight;
 	int aNumBits = theImage->mWidth * theImage->mHeight;
-	aImage->mBits = new unsigned long[aNumBits + 1];
+	aImage->mBits = new uint32_t[aNumBits + 1];
 	aImage->mHasTrans = true;
 	aImage->mHasAlpha = true;
 	memset(aImage->mBits, 0, aNumBits * 4);
@@ -163,7 +166,7 @@ MemoryImage* FilterEffectCreateImage(Image* theImage, FilterEffect theFilterEffe
 	aImage->mNumCols = theImage->mNumCols;
 	aImage->mNumRows = theImage->mNumRows;
 	return aImage;
-}
+}*/
 
 //0x447340
 Image* FilterEffectGetImage(Image* theImage, FilterEffect theFilterEffect)
@@ -175,7 +178,9 @@ Image* FilterEffectGetImage(Image* theImage, FilterEffect theFilterEffect)
 	if (it != aFilterMap.end())
 		return it->second;
 
+	unreachable();
+	/* TODO
 	MemoryImage* aImage = FilterEffectCreateImage(theImage, theFilterEffect);
 	aFilterMap.insert(ImageFilterMap::value_type(theImage, aImage));
-	return aImage;
+	return aImage;*/
 }
