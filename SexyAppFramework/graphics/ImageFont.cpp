@@ -1551,10 +1551,10 @@ void ImageFont::DrawStringEx(Graphics* g, int theX, int theY, const SexyString& 
 	g->SetColorizeImages(true);
 
 	int aCurXPos = theX;
-	for (auto it(theString.begin()), nextit(std::next(it)); it != theString.end(); it = nextit++) {
-		SexyChar aChar = GetMappedChar(*it);
+	for (auto idx = 0; idx < (int)theString.length(); ++idx) {
+		SexyChar aChar = GetMappedChar(theString[idx]);
 		SexyChar aNextChar = 0;
-		if (nextit != theString.end()) aNextChar = GetMappedChar(*nextit);
+		if (idx + 1 < (int)theString.length()) aNextChar = GetMappedChar(theString[idx + 1]);
 
 		int aMaxXPos = aCurXPos;
 

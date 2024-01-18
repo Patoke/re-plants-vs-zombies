@@ -1617,7 +1617,7 @@ void initGLFW(int width, int height, VkInterface* userPtr) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(width, height, "Plandts Game", /*glfwGetPrimaryMonitor()*/nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Plants Vs Zombies", /*glfwGetPrimaryMonitor()*/nullptr, nullptr);
     glfwSetWindowUserPointer(window, userPtr);
     //glfwSetWindowAspectRatio(window, 4, 3);
 
