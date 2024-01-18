@@ -78,4 +78,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     "BassSoundManager.h"
     "BassSoundManager.cpp"
+
+    "BassLoader.h"
+    "BassLoader.cpp"
 )

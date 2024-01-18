@@ -145,7 +145,7 @@ public:
 
 //	HANDLE					mMutex;
 	bool					mOnlyAllowOneCopyToRun;
-	UINT					mNotifyGameMessage;
+	unsigned int			mNotifyGameMessage;
 	CritSect				mCritSect;	
 	bool					mBetaValidate;
 	uchar					mAdd8BitMaxTable[512];
@@ -185,7 +185,7 @@ public:
 	std::string				mOpeningURL;
 	clock_t					mOpeningURLTime;
 	std::chrono::high_resolution_clock::time_point	mLastTimerTime;
-	DWORD					mLastBigDelayTime;	
+	unsigned long			mLastBigDelayTime;
 	double					mUnmutedMusicVolume;
 	double					mUnmutedSfxVolume;	
 	int						mMuteCount;
@@ -299,8 +299,8 @@ public:
 	bool					mUserChanged3DSetting;
 	bool					mAutoEnable3D;
 	bool					mTest3D;
-	DWORD					mMinVidMemory3D;
-	DWORD					mRecommendedVidMemory3D;
+	unsigned long			mMinVidMemory3D;
+	unsigned long			mRecommendedVidMemory3D;
 
 	bool					mWidescreenAware;
 	Rect					mScreenBounds;
@@ -322,7 +322,7 @@ public:
 	uint					mZylomGameId;
 #endif
 
-	LONG					mOldWndProc;
+	int					mOldWndProc;
 
 protected:	
 //	void					RehupFocus();

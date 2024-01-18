@@ -28,8 +28,8 @@
 
 #include "paklib/PakInterface.h"
 
-#include <bits/chrono.h>
-#include <bits/iterator_concepts.h>
+#include <chrono>
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -5648,7 +5648,9 @@ void SexyAppBase::Init()
 	// Change directory
 
 	if (!ChangeDirHook(mChangeDirTo.c_str()))
-		chdir(mChangeDirTo.c_str());
+	{
+		std::filesystem::current_path(mChangeDirTo);
+	}
 
 	/*
 	gPakInterface->AddPakFile("main.pak");

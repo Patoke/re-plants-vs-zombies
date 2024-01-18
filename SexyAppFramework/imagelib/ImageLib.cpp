@@ -13,35 +13,8 @@
 
 using namespace ImageLib;
 
-Image::Image()
-{
-	mWidth = 0;
-	mHeight = 0;
-	mBits = NULL;
-}
 
-Image::~Image()
-{
-	delete mBits;
-}
-
-int	Image::GetWidth()
-{
-	return mWidth;
-}
-
-int	Image::GetHeight()
-{
-	return mHeight;
-}
-
-unsigned long* Image::GetBits()
-{
-	return mBits;
-}
-
-
-Image* GetImageWithSDL(const std::string& theFileName)
+std::unique_ptr<Image> GetImageWithSDL(const std::string& theFileName)
 {
 	auto fp = fopen(theFileName.c_str(), "rb");
 	if (fp == NULL)
@@ -59,26 +32,23 @@ Image* GetImageWithSDL(const std::string& theFileName)
 	if (aSurface32 == NULL)
 		return NULL;
 
-	Image* anImage = new Image();
-	anImage->mWidth = aSurface32->w;
-	anImage->mHeight = aSurface32->h;
+	auto anImage = std::make_unique<Image>(aSurface32->w, aSurface32->h);
 
 	auto bufferSize = aSurface32->w * aSurface32->h;
-	anImage->mBits = new unsigned long[bufferSize];
 
 	// Copy the pixels
-	SDL_memcpy((char*)anImage->mBits, (char*)aSurface32->pixels, bufferSize * sizeof(unsigned long));
+	SDL_memcpy(anImage->mBits.get(), aSurface32->pixels, bufferSize * sizeof(uint32_t));
 
 	SDL_FreeSurface(aSurface32);
 
-	return anImage;
+	return std::move(anImage);
 }
 
 
 
 bool ImageLib::WriteJPEGImage(const std::string& theFileName, Image* theImage)
 {
-	auto aSurface = SDL_CreateRGBSurfaceFrom(theImage->mBits, theImage->mWidth, theImage->mHeight, 32, theImage->mWidth * 4, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	auto aSurface = SDL_CreateRGBSurfaceFrom(theImage->mBits.get(), theImage->mWidth, theImage->mHeight, 32, theImage->mWidth * 4, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 	if (aSurface == NULL)
 		return false;
 	auto aResult = IMG_SaveJPG(aSurface, theFileName.c_str(), 80);
@@ -89,7 +59,7 @@ bool ImageLib::WriteJPEGImage(const std::string& theFileName, Image* theImage)
 
 bool ImageLib::WritePNGImage(const std::string& theFileName, Image* theImage)
 {
-	auto aSurface = SDL_CreateRGBSurfaceFrom(theImage->mBits, theImage->mWidth, theImage->mHeight, 32, theImage->mWidth * 4, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	auto aSurface = SDL_CreateRGBSurfaceFrom(theImage->mBits.get(), theImage->mWidth, theImage->mHeight, 32, theImage->mWidth * 4, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 	if (aSurface == NULL)
 		return false;
 	auto aResult = IMG_SavePNG(aSurface, theFileName.c_str());
@@ -104,41 +74,41 @@ bool ImageLib::WriteTGAImage(const std::string& theFileName, Image* theImage)
 	if (aTGAFile == NULL)
 		return false;
 
-	BYTE aHeaderIDLen = 0;
-	fwrite(&aHeaderIDLen, sizeof(BYTE), 1, aTGAFile);
+	unsigned char aHeaderIDLen = 0;
+	fwrite(&aHeaderIDLen, sizeof(unsigned char), 1, aTGAFile);
 
-	BYTE aColorMapType = 0;
-	fwrite(&aColorMapType, sizeof(BYTE), 1, aTGAFile);
+	unsigned char aColorMapType = 0;
+	fwrite(&aColorMapType, sizeof(unsigned char), 1, aTGAFile);
 	
-	BYTE anImageType = 2;
-	fwrite(&anImageType, sizeof(BYTE), 1, aTGAFile);
+	unsigned char anImageType = 2;
+	fwrite(&anImageType, sizeof(unsigned char), 1, aTGAFile);
 
-	WORD aFirstEntryIdx = 0;
-	fwrite(&aFirstEntryIdx, sizeof(WORD), 1, aTGAFile);
+	uint16_t aFirstEntryIdx = 0;
+	fwrite(&aFirstEntryIdx, sizeof(uint16_t), 1, aTGAFile);
 
-	WORD aColorMapLen = 0;
-	fwrite(&aColorMapLen, sizeof(WORD), 1, aTGAFile);
+	uint16_t aColorMapLen = 0;
+	fwrite(&aColorMapLen, sizeof(uint16_t), 1, aTGAFile);
 
-	BYTE aColorMapEntrySize = 0;
-	fwrite(&aColorMapEntrySize, sizeof(BYTE), 1, aTGAFile); 
+	unsigned char aColorMapEntrySize = 0;
+	fwrite(&aColorMapEntrySize, sizeof(unsigned char), 1, aTGAFile); 
 
-	WORD anXOrigin = 0;
-	fwrite(&anXOrigin, sizeof(WORD), 1, aTGAFile);
+	uint16_t anXOrigin = 0;
+	fwrite(&anXOrigin, sizeof(uint16_t), 1, aTGAFile);
 
-	WORD aYOrigin = 0;
-	fwrite(&aYOrigin, sizeof(WORD), 1, aTGAFile);
+	uint16_t aYOrigin = 0;
+	fwrite(&aYOrigin, sizeof(uint16_t), 1, aTGAFile);
 
-	WORD anImageWidth = theImage->mWidth;
-	fwrite(&anImageWidth, sizeof(WORD), 1, aTGAFile); 
+	uint16_t anImageWidth = theImage->mWidth;
+	fwrite(&anImageWidth, sizeof(uint16_t), 1, aTGAFile); 
 
-	WORD anImageHeight = theImage->mHeight;
-	fwrite(&anImageHeight, sizeof(WORD), 1, aTGAFile);  
+	uint16_t anImageHeight = theImage->mHeight;
+	fwrite(&anImageHeight, sizeof(uint16_t), 1, aTGAFile);  
 
-	BYTE aBitCount = 32;
-	fwrite(&aBitCount, sizeof(BYTE), 1, aTGAFile);  
+	unsigned char aBitCount = 32;
+	fwrite(&aBitCount, sizeof(unsigned char), 1, aTGAFile);  
 
-	BYTE anImageDescriptor = 8 | (1<<5);
-	fwrite(&anImageDescriptor, sizeof(BYTE), 1, aTGAFile);
+	unsigned char anImageDescriptor = 8 | (1<<5);
+	fwrite(&anImageDescriptor, sizeof(unsigned char), 1, aTGAFile);
 
 	fwrite(theImage->mBits.get(), 4, theImage->mWidth*theImage->mHeight, aTGAFile);
 
@@ -148,25 +118,25 @@ bool ImageLib::WriteTGAImage(const std::string& theFileName, Image* theImage)
 }
 
 typedef struct tagBITMAPFILEHEADER {
-	WORD  bfType;
-	DWORD bfSize;
-	WORD  bfReserved1;
-	WORD  bfReserved2;
-	DWORD bfOffBits;
+	uint16_t  bfType;
+	unsigned int bfSize;
+	uint16_t  bfReserved1;
+	uint16_t  bfReserved2;
+	unsigned int bfOffBits;
 } BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
 
 typedef struct tagBITMAPINFOHEADER {
-	DWORD biSize;
-	LONG  biWidth;
-	LONG  biHeight;
-	WORD  biPlanes;
-	WORD  biBitCount;
-	DWORD biCompression;
-	DWORD biSizeImage;
-	LONG  biXPelsPerMeter;
-	LONG  biYPelsPerMeter;
-	DWORD biClrUsed;
-	DWORD biClrImportant;
+	unsigned int biSize;
+	int  biWidth;
+	int  biHeight;
+	uint16_t  biPlanes;
+	uint16_t  biBitCount;
+	unsigned int biCompression;
+	unsigned int biSizeImage;
+	int  biXPelsPerMeter;
+	int  biYPelsPerMeter;
+	unsigned int biClrUsed;
+	unsigned int biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
 typedef  enum {
@@ -208,7 +178,7 @@ bool ImageLib::WriteBMPImage(const std::string& theFileName, Image* theImage)
 
 	fwrite(&aFileHeader,sizeof(aFileHeader),1,aFile);
 	fwrite(&aHeader,sizeof(aHeader),1,aFile);
-	DWORD *aRow = theImage->mBits.get() + (theImage->mHeight-1)*theImage->mWidth;
+	unsigned int *aRow = theImage->mBits.get() + (theImage->mHeight-1)*theImage->mWidth;
 	int aRowSize = theImage->mWidth*4;
 	(void)aRowSize; // Unused
 	for (int i=0; i<theImage->mHeight; i++, aRow-=theImage->mWidth)
@@ -241,7 +211,7 @@ uint32_t AverageNearByPixels(ImageLib::Image* theImage, uint32_t* thePixel, int 
         {
             if ((x != 0 || j != -1) && (x != theImage->mWidth - 1 || j != 1) && (y != 0 || i != -1) && (y != theImage->mHeight - 1 || i != 1))
             {
-                unsigned long aPixel = *(thePixel + i * theImage->mWidth + j);
+                unsigned int aPixel = *(thePixel + i * theImage->mWidth + j);
                 if (aPixel & 0xFF000000UL)  // 如果不是透明像素
                 {
                     aRed += (aPixel >> 16) & 0x000000FFUL;

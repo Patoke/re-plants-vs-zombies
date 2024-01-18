@@ -3,7 +3,7 @@
 #include "TodParticle.h"
 #include "Trail.h"
 #include <assert.h>
-#include <bits/chrono.h>
+#include <chrono>
 #include <chrono>
 #include <cstring>
 #include <filesystem>
@@ -429,12 +429,14 @@ inline bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取贴图标签字符数组的长度
     //char* aImageName = (char*)alloca(aLen + 1);  // 在栈上分配贴图标签字符数组的内存空间
-    char aImageName[aLen + 1];
+    auto aImageName = new char[aLen + 1];
     SMemR(theReadPtr, aImageName, aLen);  // 读取贴图标签字符数组
     aImageName[aLen] = '\0';
 
     *theImage = nullptr;
-    return aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
+    auto result = aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
+    delete[] aImageName;
+    return result;
 }
 
 //0x444220
@@ -443,12 +445,14 @@ inline bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取字体标签字符数组的长度
     //char* aFontName = (char*)alloca(aLen + 1);  // 在栈上分配字体标签字符数组的内存空间
-    char aFontName[aLen + 1];
+    auto aFontName = new char[aLen + 1];
     SMemR(theReadPtr, aFontName, aLen);  // 读取字体标签字符数组
     aFontName[aLen] = '\0';
     
     *theFont = nullptr;
-    return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
+    auto result = aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
+    delete[] aFontName;
+    return result;
 }
 
 //0x4442C0
@@ -1276,7 +1280,7 @@ void DefMapWriteToCache(void*& theWritePtr, DefMap* theDefMap, void* theDefiniti
 }
 
 void* DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSize, unsigned int* theResultSize) {
-    size_t aCompressedSize = compressBound(theBufferSize);
+    uLongf aCompressedSize = compressBound(theBufferSize);
     auto aCompressedBuffer = (CompressedDefinitionHeader*)calloc(sizeof(CompressedDefinitionHeader) + aCompressedSize, 1);
     compress((Bytef*)((uintptr_t)aCompressedBuffer + sizeof(CompressedDefinitionHeader)), &aCompressedSize, (Bytef*)theBuffer, theBufferSize);
     aCompressedBuffer->mCookie = 0xDEADFED4;

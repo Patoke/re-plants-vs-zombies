@@ -513,7 +513,7 @@ void VkImage::DrawLineAA(double, double, double, double, const Color&, int){
     has_shown = true;
 }
 
-void VkImage::FillScanLinesWithCoverage(Span*, int, const Color&, int, const BYTE*, int, int, int, int){
+void VkImage::FillScanLinesWithCoverage(Span*, int, const Color&, int, const unsigned char*, int, int, int, int){
     static bool has_shown = false;
     if (!has_shown) printf("draw:     VkImage::FillScanLinesWithCoverage is a stub.\n");
     has_shown = true;

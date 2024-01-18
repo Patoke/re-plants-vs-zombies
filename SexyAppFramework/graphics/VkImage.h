@@ -42,7 +42,7 @@ public:
     void ClearRect(const Rect&);
     void DrawLine(double, double, double, double, const Color&, int);
     void DrawLineAA(double, double, double, double, const Color&, int);
-    void FillScanLinesWithCoverage(Span*, int, const Color&, int, const BYTE*, int, int, int, int);
+    void FillScanLinesWithCoverage(Span*, int, const Color&, int, const unsigned char*, int, int, int, int);
     bool PolyFill3D(const Point*, int, const Rect*, const Color&,int ,int, int);
     void Blt(Image*, int, int, const Rect&, const Color&, int);
     void BltF(Image*, float, float, const Rect&, const Rect&, const Color&, int);

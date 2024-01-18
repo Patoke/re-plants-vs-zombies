@@ -89,7 +89,7 @@ public:
 	virtual void ClearRect(const Rect& theRect) = 0;
 	virtual void DrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode) = 0;
 	virtual void DrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode) = 0;
-	virtual void FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const Color& theColor, int theDrawMode, const BYTE* theCoverage, int theCoverX, int theCoverY, int theCoverWidth, int theCoverHeight) = 0;
+	virtual void FillScanLinesWithCoverage(Span* theSpans, int theSpanCount, const Color& theColor, int theDrawMode, const unsigned char* theCoverage, int theCoverX, int theCoverY, int theCoverWidth, int theCoverHeight) = 0;
 	virtual void Blt(Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode) = 0;
 	virtual void BltF(Image* theImage, float theX, float theY, const Rect& theSrcRect, const Rect &theClipRect, const Color& theColor, int theDrawMode) = 0;
 	virtual void BltRotated(Image* theImage, float theX, float theY, const Rect &theSrcRect, const Rect& theClipRect, const Color& theColor, int theDrawMode, double theRot, float theRotCenterX, float theRotCenterY) = 0;
@@ -107,7 +107,7 @@ class DummyImage : public Image {
 	void ClearRect(const Rect&){}
 	void DrawLine(double, double, double, double, const Color&, int){}
 	void DrawLineAA(double, double, double, double, const Color&, int){}
-	void FillScanLinesWithCoverage(Span*, int, const Color&, int, const BYTE*, int, int, int, int){}
+	void FillScanLinesWithCoverage(Span*, int, const Color&, int, const unsigned char*, int, int, int, int){}
 	void Blt(Image*, int, int, const Rect&, const Color&, int){}
 	void BltF(Image*, float, float, const Rect&, const Rect&, const Color&, int){}
 	void BltRotated(Image*, float, float, const Rect &, const Rect&, const Color&, int, double, float, float){}

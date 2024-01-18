@@ -1,6 +1,5 @@
 #include "fcaseopen.h"
 #include <algorithm>
-#include <bits/fs_fwd.h>
 #include <cctype>
 #include <cstdlib>
 #include <locale>

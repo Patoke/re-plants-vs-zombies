@@ -1,5 +1,32 @@
 set(PROJECT_NAME LawnProject)
 
+
+################################################################################
+# Utility functions
+################################################################################
+
+# https://stackoverflow.com/a/27206982
+# Creates C resources file from files in given directory
+function(create_resources dir output)
+    # Create empty output file
+    file(WRITE ${output} "")
+    # Collect input files
+    file(GLOB bins ${dir}/*)
+    # Iterate through input files
+    foreach(bin ${bins})
+        # Get short filename
+        string(REGEX MATCH "([^/]+)$" filename ${bin})
+        # Replace filename spaces & extension separator for C compatibility
+        string(REGEX REPLACE "\\.| |-" "_" filename ${filename})
+        # Read hex data from file
+        file(READ ${bin} filedata HEX)
+        # Convert hex data for C compatibility
+        string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
+        # Append data to output file
+        file(APPEND ${output} "extern const char _binary_${filename}[] = {${filedata}};\nextern const size_t _binary_${filename}_size = sizeof(_binary_${filename});\n\n")
+    endforeach()
+endfunction()
+
 ################################################################################
 # Source groups
 ################################################################################
@@ -386,26 +413,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 set(RC_DIR ${CMAKE_SOURCE_DIR}/res)
 set(RC_OUTPUT_DIR ${CMAKE_BINARY_DIR}/res)
-file(GLOB RC_SRC
-    ${RC_DIR}/*
+
+create_resources(${RC_DIR} ${RC_OUTPUT_DIR}/resources.cpp)
+target_sources(${PROJECT_NAME} PRIVATE
+    ${RC_OUTPUT_DIR}/resources.cpp
 )
-
-set( RC_DEPENDS "" )
-
-foreach(FILE IN LISTS RC_SRC)
-    get_filename_component(FILENAME ${FILE} NAME)
-    string( MAKE_C_IDENTIFIER ${FILENAME} input_identifier )
-    set(outfile ${RC_OUTPUT_DIR}/${input_identifier}.o)
-    add_custom_command(
-        OUTPUT ${outfile}
-        COMMAND ${CMAKE_LINKER} -r --format=binary -m elf_amd64 -o ${outfile} -z noexecstack ${FILENAME}
-        WORKING_DIRECTORY ${RC_DIR}
-    )
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${outfile})
-list(APPEND RC_DEPENDS ${outfile})
-endforeach()
-
-add_custom_target(rc ALL DEPENDS ${RC_DEPENDS})
 
 ################################################################################
 # Precompiled headers
@@ -453,13 +465,6 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     ">"
 )
 
-add_library(bass SHARED IMPORTED)
-set_target_properties(bass
-    PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/lib/libbass.so
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE )
-
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ".") # SexyAppFramework
-target_link_libraries(${PROJECT_NAME} PRIVATE bass "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

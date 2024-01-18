@@ -1,6 +1,7 @@
 #include "BassSoundManager.h"
 #include "paklib/PakInterface.h"
 #include "sound/bass.h"
+#include "sound/BassLoader.h"
 #include <cstring>
 #include <fcntl.h>
 #include <mutex>
@@ -21,7 +22,7 @@ bool BassSoundManager::LoadCompatibleSound(unsigned int theSfxID, const std::str
     p_fread(aBuf, aLength, 1, aFile);
     p_fclose(aFile);
 
-    mSourceSounds[theSfxID] = std::make_optional(BASS_SampleLoad(true, aBuf, 0, aLength, 32, 0));
+    mSourceSounds[theSfxID] = std::make_optional(gBass->BASS_SampleLoad(true, aBuf, 0, aLength, 32, 0));
 
     free(aBuf);
     return true;
@@ -160,7 +161,7 @@ bool BassSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& the
         if (aReadSize != aDataSize) return false;
     }
 
-    mSourceSounds[theSfxID] = std::make_optional(BASS_SampleLoad(true, aDestHeader, 0, aDestSize + 44, 32, 0));
+    mSourceSounds[theSfxID] = std::make_optional(gBass->BASS_SampleLoad(true, aDestHeader, 0, aDestSize + 44, 32, 0));
 
     return true;
 }
@@ -232,7 +233,7 @@ void BassSoundManager::ReleaseSound(unsigned int theSfxID)
 {
     if (mSourceSounds[theSfxID].has_value())
     {
-        BASS_SampleFree(mSourceSounds[theSfxID].value());
+        gBass->BASS_SampleFree(mSourceSounds[theSfxID].value());
         mSourceSounds[theSfxID].reset();
         mSourceFileNames[theSfxID] = "";
     }

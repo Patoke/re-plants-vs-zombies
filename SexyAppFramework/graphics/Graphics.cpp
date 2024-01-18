@@ -359,7 +359,7 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 	Span aSpans[MAX_TEMP_SPANS];
 	int aSpanPos = 0;
 
-	static BYTE aCoverageBuffer[256*256];
+	static unsigned char aCoverageBuffer[256*256];
 	int aCoverWidth = 256, aCoverHeight = 256; 
 	int aCoverLeft, aCoverRight, aCoverTop, aCoverBottom;
 
@@ -379,12 +379,12 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 			aCoverBottom = std::max(aCoverBottom, aPt->mY);
 		}
 	}
-	BYTE* coverPtr = aCoverageBuffer;
+	unsigned char* coverPtr = aCoverageBuffer;
 	if ((aCoverRight-aCoverLeft+1) > aCoverWidth || (aCoverBottom-aCoverTop+1) > aCoverHeight)
 	{
 		aCoverWidth = aCoverRight-aCoverLeft+1;
 		aCoverHeight = aCoverBottom-aCoverTop+1;
-		coverPtr = new BYTE[aCoverWidth*aCoverHeight];
+		coverPtr = new unsigned char[aCoverWidth*aCoverHeight];
 	}
 	memset(coverPtr, 0, aCoverWidth*aCoverHeight);
 
@@ -470,7 +470,7 @@ void Graphics::PolyFillAA(const Point *theVertexList, int theNumVertices, bool c
 				aSpan->mX = xl;
 				aSpan->mWidth = xr - xl + 1;
 
-				BYTE* coverRow = coverPtr + (y - aCoverTop) * aCoverWidth;
+				unsigned char* coverRow = coverPtr + (y - aCoverTop) * aCoverWidth;
 				if (xr == xl)
 				{
 					coverRow[xl-aCoverLeft] = std::min(255, coverRow[xl-aCoverLeft] + ((lErr*rErr)>>8));
@@ -1106,7 +1106,7 @@ int Graphics::WriteString(const SexyString& theString, int theX, int theY, int t
 				break;
 			else // change color instruction
 			{
-				DWORD aColor = 0;
+				unsigned long aColor = 0;
 				if (theString[i+1]==_S('o'))
 				{
 					if (sexystrncmp(theString.c_str()+i+1, _S("oldclr"), 6) == 0)

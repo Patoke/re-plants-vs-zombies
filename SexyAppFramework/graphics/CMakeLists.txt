@@ -2,8 +2,10 @@ include(ExternalProject)
 
 if(WIN32)
     set (glfw_use_wayland OFF)
+    set (glfw_binary "glfw3.lib")
 else()
     set (glfw_use_wayland ON)
+    set (glfw_binary "libglfw3.a")
 endif()
 
 set(libglfw-dir "${CMAKE_BINARY_DIR}/libglfw")
@@ -19,12 +21,10 @@ ExternalProject_Add(glfw-src
                         "-DGLFW_BUILD_TESTS=OFF"
                         "-DGLFW_BUILD_EXAMPLES=OFF"
                         "-DGLFW_BUILD_X11=OFF"
-                        #"-DGLFW_BUILD_WAYLAND=OFF"
                         "-DGLFW_BUILD_WAYLAND=${glfw_use_wayland}"
-                        #"-DGLFW_USE_WAYLAND=ON"
                         "-Wno-dev"
 
-    BUILD_BYPRODUCTS    "${libglfw-dir}/install/lib/libglfw3.a"
+    BUILD_BYPRODUCTS    "${libglfw-dir}/install/lib/${glfw_binary}"
 
     USES_TERMINAL_DOWNLOAD TRUE
     USES_TERMINAL_UPDATE TRUE
@@ -36,7 +36,7 @@ ExternalProject_Add(glfw-src
 add_library(glfw STATIC IMPORTED)
 add_dependencies(glfw glfw-src)
 set_target_properties(glfw
-    PROPERTIES IMPORTED_LOCATION "${libglfw-dir}/install/lib/libglfw3.a"
+    PROPERTIES IMPORTED_LOCATION "${libglfw-dir}/install/lib/${glfw_binary}"
 )
 
 add_dependencies(${PROJECT_NAME} glfw-src)
@@ -45,7 +45,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${libglfw-dir}/install/include
 
 find_package(Vulkan REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw Vulkan::Vulkan wayland-client)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw Vulkan::Vulkan)
+if (UNIX AND NOT APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE wayland-client)
+endif()
 
 set(SHADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
 set(SHADER_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/shaders)
@@ -63,8 +66,6 @@ file(GLOB SHADERS
     ${SHADER_DIR}/*.rmiss
 )
 
-set( SHADER_DEPENDS "" )
-
 foreach(SHADER IN LISTS SHADERS)
     get_filename_component(FILENAME ${SHADER} NAME)
     add_custom_command(OUTPUT ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
@@ -73,20 +74,12 @@ foreach(SHADER IN LISTS SHADERS)
         COMMENT "Compiling ${FILENAME}")
     file(RELATIVE_PATH rel ${SHADER_OUTPUT_DIR} ${SHADER_OUTPUT_DIR}/${FILENAME}.spv)
     string( MAKE_C_IDENTIFIER ${rel} input_identifier )
-    add_custom_command(
-        OUTPUT ${SHADER_OUTPUT_DIR}/${input_identifier}.o
-        COMMAND ${CMAKE_LINKER} -r --format=binary -m elf_amd64 -o ${input_identifier}.o -z noexecstack ${FILENAME}.spv
-        DEPENDS ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
-        WORKING_DIRECTORY ${SHADER_OUTPUT_DIR}
-    )
-    target_link_libraries( ${PROJECT_NAME} PRIVATE ${SHADER_OUTPUT_DIR}/${input_identifier}.o )
-
-list(APPEND SHADER_DEPENDS ${SHADER_OUTPUT_DIR}/${input_identifier}.o)
 endForeach()
 
-add_custom_target( shader ALL DEPENDS ${SHADER_DEPENDS} )
+create_resources(${SHADER_OUTPUT_DIR} ${SHADER_OUTPUT_DIR}/shaders.cpp)
 
 target_sources(${PROJECT_NAME} PRIVATE
+    ${SHADER_OUTPUT_DIR}/shaders.cpp
     Color.cpp
     Color.h
 #    D3D8Helper.cpp
