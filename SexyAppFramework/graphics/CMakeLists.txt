@@ -1,54 +1,7 @@
 include(ExternalProject)
-
-if(WIN32)
-    set (glfw_use_wayland OFF)
-    set (glfw_binary "glfw3.lib")
-else()
-    set (glfw_use_wayland ON)
-    set (glfw_binary "libglfw3.a")
-endif()
-
-set(libglfw-dir "${CMAKE_BINARY_DIR}/libglfw")
-ExternalProject_Add(glfw-src
-    GIT_REPOSITORY      https://github.com/glfw/glfw.git
-    #GIT_TAG             3.3.9
-    SOURCE_DIR          "${libglfw-dir}"
-    BINARY_DIR          "${libglfw-dir}"
-    CMAKE_ARGS          "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
-                        "-DCMAKE_C_FLAGS=${universal_cflags}"
-                        "-DCMAKE_INSTALL_PREFIX=${libglfw-dir}/install"
-                        "-DGLFW_BUILD_DOCS=OFF"
-                        "-DGLFW_BUILD_TESTS=OFF"
-                        "-DGLFW_BUILD_EXAMPLES=OFF"
-                        "-DGLFW_BUILD_X11=OFF"
-                        "-DGLFW_BUILD_WAYLAND=${glfw_use_wayland}"
-                        "-Wno-dev"
-
-    BUILD_BYPRODUCTS    "${libglfw-dir}/install/lib/${glfw_binary}"
-
-    USES_TERMINAL_DOWNLOAD TRUE
-    USES_TERMINAL_UPDATE TRUE
-    USES_TERMINAL_CONFIGURE TRUE
-    USES_TERMINAL_BUILD TRUE
-    UPDATE_DISCONNECTED TRUE
-)
-
-add_library(glfw STATIC IMPORTED)
-add_dependencies(glfw glfw-src)
-set_target_properties(glfw
-    PROPERTIES IMPORTED_LOCATION "${libglfw-dir}/install/lib/${glfw_binary}"
-)
-
-add_dependencies(${PROJECT_NAME} glfw-src)
-
-target_include_directories(${PROJECT_NAME} PUBLIC ${libglfw-dir}/install/include)
-
 find_package(Vulkan REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw Vulkan::Vulkan)
-if (UNIX AND NOT APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE wayland-client)
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
 set(SHADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
 set(SHADER_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/shaders)

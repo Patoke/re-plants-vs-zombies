@@ -225,117 +225,70 @@ endif()
 # SDL external projects
 ################################################################################
 
-include(ExternalProject)
+include(FetchContent)
 
+FetchContent_Declare(
+    zlib
+    GIT_REPOSITORY          https://github.com/madler/zlib.git
+    GIT_TAG                 v1.3
+    OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(zlib)
 
-if(MSVC)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(sdl_binary "SDL2-staticd.lib")
-        set(sdl_main_binary "SDL2maind.lib")
-        set(sdl_image_binary "SDL2_image-staticd.lib")
-    else()
-        set(sdl_binary "SDL2-static.lib")
-        set(sdl_main_binary "SDL2main.lib")
-        set(sdl_image_binary "SDL2_image-static.lib")
-    endif()
-else() # linux
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(sdl_binary "libSDL2d.a")
-        set(sdl_main_binary "libSDL2maind.a")
-        set(sdl_image_binary "libSDL2_imaged.a")
-    else()
-        set(sdl_binary "libSDL2.a")
-        set(sdl_main_binary "libSDL2main.a")
-        set(sdl_image_binary "libSDL2_image.lib")
-    endif()
+FetchContent_Declare(
+    glfw3
+    GIT_REPOSITORY      https://github.com/glfw/glfw.git
+    OVERRIDE_FIND_PACKAGE
+)
+set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+if(UNIX AND NOT APPLE)
+    set(GLFW_BUILD_X11 OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
 endif()
+FetchContent_MakeAvailable(glfw3)
 
-set(sdl_dir "${CMAKE_SOURCE_DIR}/Dependencies/SDL")
-set(sdl_build "${CMAKE_BINARY_DIR}/SDL")
-set(SDL2_INCLUDE_DIR "${CMAKE_BINARY_DIR}/include/SDL2")
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(SDL2_EXTRA_HEADER "${sdl_build}/include-config-debug/SDL2/SDL_config.h")
-else()
-    set(SDL2_EXTRA_HEADER "${sdl_build}/include-config-release/SDL2/SDL_config.h")
-endif()
-
-ExternalProject_Add(sdl-src
+FetchContent_Declare(
+    SDL2
     URL                     https://www.libsdl.org/release/SDL2-2.28.5.tar.gz
-    SOURCE_DIR              "${sdl_dir}"
-    BINARY_DIR              "${sdl_build}"
-    CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
-                            "-DCMAKE_C_FLAGS=${universal_cflags}"
-                            "-DSDL_SHARED=OFF"
-                            "-DSDL_TEST=OFF"
-                            "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}"
-
-    BUILD_BYPRODUCTS        "${sdl_build}/${sdl_binary}"
-                            "${sdl_build}/${sdl_main_binary}"
-                            "${SDL2_INCLUDE_DIR}/"
-    
-    INSTALL_COMMAND     ${CMAKE_COMMAND} -E make_directory ${SDL2_INCLUDE_DIR};
-    COMMAND             ${CMAKE_COMMAND} -E copy_directory ${sdl_dir}/include ${SDL2_INCLUDE_DIR};
-    COMMAND             ${CMAKE_COMMAND} -E copy ${SDL2_EXTRA_HEADER} ${SDL2_INCLUDE_DIR};
-
-    DOWNLOAD_EXTRACT_TIMESTAMP true
-    USES_TERMINAL_DOWNLOAD  TRUE
-    USES_TERMINAL_UPDATE    TRUE
-    USES_TERMINAL_CONFIGURE TRUE
-    USES_TERMINAL_BUILD     TRUE
-    USES_TERMINAL_INSTALL   TRUE
-    UPDATE_DISCONNECTED     TRUE
+    OVERRIDE_FIND_PACKAGE
 )
 
-set(sdl_image_dir "${CMAKE_SOURCE_DIR}/Dependencies/SDL_image")
-set(sdl_image_build "${CMAKE_BINARY_DIR}/SDL_image")
-ExternalProject_Add(sdl_image-src
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(SDL2)
+
+FetchContent_Declare(
+    SDL2_image
     GIT_REPOSITORY          https://github.com/libsdl-org/SDL_image.git
     GIT_TAG                 release-2.8.2
-    DEPENDS                 sdl-src
-    SOURCE_DIR              "${sdl_image_dir}"
-    BINARY_DIR              "${sdl_image_build}"
-    CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
-                            "-DCMAKE_C_FLAGS=${universal_cflags}"
-                            "-DSDL2_CONFIG=${sdl_build}/sdl2-config"
-                            "-DSDL2_LIBRARY=${sdl_build}/${sdl_binary}"
-                            "-DSDL2_INCLUDE_DIR=${SDL2_INCLUDE_DIR}"
-                            "-DSDL2_MAIN_LIBRARY=${sdl_build}/${sdl_main_binary}"
-                            "-DBUILD_SHARED_LIBS=OFF"
-                            "-DBUILD_TESTING=OFF"
-                            "-DSDL2IMAGE_SAMPLES=OFF"
-                            "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}"
-
-    INSTALL_COMMAND     ${CMAKE_COMMAND} -E copy ${sdl_image_dir}/include/SDL_image.h ${SDL2_INCLUDE_DIR};
-    BUILD_BYPRODUCTS        "${sdl_image_build}/${sdl_image_binary}"
-    USES_TERMINAL_DOWNLOAD  TRUE
-    USES_TERMINAL_UPDATE    TRUE
-    USES_TERMINAL_CONFIGURE TRUE
-    USES_TERMINAL_BUILD     TRUE
-    USES_TERMINAL_INSTALL   TRUE
-    UPDATE_DISCONNECTED     TRUE
+    OVERRIDE_FIND_PACKAGE
 )
 
-add_library(sdl STATIC IMPORTED)
-add_library(sdl_image STATIC IMPORTED)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(SDL2_image)
 
-add_dependencies(sdl sdl-src)
-add_dependencies(sdl_image sdl_image-src)
-
-set_target_properties(sdl
-    PROPERTIES IMPORTED_LOCATION "${sdl_build}/${sdl_binary}"
+target_link_libraries(
+    ${PROJECT_NAME} 
+    PRIVATE 
+    SDL2::SDL2-static 
+    SDL2_image::SDL2_image-static 
+    zlibstatic
+    glfw
+)
+# Adds include directories
+target_include_directories(
+    ${PROJECT_NAME} 
+    PRIVATE 
+    ${SDL2_SOURCE_DIR}/include 
+    ${SDL2_image_SOURCE_DIR}/include
+    ${zlib_SOURCE_DIR}
+    ${glfw_SOURCE_DIR}/include
 )
 
-set_target_properties(sdl_image
-    PROPERTIES IMPORTED_LOCATION "${sdl_image_build}/${sdl_image_binary}"
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE sdl sdl_image)
-add_dependencies(${PROJECT_NAME} sdl-src sdl_image-src) # Ensures headers exist
-
-set_property(DIRECTORY PROPERTY ADDITIONAL_CLEAN_FILES
-   "${sdl_build}"
-   "${sdl_image_build}"
-)
 
 ################################################################################
 # Subdirectories
@@ -431,29 +384,6 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 # Dependencies
 ################################################################################
 
-# If on windows, link to the windows libraries, for SDL2 support
-if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:"
-            "winmm.lib;"
-            "ws2_32.lib;"
-            "Imm32.lib;"
-            "Cfgmgr32.lib;"
-            "Version.lib;"
-            "Setupapi.lib;"
-            #"ddraw.lib;"
-        ">"
-        "$<$<CONFIG:Release>:"
-            "winmm.lib;"
-            "ws2_32.lib;"
-            "Imm32.lib;"
-            "Cfgmgr32.lib;"
-            "Version.lib;"
-            "Setupapi.lib;"
-            #"ddraw.lib;"
-        ">"
-    )
-endif()
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
