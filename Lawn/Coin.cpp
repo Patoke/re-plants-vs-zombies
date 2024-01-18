@@ -1234,7 +1234,7 @@ void Coin::Collect()
             mApp->AddTodParticle(mPosX + 30.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PRESENT_PICKUP);
             StartFade();
         }
-        else if (!aIsEndlessAward && mApp->Is3DAccelerated())
+        else if (!aIsEndlessAward)
         {
             float aParticleOffsetX = mWidth / 2;
             float aParticleOffsetY = mHeight / 2;

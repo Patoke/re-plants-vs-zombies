@@ -1,3 +1,8 @@
+#include <bits/chrono.h>
+#include <chrono>
+#include <cstdarg>
+
+#include "Common.h"
 #include "SexyAppBase.h"
 #include "TodList.h"
 #include "TodDebug.h"
@@ -8,16 +13,16 @@
 #include "TodStringFile.h"
 #include "../GameConstants.h"
 #include "graphics/Font.h"
-#include "misc/Debug.h"
-#include "graphics/DDImage.h"
+//#include "graphics/DDImage.h"
 #include "graphics/Graphics.h"
 #include "graphics/ImageFont.h"
-#include "misc/PerfTimer.h"
+//#include "misc/PerfTimer.h"
 #include "misc/SexyMatrix.h"
-#include "graphics/DDInterface.h"
-#include "graphics/D3DInterface.h"
+//#include "graphics/DDInterface.h"
+//#include "graphics/D3DInterface.h"
 
 //0x510BC0
+/*
 void Tod_SWTri_AddAllDrawTriFuncs()
 {
 	SWTri_AddDrawTriFunc(true, false, false, false, 0x8888, false, TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB0_BLEND0);	//0x4A59B0
@@ -91,7 +96,7 @@ void Tod_SWTri_AddAllDrawTriFuncs()
 	SWTri_AddDrawTriFunc(true, true, true, false, 0x0555, true, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB0_BLEND1);		//0x50B230
 	SWTri_AddDrawTriFunc(true, true, true, true, 0x0555, false, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND0);		//0x50D2F0
 	SWTri_AddDrawTriFunc(true, true, true, true, 0x0555, true, TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND1);		//0x50EA10
-}
+}*/
 
 //0x5114E0
 SexyString TodGetCurrentLevelName()
@@ -461,25 +466,27 @@ void TodDrawImageCelScaled(Graphics* g, Image* theImageStrip, int thePosX, int t
 	g->DrawImage(theImageStrip, aSrcRect, aDestRect);
 }
 
+/*
 static const int POOL_SIZE = 4096;
 static RenderCommand gRenderCommandPool[POOL_SIZE];
 static RenderCommand* gRenderTail[256];
 static RenderCommand* gRenderHead[256];
-
+*/
 //0x511E50
 void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& theMatrix, const SexyString& theString, const Color& theColor)
 {
+	std::multimap<int, RenderCommand>aRenderCommandPool;
 	SexyString aFinalString = TodStringTranslate(theString);
 
+	/*
 	memset(gRenderTail, 0, sizeof(gRenderTail));
-	memset(gRenderHead, 0, sizeof(gRenderHead));
+	memset(gRenderHead, 0, sizeof(gRenderHead));*/
 	ImageFont* aFont = (ImageFont*)theFont;
 	if (!aFont->mFontData->mInitialized)
 		return;
 
 	aFont->Prepare();
 	int aCurXPos = 0;
-	int aCurPoolIdx = 0;
 	for (int aCharNum = 0; aCharNum < (int)aFinalString.size(); aCharNum++)
 	{
 		SexyChar aChar = aFont->GetMappedChar(aFinalString[aCharNum]);
@@ -554,43 +561,17 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 			aColor.mAlpha = std::min(aLayer->mColorAdd.mAlpha + theColor.mAlpha * aLayer->mColorMult.mAlpha / 255, 255);
 			int anOrder = aCharData->mOrder + aLayer->mBaseOrder;
 
-			if (aCurPoolIdx >= POOL_SIZE)
-				break;
-
-			RenderCommand* aRenderCommand = &gRenderCommandPool[aCurPoolIdx++];
-			aRenderCommand->mImage = aKernItr->mScaledImage;
-			aRenderCommand->mColor = aColor;
-			aRenderCommand->mDest[0] = anImageX;
-			aRenderCommand->mDest[1] = anImageY;
-			//aRenderCommand->mSrc[0] = aKernItr->mScaledCharImageRects[aChar].mX;
-			//aRenderCommand->mSrc[1] = aKernItr->mScaledCharImageRects[aChar].mY;
-			//aRenderCommand->mSrc[2] = aKernItr->mScaledCharImageRects[aChar].mWidth;
-			//aRenderCommand->mSrc[3] = aKernItr->mScaledCharImageRects[aChar].mHeight;
-			aRenderCommand->mSrc[0] = aKernItr->mScaledCharImageRects.find(aChar)->second.mX;
-			aRenderCommand->mSrc[1] = aKernItr->mScaledCharImageRects.find(aChar)->second.mY;
-			aRenderCommand->mSrc[2] = aKernItr->mScaledCharImageRects.find(aChar)->second.mWidth;
-			aRenderCommand->mSrc[3] = aKernItr->mScaledCharImageRects.find(aChar)->second.mHeight;
-			aRenderCommand->mMode = aLayer->mDrawMode;
-			aRenderCommand->mUseAlphaCorrection = aLayer->mUseAlphaCorrection;
-			aRenderCommand->mNext = nullptr;
-
 			int anOrderIdx = std::min(std::max(anOrder + 128, 0), 255);
-			if (gRenderTail[anOrderIdx])
-			{
-				gRenderTail[anOrderIdx]->mNext = aRenderCommand;
-				gRenderTail[anOrderIdx] = aRenderCommand;
-			}
-			else
-			{
-				gRenderHead[anOrderIdx] = aRenderCommand;
-				gRenderTail[anOrderIdx] = aRenderCommand;
-			}
+			aRenderCommandPool.insert(std::pair<int, RenderCommand>(anOrderIdx, {
+				.mImage = aKernItr->mScaledImage,
+				.mDest = {anImageX, anImageY},
+				.mSrc = aKernItr->mScaledCharImageRects.find(aChar)->second,
+				.mMode = aLayer->mDrawMode,
+				.mColor = aColor,
+				.mUseAlphaCorrection = aLayer->mUseAlphaCorrection,
+				.mNext = nullptr
+			}));
 
-			//aCurXPos += aSpacing + aCharWidth;
-			//if (aCurXPos > aMaxXPos)
-			//{
-			//	aMaxXPos = aCurXPos;
-			//}
 			if (aMaxXPos < aCurXPos + aSpacing + aCharWidth)
 			{
 				aMaxXPos = aCurXPos + aSpacing + aCharWidth;
@@ -600,30 +581,17 @@ void TodDrawStringMatrix(Graphics* g, const _Font* theFont, const SexyMatrix3& t
 		aCurXPos = aMaxXPos;
 	}
 
-	for (int aPoolIdx = 0; aPoolIdx < 256; aPoolIdx++)
-	{
-		RenderCommand* aRenderCommand = gRenderHead[aPoolIdx];
+	for (auto aRenderCommand : aRenderCommandPool) {
+		RenderCommand &cmd = aRenderCommand.second;
 
-		while (aRenderCommand)
-		{
-			int aDrawMode = g->GetDrawMode();
-			if (aRenderCommand->mMode != -1)
-			{
-				aDrawMode = aRenderCommand->mMode;
-			}
-
-			if (aRenderCommand->mImage)
-			{
-				Rect aSrcRect(aRenderCommand->mSrc[0], aRenderCommand->mSrc[1], aRenderCommand->mSrc[2], aRenderCommand->mSrc[3]);
-				SexyTransform2D aTransform;
-				float aPosX = aSrcRect.mWidth * 0.5f + aRenderCommand->mDest[0];
-				float aPosY = aSrcRect.mHeight * 0.5f + aRenderCommand->mDest[1];
-				SexyMatrix3Translation(aTransform, aPosX, aPosY);
-				SexyMatrix3Multiply(aTransform, theMatrix, aTransform);
-				TodBltMatrix(g, aRenderCommand->mImage, aTransform, g->mClipRect, aRenderCommand->mColor, aDrawMode, aSrcRect);
-			}
-			
-			aRenderCommand = aRenderCommand->mNext;
+		int aDrawMode = cmd.mMode != -1 ? cmd.mMode : g->GetDrawMode();
+		if (cmd.mImage) {
+			SexyTransform2D aTransform;
+			float aPosX = cmd.mSrc.mWidth * 0.5f + cmd.mDest[0];
+			float aPosY = cmd.mSrc.mHeight * 0.5f + cmd.mDest[1];
+			SexyMatrix3Translation(aTransform, aPosX, aPosY);
+			SexyMatrix3Multiply(aTransform, theMatrix, aTransform);
+			TodBltMatrix(g, cmd.mImage, aTransform, g->mClipRect, cmd.mColor, aDrawMode, cmd.mSrc);
 		}
 	}
 }
@@ -697,43 +665,52 @@ void SexyMatrix3ExtractScale(const SexyMatrix3& m, float& theScaleX, float& theS
 	}
 }
 
-void TodMarkImageForSanding(Image* theImage)
+void TodMarkImageForSanding(Image* /*theImage*/)
 {
-	((MemoryImage*)theImage)->mD3DFlags |= D3DIMAGEFLAG_SANDING;
+	static bool madeWarning = false;
+	if(!madeWarning) printf("warning:  Image Sanding is Skipped\n");
+	madeWarning = true;
+	//unreachable();
+	//((MemoryImage*)theImage)->mD3DFlags |= D3DIMAGEFLAG_SANDING;
 }
 
-void TodSandImageIfNeeded(Image* theImage)
+void TodSandImageIfNeeded(Image* /*theImage*/)
 {
+	static bool madeWarning = false;
+	if(!madeWarning) printf("warning:  Tried to sand Image but it didn't exist!\n");
+	madeWarning = true;
+	/* TODO
 	MemoryImage* aImage = (MemoryImage*)theImage;
-	/*if (TestBit(aImage->mD3DFlags, D3DIMAGEFLAG_SANDING))*/ // UB shift by a billion
 	if (aImage->mD3DFlags & D3DIMAGEFLAG_SANDING)
 	{
 		FixPixelsOnAlphaEdgeForBlending(theImage);
 		((MemoryImage*)theImage)->mD3DFlags &= ~D3DIMAGEFLAG_SANDING; // Unset the sanding flag
-		//SetBit((unsigned int&)aImage->mD3DFlags, D3DIMAGEFLAG_SANDING, false);  // 清除标记 Also UB!?!
-	}
+	}*/
 }
 
 //0x512650
 void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect)
 {
-	float aOffsetX = 0.0f;
-	float aOffsetY = 0.0f;
-	if (gSexyAppBase->Is3DAccelerated())
-	{
-		aOffsetX -= 0.5f;
-		aOffsetY -= 0.5f;
-	}
+	//float aOffsetX = 0.0f;
+	//float aOffsetY = 0.0f;
+	//if (gSexyAppBase->Is3DAccelerated())
+	//{
+	//aOffsetX -= 0.5f;
+	//aOffsetY -= 0.5f;
+	//}
+	/*
 	else if (theDrawMode == Graphics::DRAWMODE_ADDITIVE)
 	{
 		gTodTriangleDrawAdditive = true;
-	}
+	}*/
 
 	TodSandImageIfNeeded(theImage);
 
-	if (theClipRect.mX != 0 || theClipRect.mY != 0 || theClipRect.mWidth != BOARD_WIDTH || theClipRect.mHeight != BOARD_HEIGHT)
+	g->mDestImage->BltMatrix(theImage, 0.0f, 0.0f, theTransform, theClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
+
+	/*if (theClipRect.mX != 0 || theClipRect.mY != 0 || theClipRect.mWidth != BOARD_WIDTH || theClipRect.mHeight != BOARD_HEIGHT)
 	{
-		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, theClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
+		
 	}
 	else if (DDImage::Check3D(g->mDestImage))
 	{
@@ -745,9 +722,9 @@ void TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform,
 	{
 		Rect aBufFixClipRect(0, 0, BOARD_WIDTH + 1, BOARD_HEIGHT + 1);
 		g->mDestImage->BltMatrix(theImage, aOffsetX, aOffsetY, theTransform, aBufFixClipRect, theColor, theDrawMode, theSrcRect, g->mLinearBlend);
-	}
+	}*/
 
-	gTodTriangleDrawAdditive = false;
+	//gTodTriangleDrawAdditive = false;
 }
 
 //0x5127C0
@@ -873,7 +850,8 @@ void TodDrawImageCenterScaledF(Graphics* g, Image* theImage, float thePosX, floa
 }
 
 //0x512AC0
-unsigned long AverageNearByPixels(MemoryImage* theImage, unsigned long* thePixel, int x, int y)
+/*
+uint32_t AverageNearByPixels(MemoryImage* theImage, uint32_t* thePixel, int x, int y)
 {
 	int aRed = 0;
 	int aGreen = 0;
@@ -913,11 +891,14 @@ unsigned long AverageNearByPixels(MemoryImage* theImage, unsigned long* thePixel
 	aBlue /= aBitsCount;
 	aBlue = std::min(aBlue, 255);
 	return (aRed << 16) | (aGreen << 8) | (aBlue);
-}
+}*/
 
 //0x512C60
-void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
+
+void FixPixelsOnAlphaEdgeForBlending(Image* /*theImage*/)
 {
+	// TODO
+	/*
 	MemoryImage* aImage = (MemoryImage*)theImage;
 	if (aImage->mBits == nullptr)
 		return;
@@ -926,10 +907,10 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	if (!aImage->mHasTrans)
 		return;
 
-	PerfTimer aTimer;
-	aTimer.Start();
+	auto aTimer = std::chrono::high_resolution_clock::now();
 
-	unsigned long* aBitsPtr = aImage->mBits;
+
+	uint32_t* aBitsPtr = aImage->mBits;
 	for (int y = 0; y < theImage->mHeight; y++)
 	{
 		for (int x = 0; x < theImage->mWidth; x++)
@@ -944,11 +925,11 @@ void FixPixelsOnAlphaEdgeForBlending(Image* theImage)
 	}
 	aImage->mBitsChangedCount++;
 
-	int aDuration = std::max(aTimer.GetDuration(), 0.0);
+	int aDuration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count();
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADING:Long sanding '%s' %d ms on %s", theImage->mFilePath.c_str(), aDuration, gGetCurrentLevelName().c_str());
-	}
+	}*/
 }
 
 void SexyMatrix3Transpose(const SexyMatrix3& m, SexyMatrix3 &r)
@@ -1069,6 +1050,13 @@ Color ColorsMultiply(const Color& theColor1, const Color& theColor2)
 // GOTY @Patoke: inlined 0x51D4C0
 bool TodLoadResources(const std::string& theGroup)
 {
+	// It's fixed now.. but still, wtf
+	/* For everything that is mighty, this is so not okay. This code promotes the base class
+	 * ResourceManager to the derived class TodResourceManager and just yolo raw dogs it
+	 * and hopes for the best. It does work but Address sanitizer is having an aneurism.
+	 * Honestly I don't even know what the best way to do this is. Probably implement a
+	 * constructor in TodResourceManager and use that instead?
+	 */
 	return ((TodResourceManager*)gSexyAppBase->mResourceManager)->TodLoadResources(theGroup);
 }
 
@@ -1079,8 +1067,7 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 	if (IsGroupLoaded(theGroup))
 		return true;
 
-	PerfTimer aTimer;
-	aTimer.Start();
+	auto aTimer = std::chrono::high_resolution_clock::now();
 
 	StartLoadResources(theGroup);
 	while (!gSexyAppBase->mShutdown && TodLoadNextResource());
@@ -1101,7 +1088,7 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 
 	mLoadedGroups.insert(theGroup);
 
-	int aDuration = std::max(aTimer.GetDuration(), 0.0);
+	int aDuration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count();
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADED: '%s' %d ms on %s", theGroup.c_str(), aDuration, gGetCurrentLevelName().c_str());
@@ -1110,18 +1097,18 @@ bool TodResourceManager::TodLoadResources(const std::string& theGroup)
 	return true;
 }
 
-void TodAddImageToMap(SharedImageRef* theImage, const std::string& thePath)
-{ 
+void TodAddImageToMap(Image* theImage, const std::string& thePath)
+{
 	((TodResourceManager*)gSexyAppBase->mResourceManager)->AddImageToMap(theImage, thePath);
 }
 
 //0x513230
-void TodResourceManager::AddImageToMap(SharedImageRef* theImage, const std::string& thePath)
+void TodResourceManager::AddImageToMap(Image* theImage, const std::string& thePath)
 {
 	TOD_ASSERT(mImageMap.find(thePath) == mImageMap.end());
 
 	ImageRes* aImageRes = new ImageRes();
-	aImageRes->mImage = *theImage;
+	aImageRes->mImage = theImage;
 	aImageRes->mPath = thePath;
 	mImageMap.insert(ResMap::value_type(thePath, aImageRes));
 }
@@ -1134,7 +1121,7 @@ bool TodLoadNextResource()
 //0x513330
 bool TodResourceManager::TodLoadNextResource()
 {
-	GetTickCount();
+	//GetTickCount();
 	TodHesitationTrace("preres");
 
 	while (mCurResGroupListItr != mCurResGroupList->end())
@@ -1148,7 +1135,8 @@ bool TodResourceManager::TodLoadNextResource()
 		case ResType_Image:
 		{
 			ImageRes* anImageRes = (ImageRes*)aRes;
-			if ((DDImage*)anImageRes->mImage != nullptr)
+			anImageRes->mImageSand = true;
+			if (anImageRes->mImage != nullptr)
 			{
 				mCurResGroupListItr++;
 				continue;
@@ -1185,6 +1173,7 @@ bool TodResourceManager::TodLoadNextResource()
 		if (!LoadNextResource())
 			break;
 
+		/*
 		if (aRes->mType == ResType::ResType_Image)
 		{
 			ImageRes* anImageRes = (ImageRes*)aRes;
@@ -1193,9 +1182,9 @@ bool TodResourceManager::TodLoadNextResource()
 			{
 				TodMarkImageForSanding(aImage);
 			}
-		}
+		}*/
 
-		GetTickCount();
+		//GetTickCount();
 		TodHesitationTrace("Loading: '%s'", aRes->mPath.c_str());
 		TodHesitationTrace("resource '%s'", aRes->mPath.c_str());
 		return true;
@@ -1219,7 +1208,7 @@ bool TodResourceManager::FindFontPath(_Font* theFont, std::string* thePath)
 	for (auto anItr = mFontMap.begin(); anItr != mFontMap.end(); anItr++)
 	{
 		FontRes* aFontRes = (FontRes*)anItr->second;
-		_Font* aFont = (_Font*)aFontRes->mFont;
+		_Font* aFont = aFontRes->mFont;
 		if (aFont == theFont)
 		{
 			*thePath = anItr->first;
@@ -1327,7 +1316,7 @@ int TodVsnprintf(char* theBuffer, int theSize, const char* theFormat, va_list th
 {
 	try
 	{
-		int aCount = _vsnprintf(theBuffer, theSize, theFormat, theArgList);
+		int aCount = vsnprintf(theBuffer, theSize, theFormat, theArgList);
 		if (aCount == -1)
 		{
 			theBuffer[theSize - 1] = '\0';

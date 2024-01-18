@@ -18,8 +18,10 @@ HyperlinkWidget::HyperlinkWidget(int theId, ButtonListener* theButtonListener) :
 
 void HyperlinkWidget::Draw(Graphics* g)
 {
+	/* FIXME
 	if (mFont == NULL)
 		mFont = new SysFont(mWidgetManager->mApp, "Arial Unicode MS", 10); //baz changed
+	*/
 
 	int aFontX = (mWidth - mFont->StringWidth(mLabel))/2;
 	int aFontY = (mHeight + mFont->GetAscent())/2 - 1;

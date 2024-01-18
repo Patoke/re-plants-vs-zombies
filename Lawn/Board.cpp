@@ -1,4 +1,8 @@
+#include <bits/types/clock_t.h>
+#include <chrono>
+#include <ctime>
 #include <time.h>
+#include "Common.h"
 #include "ZenGarden.h"
 #include "BoardInclude.h"
 #include "System/Music.h"
@@ -6,7 +10,7 @@
 #include "Widget/LawnDialog.h"
 #include "System/PlayerInfo.h"
 #include "System/PoolEffect.h"
-#include "System/PopDRMComm.h"
+//#include "System/PopDRMComm.h"
 #include "System/TypingCheck.h"
 #include "Widget/StoreScreen.h"
 #include "Widget/AwardScreen.h"
@@ -24,7 +28,6 @@
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 #include "graphics/ImageFont.h"
-#include "sound/BassLoader.h"
 #include "sound/SoundManager.h"
 #include "widget/ButtonWidget.h"
 #include "widget/WidgetManager.h"
@@ -115,14 +118,14 @@ Board::Board(LawnApp* theApp)
 	mFinalWaveSoundCounter = 0;
 	mKilledYeti = false;
 	mTriggeredLawnMowers = 0;
-	mPlayTimeActiveLevel = 0;
-	mPlayTimeInactiveLevel = 0;
+	mPlayTimeActiveLevel = std::chrono::milliseconds(0);
+	mPlayTimeInactiveLevel = std::chrono::milliseconds(0);
 	mMaxSunPlants = 0;
 	mStartDrawTime = 0;
 	mIntervalDrawTime = 0;
 	mIntervalDrawCountStart = 0;
-	mPreloadTime = 0;
-	mGameID = _time64(nullptr);
+	mPreloadTime = std::chrono::milliseconds(0);
+	mGameID = time_t(nullptr);
 	mMinFPS = 1000.0f;
 	mGravesCleared = 0;
 	mPlantsEaten = 0;
@@ -155,7 +158,8 @@ Board::Board(LawnApp* theApp)
 	mSukhbirMode = mApp->mSukhbirMode;
 	mShowShovel = false;
 	mToolTip = new ToolTipWidget();
-	mDebugFont = new SysFont("Arial Unicode MS", 10, true, false, false);
+	//mDebugFont = new SysFont("Arial Unicode MS", 10, true, false, false);
+	mDebugFont = nullptr;
 	mAdvice = new MessageWidget(mApp);
 	mBackground = BackgroundType::BACKGROUND_1_DAY;
 	mMainCounter = 0;
@@ -233,10 +237,11 @@ Board::~Board()
 	{
 		delete mToolTip;
 	}
+	/*
 	if (mDebugFont)
 	{
 		delete mDebugFont;
-	}
+	}*/
 	delete mCutScene;
 	delete mChallenge;
 }
@@ -336,7 +341,7 @@ void Board::TryToSaveGame()
 		MkDir(GetAppDataFolder() + "userdata");
 		mApp->mMusic->GameMusicPause(true);
 		LawnSaveGame(this, aFileName);
-		mApp->ClearUpdateBacklog();
+		//mApp->ClearUpdateBacklog();
 		SurvivalSaveScore();
 	}
 }
@@ -361,7 +366,7 @@ void Board::SaveGame(const std::string& theFileName)
 // GOTY @Patoke: 0x40B739
 void Board::ResetFPSStats()
 {
-	DWORD aTickCount = GetTickCount();
+	clock_t aTickCount = clock();
 	mStartDrawTime = aTickCount;
 	mIntervalDrawTime = aTickCount;
 	mDrawCount = 1;
@@ -376,7 +381,7 @@ bool Board::LoadGame(const std::string& theFileName)
 		return false;
 
 	LoadBackgroundImages();
-	mApp->ClearUpdateBacklog();
+	//mApp->ClearUpdateBacklog();
 	ResetFPSStats();
 	UpdateLayers();
 	return true;
@@ -3071,7 +3076,7 @@ void Board::UpdateCursor()
 
 	if (mPaused || mBoardFadeOutCounter >= 0 || mTimeStopCounter > 0 || mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
 	{
-		mApp->SetCursor(Sexy::CURSOR_POINTER);
+		mApp->SetCursor(CURSOR_POINTER);
 		return;
 	}
 
@@ -3136,19 +3141,19 @@ void Board::UpdateCursor()
 
 	if (mChallenge->mBeghouledMouseCapture || aShowDrag)
 	{
-		mApp->SetCursor(Sexy::CURSOR_DRAGGING);
+		mApp->SetCursor(CURSOR_DRAGGING);
 	}
 	else if (aShowFinger)
 	{
-		mApp->SetCursor(Sexy::CURSOR_HAND);
+		mApp->SetCursor(CURSOR_HAND);
 	}
 	else if (aHideCursor)
 	{
-		mApp->SetCursor(Sexy::CURSOR_NONE);
+		mApp->SetCursor(CURSOR_NONE);
 	}
 	else
 	{
-		mApp->SetCursor(Sexy::CURSOR_POINTER);
+		mApp->SetCursor(CURSOR_POINTER);
 	}
 }
 
@@ -4827,10 +4832,10 @@ void Board::MouseUp(int x, int y, int theClickCount)
 			}
 			else if (mApp->mGameMode == GameMode::GAMEMODE_UPSELL)
 			{
-				if (mApp->mDRM)
+				/*if (mApp->mDRM)
 				{
 					mApp->mDRM->BuyGame();
-				}
+				}*/
 				mApp->DoBackToMain();
 			}
 		}
@@ -7269,9 +7274,9 @@ void Board::DrawDebugText(Graphics* g)
 				float bpm1;
 				float bpm2;
 				float bpm3;
-				gBass->BASS_ChannelGetAttribute(aMusicHandle1, BASS_ATTRIB_MUSIC_BPM, &bpm1);
-				gBass->BASS_ChannelGetAttribute(aMusicHandle2, BASS_ATTRIB_MUSIC_BPM, &bpm2);
-				gBass->BASS_ChannelGetAttribute(aMusicHandle3, BASS_ATTRIB_MUSIC_BPM, &bpm3);
+				BASS_ChannelGetAttribute(aMusicHandle1, BASS_ATTRIB_MUSIC_BPM, &bpm1);
+				BASS_ChannelGetAttribute(aMusicHandle2, BASS_ATTRIB_MUSIC_BPM, &bpm2);
+				BASS_ChannelGetAttribute(aMusicHandle3, BASS_ATTRIB_MUSIC_BPM, &bpm3);
 				aText += StrFormat(_S("bpm1 %f bmp2 %f bpm3 %f\n"), bpm1, bpm2, bpm3);
 			}
 			else if (mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_NIGHT_MOONGRAINS)
@@ -7314,6 +7319,9 @@ void Board::DrawDebugText(Graphics* g)
 		break;
 	}
 
+	//unreachable();
+	// TODO
+	mDebugFont = FONT_BRIANNETOD16;
 	g->SetFont(mDebugFont);
 	g->SetColor(Color::Black);
 	g->DrawStringWordWrapped(aText, 10, 89);
@@ -7619,7 +7627,7 @@ void Board::UpdateFog()
 //0x41A730
 void Board::DrawFog(Graphics* g)
 {
-	Image* aImageFog = mApp->Is3DAccelerated() ? Sexy::IMAGE_FOG : Sexy::IMAGE_FOG_SOFTWARE;
+	Image* aImageFog = /*mApp->Is3DAccelerated() ?*/ Sexy::IMAGE_FOG; /*: Sexy::IMAGE_FOG_SOFTWARE*/
 	for (int x = 0; x < MAX_GRID_SIZE_X; x++)
 	{
 		for (int y = 0; y < MAX_GRID_SIZE_Y + 1; y++)
@@ -7645,6 +7653,7 @@ void Board::DrawFog(Graphics* g)
 
 			int aColorVariant = 255 - aCelLook * 1.5 - aMotion * 1.5;
 			int aLightnessVariant = 255 - aCelLook - aMotion;
+			/*
 			if (!mApp->Is3DAccelerated())
 			{
 				aPosX += 10;
@@ -7652,7 +7661,7 @@ void Board::DrawFog(Graphics* g)
 				aCelCol = aCelLook % Sexy::IMAGE_FOG_SOFTWARE->mNumCols;
 				aColorVariant = 255;
 				aLightnessVariant = 255;
-			}
+			}*/
 
 			g->SetColorizeImages(true);
 			g->SetColor(Color(aColorVariant, aColorVariant, aLightnessVariant, aFadeAmount));
@@ -7749,12 +7758,12 @@ void Board::Draw(Graphics* g)
 
 	if (mDrawCount && mCutScene->mPreloaded)
 	{
-		int aTickCount = GetTickCount();
-		int aIntervalDraws = mDrawCount - mIntervalDrawCountStart;
-		int aInterval = aTickCount - mIntervalDrawTime;
-		if (aInterval > 10000)
+		clock_t aTickCount = clock();
+		clock_t aIntervalDraws = mDrawCount - mIntervalDrawCountStart;
+		clock_t aInterval = aTickCount - mIntervalDrawTime;
+		if (aInterval > 10*CLOCKS_PER_SEC)
 		{
-			float aIntervalFPS = (aIntervalDraws * 1000 + 500) / aInterval;
+			float aIntervalFPS = ((1000.0*1000.0/CLOCKS_PER_SEC)*aIntervalDraws + 500) / aInterval;
 			if (mMinFPS > aIntervalFPS)
 			{
 				mMinFPS = aIntervalFPS;
@@ -8719,7 +8728,7 @@ void Board::KeyChar(SexyChar theChar)
 	}
 	if (theChar == _S('%'))
 	{
-		mApp->SwitchScreenMode(mApp->mIsWindowed, !mApp->Is3DAccelerated(), false);
+		mApp->SwitchScreenMode(mApp->mIsWindowed, false, false);
 	}
 	if (theChar == _S('M'))
 	{

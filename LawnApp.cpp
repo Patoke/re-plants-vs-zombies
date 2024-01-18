@@ -1,5 +1,7 @@
-#include <corecrt.h>
+#include <bits/chrono.h>
+#include <chrono>
 #include <time.h>
+#include "Common.h"
 #include "LawnApp.h"
 #include "Lawn/Board.h"
 #include "Lawn/Plant.h"
@@ -17,7 +19,7 @@
 #include "Lawn/System/PlayerInfo.h"
 #include "Lawn/System/PoolEffect.h"
 #include "Lawn/System/ProfileMgr.h"
-#include "Lawn/System/PopDRMComm.h"
+//#include "Lawn/System/PopDRMComm.h"
 #include "Lawn/Widget/GameButton.h"
 #include "Sexy.TodLib/Reanimator.h"
 #include "Lawn/Widget/UserDialog.h"
@@ -44,9 +46,8 @@
 #include "misc/ResourceManager.h"
 
 #include "widget/Checkbox.h"
-#include "sound/BassMusicInterface.h"
 #include "widget/Dialog.h"
-#include "SexyAppFramework/resource.h"
+#include "graphics/WindowInterface.h"
 
 bool gIsPartnerBuild = false; // GOTY @Patoke: 0x729659
 bool gSlowMo = false;  //0x6A9EAA
@@ -107,7 +108,7 @@ LawnApp::LawnApp()
 	mHeight = BOARD_HEIGHT;
 	mFullscreenBits = 32;
 	mAppCounter = 0;
-	mAppRandSeed = _time64(nullptr);
+	mAppRandSeed = clock();
 	mTrialType = TrialType::TRIALTYPE_NONE;
 	mDebugTrialLocked = false;
 	mMuteSoundsForCutscene = false;
@@ -115,11 +116,11 @@ LawnApp::LawnApp()
 	mSfxVolume = 0.5525;
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
-	mProdName = "PopCap\\PlantsVsZombies";
+	mProdName = "PopCap/PlantsVsZombies";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
 	aTitleName += " BETA ";
-	aTitleName += mProductVersion;
+	//aTitleName += mProductVersion;
 #endif
 	mTitle = StringToSexyStringFast(aTitleName);
 	mCustomCursorsEnabled = false;
@@ -129,7 +130,7 @@ LawnApp::LawnApp()
 	mGameMode = GameMode::GAMEMODE_ADVENTURE;
 	mEasyPlantingCheat = false;
 	mAutoEnable3D = true;
-	Tod_SWTri_AddAllDrawTriFuncs();
+//	Tod_SWTri_AddAllDrawTriFuncs();
 	mLoadingZombiesThreadCompleted = true;
 	mGamesPlayed = 0;
 	mMaxExecutions = 0;
@@ -144,7 +145,9 @@ LawnApp::LawnApp()
 	mCrazyDaveBlinkCounter = 0;
 	mCrazyDaveBlinkReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveMessageIndex = -1;
-	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
+	//unreachable();
+	/* TODO
+	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));*/
 	mDRM = nullptr;
 }
 
@@ -300,7 +303,6 @@ void LawnApp::Shutdown()
 
 		if (mReanimatorCache)
 		{
-			mReanimatorCache->ReanimatorCacheDispose();
 			delete mReanimatorCache;
 			mReanimatorCache = nullptr;
 		}
@@ -313,10 +315,11 @@ void LawnApp::Shutdown()
 		UpdateRegisterInfo();
 		SexyAppBase::Shutdown();
 
+		/* TODO
 		if (mDRM)
 		{
 			delete mDRM;
-		}
+		}*/
 		mDRM = nullptr;
 	}
 }
@@ -615,7 +618,7 @@ void LawnApp::KillStoreScreen()
 	if (GetDialog(Dialogs::DIALOG_STORE))
 	{
 		KillDialog(Dialogs::DIALOG_STORE);
-		ClearUpdateBacklog(false);
+		//ClearUpdateBacklog(false);
 	}
 }
 
@@ -704,8 +707,7 @@ void LawnApp::DoNewOptions(bool theFromGameSelector)
 // GOTY @Patoke: 0x453410
 AlmanacDialog* LawnApp::DoAlmanacDialog(SeedType theSeedType, ZombieType theZombieType)
 {
-	PerfTimer mTimer;
-	mTimer.Start();
+	auto mTimer = std::chrono::high_resolution_clock::now();
 
 	//FinishModelessDialogs();
 
@@ -722,8 +724,7 @@ AlmanacDialog* LawnApp::DoAlmanacDialog(SeedType theSeedType, ZombieType theZomb
 		aDialog->ShowZombie(theZombieType);
 	}
 
-	int aDuration = mTimer.GetDuration();
-	TodTrace("almanac load time: %d ms", aDuration);
+	TodTrace("almanac load time: %d ms", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimer).count());
 
 	return aDialog;
 }
@@ -1138,7 +1139,7 @@ bool LawnApp::KillNewOptionsDialog()
 	SwitchScreenMode(wantWindowed, want3D, false);
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
-	ClearUpdateBacklog();
+	//ClearUpdateBacklog();
 	return true;
 }
 
@@ -1148,7 +1149,7 @@ bool LawnApp::KillAlmanacDialog()
 	if (GetDialog(Dialogs::DIALOG_ALMANAC))
 	{
 		KillDialog(Dialogs::DIALOG_ALMANAC);
-		ClearUpdateBacklog(false);
+		//ClearUpdateBacklog(false);
 		return true;
 	}
 
@@ -1238,7 +1239,6 @@ void BetaSubmitFunc()
 // GOTY @Patoke: 0x454C60
 void LawnApp::Init()
 {
-	DoParseCmdLine();
 	if (!mTodCheatKeys)
 	{
 		mOnlyAllowOneCopyToRun = true;
@@ -1259,9 +1259,9 @@ void LawnApp::Init()
 	//	gSexyCache->Disconnect();
 	//}
 
-	mSessionID = _time64(nullptr);
-	mPlayTimeActiveSession = 0;
-	mPlayTimeInactiveSession = 0;
+	mSessionID = clock();
+	mPlayTimeActiveSession = std::chrono::milliseconds(0);
+	mPlayTimeInactiveSession = std::chrono::milliseconds(0);
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
 	mSawYeti = false;
 
@@ -1272,7 +1272,7 @@ void LawnApp::Init()
 	TodLog("session id: %u", mSessionID);
 //#endif
 
-	if (!mResourceManager->ParseResourcesFile("properties\\resources.xml"))
+	if (!mResourceManager->ParseResourcesFile("properties/resources.xml"))
 	{
 		ShowResourceError(true);
 		return;
@@ -1283,8 +1283,7 @@ void LawnApp::Init()
 		return;
 	}
 
-	PerfTimer mTimer;
-	mTimer.Start();
+	auto mTimer = std::chrono::high_resolution_clock::now();
 
 	mProfileMgr->Load();
 
@@ -1308,10 +1307,9 @@ void LawnApp::Init()
 	mWidgetManager->SetFocus(mTitleScreen);
 
 #ifdef _DEBUG
-	int aDuration = mTimer.GetDuration();
-	TodTrace("loading: 'profiles' %d ms", aDuration);
+	TodTrace("loading: 'profiles' %d ms", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimer).count());
 #endif
-	mTimer.Start();
+	mTimer = std::chrono::high_resolution_clock::now();
 
 	mMusic = new Music();
 	mSoundSystem = new TodFoley();
@@ -1340,20 +1338,18 @@ void LawnApp::Init()
 	mSukhbirCheck = new TypingCheck("sukhbir");
 
 #ifdef _DEBUG
-	aDuration = mTimer.GetDuration();
-	TodTrace("loading: 'system' %d ms", aDuration);
+	TodTrace("loading: 'system' %d ms", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimer).count());
 #endif
-	mTimer.Start();
+	mTimer = std::chrono::high_resolution_clock::now();
 
 	ReanimatorLoadDefinitions(gLawnReanimationArray, ReanimationType::NUM_REANIMS);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_LOADBAR_SPROUT, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD, true);
 
 #ifdef _DEBUG
-	aDuration = mTimer.GetDuration();
-	TodTrace("loading: 'loaderbar' %d ms", aDuration);
+	TodTrace("loading: 'loaderbar' %d ms", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - mTimer).count());
 #endif
-	mTimer.Start();
+	//mTimer.Start();
 }
 
 //0x4522A0
@@ -1589,27 +1585,27 @@ void LawnApp::CheckForGameEnd()
 
 void LawnApp::UpdatePlayTimeStats()
 {
-	static int aLastTime = -1;
+	static auto aLastTime = std::chrono::high_resolution_clock::now();
 
-	int aTickCount = GetTickCount();
-	int aSession = (aTickCount - aLastTime) / 1000;
+	auto aTickCount = std::chrono::high_resolution_clock::now();
+	auto aSession = (aTickCount - aLastTime);
 
 	if (mPlayerInfo && !mPlayerInfo->mHasUsedCheatKeys && !mDebugKeysEnabled && mTodCheatKeys)
 	{
 		mPlayerInfo->mHasUsedCheatKeys = 1;
 	}
 
-	if (aLastTime == -1)
+	if (aLastTime == aTickCount)
 	{
-		aLastTime = aTickCount;
+		//aLastTime = aTickCount;
 		return;
 	}
 
-	if (aSession > 0)
+	if (aSession > std::chrono::milliseconds(0))
 	{
 		aLastTime = aTickCount;
 
-		if ((mBoard == nullptr || !mBoard->mPaused) && mHasFocus && mLastTimerTime - mLastUserInputTick <= 10000)
+		if ((mBoard == nullptr || !mBoard->mPaused) && mHasFocus && mLastTimerTime - mLastUserInputTick <= std::chrono::milliseconds(10000))
 		{
 			mPlayTimeActiveSession += aSession;
 
@@ -1707,8 +1703,7 @@ void LawnApp::ToggleFastMo()
 //0x452740
 void LawnApp::LoadGroup(const char* theGroupName, int theGroupAveMsToLoad)
 {
-	PerfTimer aTimer;
-	aTimer.Start();
+	//auto aTimer = std::chrono::high_resolution_clock::now();
 
 	mResourceManager->StartLoadResources(theGroupName);
 	while (!mShutdown && !mCloseRequest && !mLoadingFailed && TodLoadNextResource())
@@ -1736,7 +1731,7 @@ void LawnApp::LoadingThreadProc()
 	if (!TodLoadResources("LoaderBar"))
 		return;
 
-	TodStringListLoad("Properties\\LawnStrings.txt");
+	TodStringListLoad("Properties/LawnStrings.txt");
 
 	if (mTitleScreen)
 	{
@@ -1749,12 +1744,12 @@ void LawnApp::LoadingThreadProc()
 	{
 		mNumLoadingThreadTasks += mResourceManager->GetNumResources(groups[i]) * group_ave_ms_to_load[i];
 	}
-	mNumLoadingThreadTasks += 636;
+	//mNumLoadingThreadTasks += 636;
+	mNumLoadingThreadTasks -= 744; // I have no idea why but the count is off by this much.
 	mNumLoadingThreadTasks += GetNumPreloadingTasks();
 	mNumLoadingThreadTasks += mMusic->GetNumLoadingTasks();
 
-	PerfTimer aTimer;
-	aTimer.Start();
+	auto aTimer = std::chrono::high_resolution_clock::now();
 
 	TodHesitationTrace("start loading");
 	TodHesitationBracket aHesitationResources("Resources");
@@ -1762,45 +1757,41 @@ void LawnApp::LoadingThreadProc()
 
 	LoadGroup("LoadingImages", 9);
 	LoadGroup("LoadingFonts", 54);
+	LoadGroup("LoadingSounds", 54);
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
 
 	aHesitationResources.EndBracket();
-	TodTrace("loading '%s' %d ms", "resources", (int)aTimer.GetDuration());
+
+	TodTrace("loading: '%s' %d ms", "resources", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count());
 
 	mMusic->MusicInit();
 	// aDuration goes unused
 	//int aDuration = max(aTimer.GetDuration(), 0.0);
-	aTimer.Start();
-
+	aTimer = std::chrono::high_resolution_clock::now();
 	mPoolEffect = new PoolEffect();
 	mPoolEffect->PoolEffectInitialize();
 	mZenGarden = new ZenGarden();
 	mReanimatorCache = new ReanimatorCache();
-	mReanimatorCache->ReanimatorCacheInitialize();
 	TodFoleyInitialize(gLawnFoleyParamArray, LENGTH(gLawnFoleyParamArray));
-
-	TodTrace("loading '%s' %d ms", "stuff", (int)aTimer.GetDuration());
-	aTimer.Start();
-
+	TodTrace("loading: '%s' %d ms", "stuff", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count());
+	
+	aTimer = std::chrono::high_resolution_clock::now();
 	TrailLoadDefinitions(gLawnTrailArray, LENGTH(gLawnTrailArray));
-	TodTrace("loading '%s' %d ms", "trail", (int)aTimer.GetDuration());
-	aTimer.Start();
+	TodTrace("loading: '%s' %d ms", "trail", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count());
 	TodHesitationTrace("trail");
 	
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray));
 	//aDuration = max(aTimer.GetDuration(), 0.0);
-	aTimer.Start();
 
 	PreloadForUser();
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
 
 	//aDuration = max(aTimer.GetDuration(), 0.0);
-	aTimer.Start();
 
-	GetNumPreloadingTasks();
-	LoadGroup("LoadingSounds", 54);
+	//GetNumPreloadingTasks();
+	
 	TodHesitationTrace("finished loading");
 }
 
@@ -1928,7 +1919,8 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
-			SendMessage(mHWnd, WM_CLOSE, 0, 0);
+			CloseRequestAsync();
+			//SendMessage(mHWnd, WM_CLOSE, 0, 0);
 			return;
 
 		case Dialogs::DIALOG_NAG:
@@ -2353,7 +2345,7 @@ bool LawnApp::UpdateApp()
 //0x453A70
 void LawnApp::CloseRequestAsync()
 {
-	mDeferredMessages.clear();
+	//mDeferredMessages.clear();
 	mExitToTop = true;
 	mCloseRequest = true;
 }
@@ -3146,7 +3138,7 @@ int LawnApp::GetNumPreloadingTasks()
 //0x455720
 void LawnApp::PreloadForUser()
 {
-	int aNumTasks = mNumLoadingThreadTasks + GetNumPreloadingTasks();
+	int aNumTasks = mNumLoadingThreadTasks /*+ GetNumPreloadingTasks()*/;
 	if (mTitleScreen && mTitleScreen->mQuickLoadKey != KeyCode::KEYCODE_UNKNOWN)
 	{
 		TodTrace("preload canceled\n");
@@ -3157,19 +3149,19 @@ void LawnApp::PreloadForUser()
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_PUFF, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_LAWN_MOWERED_ZOMBIE, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_READYSETPLANT, true);
-	mCompletedLoadingThreadTasks += 68;
+	//mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_FINAL_WAVE, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_SUN, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_TEXT_FADE_ON, true);
-	mCompletedLoadingThreadTasks += 68;
+	//mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE, true);
-	mCompletedLoadingThreadTasks += 68;
+	//mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE_NEWSPAPER, true);
-	mCompletedLoadingThreadTasks += 68;
+	//mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_SELECTOR_SCREEN, true);
-	mCompletedLoadingThreadTasks += 340;
+	//mCompletedLoadingThreadTasks += 340;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE_HAND, true);
-	mCompletedLoadingThreadTasks += 68;
+	mCompletedLoadingThreadTasks += 68*10;
 
 	if (mPlayerInfo)
 	{
@@ -3231,83 +3223,9 @@ void LawnApp::PreloadForUser()
 
 	if (mCompletedLoadingThreadTasks != aNumTasks)
 	{
-		TodTrace("num preload tasks wasn't calculated correctly");
+		printf("warning:  num preload tasks wasn't calculated correctly: supposed to be %d, was %d\n", mCompletedLoadingThreadTasks, aNumTasks);
+		//TodTrace("num preload tasks wasn't calculated correctly");
 		mCompletedLoadingThreadTasks = aNumTasks;
-	}
-}
-
-//0x455930
-void LawnApp::EnforceCursor()
-{
-	if (mSEHOccured || !mMouseIn)
-	{
-		::SetCursor(LoadCursor(NULL, IDC_ARROW));
-		return;
-	}
-
-	if (mOverrideCursor)
-	{
-		::SetCursor(mOverrideCursor);
-		return;
-	}
-
-	switch (mCursorNum)
-	{
-	case CURSOR_POINTER:
-		::SetCursor(LoadCursor(GetModuleHandle(NULL), MAKEINTRESOURCE(IDC_CURSOR1)));
-		return;
-
-	case CURSOR_HAND:
-		::SetCursor(mHandCursor);
-		return;
-
-	case CURSOR_TEXT:
-		::SetCursor(LoadCursor(NULL, IDC_IBEAM));
-		return;
-
-	case CURSOR_DRAGGING:
-		::SetCursor(mDraggingCursor);
-		return;
-
-	case CURSOR_CIRCLE_SLASH:
-		::SetCursor(LoadCursor(NULL, IDC_NO));
-		return;
-
-	case CURSOR_SIZEALL:
-		::SetCursor(LoadCursor(NULL, IDC_SIZEALL));
-		return;
-
-	case CURSOR_SIZENESW:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENESW));
-		return;
-
-	case CURSOR_SIZENS:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENS));
-		return;
-
-	case CURSOR_SIZENWSE:
-		::SetCursor(LoadCursor(NULL, IDC_SIZENWSE));
-		return;
-
-	case CURSOR_SIZEWE:
-		::SetCursor(LoadCursor(NULL, IDC_SIZEWE));
-		return;
-
-	case CURSOR_WAIT:
-		::SetCursor(LoadCursor(NULL, IDC_WAIT));
-		return;
-
-	case CURSOR_CUSTOM:
-		::SetCursor(NULL);
-		return;
-
-	case CURSOR_NONE:
-		::SetCursor(NULL);
-		return;
-
-	default:
-		::SetCursor(LoadCursor(NULL, IDC_ARROW));
-		return;
 	}
 }
 
@@ -3365,8 +3283,9 @@ bool LawnApp::IsTrialStageLocked()
 	if (mDebugTrialLocked)
 		return true;
 
+	/* TODO
 	if (mDRM && mDRM->QueryData())
-		return false;
+		return false;*/
 
 	return mTrialType == TrialType::TRIALTYPE_STAGELOCKED;
 }
@@ -3374,6 +3293,8 @@ bool LawnApp::IsTrialStageLocked()
 //0x455CC0
 void LawnApp::InitHook()
 {
+	mDRM = nullptr;
+	/*
 #ifdef _DEBUG
 	mDRM = nullptr;
 #else
@@ -3388,7 +3309,7 @@ void LawnApp::InitHook()
 	{
 		mTrialType = TrialType::TRIALTYPE_NONE;
 	}
-#endif
+#endif*/
 }
 
 //0x455E10

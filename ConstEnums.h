@@ -548,7 +548,7 @@ enum LawnMowerState
     MOWER_TRIGGERED = 2,
     MOWER_SQUISHED = 3
 };
-enum LawnMowerType
+enum LawnMowerType : int
 {
     LAWNMOWER_LAWN,
     LAWNMOWER_POOL,
@@ -1312,7 +1312,7 @@ enum ZombiePhase
     PHASE_SQUASH_FALLING,
     PHASE_SQUASH_DONE_FALLING
 };
-enum ZombieType
+enum ZombieType : int
 {
     ZOMBIE_INVALID = -1,
     ZOMBIE_NORMAL,

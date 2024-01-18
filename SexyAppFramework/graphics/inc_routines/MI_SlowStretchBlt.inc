@@ -1,5 +1,5 @@
 {	
-	ulong* aDestBits = GetBits();
+	uint32_t* aDestBits = GetBits();
 
 	int aSrcRowWidth = aSrcMemoryImage->GetWidth();
 
@@ -19,11 +19,11 @@
 	int aTempDestHeight = theDestRect.mHeight+4;
 
 	// For holding horizontally resized pixels not vertically (yet)
-	ulong* aNewHorzPixels = new ulong[aTempDestWidth*aSrcHeightI*4];
+	uint32_t* aNewHorzPixels = new uint32_t[aTempDestWidth*aSrcHeightI*4];
 
-	ulong* aNewHorzPixelsEnd = aNewHorzPixels + (aTempDestWidth*aSrcHeightI*4);
+	uint32_t* aNewHorzPixelsEnd = aNewHorzPixels + (aTempDestWidth*aSrcHeightI*4);
 	(void)aNewHorzPixelsEnd; // unused in Release mode
-	ZeroMemory(aNewHorzPixels, aTempDestWidth*aSrcHeightI*4*4);
+	memset(aNewHorzPixels, 0, aTempDestWidth*aSrcHeightI*4*4);
 
 	int aSrcImageWidth = theImage->GetWidth();
 	(void)aSrcImageWidth; // unused, but not sure if no side-effects
@@ -47,12 +47,12 @@
 
 			if (aDestXI1 == aDestXI2)
 			{
-				ulong* d = &aNewHorzPixels[aDestXI1*4];					
+				uint32_t* d = &aNewHorzPixels[aDestXI1*4];					
 				int aFactor = (int) (257 * aDestXFactor);
 				
 				for (int aSrcY = 0; aSrcY < aSrcHeightI; aSrcY++)
 				{
-					ulong pixel = READ_COLOR(s1);
+					uint32_t pixel = READ_COLOR(s1);
 					
 					*d++ += aFactor * ((pixel      ) & 0xFF);
 					*d++ += aFactor * ((pixel >>  8) & 0xFF);
@@ -70,11 +70,11 @@
 				int aFactor1 = (int) (257 * (aDestXI2 - aDestX1));
 				int aFactor2 = (int) (257 * (aDestX2 - aDestXI2));
 				
-				ulong* d = &aNewHorzPixels[aDestXI1*4];					
+				uint32_t* d = &aNewHorzPixels[aDestXI1*4];					
 				
 				for (int aSrcY = 0; aSrcY < aSrcHeightI; aSrcY++)
 				{
-					ulong pixel = READ_COLOR(s1);
+					uint32_t pixel = READ_COLOR(s1);
 					
 					*d++ += aFactor1 * ((pixel      ) & 0xFF);
 					*d++ += aFactor1 * ((pixel >>  8) & 0xFF);
@@ -104,7 +104,7 @@
 
 		for (int aDestX = 1; aDestX < aTempDestWidth-1; aDestX++)
 		{
-			ulong* d = &aNewHorzPixels[aDestX*4];
+			uint32_t* d = &aNewHorzPixels[aDestX*4];
 
 			double aSrcX = (aDestX - 1)*aSrcXFactor + theSrcRect.mX;
 			int aSrcXI = (int) aSrcX;
@@ -116,8 +116,8 @@
 
 			for (int aDestY = 0; aDestY < aSrcHeightI; aDestY++)
 			{
-				ulong pixel1 = READ_COLOR(s++);
-				ulong pixel2 = READ_COLOR(s);
+				uint32_t pixel1 = READ_COLOR(s++);
+				uint32_t pixel2 = READ_COLOR(s);
 				
 				*d++ = (aFactor1 * ((pixel1      ) & 0xFF)) + (aFactor2 * ((pixel2      ) & 0xFF));
 				*d++ = (aFactor1 * ((pixel1 >>  8) & 0xFF)) + (aFactor2 * ((pixel2 >>  8) & 0xFF));
@@ -132,12 +132,12 @@
 		}
 	}
 
-	ulong* aNewPixels = new ulong[aTempDestWidth*aTempDestHeight*4];
+	uint32_t* aNewPixels = new uint32_t[aTempDestWidth*aTempDestHeight*4];
 
-	ulong* aNewPixelsEnd = aNewPixels + (aTempDestWidth*aTempDestHeight*4);
+	uint32_t* aNewPixelsEnd = aNewPixels + (aTempDestWidth*aTempDestHeight*4);
 	(void)aNewPixelsEnd; // Unused in Release mode
 
-	ZeroMemory(aNewPixels, aTempDestWidth*aTempDestHeight*4*4);
+	memset(aNewPixels, 0, aTempDestWidth*aTempDestHeight*4*4);
 
 	// Now resize vertically
 	if (theSrcRect.mHeight >= theDestRect.mHeight)
@@ -154,11 +154,11 @@
 			int aDestYI1 = (int) floor(aDestY1);
 			int aDestYI2 = (int) floor(aDestY2);
 
-			ulong* s = &aNewHorzPixels[aSrcY*aTempDestWidth*4];
+			uint32_t* s = &aNewHorzPixels[aSrcY*aTempDestWidth*4];
 
 			if (aDestYI1 == aDestYI2)
 			{
-				ulong* d = &aNewPixels[aDestYI1*aTempDestWidth*4];
+				uint32_t* d = &aNewPixels[aDestYI1*aTempDestWidth*4];
 				int aFactor = (int) (256 * aDestYFactor);
 				
 				for (int aSrcX = 0; aSrcX < aTempDestWidth; aSrcX++)
@@ -176,8 +176,8 @@
 				int aFactor1 = (int) (256 * (aDestYI2 - aDestY1));
 				int aFactor2 = (int) (256 * (aDestY2 - aDestYI2));					
 				
-				ulong* d1 = &aNewPixels[aDestYI1*aTempDestWidth*4];
-				ulong* d2 = &aNewPixels[aDestYI2*aTempDestWidth*4];					
+				uint32_t* d1 = &aNewPixels[aDestYI1*aTempDestWidth*4];
+				uint32_t* d2 = &aNewPixels[aDestYI2*aTempDestWidth*4];					
 				
 				for (int aSrcX = 0; aSrcX < aTempDestWidth; aSrcX++)
 				{
@@ -209,7 +209,7 @@
 
 		for (int aDestY = 1; aDestY < theDestRect.mHeight + 1; aDestY++)			
 		{
-			ulong* d = &aNewPixels[(aDestY*aTempDestWidth+1)*4];
+			uint32_t* d = &aNewPixels[(aDestY*aTempDestWidth+1)*4];
 
 			double aSrcY = (aDestY-1)*aSrcYFactor + (theSrcRect.mY - ((int) theSrcRect.mY));
 			int aSrcYI = (int) aSrcY;
@@ -217,8 +217,8 @@
 			int aFactor1 = (int) (256 * (1.0 - (aSrcY - aSrcYI)));
 			int aFactor2 = 256 - aFactor1;
 			
-			ulong* s1 = &aNewHorzPixels[(aSrcYI*aTempDestWidth+1)*4];
-			ulong* s2;
+			uint32_t* s1 = &aNewHorzPixels[(aSrcYI*aTempDestWidth+1)*4];
+			uint32_t* s2;
 			
 			if (aSrcYI == aSrcHeightI - 1)
 				s2 = s1;
@@ -238,11 +238,11 @@
 	
 	for (int y = 0; y < theDestRect.mHeight; y++)
 	{
-		ulong* aDestPixels = &aDestBits[(theDestRect.mY+y)*mWidth+theDestRect.mX];
+		uint32_t* aDestPixels = &aDestBits[(theDestRect.mY+y)*mWidth+theDestRect.mX];
 
 		for (int x = 0; x < theDestRect.mWidth; x++)				
 		{
-			ulong *p = &aNewPixels[((y+1)*aTempDestWidth+x+1)*4];
+			uint32_t *p = &aNewPixels[((y+1)*aTempDestWidth+x+1)*4];
 			
 			int b = (*p++) >> 16;
 			int g = (*p++) >> 16;
@@ -254,7 +254,7 @@
 
 			if (a != 0)
 			{		
-				ulong dest = *aDestPixels;
+				uint32_t dest = *aDestPixels;
 				int aDestAlpha = dest >> 24;
 				int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * a) / 255;
 

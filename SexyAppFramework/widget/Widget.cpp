@@ -27,7 +27,7 @@ Widget::Widget()
 }
 
 Widget::~Widget()
-{	
+{
 	mColors.clear();
 }
 

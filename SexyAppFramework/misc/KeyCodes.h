@@ -7,7 +7,7 @@ namespace Sexy
 {
 
 // Don't need typedef
-/*typedef*/ enum KeyCode
+/*typedef*/ enum KeyCode : uint8_t
 {
 	KEYCODE_UNKNOWN		  = 0x00,
 	KEYCODE_LBUTTON		  = 0x01,
@@ -97,7 +97,13 @@ namespace Sexy
 	KEYCODE_F23           = 0x86,
 	KEYCODE_F24           = 0x87,
 	KEYCODE_NUMLOCK       = 0x90,
-	KEYCODE_SCROLL        = 0x91,	
+	KEYCODE_SCROLL        = 0x91,
+	KEYCODE_LSHIFT        = 0xA0,
+	KEYCODE_RSHIFT        = 0xA1,
+	KEYCODE_LCONTROL      = 0xA2,
+	KEYCODE_RCONTROL      = 0xA3,
+	KEYCODE_LMENU         = 0xA4,
+	KEYCODE_RMENU         = 0xA5,
 	KEYCODE_ASCIIBEGIN2	  = 0xB3, //ASCII + 0x80
 	KEYCODE_ASCIIEND2	  = 0xE0
 };

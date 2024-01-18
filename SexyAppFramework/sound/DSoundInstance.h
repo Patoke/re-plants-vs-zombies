@@ -2,7 +2,6 @@
 #define __DSOUNDINSTANCE_H__
 
 #include "SoundInstance.h"
-#include "dsoundversion.h"
 
 namespace Sexy
 {
@@ -15,8 +14,8 @@ class DSoundInstance : public SoundInstance
 
 protected:
 	DSoundManager*			mSoundManagerP;
-	LPDIRECTSOUNDBUFFER		mSourceSoundBuffer;
-	LPDIRECTSOUNDBUFFER		mSoundBuffer;
+//	LPDIRECTSOUNDBUFFER		mSourceSoundBuffer;
+//	LPDIRECTSOUNDBUFFER		mSoundBuffer;
 	bool					mAutoRelease;
 	bool					mHasPlayed;
 	bool					mReleased;
@@ -34,7 +33,7 @@ protected:
 	void					RehupPan();
 
 public:
-	DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound);
+	//DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound);
 	virtual ~DSoundInstance();	
 	virtual void			Release();
 	

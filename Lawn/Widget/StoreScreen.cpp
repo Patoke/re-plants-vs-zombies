@@ -12,7 +12,7 @@
 #include "../System/Music.h"
 #include "SeedChooserScreen.h"
 #include "../../GameConstants.h"
-#include "../System/PopDRMComm.h"
+//#include "../System/PopDRMComm.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/Reanimator.h"
@@ -969,7 +969,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
             }
             else if (theStoreItem == STORE_ITEM_STINKY_THE_SNAIL)
             {
-                mApp->mPlayerInfo->mPurchases[theStoreItem] = _time64(nullptr);
+                mApp->mPlayerInfo->mPurchases[theStoreItem] = time(nullptr);
             }
             else if (theStoreItem == STORE_ITEM_FERTILIZER || theStoreItem == STORE_ITEM_BUG_SPRAY)
             {
@@ -1132,6 +1132,7 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
                 mApp->LawnMessageBox(DIALOG_MESSAGE, "[GET_FULL_VERSION_TITLE]", "[FULL_VERSION_TO_BUY]", "[DIALOG_BUTTON_OK]", "", BUTTONS_FOOTER);
                 mWaitForDialog = false;
             }
+            /*
             else if (aItemType == STORE_ITEM_PVZ)
             {
                 mWaitForDialog = true;
@@ -1142,7 +1143,7 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
                 {
                     if (mApp->mDRM) mApp->mDRM->BuyGame();
                 }
-            }
+            }*/
             else if(!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType))
                 PurchaseItem(aItemType);
             break;

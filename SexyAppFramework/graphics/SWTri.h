@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Color.h"
-#include "MemoryImage.h"
+//#include "MemoryImage.h"
 #include "misc/Rect.h"
 #include "misc/SexyMatrix.h"
 
@@ -39,11 +39,11 @@ public:
 		unsigned int		a, r, g, b;
 	};
 
-	typedef	__int64	signed64;
+	typedef	int64_t signed64;
 
 public:
 	// For drawing
-	static void						SWDrawShape(XYZStruct *theVerts, int theNumVerts, MemoryImage *theImage, const Color &theColor, int theDrawMode, const Rect &theClipRect, void *theSurface, int thePitch, int thePixelFormat, bool blend, bool vertexColor);
+//	static void						SWDrawShape(XYZStruct *theVerts, int theNumVerts, MemoryImage *theImage, const Color &theColor, int theDrawMode, const Rect &theClipRect, void *theSurface, int thePitch, int thePixelFormat, bool blend, bool vertexColor);
 	static void						SWDrawTriangle(bool textured, bool talpha, bool mod_argb, bool global_argb, SWVertex * pVerts, unsigned int * pFrameBuffer, const unsigned int pitch, const SWTextureInfo * textureInfo, SWDiffuse & globalDiffuse, int thePixelFormat, bool blend);
 };
 

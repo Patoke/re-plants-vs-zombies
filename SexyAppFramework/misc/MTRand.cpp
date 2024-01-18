@@ -35,8 +35,8 @@ http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
 email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-#define NOMINMAX 1
-#include <windows.h> 
+//#define NOMINMAX 1
+//#include <windows.h> 
 #include "MTRand.h"
 #include "Debug.h"
 #include <stdio.h>

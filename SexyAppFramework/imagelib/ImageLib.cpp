@@ -1,14 +1,12 @@
+#include <memory>
 #define XMD_H
 
-#define NOMINMAX 1
-#include <windows.h>
 #include "ImageLib.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include <math.h>
-#include <tchar.h>
 #include "paklib/PakInterface.h"
 #include "Common.h"
 
@@ -122,7 +120,7 @@ bool ImageLib::WriteTGAImage(const std::string& theFileName, Image* theImage)
 	fwrite(&aColorMapLen, sizeof(WORD), 1, aTGAFile);
 
 	BYTE aColorMapEntrySize = 0;
-	fwrite(&aColorMapEntrySize, sizeof(BYTE), 1, aTGAFile);	
+	fwrite(&aColorMapEntrySize, sizeof(BYTE), 1, aTGAFile); 
 
 	WORD anXOrigin = 0;
 	fwrite(&anXOrigin, sizeof(WORD), 1, aTGAFile);
@@ -131,23 +129,57 @@ bool ImageLib::WriteTGAImage(const std::string& theFileName, Image* theImage)
 	fwrite(&aYOrigin, sizeof(WORD), 1, aTGAFile);
 
 	WORD anImageWidth = theImage->mWidth;
-	fwrite(&anImageWidth, sizeof(WORD), 1, aTGAFile);	
+	fwrite(&anImageWidth, sizeof(WORD), 1, aTGAFile); 
 
 	WORD anImageHeight = theImage->mHeight;
-	fwrite(&anImageHeight, sizeof(WORD), 1, aTGAFile);	
+	fwrite(&anImageHeight, sizeof(WORD), 1, aTGAFile);  
 
 	BYTE aBitCount = 32;
-	fwrite(&aBitCount, sizeof(BYTE), 1, aTGAFile);	
+	fwrite(&aBitCount, sizeof(BYTE), 1, aTGAFile);  
 
 	BYTE anImageDescriptor = 8 | (1<<5);
 	fwrite(&anImageDescriptor, sizeof(BYTE), 1, aTGAFile);
 
-	fwrite(theImage->mBits, 4, theImage->mWidth*theImage->mHeight, aTGAFile);
+	fwrite(theImage->mBits.get(), 4, theImage->mWidth*theImage->mHeight, aTGAFile);
 
 	fclose(aTGAFile);
 
 	return true;
 }
+
+typedef struct tagBITMAPFILEHEADER {
+	WORD  bfType;
+	DWORD bfSize;
+	WORD  bfReserved1;
+	WORD  bfReserved2;
+	DWORD bfOffBits;
+} BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
+
+typedef struct tagBITMAPINFOHEADER {
+	DWORD biSize;
+	LONG  biWidth;
+	LONG  biHeight;
+	WORD  biPlanes;
+	WORD  biBitCount;
+	DWORD biCompression;
+	DWORD biSizeImage;
+	LONG  biXPelsPerMeter;
+	LONG  biYPelsPerMeter;
+	DWORD biClrUsed;
+	DWORD biClrImportant;
+} BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
+
+typedef  enum {
+	 BI_RGB = 0x0000,
+	 BI_RLE8 = 0x0001,
+	 BI_RLE4 = 0x0002,
+	 BI_BITFIELDS = 0x0003,
+	 BI_JPEG = 0x0004,
+	 BI_PNG = 0x0005,
+	 BI_CMYK = 0x000B,
+	 BI_CMYKRLE8 = 0x000C,
+	 BI_CMYKRLE4 = 0x000D
+} Compression;
 
 bool ImageLib::WriteBMPImage(const std::string& theFileName, Image* theImage)
 {
@@ -176,7 +208,7 @@ bool ImageLib::WriteBMPImage(const std::string& theFileName, Image* theImage)
 
 	fwrite(&aFileHeader,sizeof(aFileHeader),1,aFile);
 	fwrite(&aHeader,sizeof(aHeader),1,aFile);
-	DWORD *aRow = theImage->mBits + (theImage->mHeight-1)*theImage->mWidth;
+	DWORD *aRow = theImage->mBits.get() + (theImage->mHeight-1)*theImage->mWidth;
 	int aRowSize = theImage->mWidth*4;
 	(void)aRowSize; // Unused
 	for (int i=0; i<theImage->mHeight; i++, aRow-=theImage->mWidth)
@@ -191,7 +223,49 @@ int ImageLib::gAlphaComposeColor = 0xFFFFFF;
 bool ImageLib::gAutoLoadAlpha = true;
 bool ImageLib::gIgnoreJPEG2000Alpha = true;
 
-Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage)
+uint32_t AverageNearByPixels(ImageLib::Image* theImage, uint32_t* thePixel, int x, int y)
+{
+    int aRed = 0;
+    int aGreen = 0;
+    int aBlue = 0;
+    int aBitsCount = 0;
+
+    for (int i = -1; i <= 1; i++)  // 依次循环上方、当前、下方的一行
+    {
+        if (i == 0)  // 排除当前行
+        {
+            continue;
+        }
+
+        for (int j = -1; j <= 1; j++)  // 依次循环左方、当前、右方的一列
+        {
+            if ((x != 0 || j != -1) && (x != theImage->mWidth - 1 || j != 1) && (y != 0 || i != -1) && (y != theImage->mHeight - 1 || i != 1))
+            {
+                unsigned long aPixel = *(thePixel + i * theImage->mWidth + j);
+                if (aPixel & 0xFF000000UL)  // 如果不是透明像素
+                {
+                    aRed += (aPixel >> 16) & 0x000000FFUL;
+                    aGreen += (aPixel >> 8) & 0x000000FFUL;
+                    aBlue += aPixel & 0x000000FFUL;
+                    aBitsCount++;
+                }
+            }
+        }
+    }
+
+    if (aBitsCount == 0)
+        return 0;
+
+    aRed /= aBitsCount;
+    aRed = std::min(aRed, 255);
+    aGreen /= aBitsCount;
+    aGreen = std::min(aGreen, 255);
+    aBlue /= aBitsCount;
+    aBlue = std::min(aBlue, 255);
+    return (aRed << 16) | (aGreen << 8) | (aBlue);
+}
+
+std::unique_ptr<Image> ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage, bool theDoImageSanding)
 {
 	if (!gAutoLoadAlpha)
 		lookForAlphaImage = false;
@@ -210,7 +284,7 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 	else
 		aFilename = theFilename;
 
-	Image* anImage = NULL;
+	std::unique_ptr<Image> anImage = nullptr;
 
 	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".tga") == 0) || (anExt.length() == 0)))
 		anImage = GetImageWithSDL(aFilename + ".tga");
@@ -231,7 +305,7 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 
 
 	// Check for alpha images
-	Image* anAlphaImage = NULL;
+	std::unique_ptr<Image> anAlphaImage = NULL;
 	if(lookForAlphaImage)
 	{
 		// Check _ImageName
@@ -239,11 +313,9 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 			theFilename.substr(aLastSlashPos+1, theFilename.length() - aLastSlashPos - 1), false);
 
 		// Check ImageName_
-		if(anAlphaImage==NULL)
+		if(anAlphaImage == NULL)
 			anAlphaImage = GetImage(theFilename + "_", false);
 	}
-
-
 
 	// Compose alpha channel with image
 	if (anAlphaImage != NULL) 
@@ -253,8 +325,8 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 			if ((anImage->mWidth == anAlphaImage->mWidth) &&
 				(anImage->mHeight == anAlphaImage->mHeight))
 			{
-				unsigned long* aBits1 = anImage->mBits;
-				unsigned long* aBits2 = anAlphaImage->mBits;
+				uint32_t* aBits1 = anImage->mBits.get();
+				uint32_t* aBits2 = anAlphaImage->mBits.get();
 				int aSize = anImage->mWidth*anImage->mHeight;
 
 				for (int i = 0; i < aSize; i++)
@@ -264,14 +336,12 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 					++aBits2;
 				}
 			}
-
-			delete anAlphaImage;
 		}
 		else if (gAlphaComposeColor==0xFFFFFF)
 		{
-			anImage = anAlphaImage;
+			anImage = std::move(anAlphaImage);
 
-			unsigned long* aBits1 = anImage->mBits;
+			uint32_t* aBits1 = anImage->mBits.get();
 
 			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
@@ -283,15 +353,34 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 		else
 		{
 			const int aColor = gAlphaComposeColor;
-			anImage = anAlphaImage;
+			anImage = std::move(anAlphaImage);
 
-			unsigned long* aBits1 = anImage->mBits;
+			uint32_t* aBits1 = anImage->mBits.get();
 
 			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = aColor | ((*aBits1 & 0xFF) << 24);
 				++aBits1;
+			}
+		}
+	}
+
+    // Image Sanding. We have to move it here to avoid moving the image
+    // between the CPU and GPU constantly. Sand once before uploading to
+    // the GPU and everyone is happy.
+	if (theDoImageSanding) {
+		uint32_t* aBitsPtr = anImage->mBits.get();
+		for (int y = 0; y < anImage->mHeight; y++)
+		{
+			for (int x = 0; x < anImage->mWidth; x++)
+			{
+				if ((*aBitsPtr & 0xFF000000UL) == 0)  // 如果像素的不透明度为 0
+				{
+					*aBitsPtr = AverageNearByPixels(anImage.get(), aBitsPtr, x, y);  // 计算该点周围非透明像素的平均颜色
+				}
+	
+				aBitsPtr++;
 			}
 		}
 	}

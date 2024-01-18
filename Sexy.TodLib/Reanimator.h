@@ -20,7 +20,7 @@ namespace Sexy
     class _Font;
     class Image;
     class Graphics;
-    class MemoryImage;
+//    class MemoryImage;
 };
 
 // ######################################################################################################################################################
@@ -93,7 +93,7 @@ inline void                         ReanimationFillInMissingData(float& thePrev,
 inline void                         ReanimationFillInMissingData(void*& thePrev, void*& theValue);
 bool                                ReanimationLoadDefinition(const SexyString& theFileName, ReanimatorDefinition* theDefinition);
 void                                ReanimationFreeDefinition(ReanimatorDefinition* theDefinition);
-void _cdecl	                        ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
+void __cdecl	                    ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
 void                                ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int theReanimationParamArraySize);
 void                                ReanimatorFreeDefinitions();
 

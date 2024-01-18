@@ -55,7 +55,7 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector) :
     mSfxVolumeSlider->SetValue(theApp->GetSfxVolume() / 0.65);
 
     mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, !theApp->mIsWindowed);
-    mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, theApp->Is3DAccelerated());
+    mHardwareAccelerationCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_HardwareAcceleration, this, true /*theApp->Is3DAccelerated()*/);
 
     if (mFromGameSelector)
     {
@@ -233,7 +233,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
             mFullscreenCheckbox->SetChecked(true, false);
         }
         break;
-
+    /*
     case NewOptionsDialog::NewOptionsDialog_HardwareAcceleration:
         if (checked)
         {
@@ -265,7 +265,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
                 );
             }
         }
-        break;
+        break;*/
     }
 }
 

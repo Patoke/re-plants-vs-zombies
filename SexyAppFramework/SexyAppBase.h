@@ -2,20 +2,26 @@
 #define __SEXYAPPBASE_H__
 
 #include "Common.h"
+#include "graphics/VkInterface.h"
+#include "graphics/WindowInterface.h"
 #include "misc/Rect.h"
 #include "graphics/Color.h"
+#include "misc/RegistryEmulator.h"
 #include "widget/ButtonListener.h"
 #include "widget/DialogListener.h"
 #include "misc/Buffer.h"
 #include "misc/CritSect.h"
-#include "graphics/SharedImage.h"
 #include "misc/Ratio.h"
+#include <atomic>
+#include <chrono>
+#include <memory>
+#include <thread>
 
-extern HMODULE gDDrawDLL;
-extern HMODULE gDSoundDLL;
-extern HMODULE gVersionDLL;
+//extern HMODULE gDDrawDLL;
+//extern HMODULE gDSoundDLL;
+//extern HMODULE gVersionDLL;
 
-extern bool gD3DInterfacePreDrawError;
+//extern bool gD3DInterfacePreDrawError;
 
 namespace ImageLib
 {
@@ -26,13 +32,13 @@ namespace Sexy
 {
 
 class WidgetManager;
-class DDInterface;
+//class DDInterface;
 class Image;
-class DDImage;
+//class DDImage;
 class Widget;
 class SoundManager;
 class MusicInterface;
-class MemoryImage;
+//class MemoryImage;
 class HTTPTransfer;
 class Dialog;
 
@@ -47,10 +53,10 @@ public:
 
 
 typedef std::list<WidgetSafeDeleteInfo> WidgetSafeDeleteList;
-typedef std::set<MemoryImage*> MemoryImageSet;
+//typedef std::set<MemoryImage*> MemoryImageSet;
 typedef std::map<int, Dialog*> DialogMap;
 typedef std::list<Dialog*> DialogList;
-typedef std::list<MSG> WindowsMessageList;
+//typedef std::list<MSG> WindowsMessageList;
 typedef std::vector<std::string> StringVector;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
@@ -61,24 +67,6 @@ typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, int> StringIntMap;
 typedef std::map<std::string, double> StringDoubleMap;
 typedef std::map<std::string, StringVector> StringStringVectorMap;
-
-enum
-{
-	CURSOR_POINTER,
-	CURSOR_HAND,
-	CURSOR_DRAGGING,
-	CURSOR_TEXT,
-	CURSOR_CIRCLE_SLASH,
-	CURSOR_SIZEALL,
-	CURSOR_SIZENESW,
-	CURSOR_SIZENS,
-	CURSOR_SIZENWSE,
-	CURSOR_SIZEWE,	
-	CURSOR_WAIT,
-	CURSOR_NONE,
-	CURSOR_CUSTOM,
-	NUM_CURSORS
-};
 
 enum
 {
@@ -117,13 +105,13 @@ enum {
 
 enum
 {
-	UPDATESTATE_MESSAGES,
+	UPDATESTATE_PROCESS_DONE,
 	UPDATESTATE_PROCESS_1,
 	UPDATESTATE_PROCESS_2,
-	UPDATESTATE_PROCESS_DONE
 };
 
-typedef std::map<HANDLE, int> HandleToIntMap;
+//typedef std::map<HANDLE, int> HandleToIntMap;
+typedef std::map<std::pair<std::string, std::string>, std::unique_ptr<Image>> SharedImageMap;
 
 class SexyAppBase : public ButtonListener, public DialogListener
 {
@@ -155,7 +143,7 @@ public:
 	bool					mStandardWordWrap;
 	bool					mbAllowExtendedChars;
 
-	HANDLE					mMutex;
+//	HANDLE					mMutex;
 	bool					mOnlyAllowOneCopyToRun;
 	UINT					mNotifyGameMessage;
 	CritSect				mCritSect;	
@@ -164,39 +152,39 @@ public:
 	WidgetManager*			mWidgetManager;
 	DialogMap				mDialogMap;
 	DialogList				mDialogList;
-	DWORD					mPrimaryThreadId;
-	bool					mSEHOccured;
+	std::thread::id			mPrimaryThreadId;
+//	bool					mSEHOccured;
 	bool					mShutdown;
 	bool					mExitToTop;
-	bool					mIsWindowed;
+//	bool					mIsWindowed;
 	bool					mIsPhysWindowed;
 	bool					mFullScreenWindow; // uses ChangeDisplaySettings to run fullscreen with mIsWindowed true
 	bool					mForceFullscreen;
 	bool					mForceWindowed;	
 	bool					mInitialized;	
 	bool					mProcessInTimer;
-	DWORD					mTimeLoaded;
-	HWND					mHWnd;
-	HWND					mInvisHWnd;
+	std::chrono::high_resolution_clock::time_point	mTimeLoaded;
+//	HWND					mHWnd;
+//	HWND					mInvisHWnd;
 	bool					mIsScreenSaver;
 	bool					mAllowMonitorPowersave;
-	WindowsMessageList		mDeferredMessages;
+//	WindowsMessageList		mDeferredMessages;
 	bool					mNoDefer;	
 	bool					mFullScreenPageFlip;	
 	bool					mTabletPC;
-	DDInterface*			mDDInterface;
+//	DDInterface*			mDDInterface;
 	bool					mAlphaDisabled;
 	MusicInterface*			mMusicInterface;	
 	bool					mReadFromRegistry;
 	std::string				mRegisterLink;
-	std::string				mProductVersion;	
-	Image*					mCursorImages[NUM_CURSORS];
-	HCURSOR					mOverrideCursor;
+	//std::string			mProductVersion;	
+//	Image*					mCursorImages[NUM_CURSORS];
+//	HCURSOR					mOverrideCursor;
 	bool					mIsOpeningURL;
 	bool					mShutdownOnURLOpen;
 	std::string				mOpeningURL;
-	DWORD					mOpeningURLTime;
-	DWORD					mLastTimerTime;
+	clock_t					mOpeningURLTime;
+	std::chrono::high_resolution_clock::time_point	mLastTimerTime;
 	DWORD					mLastBigDelayTime;	
 	double					mUnmutedMusicVolume;
 	double					mUnmutedSfxVolume;	
@@ -204,64 +192,66 @@ public:
 	int						mAutoMuteCount;
 	bool					mDemoMute;
 	bool					mMuteOnLostFocus;
-	MemoryImageSet			mMemoryImageSet;
+//	MemoryImageSet			mMemoryImageSet;
 	SharedImageMap			mSharedImageMap;
 	bool					mCleanupSharedImages;
 	
-	int						mNonDrawCount;
-	int						mFrameTime;
+//	int						mNonDrawCount;
+	std::chrono::high_resolution_clock::duration	mFrameTime;
 
 	bool					mIsDrawing;
 	bool					mLastDrawWasEmpty;
-	bool					mHasPendingDraw;
-	double					mPendingUpdatesAcc;
-	double					mUpdateFTimeAcc;
-	DWORD					mLastTimeCheck;
-	DWORD					mLastTime;
-	DWORD					mLastUserInputTick;
+//	bool					mHasPendingDraw;
+	int						mPendingUpdatesAcc;
+//	std::chrono::high_resolution_clock::duration	mUpdateFTimeAcc;
+//	std::chrono::high_resolution_clock::time_point	mLastTimeCheck;
+	std::chrono::high_resolution_clock::time_point	mLastTime;
+	std::chrono::high_resolution_clock::time_point	mLastUserInputTick;
 
 	int						mSleepCount;
 	int						mDrawCount;
 	int						mUpdateCount;
 	int						mUpdateAppState;
 	int						mUpdateAppDepth;
-	double					mUpdateMultiplier;		
+//	double					mUpdateMultiplier;		
 	bool					mPaused;
 	int						mFastForwardToUpdateNum;
 	bool					mFastForwardToMarker;
 	bool					mFastForwardStep;
-	DWORD					mLastDrawTick;
-	DWORD					mNextDrawTick;
+	std::chrono::high_resolution_clock::time_point	mLastDrawTick;
+	std::chrono::high_resolution_clock::time_point	mNextDrawTick;
 	int						mStepMode;  // 0 = off, 1 = step, 2 = waiting for step
 
 	int						mCursorNum;
 	SoundManager*			mSoundManager;
-	HCURSOR					mHandCursor;
-	HCURSOR					mDraggingCursor;
+	size_t					mHandCursor;
+	size_t					mDraggingCursor;
 	WidgetSafeDeleteList	mSafeDeleteList;
 	bool					mMouseIn;	
 	bool					mRunning;
-	bool					mActive;
+//	bool					mActive;
+	bool 					mActive;
+    bool 					mIsWindowed;
 	bool					mMinimized;
 	bool					mPhysMinimized;
 	bool					mIsDisabled;
 	bool					mHasFocus;
-	int						mDrawTime;
-	ulong					mFPSStartTick;
+	std::chrono::high_resolution_clock::duration	mDrawTime;
+	std::chrono::high_resolution_clock::time_point	mFPSStartTick;
 	int						mFPSFlipCount;
 	int						mFPSDirtyCount;
-	int						mFPSTime;
+	std::chrono::high_resolution_clock::duration	mFPSTime;
 	int						mFPSCount;
 	bool					mShowFPS;
 	int						mShowFPSMode;
-	int						mScreenBltTime;
+	std::chrono::high_resolution_clock::duration	mScreenBltTime;
 	bool					mAutoStartLoadingThread;
-	bool					mLoadingThreadStarted;
-	bool					mLoadingThreadCompleted;
+	std::atomic_bool		mLoadingThreadStarted;
+	std::atomic_bool		mLoadingThreadCompleted;
 	bool					mLoaded;
 	bool					mYieldMainThread;
 	bool					mLoadingFailed;
-	bool					mCursorThreadRunning;
+//	bool					mCursorThreadRunning;
 	bool					mSysCursor;	
 	bool					mCustomCursorsEnabled;
 	bool					mCustomCursorDirty;	
@@ -290,7 +280,7 @@ public:
 	int						mDemoCmdOrder;
 	int						mDemoCmdBitPos;
 	bool					mDemoLoadingComplete;
-	HandleToIntMap			mHandleToIntMap; // For waiting on handles
+//	HandleToIntMap			mHandleToIntMap; // For waiting on handles
 	int						mCurHandleNum;
 
 	typedef std::pair<std::string, int> DemoMarker;
@@ -304,11 +294,6 @@ public:
 	bool					mAllowAltEnter;
 	
 	int						mSyncRefreshRate;
-	bool					mVSyncUpdates;
-	bool					mVSyncBroken;
-	int						mVSyncBrokenCount;
-	DWORD					mVSyncBrokenTestStartTick;
-	DWORD					mVSyncBrokenTestUpdates;
 	bool					mWaitForVSync;
 	bool					mSoftVSyncWait;
 	bool					mUserChanged3DSetting;
@@ -329,6 +314,10 @@ public:
 	StringStringVectorMap	mStringVectorProperties;
 	ResourceManager*		mResourceManager;
 
+	std::unique_ptr<RegistryEmulator> mRegHandle;
+
+	WindowInterface<Vk::VkInterface> *mWindowInterface;
+
 #ifdef ZYLOM
 	uint					mZylomGameId;
 #endif
@@ -336,16 +325,15 @@ public:
 	LONG					mOldWndProc;
 
 protected:	
-	void					RehupFocus();
+//	void					RehupFocus();
 	void					ClearKeysDown();
 	bool					ProcessDeferredMessages(bool singleMessage);
-	void					UpdateFTimeAcc();
-	virtual bool			Process(bool allowSleep = true);		
+//	void					UpdateFTimeAcc();
+//	virtual bool			Process(bool allowSleep = true);		
 	virtual void			UpdateFrames();
-	virtual bool			DoUpdateFrames();
-	virtual void			DoUpdateFramesF(float theFrac);
+	virtual void			DoUpdateFrames();
 	virtual void			MakeWindow();
-	virtual void			EnforceCursor();
+//	virtual void			EnforceCursor();
 	virtual void			ReInitImages();
 	virtual void			DeleteNativeImageData();	
 	virtual void			DeleteExtraImageData();
@@ -355,9 +343,6 @@ protected:
 	static void				LoadingThreadProcStub(void *theArg);	
 
 	// Cursor thread methods
-	void					CursorThreadProc();
-	static void				CursorThreadProcStub(void *theArg);
-	void					StartCursorThread();
 	
 	void					WaitForLoadingThread();				
 	void					ProcessSafeDeleteList();	
@@ -369,9 +354,9 @@ protected:
 	void					ShowMemoryUsage();			
 
 	// Registry helpers
-	bool					RegistryRead(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength);
-	bool					RegistryReadKey(const std::string& theValueName, ulong* theType, uchar* theValue, ulong* theLength, HKEY theMainKey = HKEY_CURRENT_USER);
-	bool					RegistryWrite(const std::string& theValueName, ulong theType, const uchar* theValue, ulong theLength);
+	bool					RegistryRead(const std::string& theValueName, uint32_t &theType, std::vector<uint8_t> &theValue, uint32_t &theLength);
+//	bool					RegistryReadKey(const std::string& theValueName, uint32_t &theType, std::vector<uint8_t> &theValue, uint32_t &theLength);
+	bool					RegistryWrite(const std::string& theValueName, uint32_t theType, const uchar* theValue, uint32_t theLength);
 
 	// Demo recording helpers	
 	void					ProcessDemo();
@@ -394,8 +379,8 @@ public:
 	// Public methods
 	virtual void			BeginPopup();
 	virtual void			EndPopup();
-	virtual int				MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = MB_OK);
-	virtual int				MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = MB_OK);
+//	virtual int				MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = MB_OK);
+//	virtual int				MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = MB_OK);
 	virtual void			Popup(const std::string& theString);
 	virtual void			Popup(const std::wstring& theString);
 	virtual void			LogScreenSaverError(const std::string &theError);
@@ -406,12 +391,12 @@ public:
 	virtual bool			OpenURL(const std::string& theURL, bool shutdownOnOpen = false);	
 	virtual std::string		GetProductVersion(const std::string& thePath);	
 
-	virtual void			SEHOccured();
-	virtual std::string		GetGameSEHInfo();
+	//virtual void			SEHOccured();
+	//virtual std::string		GetGameSEHInfo();
 	virtual void			GetSEHWebParams(DefinesMap* theDefinesMap);
 	virtual void			Shutdown();	
 
-	virtual void			DoParseCmdLine();
+	virtual void			DoParseCmdLine(int argc, char* argv[]);
 	virtual void			ParseCmdLine(const std::string& theCmdLine);
 	virtual void			HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue);
 	virtual void			HandleNotifyGameMessage(int theType); // for HWND_BROADCAST of mNotifyGameMessage (0-1000 are reserved for SexyAppBase for theType)
@@ -419,8 +404,8 @@ public:
 
 	virtual void			Start();	
 	virtual void			Init();	
-	virtual void			PreDDInterfaceInitHook();
-	virtual void			PostDDInterfaceInitHook();
+//	virtual void			PreDDInterfaceInitHook();
+//	virtual void			PostDDInterfaceInitHook();
 	virtual bool			ChangeDirHook(const char *theIntendedPath);
 	virtual void			PlaySample(int theSoundNum);
 	virtual void			PlaySample(int theSoundNum, int thePan);
@@ -445,32 +430,32 @@ public:
 	void					SetCursor(int theCursorNum);
 	int						GetCursor();
 	void					EnableCustomCursors(bool enabled);	
-	virtual DDImage*		GetImage(const std::string& theFileName, bool commitBits = true);	
-	virtual SharedImageRef	SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew);
-	virtual SharedImageRef	GetSharedImage(const std::string& theFileName, const std::string& theVariant = "", bool* isNew = NULL);
+	virtual std::unique_ptr<Image> GetImage(const std::string& theFileName, bool theDoImageSanding = false);	
+//	virtual SharedImageRef	SetSharedImage(const std::string& theFileName, const std::string& theVariant, DDImage* theImage, bool* isNew);
+	virtual Image*			GetSharedImage(const std::string& theFileName, const std::string& theVariant = "", bool theDoImageSanding = false);
 
 	void					CleanSharedImages();
-	void					PrecacheAdditive(MemoryImage* theImage);
-	void					PrecacheAlpha(MemoryImage* theImage);
-	void					PrecacheNative(MemoryImage* theImage);
+//	void					PrecacheAdditive(MemoryImage* theImage);
+//	void					PrecacheAlpha(MemoryImage* theImage);
+//	void					PrecacheNative(MemoryImage* theImage);
 	void					SetCursorImage(int theCursorNum, Image* theImage);
 
-	DDImage*				CreateCrossfadeImage(Image* theImage1, const Rect& theRect1, Image* theImage2, const Rect& theRect2, double theFadeFactor);
+//	DDImage*				CreateCrossfadeImage(Image* theImage1, const Rect& theRect1, Image* theImage2, const Rect& theRect2, double theFadeFactor);
 	void					ColorizeImage(Image* theImage, const Color& theColor);
-	DDImage*				CreateColorizedImage(Image* theImage, const Color& theColor);
-	DDImage*				CopyImage(Image* theImage, const Rect& theRect);
-	DDImage*				CopyImage(Image* theImage);
+//	DDImage*				CreateColorizedImage(Image* theImage, const Color& theColor);
+//	DDImage*				CopyImage(Image* theImage, const Rect& theRect);
+//	DDImage*				CopyImage(Image* theImage);
 	void					MirrorImage(Image* theImage);
 	void					FlipImage(Image* theImage);
-	void					RotateImageHue(Sexy::MemoryImage *theImage, int theDelta);
+//	void					RotateImageHue(Sexy::MemoryImage *theImage, int theDelta);
 	ulong					HSLToRGB(int h, int s, int l);
 	ulong					RGBToHSL(int r, int g, int b);
 	void					HSLToRGB(const ulong* theSource, ulong* theDest, int theSize);
 	void					RGBToHSL(const ulong* theSource, ulong* theDest, int theSize);
 
-	void					AddMemoryImage(MemoryImage* theMemoryImage);
-	void					RemoveMemoryImage(MemoryImage* theMemoryImage);
-	void					Remove3DData(MemoryImage* theMemoryImage);
+//	void					AddMemoryImage(MemoryImage* theMemoryImage);
+//	void					RemoveMemoryImage(MemoryImage* theMemoryImage);
+//	void					Remove3DData(MemoryImage* theMemoryImage);
 	virtual void			SwitchScreenMode();
 	virtual void			SwitchScreenMode(bool wantWindowed);
 	virtual void			SwitchScreenMode(bool wantWindowed, bool is3d, bool force = false);
@@ -491,21 +476,21 @@ public:
 
 	virtual void			GotFocus();
 	virtual void			LostFocus();	
-	virtual bool			IsAltKeyUsed(WPARAM wParam);
+//	virtual bool			IsAltKeyUsed(WPARAM wParam);
 	virtual bool			DebugKeyDown(int theKey);	
 //	virtual bool			DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
 	virtual void			CloseRequestAsync();
-	bool					Is3DAccelerated();
-	bool					Is3DAccelerationSupported();
-	bool					Is3DAccelerationRecommended();
+//	bool					Is3DAccelerated();
+//	bool					Is3DAccelerationSupported();
+//	bool					Is3DAccelerationRecommended();
 	void					DemoSyncRefreshRate();
-	void					Set3DAcclerated(bool is3D, bool reinit = true);
+//	void					Set3DAcclerated(bool is3D, bool reinit = true);
 	virtual void			Done3dTesting();
 	virtual std::string		NotifyCrashHook(); // return file name that you want to upload
 	
 //	virtual bool			CheckSignature(const Buffer& theBuffer, const std::string& theFileName);
 	virtual bool			DrawDirtyStuff();
-	virtual void			Redraw(Rect* theClipRect);
+	virtual void			Redraw();
 
 	// Properties access methods
 	bool					LoadProperties(const std::string& theFileName, bool required, bool checkSig);
@@ -544,9 +529,9 @@ public:
 	void					DemoAssertStringEqual(const std::string& theString);
 	void					DemoAssertIntEqual(int theInt);
 	void					DemoAddMarker(const std::string& theString);
-	void					DemoRegisterHandle(HANDLE theHandle);
-	void					DemoWaitForHandle(HANDLE theHandle);
-	bool					DemoCheckHandle(HANDLE theHandle);
+//	void					DemoRegisterHandle(HANDLE theHandle);
+//	void					DemoWaitForHandle(HANDLE theHandle);
+//	bool					DemoCheckHandle(HANDLE theHandle);
 	
 
 	// Registry access methods
@@ -554,7 +539,7 @@ public:
 	bool					RegistryReadString(const std::string& theValueName, std::string* theString);
 	bool					RegistryReadInteger(const std::string& theValueName, int* theValue);
 	bool					RegistryReadBoolean(const std::string& theValueName, bool* theValue);
-	bool					RegistryReadData(const std::string& theValueName, uchar* theValue, ulong* theLength);
+	bool					RegistryReadData(const std::string &theKey, std::vector<uint8_t> &theValue, uint32_t &theLength);
 	bool					RegistryWriteString(const std::string& theValueName, const std::string& theString);
 	bool					RegistryWriteInteger(const std::string& theValueName, int theValue);
 	bool					RegistryWriteBoolean(const std::string& theValueName, bool theValue);
@@ -573,11 +558,11 @@ public:
 	virtual void			DoMainLoop();
 	virtual bool			UpdateAppStep(bool* updated);
 	virtual bool			UpdateApp();
-	int						InitDDInterface();
-	void					ClearUpdateBacklog(bool relaxForASecond = false);
+//	int						InitDDInterface();
+//	void					ClearUpdateBacklog(bool relaxForASecond = false);
 	bool					IsScreenSaver();
 	virtual bool			AppCanRestore();
-	static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
+//	static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);		
 };
 
 extern SexyAppBase* gSexyAppBase;

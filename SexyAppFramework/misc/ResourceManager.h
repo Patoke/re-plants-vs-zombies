@@ -3,7 +3,9 @@
 
 #include "Common.h"
 #include "graphics/Image.h"
+#include "graphics/Font.h"
 #include "SexyAppBase.h"
+#include <memory>
 #include <string>
 #include <map>
 
@@ -53,10 +55,11 @@ public: // @Patoke todo: revert to protected
 
 	struct ImageRes : public BaseRes
 	{
-		SharedImageRef mImage;
+		Image* mImage = nullptr;
 		std::string mAlphaImage;
 		std::string mAlphaGridImage;
 		std::string mVariant;
+		bool mImageSand = false;
 		bool mAutoFindAlpha;
 		bool mPalletize;
 		bool mA4R4G4B4;
@@ -65,7 +68,7 @@ public: // @Patoke todo: revert to protected
 		bool mPurgeBits;
 		bool mMinimizeSubdivisions;
 		int mRows;
-		int mCols;	
+		int mCols;
 		DWORD mAlphaColor;
 		AnimInfo mAnimInfo;
 
@@ -142,8 +145,8 @@ public: // @Patoke todo: revert to protected
 	void					DeleteMap(ResMap &theMap);
 	virtual void			DeleteResources(ResMap &theMap, const std::string &theGroup);
 
-	bool					LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage);
-	bool					LoadAlphaImage(ImageRes *theRes, DDImage *theImage);
+//	bool					LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage);
+//	bool					LoadAlphaImage(ImageRes *theRes, DDImage *theImage);
 	virtual bool			DoLoadImage(ImageRes *theRes);
 	virtual bool			DoLoadFont(FontRes* theRes);
 	virtual bool			DoLoadSound(SoundRes* theRes);
@@ -177,12 +180,12 @@ public:
 	bool					ReplaceFont(const std::string &theId, _Font *theFont);
 
 	void					DeleteImage(const std::string &theName);
-	SharedImageRef			LoadImage(const std::string &theName);
+	Image*					LoadImage(const std::string &theName);
 
 	void					DeleteFont(const std::string &theName);
 	_Font*					LoadFont(const std::string &theName);
 
-	SharedImageRef			GetImage(const std::string &theId);
+	Image*					GetImage(const std::string &theId);
 	int						GetSound(const std::string &theId);
 	_Font*					GetFont(const std::string &theId);
 	
@@ -190,7 +193,7 @@ public:
 	const XMLParamMap&		GetImageAttributes(const std::string &theId);
 
 	// These throw a ResourceManagerException if the resource is not found
-	virtual SharedImageRef	GetImageThrow(const std::string &theId);
+	virtual Image*			GetImageThrow(const std::string &theId);
 	virtual int				GetSoundThrow(const std::string &theId);
 	virtual _Font*			GetFontThrow(const std::string &theId);
 
@@ -215,5 +218,3 @@ struct ResourceManagerException : public std::exception
 }
 
 #endif //__PROPERTIESPARSER_H__
-
-

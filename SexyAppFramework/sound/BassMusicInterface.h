@@ -35,7 +35,7 @@ public:
 	int						mMusicLoadFlags;
 
 public:
-	BassMusicInterface(HWND theHWnd);
+	BassMusicInterface(void *theHWnd);
 	virtual ~BassMusicInterface();
 	
 	virtual bool			LoadMusic(int theSongId, const std::string& theFileName);

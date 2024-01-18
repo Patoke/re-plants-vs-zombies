@@ -1,3 +1,4 @@
+#include "Common.h"
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "Definition.h"
@@ -9,7 +10,10 @@
 #include "../GameConstants.h"
 #include "graphics/Font.h"
 #include "misc/PerfTimer.h"
-#include "graphics/MemoryImage.h"
+//#include "graphics/MemoryImage.h"
+#include <bits/chrono.h>
+#include <chrono>
+#include <string>
 
 unsigned int gReanimatorDefCount;                     //[0x6A9EE4]
 ReanimatorDefinition* gReanimatorDefArray;   //[0x6A9EE8]
@@ -17,149 +21,149 @@ unsigned int gReanimationParamArraySize;              //[0x6A9EEC]
 ReanimationParams* gReanimationParamArray;   //[0x6A9EF0]
 
 ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = { //0x6A1340
-	{ ReanimationType::REANIM_LOADBAR_SPROUT,                       "reanim\\LoadBar_sprout.reanim",                    1 },
-	{ ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD,                   "reanim\\LoadBar_Zombiehead.reanim",                1 },
-	{ ReanimationType::REANIM_SODROLL,                              "reanim\\SodRoll.reanim",                           0 },
-	{ ReanimationType::REANIM_FINAL_WAVE,                           "reanim\\FinalWave.reanim",                         1 },
-	{ ReanimationType::REANIM_PEASHOOTER,                           "reanim\\PeaShooterSingle.reanim",                  0 },
-	{ ReanimationType::REANIM_WALLNUT,                              "reanim\\Wallnut.reanim",                           0 },
-	{ ReanimationType::REANIM_LILYPAD,                              "reanim\\Lilypad.reanim",                           0 },
-	{ ReanimationType::REANIM_SUNFLOWER,                            "reanim\\SunFlower.reanim",                         0 },
-	{ ReanimationType::REANIM_LAWNMOWER,                            "reanim\\LawnMower.reanim",                         0 },
-	{ ReanimationType::REANIM_READYSETPLANT,                        "reanim\\StartReadySetPlant.reanim",                1 },
-	{ ReanimationType::REANIM_CHERRYBOMB,                           "reanim\\CherryBomb.reanim",                        0 },
-	{ ReanimationType::REANIM_SQUASH,                               "reanim\\Squash.reanim",                            0 },
-	{ ReanimationType::REANIM_DOOMSHROOM,                           "reanim\\DoomShroom.reanim",                        0 },
-	{ ReanimationType::REANIM_SNOWPEA,                              "reanim\\SnowPea.reanim",                           0 },
-	{ ReanimationType::REANIM_REPEATER,                             "reanim\\PeaShooter.reanim",                        0 },
-	{ ReanimationType::REANIM_SUNSHROOM,                            "reanim\\SunShroom.reanim",                         0 },
-	{ ReanimationType::REANIM_TALLNUT,                              "reanim\\Tallnut.reanim",                           0 },
-	{ ReanimationType::REANIM_FUMESHROOM,                           "reanim\\Fumeshroom.reanim",                        0 },
-	{ ReanimationType::REANIM_PUFFSHROOM,                           "reanim\\Puffshroom.reanim",                        0 },
-	{ ReanimationType::REANIM_HYPNOSHROOM,                          "reanim\\Hypnoshroom.reanim",                       0 },
-	{ ReanimationType::REANIM_CHOMPER,                              "reanim\\Chomper.reanim",                           0 },
-	{ ReanimationType::REANIM_ZOMBIE,                               "reanim\\Zombie.reanim",                            0 },
-	{ ReanimationType::REANIM_SUN,                                  "reanim\\Sun.reanim",                               0 },
-	{ ReanimationType::REANIM_POTATOMINE,                           "reanim\\PotatoMine.reanim",                        0 },
-	{ ReanimationType::REANIM_SPIKEWEED,                            "reanim\\Caltrop.reanim",                           0 },
-	{ ReanimationType::REANIM_SPIKEROCK,                            "reanim\\SpikeRock.reanim",                         0 },
-	{ ReanimationType::REANIM_THREEPEATER,                          "reanim\\ThreePeater.reanim",                       0 },
-	{ ReanimationType::REANIM_MARIGOLD,                             "reanim\\Marigold.reanim",                          0 },
-	{ ReanimationType::REANIM_ICESHROOM,                            "reanim\\IceShroom.reanim",                         0 },
-	{ ReanimationType::REANIM_ZOMBIE_FOOTBALL,                      "reanim\\Zombie_football.reanim",                   0 },
-	{ ReanimationType::REANIM_ZOMBIE_NEWSPAPER,                     "reanim\\Zombie_paper.reanim",                      0 },
-	{ ReanimationType::REANIM_ZOMBIE_ZAMBONI,                       "reanim\\Zombie_zamboni.reanim",                    0 },
-	{ ReanimationType::REANIM_SPLASH,                               "reanim\\splash.reanim",                            0 },
-	{ ReanimationType::REANIM_JALAPENO,                             "reanim\\Jalapeno.reanim",                          0 },
-	{ ReanimationType::REANIM_JALAPENO_FIRE,                        "reanim\\fire.reanim",                              0 },
-	{ ReanimationType::REANIM_COIN_SILVER,                          "reanim\\Coin_silver.reanim",                       0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED,                       "reanim\\Zombie_charred.reanim",                    0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED_IMP,                   "reanim\\Zombie_charred_imp.reanim",                0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED_DIGGER,                "reanim\\Zombie_charred_digger.reanim",             0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED_ZAMBONI,               "reanim\\Zombie_charred_zamboni.reanim",            0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED_CATAPULT,              "reanim\\Zombie_charred_catapult.reanim",           0 },
-	{ ReanimationType::REANIM_ZOMBIE_CHARRED_GARGANTUAR,            "reanim\\Zombie_charred_gargantuar.reanim",         0 },
-	{ ReanimationType::REANIM_SCRAREYSHROOM,                        "reanim\\ScaredyShroom.reanim",                     0 },
-	{ ReanimationType::REANIM_PUMPKIN,                              "reanim\\Pumpkin.reanim",                           0 },
-	{ ReanimationType::REANIM_PLANTERN,                             "reanim\\Plantern.reanim",                          0 },
-	{ ReanimationType::REANIM_TORCHWOOD,                            "reanim\\Torchwood.reanim",                         0 },
-	{ ReanimationType::REANIM_SPLITPEA,                             "reanim\\SplitPea.reanim",                          0 },
-	{ ReanimationType::REANIM_SEASHROOM,                            "reanim\\SeaShroom.reanim",                         0 },
-	{ ReanimationType::REANIM_BLOVER,                               "reanim\\Blover.reanim",                            0 },
-	{ ReanimationType::REANIM_FLOWER_POT,                           "reanim\\Pot.reanim",                               0 },
-	{ ReanimationType::REANIM_CACTUS,                               "reanim\\Cactus.reanim",                            0 },
-	{ ReanimationType::REANIM_DANCER,                               "reanim\\Zombie_disco.reanim",						0 }, // @Patoke: GOTY has different reanim name
-	{ ReanimationType::REANIM_TANGLEKELP,                           "reanim\\Tanglekelp.reanim",                        0 },
-	{ ReanimationType::REANIM_STARFRUIT,                            "reanim\\Starfruit.reanim",                         0 },
-	{ ReanimationType::REANIM_POLEVAULTER,                          "reanim\\Zombie_polevaulter.reanim",                0 },
-	{ ReanimationType::REANIM_BALLOON,                              "reanim\\Zombie_balloon.reanim",                    0 },
-	{ ReanimationType::REANIM_GARGANTUAR,                           "reanim\\Zombie_gargantuar.reanim",                 0 },
-	{ ReanimationType::REANIM_IMP,                                  "reanim\\Zombie_imp.reanim",                        0 },
-	{ ReanimationType::REANIM_DIGGER,                               "reanim\\Zombie_digger.reanim",                     0 },
-	{ ReanimationType::REANIM_DIGGER_DIRT,                          "reanim\\Digger_rising_dirt.reanim",                0 },
-	{ ReanimationType::REANIM_ZOMBIE_DOLPHINRIDER,                  "reanim\\Zombie_dolphinrider.reanim",               0 },
-	{ ReanimationType::REANIM_POGO,                                 "reanim\\Zombie_pogo.reanim",                       0 },
-	{ ReanimationType::REANIM_BACKUP_DANCER,                        "reanim\\Zombie_backup.reanim",                     0 }, // @Patoke: GOTY has different reanim name
-	{ ReanimationType::REANIM_BOBSLED,                              "reanim\\Zombie_bobsled.reanim",                    0 },
-	{ ReanimationType::REANIM_JACKINTHEBOX,                         "reanim\\Zombie_jackbox.reanim",                    0 },
-	{ ReanimationType::REANIM_SNORKEL,                              "reanim\\Zombie_snorkle.reanim",                    0 },
-	{ ReanimationType::REANIM_BUNGEE,                               "reanim\\Zombie_bungi.reanim",                      0 },
-	{ ReanimationType::REANIM_CATAPULT,                             "reanim\\Zombie_catapult.reanim",                   0 },
-	{ ReanimationType::REANIM_LADDER,                               "reanim\\Zombie_ladder.reanim",                     0 },
-	{ ReanimationType::REANIM_PUFF,                                 "reanim\\Puff.reanim",                              0 },
-	{ ReanimationType::REANIM_SLEEPING,                             "reanim\\Z.reanim",                                 0 },
-	{ ReanimationType::REANIM_GRAVE_BUSTER,                         "reanim\\Gravebuster.reanim",                       0 },
-	{ ReanimationType::REANIM_ZOMBIES_WON,                          "reanim\\ZombiesWon.reanim",                        1 },
-	{ ReanimationType::REANIM_MAGNETSHROOM,                         "reanim\\Magnetshroom.reanim",                      0 },
-	{ ReanimationType::REANIM_BOSS,                                 "reanim\\Zombie_boss.reanim",                       0 },
-	{ ReanimationType::REANIM_CABBAGEPULT,                          "reanim\\Cabbagepult.reanim",                       0 },
-	{ ReanimationType::REANIM_KERNELPULT,                           "reanim\\Cornpult.reanim",                          0 },
-	{ ReanimationType::REANIM_MELONPULT,                            "reanim\\Melonpult.reanim",                         0 },
-	{ ReanimationType::REANIM_COFFEEBEAN,                           "reanim\\Coffeebean.reanim",                        1 },
-	{ ReanimationType::REANIM_UMBRELLALEAF,                         "reanim\\Umbrellaleaf.reanim",                      0 },
-	{ ReanimationType::REANIM_GATLINGPEA,                           "reanim\\GatlingPea.reanim",                        0 },
-	{ ReanimationType::REANIM_CATTAIL,                              "reanim\\Cattail.reanim",                           0 },
-	{ ReanimationType::REANIM_GLOOMSHROOM,                          "reanim\\GloomShroom.reanim",                       0 },
-	{ ReanimationType::REANIM_BOSS_ICEBALL,                         "reanim\\Zombie_boss_iceball.reanim",               1 },
-	{ ReanimationType::REANIM_BOSS_FIREBALL,                        "reanim\\Zombie_boss_fireball.reanim",              1 },
-	{ ReanimationType::REANIM_COBCANNON,                            "reanim\\CobCannon.reanim",                         0 },
-	{ ReanimationType::REANIM_GARLIC,                               "reanim\\Garlic.reanim",                            0 },
-	{ ReanimationType::REANIM_GOLD_MAGNET,                          "reanim\\GoldMagnet.reanim",                        0 },
-	{ ReanimationType::REANIM_WINTER_MELON,                         "reanim\\WinterMelon.reanim",                       0 },
-	{ ReanimationType::REANIM_TWIN_SUNFLOWER,                       "reanim\\TwinSunflower.reanim",                     0 },
-	{ ReanimationType::REANIM_POOL_CLEANER,                         "reanim\\PoolCleaner.reanim",                       0 },
-	{ ReanimationType::REANIM_ROOF_CLEANER,                         "reanim\\RoofCleaner.reanim",                       0 },
-	{ ReanimationType::REANIM_FIRE_PEA,                             "reanim\\FirePea.reanim",                           0 },
-	{ ReanimationType::REANIM_IMITATER,                             "reanim\\Imitater.reanim",                          0 },
-	{ ReanimationType::REANIM_YETI,                                 "reanim\\Zombie_yeti.reanim",                       0 },
-	{ ReanimationType::REANIM_BOSS_DRIVER,                          "reanim\\Zombie_Boss_driver.reanim",                0 },
-	{ ReanimationType::REANIM_LAWN_MOWERED_ZOMBIE,                  "reanim\\LawnMoweredZombie.reanim",                 0 },
-	{ ReanimationType::REANIM_CRAZY_DAVE,                           "reanim\\CrazyDave.reanim",                         1 },
-	{ ReanimationType::REANIM_TEXT_FADE_ON,                         "reanim\\TextFadeOn.reanim",                        0 },
-	{ ReanimationType::REANIM_HAMMER,                               "reanim\\Hammer.reanim",                            0 },
-	{ ReanimationType::REANIM_SLOT_MACHINE_HANDLE,                  "reanim\\SlotMachine.reanim",                       0 },
-	{ ReanimationType::REANIM_CREDITS_FOOTBALL,                     "reanim\\Credits_Football.reanim",                  1 },
-	{ ReanimationType::REANIM_CREDITS_JACKBOX,                      "reanim\\Credits_Jackbox.reanim",                   1 },
-	{ ReanimationType::REANIM_SELECTOR_SCREEN,                      "reanim\\SelectorScreen.reanim",                    3 },
-	{ ReanimationType::REANIM_PORTAL_CIRCLE,                        "reanim\\Portal_Circle.reanim",                     0 },
-	{ ReanimationType::REANIM_PORTAL_SQUARE,                        "reanim\\Portal_Square.reanim",                     0 },
-	{ ReanimationType::REANIM_ZENGARDEN_SPROUT,                     "reanim\\ZenGarden_sprout.reanim",                  0 },
-	{ ReanimationType::REANIM_ZENGARDEN_WATERINGCAN,                "reanim\\ZenGarden_wateringcan.reanim",             1 },
-	{ ReanimationType::REANIM_ZENGARDEN_FERTILIZER,                 "reanim\\ZenGarden_fertilizer.reanim",              1 },
-	{ ReanimationType::REANIM_ZENGARDEN_BUGSPRAY,                   "reanim\\ZenGarden_bugspray.reanim",                1 },
-	{ ReanimationType::REANIM_ZENGARDEN_PHONOGRAPH,                 "reanim\\ZenGarden_phonograph.reanim",              1 },
-	{ ReanimationType::REANIM_DIAMOND,                              "reanim\\Diamond.reanim",                           0 },
-	{ ReanimationType::REANIM_ZOMBIE_HAND,                          "reanim\\Zombie_hand.reanim",                       1 },
-	{ ReanimationType::REANIM_STINKY,                               "reanim\\Stinky.reanim",                            0 },
-	{ ReanimationType::REANIM_RAKE,                                 "reanim\\Rake.reanim",                              0 },
-	{ ReanimationType::REANIM_RAIN_CIRCLE,                          "reanim\\Rain_circle.reanim",                       0 },
-	{ ReanimationType::REANIM_RAIN_SPLASH,                          "reanim\\Rain_splash.reanim",                       0 },
-	{ ReanimationType::REANIM_ZOMBIE_SURPRISE,                      "reanim\\Zombie_surprise.reanim",                   0 },
-	{ ReanimationType::REANIM_COIN_GOLD,                            "reanim\\Coin_gold.reanim",                         0 },
-	{ ReanimationType::REANIM_TREEOFWISDOM,                         "reanim\\TreeOfWisdom.reanim",                      1 },
-	{ ReanimationType::REANIM_TREEOFWISDOM_CLOUDS,                  "reanim\\TreeOfWisdomClouds.reanim",                1 },
-	{ ReanimationType::REANIM_TREEOFWISDOM_TREEFOOD,                "reanim\\TreeFood.reanim",                          1 },
-	{ ReanimationType::REANIM_CREDITS_MAIN,                         "reanim\\Credits_Main.reanim",                      3 },
-	{ ReanimationType::REANIM_CREDITS_MAIN2,                        "reanim\\Credits_Main2.reanim",                     3 },
-	{ ReanimationType::REANIM_CREDITS_MAIN3,                        "reanim\\Credits_Main3.reanim",                     3 },
-	{ ReanimationType::REANIM_ZOMBIE_CREDITS_DANCE,                 "reanim\\Zombie_credits_dance.reanim",              0 },
-	{ ReanimationType::REANIM_CREDITS_STAGE,                        "reanim\\Credits_stage.reanim",                     1 },
-	{ ReanimationType::REANIM_CREDITS_BIGBRAIN,                     "reanim\\Credits_BigBrain.reanim",                  1 },
-	{ ReanimationType::REANIM_CREDITS_FLOWER_PETALS,                "reanim\\Credits_Flower_petals.reanim",             1 },
-	{ ReanimationType::REANIM_CREDITS_INFANTRY,                     "reanim\\Credits_Infantry.reanim",                  1 },
-	{ ReanimationType::REANIM_CREDITS_THROAT,                       "reanim\\Credits_Throat.reanim",                    1 },
-	{ ReanimationType::REANIM_CREDITS_CRAZYDAVE,                    "reanim\\Credits_CrazyDave.reanim",                 1 },
-	{ ReanimationType::REANIM_CREDITS_BOSSDANCE,                    "reanim\\Credits_Bossdance.reanim",                 1 },
-	{ ReanimationType::REANIM_ZOMBIE_CREDITS_SCREEN_DOOR,           "reanim\\Zombie_Credits_Screendoor.reanim",         1 },
-	{ ReanimationType::REANIM_ZOMBIE_CREDITS_CONEHEAD,              "reanim\\Zombie_Credits_Conehead.reanim",           1 },
-	{ ReanimationType::REANIM_CREDITS_ZOMBIEARMY1,                  "reanim\\Credits_ZombieArmy1.reanim",               1 },
-	{ ReanimationType::REANIM_CREDITS_ZOMBIEARMY2,                  "reanim\\Credits_ZombieArmy2.reanim",               1 },
-	{ ReanimationType::REANIM_CREDITS_TOMBSTONES,                   "reanim\\Credits_Tombstones.reanim",                1 },
-	{ ReanimationType::REANIM_CREDITS_SOLARPOWER,                   "reanim\\Credits_SolarPower.reanim",                1 },
-	{ ReanimationType::REANIM_CREDITS_ANYHOUR,                      "reanim\\Credits_Anyhour.reanim",                   3 },
-	{ ReanimationType::REANIM_CREDITS_WEARETHEUNDEAD,               "reanim\\Credits_WeAreTheUndead.reanim",            1 },
-	{ ReanimationType::REANIM_CREDITS_DISCOLIGHTS,                  "reanim\\Credits_DiscoLights.reanim",               1 },
-	{ ReanimationType::REANIM_FLAG,                                 "reanim\\Zombie_FlagPole.reanim",                   0 },
+	{ ReanimationType::REANIM_LOADBAR_SPROUT,                       "LoadBar_sprout.reanim",                    1 },
+	{ ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD,                   "LoadBar_Zombiehead.reanim",                1 },
+	{ ReanimationType::REANIM_SODROLL,                              "SodRoll.reanim",                           0 },
+	{ ReanimationType::REANIM_FINAL_WAVE,                           "FinalWave.reanim",                         1 },
+	{ ReanimationType::REANIM_PEASHOOTER,                           "PeaShooterSingle.reanim",                  0 },
+	{ ReanimationType::REANIM_WALLNUT,                              "Wallnut.reanim",                           0 },
+	{ ReanimationType::REANIM_LILYPAD,                              "Lilypad.reanim",                           0 },
+	{ ReanimationType::REANIM_SUNFLOWER,                            "SunFlower.reanim",                         0 },
+	{ ReanimationType::REANIM_LAWNMOWER,                            "LawnMower.reanim",                         0 },
+	{ ReanimationType::REANIM_READYSETPLANT,                        "StartReadySetPlant.reanim",                1 },
+	{ ReanimationType::REANIM_CHERRYBOMB,                           "CherryBomb.reanim",                        0 },
+	{ ReanimationType::REANIM_SQUASH,                               "Squash.reanim",                            0 },
+	{ ReanimationType::REANIM_DOOMSHROOM,                           "DoomShroom.reanim",                        0 },
+	{ ReanimationType::REANIM_SNOWPEA,                              "SnowPea.reanim",                           0 },
+	{ ReanimationType::REANIM_REPEATER,                             "PeaShooter.reanim",                        0 },
+	{ ReanimationType::REANIM_SUNSHROOM,                            "SunShroom.reanim",                         0 },
+	{ ReanimationType::REANIM_TALLNUT,                              "Tallnut.reanim",                           0 },
+	{ ReanimationType::REANIM_FUMESHROOM,                           "Fumeshroom.reanim",                        0 },
+	{ ReanimationType::REANIM_PUFFSHROOM,                           "Puffshroom.reanim",                        0 },
+	{ ReanimationType::REANIM_HYPNOSHROOM,                          "Hypnoshroom.reanim",                       0 },
+	{ ReanimationType::REANIM_CHOMPER,                              "Chomper.reanim",                           0 },
+	{ ReanimationType::REANIM_ZOMBIE,                               "Zombie.reanim",                            0 },
+	{ ReanimationType::REANIM_SUN,                                  "Sun.reanim",                               0 },
+	{ ReanimationType::REANIM_POTATOMINE,                           "PotatoMine.reanim",                        0 },
+	{ ReanimationType::REANIM_SPIKEWEED,                            "Caltrop.reanim",                           0 },
+	{ ReanimationType::REANIM_SPIKEROCK,                            "SpikeRock.reanim",                         0 },
+	{ ReanimationType::REANIM_THREEPEATER,                          "ThreePeater.reanim",                       0 },
+	{ ReanimationType::REANIM_MARIGOLD,                             "Marigold.reanim",                          0 },
+	{ ReanimationType::REANIM_ICESHROOM,                            "IceShroom.reanim",                         0 },
+	{ ReanimationType::REANIM_ZOMBIE_FOOTBALL,                      "Zombie_football.reanim",                   0 },
+	{ ReanimationType::REANIM_ZOMBIE_NEWSPAPER,                     "Zombie_paper.reanim",                      0 },
+	{ ReanimationType::REANIM_ZOMBIE_ZAMBONI,                       "Zombie_zamboni.reanim",                    0 },
+	{ ReanimationType::REANIM_SPLASH,                               "splash.reanim",                            0 },
+	{ ReanimationType::REANIM_JALAPENO,                             "Jalapeno.reanim",                          0 },
+	{ ReanimationType::REANIM_JALAPENO_FIRE,                        "fire.reanim",                              0 },
+	{ ReanimationType::REANIM_COIN_SILVER,                          "Coin_silver.reanim",                       0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED,                       "Zombie_charred.reanim",                    0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED_IMP,                   "Zombie_charred_imp.reanim",                0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED_DIGGER,                "Zombie_charred_digger.reanim",             0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED_ZAMBONI,               "Zombie_charred_zamboni.reanim",            0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED_CATAPULT,              "Zombie_charred_catapult.reanim",           0 },
+	{ ReanimationType::REANIM_ZOMBIE_CHARRED_GARGANTUAR,            "Zombie_charred_gargantuar.reanim",         0 },
+	{ ReanimationType::REANIM_SCRAREYSHROOM,                        "ScaredyShroom.reanim",                     0 },
+	{ ReanimationType::REANIM_PUMPKIN,                              "Pumpkin.reanim",                           0 },
+	{ ReanimationType::REANIM_PLANTERN,                             "Plantern.reanim",                          0 },
+	{ ReanimationType::REANIM_TORCHWOOD,                            "Torchwood.reanim",                         0 },
+	{ ReanimationType::REANIM_SPLITPEA,                             "SplitPea.reanim",                          0 },
+	{ ReanimationType::REANIM_SEASHROOM,                            "SeaShroom.reanim",                         0 },
+	{ ReanimationType::REANIM_BLOVER,                               "Blover.reanim",                            0 },
+	{ ReanimationType::REANIM_FLOWER_POT,                           "Pot.reanim",                               0 },
+	{ ReanimationType::REANIM_CACTUS,                               "Cactus.reanim",                            0 },
+	{ ReanimationType::REANIM_DANCER,                               "Zombie_disco.reanim",						0 }, // @Patoke: GOTY has different reanim name
+	{ ReanimationType::REANIM_TANGLEKELP,                           "Tanglekelp.reanim",                        0 },
+	{ ReanimationType::REANIM_STARFRUIT,                            "Starfruit.reanim",                         0 },
+	{ ReanimationType::REANIM_POLEVAULTER,                          "Zombie_polevaulter.reanim",                0 },
+	{ ReanimationType::REANIM_BALLOON,                              "Zombie_balloon.reanim",                    0 },
+	{ ReanimationType::REANIM_GARGANTUAR,                           "Zombie_gargantuar.reanim",                 0 },
+	{ ReanimationType::REANIM_IMP,                                  "Zombie_imp.reanim",                        0 },
+	{ ReanimationType::REANIM_DIGGER,                               "Zombie_digger.reanim",                     0 },
+	{ ReanimationType::REANIM_DIGGER_DIRT,                          "Digger_rising_dirt.reanim",                0 },
+	{ ReanimationType::REANIM_ZOMBIE_DOLPHINRIDER,                  "Zombie_dolphinrider.reanim",               0 },
+	{ ReanimationType::REANIM_POGO,                                 "Zombie_pogo.reanim",                       0 },
+	{ ReanimationType::REANIM_BACKUP_DANCER,                        "Zombie_backup.reanim",                     0 }, // @Patoke: GOTY has different reanim name
+	{ ReanimationType::REANIM_BOBSLED,                              "Zombie_bobsled.reanim",                    0 },
+	{ ReanimationType::REANIM_JACKINTHEBOX,                         "Zombie_jackbox.reanim",                    0 },
+	{ ReanimationType::REANIM_SNORKEL,                              "Zombie_snorkle.reanim",                    0 },
+	{ ReanimationType::REANIM_BUNGEE,                               "Zombie_bungi.reanim",                      0 },
+	{ ReanimationType::REANIM_CATAPULT,                             "Zombie_catapult.reanim",                   0 },
+	{ ReanimationType::REANIM_LADDER,                               "Zombie_ladder.reanim",                     0 },
+	{ ReanimationType::REANIM_PUFF,                                 "Puff.reanim",                              0 },
+	{ ReanimationType::REANIM_SLEEPING,                             "Z.reanim",                                 0 },
+	{ ReanimationType::REANIM_GRAVE_BUSTER,                         "Gravebuster.reanim",                       0 },
+	{ ReanimationType::REANIM_ZOMBIES_WON,                          "ZombiesWon.reanim",                        1 },
+	{ ReanimationType::REANIM_MAGNETSHROOM,                         "Magnetshroom.reanim",                      0 },
+	{ ReanimationType::REANIM_BOSS,                                 "Zombie_boss.reanim",                       0 },
+	{ ReanimationType::REANIM_CABBAGEPULT,                          "Cabbagepult.reanim",                       0 },
+	{ ReanimationType::REANIM_KERNELPULT,                           "Cornpult.reanim",                          0 },
+	{ ReanimationType::REANIM_MELONPULT,                            "Melonpult.reanim",                         0 },
+	{ ReanimationType::REANIM_COFFEEBEAN,                           "Coffeebean.reanim",                        1 },
+	{ ReanimationType::REANIM_UMBRELLALEAF,                         "Umbrellaleaf.reanim",                      0 },
+	{ ReanimationType::REANIM_GATLINGPEA,                           "GatlingPea.reanim",                        0 },
+	{ ReanimationType::REANIM_CATTAIL,                              "Cattail.reanim",                           0 },
+	{ ReanimationType::REANIM_GLOOMSHROOM,                          "GloomShroom.reanim",                       0 },
+	{ ReanimationType::REANIM_BOSS_ICEBALL,                         "Zombie_boss_iceball.reanim",               1 },
+	{ ReanimationType::REANIM_BOSS_FIREBALL,                        "Zombie_boss_fireball.reanim",              1 },
+	{ ReanimationType::REANIM_COBCANNON,                            "CobCannon.reanim",                         0 },
+	{ ReanimationType::REANIM_GARLIC,                               "Garlic.reanim",                            0 },
+	{ ReanimationType::REANIM_GOLD_MAGNET,                          "GoldMagnet.reanim",                        0 },
+	{ ReanimationType::REANIM_WINTER_MELON,                         "WinterMelon.reanim",                       0 },
+	{ ReanimationType::REANIM_TWIN_SUNFLOWER,                       "TwinSunflower.reanim",                     0 },
+	{ ReanimationType::REANIM_POOL_CLEANER,                         "PoolCleaner.reanim",                       0 },
+	{ ReanimationType::REANIM_ROOF_CLEANER,                         "RoofCleaner.reanim",                       0 },
+	{ ReanimationType::REANIM_FIRE_PEA,                             "FirePea.reanim",                           0 },
+	{ ReanimationType::REANIM_IMITATER,                             "Imitater.reanim",                          0 },
+	{ ReanimationType::REANIM_YETI,                                 "Zombie_yeti.reanim",                       0 },
+	{ ReanimationType::REANIM_BOSS_DRIVER,                          "Zombie_Boss_driver.reanim",                0 },
+	{ ReanimationType::REANIM_LAWN_MOWERED_ZOMBIE,                  "LawnMoweredZombie.reanim",                 0 },
+	{ ReanimationType::REANIM_CRAZY_DAVE,                           "CrazyDave.reanim",                         1 },
+	{ ReanimationType::REANIM_TEXT_FADE_ON,                         "TextFadeOn.reanim",                        0 },
+	{ ReanimationType::REANIM_HAMMER,                               "Hammer.reanim",                            0 },
+	{ ReanimationType::REANIM_SLOT_MACHINE_HANDLE,                  "SlotMachine.reanim",                       0 },
+	{ ReanimationType::REANIM_CREDITS_FOOTBALL,                     "Credits_Football.reanim",                  1 },
+	{ ReanimationType::REANIM_CREDITS_JACKBOX,                      "Credits_Jackbox.reanim",                   1 },
+	{ ReanimationType::REANIM_SELECTOR_SCREEN,                      "SelectorScreen.reanim",                    3 },
+	{ ReanimationType::REANIM_PORTAL_CIRCLE,                        "Portal_Circle.reanim",                     0 },
+	{ ReanimationType::REANIM_PORTAL_SQUARE,                        "Portal_Square.reanim",                     0 },
+	{ ReanimationType::REANIM_ZENGARDEN_SPROUT,                     "ZenGarden_sprout.reanim",                  0 },
+	{ ReanimationType::REANIM_ZENGARDEN_WATERINGCAN,                "ZenGarden_wateringcan.reanim",             1 },
+	{ ReanimationType::REANIM_ZENGARDEN_FERTILIZER,                 "ZenGarden_fertilizer.reanim",              1 },
+	{ ReanimationType::REANIM_ZENGARDEN_BUGSPRAY,                   "ZenGarden_bugspray.reanim",                1 },
+	{ ReanimationType::REANIM_ZENGARDEN_PHONOGRAPH,                 "ZenGarden_phonograph.reanim",              1 },
+	{ ReanimationType::REANIM_DIAMOND,                              "Diamond.reanim",                           0 },
+	{ ReanimationType::REANIM_ZOMBIE_HAND,                          "Zombie_hand.reanim",                       1 },
+	{ ReanimationType::REANIM_STINKY,                               "Stinky.reanim",                            0 },
+	{ ReanimationType::REANIM_RAKE,                                 "Rake.reanim",                              0 },
+	{ ReanimationType::REANIM_RAIN_CIRCLE,                          "Rain_circle.reanim",                       0 },
+	{ ReanimationType::REANIM_RAIN_SPLASH,                          "Rain_splash.reanim",                       0 },
+	{ ReanimationType::REANIM_ZOMBIE_SURPRISE,                      "Zombie_surprise.reanim",                   0 },
+	{ ReanimationType::REANIM_COIN_GOLD,                            "Coin_gold.reanim",                         0 },
+	{ ReanimationType::REANIM_TREEOFWISDOM,                         "TreeOfWisdom.reanim",                      1 },
+	{ ReanimationType::REANIM_TREEOFWISDOM_CLOUDS,                  "TreeOfWisdomClouds.reanim",                1 },
+	{ ReanimationType::REANIM_TREEOFWISDOM_TREEFOOD,                "TreeFood.reanim",                          1 },
+	{ ReanimationType::REANIM_CREDITS_MAIN,                         "Credits_Main.reanim",                      3 },
+	{ ReanimationType::REANIM_CREDITS_MAIN2,                        "Credits_Main2.reanim",                     3 },
+	{ ReanimationType::REANIM_CREDITS_MAIN3,                        "Credits_Main3.reanim",                     3 },
+	{ ReanimationType::REANIM_ZOMBIE_CREDITS_DANCE,                 "Zombie_credits_dance.reanim",              0 },
+	{ ReanimationType::REANIM_CREDITS_STAGE,                        "Credits_stage.reanim",                     1 },
+	{ ReanimationType::REANIM_CREDITS_BIGBRAIN,                     "Credits_BigBrain.reanim",                  1 },
+	{ ReanimationType::REANIM_CREDITS_FLOWER_PETALS,                "Credits_Flower_petals.reanim",             1 },
+	{ ReanimationType::REANIM_CREDITS_INFANTRY,                     "Credits_Infantry.reanim",                  1 },
+	{ ReanimationType::REANIM_CREDITS_THROAT,                       "Credits_Throat.reanim",                    1 },
+	{ ReanimationType::REANIM_CREDITS_CRAZYDAVE,                    "Credits_CrazyDave.reanim",                 1 },
+	{ ReanimationType::REANIM_CREDITS_BOSSDANCE,                    "Credits_Bossdance.reanim",                 1 },
+	{ ReanimationType::REANIM_ZOMBIE_CREDITS_SCREEN_DOOR,           "Zombie_Credits_Screendoor.reanim",         1 },
+	{ ReanimationType::REANIM_ZOMBIE_CREDITS_CONEHEAD,              "Zombie_Credits_Conehead.reanim",           1 },
+	{ ReanimationType::REANIM_CREDITS_ZOMBIEARMY1,                  "Credits_ZombieArmy1.reanim",               1 },
+	{ ReanimationType::REANIM_CREDITS_ZOMBIEARMY2,                  "Credits_ZombieArmy2.reanim",               1 },
+	{ ReanimationType::REANIM_CREDITS_TOMBSTONES,                   "Credits_Tombstones.reanim",                1 },
+	{ ReanimationType::REANIM_CREDITS_SOLARPOWER,                   "Credits_SolarPower.reanim",                1 },
+	{ ReanimationType::REANIM_CREDITS_ANYHOUR,                      "Credits_Anyhour.reanim",                   3 },
+	{ ReanimationType::REANIM_CREDITS_WEARETHEUNDEAD,               "Credits_WeAreTheUndead.reanim",            1 },
+	{ ReanimationType::REANIM_CREDITS_DISCOLIGHTS,                  "Credits_DiscoLights.reanim",               1 },
+	{ ReanimationType::REANIM_FLAG,                                 "Zombie_FlagPole.reanim",                   0 },
 };
 
 //0x471540
@@ -345,17 +349,18 @@ void ReanimationCreateAtlas(ReanimatorDefinition* theDefinition, ReanimationType
 	if (theDefinition->mReanimAtlas != nullptr || TestBit(aParam.mReanimParamFlags, ReanimFlags::REANIM_NO_ATLAS))
 		return;  // 当动画已存在 Atlas 或无需 Atlas 时，直接退出
 
-	PerfTimer aTimer;
-	aTimer.Start();
+	auto aTimer = std::chrono::high_resolution_clock::now();
+
 	TodHesitationTrace("preatlas");
 	ReanimAtlas* aAtlas = new ReanimAtlas();
 	theDefinition->mReanimAtlas = aAtlas;  // 赋值动画 Atlas 指针
 	aAtlas->ReanimAtlasCreate(theDefinition);
 
 	TodHesitationTrace("atlas '%s'", aParam.mReanimFileName);
-	int aDuration = std::max(aTimer.GetDuration(), 0.0);
+	//int aDuration = std::max(aTimer.GetDuration(), 0.0);
+	int aDuration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count();
 	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE)  //（仅内测版）创建时间过长的报告
-		TodTraceAndLog("LOADING:Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
+		TodTraceAndLog("loading:  Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
 void ReanimationPreload(ReanimationType theReanimationType)
@@ -366,7 +371,8 @@ void ReanimationPreload(ReanimationType theReanimationType)
 	ReanimationCreateAtlas(aReanimDef, theReanimationType);
 	if (aReanimDef->mReanimAtlas)
 	{
-		TodSandImageIfNeeded(aReanimDef->mReanimAtlas->mMemoryImage);
+		unreachable();
+		//TodSandImageIfNeeded(aReanimDef->mReanimAtlas->mMemoryImage);
 	}
 }
 
@@ -404,7 +410,7 @@ void Reanimation::Update()
 	if (mFrameCount == 0 || mDead)
 		return;
 
-	TOD_ASSERT(_finite(mAnimRate));
+	TOD_ASSERT(std::isfinite(mAnimRate));
 	mLastFrameTime = mAnimTime;  // 更新上一帧的循环率
 	mAnimTime += SECONDS_PER_UPDATE * mAnimRate / mFrameCount;  // 更新当前循环率
 
@@ -489,7 +495,7 @@ void Reanimation::Update()
 			aTrack->mShakeY = RandRangeFloat(-aTrack->mShakeOverride, aTrack->mShakeOverride);
 		}
 
-		if (strnicmp(mDefinition->mTracks.tracks[aTrackIndex].mName, "attacher__", 10) == 0)  // IsAttacher
+		if (strncasecmp(mDefinition->mTracks.tracks[aTrackIndex].mName, "attacher__", 10) == 0)  // IsAttacher
 			UpdateAttacherTrack(aTrackIndex);
 
 		if (aTrack->mAttachmentID != AttachmentID::ATTACHMENTID_NULL)
@@ -553,16 +559,17 @@ void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* the
 	TOD_ASSERT(theTrackIndex >= 0 && theTrackIndex < mDefinition->mTracks.count);
 	ReanimatorTrack* aTrack = &mDefinition->mTracks.tracks[theTrackIndex];
 	TOD_ASSERT(aTrack->mTransforms.count == mDefinition->mTracks.tracks[0].mTransforms.count);
-	ReanimatorTransform& aTransBefore = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameBeforeInt];  // 前一帧的变换定义
-	ReanimatorTransform& aTransAfter = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameAfterInt];  // 后一帧的变换定义
+	ReanimatorTransform& aTransBefore = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameBeforeInt]; // 前一帧的变换定义
+	ReanimatorTransform& aTransAfter  = aTrack->mTransforms.mTransforms[theFrameTime->mAnimFrameAfterInt];  // 后一帧的变换定义
 
-	theTransform->mTransX = FloatLerp(aTransBefore.mTransX, aTransAfter.mTransX, theFrameTime->mFraction);
-	theTransform->mTransY = FloatLerp(aTransBefore.mTransY, aTransAfter.mTransY, theFrameTime->mFraction);
-	theTransform->mSkewX = FloatLerp(aTransBefore.mSkewX, aTransAfter.mSkewX, theFrameTime->mFraction);
-	theTransform->mSkewY = FloatLerp(aTransBefore.mSkewY, aTransAfter.mSkewY, theFrameTime->mFraction);
-	theTransform->mScaleX = FloatLerp(aTransBefore.mScaleX, aTransAfter.mScaleX, theFrameTime->mFraction);
-	theTransform->mScaleY = FloatLerp(aTransBefore.mScaleY, aTransAfter.mScaleY, theFrameTime->mFraction);
-	theTransform->mAlpha = FloatLerp(aTransBefore.mAlpha, aTransAfter.mAlpha, theFrameTime->mFraction);
+	auto theFactor = theFrameTime->mFraction;
+	theTransform->mTransX = FloatLerp(aTransBefore.mTransX, aTransAfter.mTransX, theFactor);
+	theTransform->mTransY = FloatLerp(aTransBefore.mTransY, aTransAfter.mTransY, theFactor);
+	theTransform->mSkewX  = FloatLerp(aTransBefore.mSkewX,  aTransAfter.mSkewX,  theFactor);
+	theTransform->mSkewY  = FloatLerp(aTransBefore.mSkewY,  aTransAfter.mSkewY,  theFactor);
+	theTransform->mScaleX = FloatLerp(aTransBefore.mScaleX, aTransAfter.mScaleX, theFactor);
+	theTransform->mScaleY = FloatLerp(aTransBefore.mScaleY, aTransAfter.mScaleY, theFactor);
+	theTransform->mAlpha  = FloatLerp(aTransBefore.mAlpha,  aTransAfter.mAlpha,  theFactor);
 	theTransform->mImage = aTransBefore.mImage;
 	theTransform->mFont = aTransBefore.mFont;
 	theTransform->mText = aTransBefore.mText;
@@ -593,7 +600,7 @@ void Reanimation::MatrixFromTransform(const ReanimatorTransform& theTransform, S
 
 //0x472190
 void Reanimation::ReanimBltMatrix(Graphics* g, Image* theImage, SexyMatrix3& theTransform, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect)
-{
+{/*
 	if (!gSexyAppBase->Is3DAccelerated() &&  // 未开启 3D 硬件加速
 		TestBit(gReanimationParamArray[(int)mReanimationType].mReanimParamFlags, (int)ReanimFlags::REANIM_FAST_DRAW_IN_SW_MODE) &&  // 动画允许使用软件渲染
 		FloatApproxEqual(theTransform.m01, 0.0f) && FloatApproxEqual(theTransform.m10, 0.0f) &&  // 横向和纵向的倾斜值均为 0
@@ -622,8 +629,8 @@ void Reanimation::ReanimBltMatrix(Graphics* g, Image* theImage, SexyMatrix3& the
 		g->SetDrawMode(aOldMode);  // 还原绘制模式
 		g->SetClipRect(aOldClipRect);  // 还原裁剪矩形
 	}
-	else
-		TodBltMatrix(g, theImage, theTransform, theClipRect, theColor, theDrawMode, theSrcRect);
+	else*/
+	TodBltMatrix(g, theImage, theTransform, theClipRect, theColor, theDrawMode, theSrcRect);
 }
 
 //0x4723B0
@@ -704,7 +711,7 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	}
 	else
 	{
-		if (stricmp(mDefinition->mTracks.tracks[theTrackIndex].mName, "fullscreen"))  // 如果既没有图像也没有文本，且不是全屏轨道
+		if (strcasecmp(mDefinition->mTracks.tracks[theTrackIndex].mName, "fullscreen"))  // 如果既没有图像也没有文本，且不是全屏轨道
 			return false;  // 无需绘制
 		aFullScreen = true;  // 标记全屏轨道，后续会填充一个屏幕大小的矩形
 	}
@@ -721,7 +728,8 @@ bool Reanimation::DrawTrack(Graphics* g, int theTrackIndex, int theRenderGroup, 
 	if (aAtlasImage != nullptr)  // 如果存在图集（动画定义存在 atlas，轨道变换存在图像，轨道不存在覆写贴图）
 	{
 		Rect aSrcRect(aAtlasImage->mX, aAtlasImage->mY, aAtlasImage->mWidth, aAtlasImage->mHeight);
-		aImage = mDefinition->mReanimAtlas->mMemoryImage;
+		
+		aImage = mDefinition->mReanimAtlas->mMemoryImage.get();
 		if (mFilterEffect != FilterEffect::FILTER_EFFECT_NONE)  // 如果动画存在滤镜
 		{
 			aImage = FilterEffectGetImage(aImage, mFilterEffect);  // 取得滤镜后的贴图
@@ -892,7 +900,7 @@ void Reanimation::Draw(Graphics* g)
 int Reanimation::FindTrackIndex(const char* theTrackName)
 {
 	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
-		if (stricmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
+		if (strcasecmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
 			return aTrackIndex;
 
 	TodTrace("Can't find track '%s'", theTrackName);
@@ -1008,7 +1016,7 @@ void Reanimation::SetFramesForLayer(const char* theTrackName)
 bool Reanimation::TrackExists(const char* theTrackName)
 {
 	for (int aTrackIndex = 0; aTrackIndex < mDefinition->mTracks.count; aTrackIndex++)
-		if (stricmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
+		if (strcasecmp(mDefinition->mTracks.tracks[aTrackIndex].mName, theTrackName) == 0)
 			return true;
 	return false;
 }
@@ -1124,6 +1132,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	if (aReanimDef->mTracks.tracks != nullptr)  // 如果轨道指针不为空指针，说明定义数据已经加载
 		return;
 	ReanimationParams* aReanimParams = &gReanimationParamArray[(int)theReanimType];
+	std::string aFileName = "reanim/" + std::string(aReanimParams->mReanimFileName);
 	if (theIsPreloading)
 	{
 		if (gSexyAppBase->mShutdown || gAppCloseRequest())  // 预加载时若程序退出，则取消加载
@@ -1132,23 +1141,23 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	else  // < 以下部分仅内测版执行 >
 	{
 		if (gAppHasUsedCheatKeys())
-			TodTraceAndLog("Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
+			TodTraceAndLog("Cheater failed to preload '%s' on %s", aFileName.c_str(), gGetCurrentLevelName().c_str());
 		else
-			TodTraceAndLog("Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
+			TodTraceAndLog("Non-cheater failed to preload '%s' on %s", aFileName.c_str(), gGetCurrentLevelName().c_str());
 	}  // < 以上部分仅内测版执行 >
 
-	PerfTimer aTimer;
-	aTimer.Start();
+	auto aTimer = std::chrono::high_resolution_clock::now();
+
 	TodHesitationBracket aHesitation("Load Reanim '%s'", aReanimParams->mReanimFileName);
-	if (!ReanimationLoadDefinition(aReanimParams->mReanimFileName, aReanimDef))
+	if (!ReanimationLoadDefinition(aFileName, aReanimDef))
 	{
 		char aBuf[1024];
-		sprintf_s<1024U>(aBuf, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
+		sprintf(aBuf, "Failed to load reanim '%s'", aFileName.c_str());
 		TodErrorMessageBox(aBuf, "Error");
 	}
-	int aDuration = aTimer.GetDuration();
+	int aDuration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - aTimer).count();
 	if (aDuration > 100)  //（仅内测版）创建时间过长的报告
-		TodTraceAndLog("LOADING:Long reanim '%s' %d ms on %s", aReanimParams->mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
+		TodTraceAndLog("loading:  Long reanim '%s' %d ms on %s", aFileName.c_str(), aDuration, gGetCurrentLevelName().c_str());
 }
 
 //0x473750
@@ -1165,7 +1174,7 @@ void ReanimatorLoadDefinitions(ReanimationParams* theReanimationParamArray, int 
 	{
 		ReanimationParams* aReanimationParams = &theReanimationParamArray[i];
 		TOD_ASSERT(aReanimationParams->mReanimationType == i);
-		if (DefinitionIsCompiled(StringToSexyString(aReanimationParams->mReanimFileName)))
+		if (DefinitionIsCompiled("reanim/" + StringToSexyString(aReanimationParams->mReanimFileName)))
 			ReanimatorEnsureDefinitionLoaded(aReanimationParams->mReanimationType, true);
 	}
 }
@@ -1213,7 +1222,7 @@ void Reanimation::ShowOnlyTrack(const char* theTrackName)
 	for (int i = 0; i < mDefinition->mTracks.count; i++)
 	{
 		// 轨道名与指定名称相同时，设置轨道渲染分组为正常显示，否则设置轨道渲染分组为隐藏
-		mTrackInstances[i].mRenderGroup = stricmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0 ? RENDER_GROUP_NORMAL : RENDER_GROUP_HIDDEN;
+		mTrackInstances[i].mRenderGroup = strcasecmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0 ? RENDER_GROUP_NORMAL : RENDER_GROUP_HIDDEN;
 	}
 }
 
@@ -1222,7 +1231,7 @@ void Reanimation::ShowOnlyTrack(const char* theTrackName)
 void Reanimation::AssignRenderGroupToTrack(const char* theTrackName, int theRenderGroup)
 {
 	for (int i = 0; i < mDefinition->mTracks.count; i++)
-		if (stricmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
+		if (strcasecmp(mDefinition->mTracks.tracks[i].mName, theTrackName) == 0)
 		{
 			mTrackInstances[i].mRenderGroup = theRenderGroup;  // 仅设置首个名称恰好为 theTrackName 的轨道
 			return;
@@ -1237,7 +1246,7 @@ void Reanimation::AssignRenderGroupToPrefix(const char* theTrackName, int theRen
 	for (int i = 0; i < mDefinition->mTracks.count; i++)
 	{
 		const char* const aTrackName = mDefinition->mTracks.tracks[i].mName;
-		if (strlen(aTrackName) >= aPrifixLength && !strnicmp(aTrackName, theTrackName, aPrifixLength))  // 轨道名称长度必须不小于指定前缀长度
+		if (strlen(aTrackName) >= aPrifixLength && !strncasecmp(aTrackName, theTrackName, aPrifixLength))  // 轨道名称长度必须不小于指定前缀长度
 			mTrackInstances[i].mRenderGroup = theRenderGroup;
 	}
 }
@@ -1317,7 +1326,7 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform& theTransform, At
 			break;
 		
 		std::string aCode(aTags + 1, aTagEnds - aTags - 1);  // 取中括号内的文本
-		if (sscanf_s(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)  // 尝试将文本作为浮点数扫描，如果扫描成功则将结果作为动画速率
+		if (sscanf(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)  // 尝试将文本作为浮点数扫描，如果扫描成功则将结果作为动画速率
 		{
 			if (aCode.compare("hold") == 0)
 				theAttacherInfo.mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
@@ -1395,11 +1404,11 @@ void Reanimation::UpdateAttacherTrack(int theTrackIndex)
 	ReanimationType aReanimationType = ReanimationType::REANIM_NONE;
 	if (aAttacherInfo.mReanimName.size() != 0)  // 如果附属轨道设定了当前的附属动画名称
 	{
-		std::string aReanimFileName = StrFormat("reanim\\%s.reanim", aAttacherInfo.mReanimName.c_str());
+		std::string aReanimFileName = StrFormat("%s.reanim", aAttacherInfo.mReanimName.c_str());
 		for (unsigned int i = 0; i < gReanimationParamArraySize; i++)  // 在动画参数数组中寻找动画文件名对应的动画类型
 		{
 			ReanimationParams* aParams = &gReanimationParamArray[i];
-			if (stricmp(aReanimFileName.c_str(), aParams->mReanimFileName) == 0)
+			if (strcasecmp(aReanimFileName.c_str(), aParams->mReanimFileName) == 0)
 			{
 				aReanimationType = aParams->mReanimationType;
 				break;
