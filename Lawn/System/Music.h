@@ -104,7 +104,7 @@ public:
 	void						GameMusicPause(bool thePause);
 	void						PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolume);
 	void						MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusicFileToSync);
-	bool						TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName);
+	bool						TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName) const;
 	void						MusicTitleScreenInit();
 	/*inline*/ void				MakeSureMusicIsPlaying(MusicTune theMusicTune);
 	/*inline*/ void				FadeOut(int theFadeOutDuration);

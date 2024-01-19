@@ -70,8 +70,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     "DummySoundManager.h"
     "DummySoundInstance.h"
 
-    "BassMusicInterface.h"
-    "BassMusicInterface.cpp"
+    "SDLMusicInterface.h"
+    "SDLMusicInterface.cpp"
 
     "BassSoundInstance.h"
     "BassSoundInstance.cpp"

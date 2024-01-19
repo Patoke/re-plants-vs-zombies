@@ -23,7 +23,7 @@
 #include "misc/ResourceManager.h"
 #include "misc/Debug.h"
 
-#include "sound/BassMusicInterface.h"
+#include "sound/SDLMusicInterface.h"
 #include "sound/DummyMusicInterface.h"
 
 #include "paklib/PakInterface.h"
@@ -5570,7 +5570,7 @@ MusicInterface* SexyAppBase::CreateMusicInterface()
 	}
 	else {
 		printf("Bass dll currently loaded without HWnd, likely to cause problems on Windows\n");
-		return new BassMusicInterface(NULL);
+		return new SDLMusicInterface(NULL);
 	}
 }
 

@@ -1,6 +1,7 @@
-#include "BassMusicInterface.h"
+#include "SDLMusicInterface.h"
 #include "BassLoader.h"
 #include "paklib/PakInterface.h"
+#include <SDL_mixer.h>
 
 using namespace Sexy;
 
@@ -8,7 +9,7 @@ using namespace Sexy;
 
 #define BASS_CONFIG_BUFFER			0
 
-BassMusicInfo::BassMusicInfo()
+SDLMusicInfo::SDLMusicInfo()
 {
 	mVolume = 0.0;
 	mVolumeAdd = 0.0;
@@ -18,7 +19,7 @@ BassMusicInfo::BassMusicInfo()
 	mHStream = 0;
 }
 
-BassMusicInterface::BassMusicInterface(HWND theHWnd)
+SDLMusicInterface::SDLMusicInterface(HWND theHWnd)
 {
 	LoadBassDLL();
 
@@ -68,17 +69,27 @@ BassMusicInterface::BassMusicInterface(HWND theHWnd)
 	mMaxMusicVolume = 40;
 
 	mMusicLoadFlags = gBass->mVersion2 ? BASS_MUSIC_LOOP | BASS2_MUSIC_RAMP : BASS_MUSIC_LOOP;
+
+	Mix_Init(
+		MIX_INIT_FLAC	|
+		MIX_INIT_MOD	|
+		MIX_INIT_MP3	|
+		MIX_INIT_OGG	|
+		MIX_INIT_OPUS
+	);
 }
 
-BassMusicInterface::~BassMusicInterface()
+SDLMusicInterface::~SDLMusicInterface()
 {
 	gBass->BASS_Stop();
 	gBass->BASS_Free();
 
 	FreeBassDLL();
+
+	Mix_Quit();
 }
 
-bool BassMusicInterface::LoadMusic(int theSongId, const std::string& theFileName)
+bool SDLMusicInterface::LoadMusic(int theSongId, const std::string& theFileName)
 {
 	HMUSIC aHMusic = 0;
 	HSTREAM aStream = 0;
@@ -112,20 +123,20 @@ bool BassMusicInterface::LoadMusic(int theSongId, const std::string& theFileName
 	if (aHMusic == 0 && aStream == 0)
 		return false;
 
-	BassMusicInfo aMusicInfo;
+	SDLMusicInfo aMusicInfo;
 	aMusicInfo.mHMusic = aHMusic;
 	aMusicInfo.mHStream = aStream;
-	mMusicMap.insert(BassMusicMap::value_type(theSongId, aMusicInfo));
+	mMusicMap.insert(SDLMusicMap::value_type(theSongId, aMusicInfo));
 
 	return true;
 }
 
-void BassMusicInterface::PlayMusic(int theSongId, int theOffset, bool noLoop)
+void SDLMusicInterface::PlayMusic(int theSongId, int theOffset, bool noLoop)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		aMusicInfo->mVolume = aMusicInfo->mVolumeCap;
 		aMusicInfo->mVolumeAdd = 0.0;
 		aMusicInfo->mStopOnFade = noLoop;
@@ -149,37 +160,37 @@ void BassMusicInterface::PlayMusic(int theSongId, int theOffset, bool noLoop)
 	}
 }
 
-void BassMusicInterface::StopMusic(int theSongId)
+void SDLMusicInterface::StopMusic(int theSongId)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		aMusicInfo->mVolume = 0.0;
 		gBass->BASS_ChannelStop(aMusicInfo->GetHandle());
 	}
 }
 
-void BassMusicInterface::StopAllMusic()
+void SDLMusicInterface::StopAllMusic()
 {
-	BassMusicMap::iterator anItr = mMusicMap.begin();
+	SDLMusicMap::iterator anItr = mMusicMap.begin();
 	while (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		aMusicInfo->mVolume = 0.0;
 		gBass->BASS_ChannelStop(aMusicInfo->GetHandle());
 		++anItr;
 	}
 }
 
-void BassMusicInterface::UnloadMusic(int theSongId)
+void SDLMusicInterface::UnloadMusic(int theSongId)
 {
 	StopMusic(theSongId);
 
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		if (aMusicInfo->mHStream)
 			gBass->BASS_StreamFree(aMusicInfo->mHStream);
 		else if (aMusicInfo->mHMusic)
@@ -189,12 +200,12 @@ void BassMusicInterface::UnloadMusic(int theSongId)
 	}
 }
 
-void BassMusicInterface::UnloadAllMusic()
+void SDLMusicInterface::UnloadAllMusic()
 {
 	StopAllMusic();
-	for (BassMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
+	for (SDLMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		if (aMusicInfo->mHStream)
 			gBass->BASS_StreamFree(aMusicInfo->mHStream);
 		else if (aMusicInfo->mHMusic)
@@ -203,53 +214,53 @@ void BassMusicInterface::UnloadAllMusic()
 	mMusicMap.clear();
 }
 
-void BassMusicInterface::PauseMusic(int theSongId)
+void SDLMusicInterface::PauseMusic(int theSongId)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		gBass->BASS_ChannelPause(aMusicInfo->GetHandle());
 	}
 }
 
-void BassMusicInterface::PauseAllMusic()
+void SDLMusicInterface::PauseAllMusic()
 {
-	for (BassMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
+	for (SDLMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		if (gBass->BASS_ChannelIsActive(aMusicInfo->GetHandle()) == BASS_ACTIVE_PLAYING)
 			gBass->BASS_ChannelPause(aMusicInfo->GetHandle());
 	}
 }
 
-void BassMusicInterface::ResumeAllMusic()
+void SDLMusicInterface::ResumeAllMusic()
 {
-	for (BassMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
+	for (SDLMusicMap::iterator anItr = mMusicMap.begin(); anItr != mMusicMap.end(); ++anItr)
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		if (gBass->BASS_ChannelIsActive(aMusicInfo->GetHandle()) == BASS_ACTIVE_PAUSED)
 			gBass->BASS_ChannelResume(aMusicInfo->GetHandle());
 	}
 }
 
-void BassMusicInterface::ResumeMusic(int theSongId)
+void SDLMusicInterface::ResumeMusic(int theSongId)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		gBass->BASS_ChannelResume(aMusicInfo->GetHandle());
 	}
 }
 
-void BassMusicInterface::FadeIn(int theSongId, int theOffset, double theSpeed, bool noLoop)
+void SDLMusicInterface::FadeIn(int theSongId, int theOffset, double theSpeed, bool noLoop)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		aMusicInfo->mVolumeAdd = theSpeed;
 		aMusicInfo->mStopOnFade = noLoop;
@@ -276,12 +287,12 @@ void BassMusicInterface::FadeIn(int theSongId, int theOffset, double theSpeed, b
 	}
 }
 
-void BassMusicInterface::FadeOut(int theSongId, bool stopSong, double theSpeed)
+void SDLMusicInterface::FadeOut(int theSongId, bool stopSong, double theSpeed)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		if (aMusicInfo->mVolume != 0.0)
 		{
@@ -292,12 +303,12 @@ void BassMusicInterface::FadeOut(int theSongId, bool stopSong, double theSpeed)
 	}
 }
 
-void BassMusicInterface::FadeOutAll(bool stopSong, double theSpeed)
+void SDLMusicInterface::FadeOutAll(bool stopSong, double theSpeed)
 {
-	BassMusicMap::iterator anItr = mMusicMap.begin();
+	SDLMusicMap::iterator anItr = mMusicMap.begin();
 	while (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		aMusicInfo->mVolumeAdd = -theSpeed;
 		aMusicInfo->mStopOnFade = stopSong;
@@ -306,31 +317,31 @@ void BassMusicInterface::FadeOutAll(bool stopSong, double theSpeed)
 	}
 }
 
-void BassMusicInterface::SetVolume(double theVolume)
+void SDLMusicInterface::SetVolume(double theVolume)
 {
 	// int aVolume = (int) (theVolume * mMaxMusicVolume); // unused
 	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, (int)(theVolume * 10000));
 	gBass->BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int)(theVolume * 10000));
 }
 
-void BassMusicInterface::SetSongVolume(int theSongId, double theVolume)
+void SDLMusicInterface::SetSongVolume(int theSongId, double theVolume)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		aMusicInfo->mVolume = theVolume;
 		gBass->BASS_ChannelSetAttribute(aMusicInfo->GetHandle(), BASS_ATTRIB_VOL, (int)(aMusicInfo->mVolume));
 	}
 }
 
-void BassMusicInterface::SetSongMaxVolume(int theSongId, double theMaxVolume)
+void SDLMusicInterface::SetSongMaxVolume(int theSongId, double theMaxVolume)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		aMusicInfo->mVolumeCap = theMaxVolume;
 		aMusicInfo->mVolume = std::min(aMusicInfo->mVolume, theMaxVolume);
@@ -338,34 +349,34 @@ void BassMusicInterface::SetSongMaxVolume(int theSongId, double theMaxVolume)
 	}
 }
 
-bool BassMusicInterface::IsPlaying(int theSongId)
+bool SDLMusicInterface::IsPlaying(int theSongId)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		return gBass->BASS_ChannelIsActive(aMusicInfo->GetHandle()) == BASS_ACTIVE_PLAYING;
 	}
 
 	return false;
 }
 
-void BassMusicInterface::SetMusicAmplify(int theSongId, double theAmp)
+void SDLMusicInterface::SetMusicAmplify(int theSongId, double theAmp)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		gBass->BASS_MusicSetAmplify(aMusicInfo->GetHandle(), (int)(theAmp * 100));
 	}
 }
 
-void BassMusicInterface::Update()
+void SDLMusicInterface::Update()
 {
-	BassMusicMap::iterator anItr = mMusicMap.begin();
+	SDLMusicMap::iterator anItr = mMusicMap.begin();
 	while (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 
 		if (aMusicInfo->mVolumeAdd != 0.0)
 		{
@@ -396,12 +407,12 @@ void BassMusicInterface::Update()
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 // MODs are broken up into several orders or patterns. This returns the current order a song is on.
-int BassMusicInterface::GetMusicOrder(int theSongId)
+int SDLMusicInterface::GetMusicOrder(int theSongId)
 {
-	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	SDLMusicMap::iterator anItr = mMusicMap.find(theSongId);
 	if (anItr != mMusicMap.end())
 	{
-		BassMusicInfo* aMusicInfo = &anItr->second;
+		SDLMusicInfo* aMusicInfo = &anItr->second;
 		int aPosition = gBass->BASS_ChannelGetPosition(aMusicInfo->GetHandle(), BASS_POS_MUSIC_ORDER);
 		return aPosition;
 	}

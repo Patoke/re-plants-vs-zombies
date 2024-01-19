@@ -261,6 +261,8 @@ set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 set(SDL_TEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SDL2)
 
+include_directories(${SDL2_SOURCE_DIR}/include)
+
 FetchContent_Declare(
     SDL2_image
     GIT_REPOSITORY          https://github.com/libsdl-org/SDL_image.git
@@ -271,11 +273,21 @@ FetchContent_Declare(
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SDL2_image)
 
+FetchContent_Declare(
+    SDL2_mixer
+    GIT_REPOSITORY          https://github.com/libsdl-org/SDL_mixer.git
+    GIT_TAG                 release-2.6.3
+    OVERRIDE_FIND_PACKAGE
+)
+set(SDL2MIXER_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(SDL2_mixer)
+
 target_link_libraries(
     ${PROJECT_NAME} 
     PRIVATE 
     SDL2::SDL2-static 
-    SDL2_image::SDL2_image-static 
+    SDL2_image::SDL2_image-static
+    SDL2_mixer::SDL2_mixer-static
     zlibstatic
     glfw
 )
@@ -283,8 +295,8 @@ target_link_libraries(
 target_include_directories(
     ${PROJECT_NAME} 
     PRIVATE 
-    ${SDL2_SOURCE_DIR}/include 
     ${SDL2_image_SOURCE_DIR}/include
+    ${SDL2_mixer_SOURCE_DIR}/include
     ${zlib_SOURCE_DIR}
     ${glfw_SOURCE_DIR}/include
 )
