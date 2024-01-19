@@ -2930,7 +2930,8 @@ int Challenge::UpdateZombieSpawning()
 	if (mApp->IsWhackAZombieLevel())
 	{
 		WhackAZombieSpawning();
-		return 0;
+		//@Minerscale: Need to return truthy value to prevent normal spawning
+		return true;
 	}
 	else return
 		mApp->IsFinalBossLevel() ||

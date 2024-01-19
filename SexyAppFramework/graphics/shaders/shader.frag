@@ -31,14 +31,16 @@ vec4 premultiplyAlpha(vec4 c) {
     return vec4(c.w*c.xyz, c.w);
 }
 
+vec4 unpremultiplyAlpha(vec4 c) {
+    return vec4(c.w == 0 ? vec3(0.0f) : c.xyz/c.w, c.w);
+}
+
 vec4 textureBicubic(sampler2D samp, vec2 texCoords) {
+    vec2 texSize = textureSize(samp, 0);
+    vec2 invTexSize = 1.0 / texSize;
 
-   vec2 texSize = textureSize(samp, 0);
-   vec2 invTexSize = 1.0 / texSize;
-   
-   texCoords = texCoords * texSize - 0.5;
+    texCoords = texCoords * texSize - 0.5;
 
-   
     vec2 fxy = fract(texCoords);
     texCoords -= fxy;
 
@@ -63,19 +65,13 @@ vec4 textureBicubic(sampler2D samp, vec2 texCoords) {
     return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);
 }
 
-vec4 unpremultiplyAlpha(vec4 c) {
-    return vec4(c.w == 0 ? vec3(0.0f) : c.xyz/c.w, c.w);
-}
-
 void main() {
-    vec4 c = premultiplyAlpha(PushConstants.renderColor) * premultiplyAlpha(fragColor);
-
     vec4 tex;
 
     if (PushConstants.toFilter)
-        tex = textureBicubic(texSampler, fragTexCoord);
+        tex = unpremultiplyAlpha(textureBicubic(texSampler, fragTexCoord));
     else
-        tex = premultiplyAlpha(texture(texSampler, fragTexCoord));
+        tex = texture(texSampler, fragTexCoord);
 
-    outColor = unpremultiplyAlpha(c * tex);
+    outColor = fragColor * tex;
 }

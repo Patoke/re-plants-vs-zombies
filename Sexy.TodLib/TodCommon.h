@@ -112,8 +112,8 @@ void					TodDrawImageCelScaled(Graphics* g, Image* theImageStrip, int thePosX, i
 void					TodDrawImageCelScaledF(Graphics* g, Image* theImageStrip, float thePosX, float thePosY, int theCelCol, int theCelRow, float theScaleX, float theScaleY);
 void					TodDrawImageCelCenterScaledF(Graphics* g, Image* theImageStrip, float thePosX, float thePosY, int theCelCol, float theScaleX, float theScaleY);
 void					TodBltMatrix(Graphics* g, Image* theImage, const SexyMatrix3& theTransform, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect);
-void					TodMarkImageForSanding(Image* theImage);
-void					TodSandImageIfNeeded(Image* theImage);
+//void					TodMarkImageForSanding(Image* theImage);
+//void					TodSandImageIfNeeded(Image* theImage);
 void					FixPixelsOnAlphaEdgeForBlending(Image* theImage);
 //unsigned long			AverageNearByPixels(MemoryImage* theImage, unsigned long* thePixel, int x, int y);
 //void					Tod_SWTri_AddAllDrawTriFuncs();

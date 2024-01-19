@@ -34,16 +34,16 @@ void main() {
     fragTexCoord = vertex.zw;
     gl_Position  = vec4(vertex.xy, 0.0, 1.0);
 
-    uint c = PushConstants.colors[gl_VertexIndex];
-    vec4 outColor = vec4(
-        (c & 0xFF)/255.0,
-        (c >> 8 & 0xFF)/255.0,
-        (c >> 16 & 0xFF)/255.0,
-        (c >> 24)/255.0
-    );
-
-    if (is_color)
+    if (is_color) {
+        uint c = PushConstants.colors[gl_VertexIndex];
+        vec4 outColor = vec4(
+            (c >> 16 & 0xFF)/255.0,
+            (c >> 8 & 0xFF)/255.0,
+            (c & 0xFF)/255.0,
+            (c >> 24)/255.0
+        );
         fragColor = outColor;
-    else
-        fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    } else {
+        fragColor = PushConstants.renderColor;
+    }
 }

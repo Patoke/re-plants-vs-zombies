@@ -395,7 +395,7 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
 		// @Patoke: do we want this? if 3D acceleration is off then blending is messed up
 		if (!gSexyAppBase->Is3DAccelerated() && mDrawMode == Graphics::DRAWMODE_ADDITIVE)
 			gTodTriangleDrawAdditive = true;*/
-		TodSandImageIfNeeded(mImage);
+		//TodSandImageIfNeeded(mImage);
 
 		//unreachable();
 		/* FIXME
