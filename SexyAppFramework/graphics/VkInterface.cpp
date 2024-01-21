@@ -1589,6 +1589,9 @@ static void mouseButtonCallback(GLFWwindow*, int button, int action, int /*mods*
 }
 
 void keyCallback(GLFWwindow*, int key, int /*scancode*/, int action, int /*mods*/) {
+    if (key == GLFW_KEY_UNKNOWN)
+		return;
+
     auto code = keymap[key];
 
     if (action == GLFW_PRESS) {

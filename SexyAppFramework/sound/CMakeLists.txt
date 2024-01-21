@@ -74,7 +74,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     "SDLMusicInterface.cpp"
 
     "BassSoundInstance.h"
-    "BassSoundInstance.cpp"
+    "SDLSoundInstance.cpp"
 
     "BassSoundManager.h"
     "BassSoundManager.cpp"
