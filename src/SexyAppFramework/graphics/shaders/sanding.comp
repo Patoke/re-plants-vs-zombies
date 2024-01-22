@@ -1,0 +1,85 @@
+#version 450
+
+layout (local_size_x = 16, local_size_y = 16) in;
+layout (binding = 0, rgba8) uniform readonly image2D inputImage;
+layout (binding = 1, rgba8) uniform writeonly image2D outputImage;
+
+layout(push_constant) uniform constants {
+	bool sand;
+	bool premultiply;
+	bool already_premultiplied;
+} PushConstants;
+
+float lin_to_sRGB (float theLinearValue) {
+  return theLinearValue <= 0.0031308f
+       ? theLinearValue * 12.92f
+       : pow (theLinearValue, 1.0f/2.4f) * 1.055f - 0.055f;
+}
+float sRGB_to_lin (float thesRGBValue) {
+  return thesRGBValue <= 0.04045f
+       ? thesRGBValue / 12.92f
+       : pow ((thesRGBValue + 0.055f) / 1.055f, 2.4f);
+}
+
+vec3 lin_to_sRGB(vec3 c) {
+    return vec3(
+        lin_to_sRGB(c.r),
+        lin_to_sRGB(c.g),
+        lin_to_sRGB(c.b)
+    );
+}
+
+vec3 sRGB_to_lin(vec3 c) {
+    return vec3(
+        sRGB_to_lin(c.r),
+        sRGB_to_lin(c.g),
+        sRGB_to_lin(c.b)
+    );
+}
+
+vec3 AverageNearByPixels(ivec2 xy)
+{
+    vec4 averageColor = vec4(0);
+    uint aBitsCount = 0;
+
+    const vec2 imageSize = imageSize(inputImage);
+
+    for (int i = 0; i < 3; i++)
+    {
+    	for (int j = 0; j < 3; j++) {
+    		ivec2 idx = ivec2(j + xy.x, i + xy.y);
+    		// Are we inside the image?
+    		bool inside = (idx.x >= 0 && idx.y >= 0 && idx.x < imageSize.x && idx.y < imageSize.y);
+    		if (i != 1 && j != 1 && inside) {
+    			vec4 pixel = imageLoad(inputImage, idx);
+    			if (pixel.a != 0) {
+    				averageColor += vec4(lin_to_sRGB(sRGB_to_lin(pixel.rgb) / sRGB_to_lin(pixel.a)), pixel.a);
+    				aBitsCount++;
+    			}
+    		}
+    	}
+    }
+
+    if (aBitsCount == 0)
+        return vec3(0);
+
+    averageColor /= aBitsCount;
+
+    return lin_to_sRGB(sRGB_to_lin(averageColor.rgb) * sRGB_to_lin(averageColor.a));
+}
+
+void main() {
+	ivec2 idx = ivec2(gl_GlobalInvocationID.xy);
+
+	vec4 pixel = imageLoad(inputImage, idx);
+	vec4 outPixel;
+	if (pixel.a == 0) {
+		//outPixel = vec4(AverageNearByPixels(idx), 0);
+		//outPixel = vec4(0);
+		outPixel = pixel;
+	} else {
+		outPixel = pixel;
+	}
+
+	imageStore(outputImage, idx, outPixel);
+}
