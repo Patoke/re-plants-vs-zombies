@@ -1,0 +1,17 @@
+target_sources(${PROJECT_NAME} PRIVATE
+    "ButtonWidget.cpp"
+    "Checkbox.cpp"
+    "Dialog.cpp"
+    "DialogButton.cpp"
+    "EditWidget.cpp"
+    "HyperlinkWidget.cpp"
+    "Insets.cpp"
+    "ListWidget.cpp"
+    "ScrollbarWidget.cpp"
+    "ScrollbuttonWidget.cpp"
+    "Slider.cpp"
+    "TextWidget.cpp"
+    "Widget.cpp"
+    "WidgetContainer.cpp"
+    "WidgetManager.cpp"
+)

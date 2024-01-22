@@ -1,12 +1,25 @@
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    "$<$<CONFIG:Debug>:"
+        "_DEBUG;"
+    ">"
+    "$<$<CONFIG:Release>:"
+        "NDEBUG;"
+        "RELEASEFINAL;"
+    ">"
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    "${CMAKE_BINARY_DIR}/include"
+    "${CMAKE_SOURCE_DIR}/src"
+)
+
 target_sources(${PROJECT_NAME} PRIVATE
     main.cpp
     LawnApp.cpp
     Resources.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
-target_include_directories(${PROJECT_NAME} PRIVATE "SexyAppFramework") # SexyAppFramework
-
-add_subdirectory(SexyAppFramework)
-add_subdirectory(Sexy.TodLib)
-add_subdirectory(Lawn)
+add_subdirectory(framework)
+add_subdirectory(todlib)
+add_subdirectory(lawn)
+add_subdirectory(res)

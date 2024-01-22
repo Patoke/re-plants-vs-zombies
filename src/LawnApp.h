@@ -2,8 +2,8 @@
 #define __LAWNAPP_H__
 
 #include "ConstEnums.h"
-#include "SexyAppFramework/SexyApp.h"
-#include "Sexy.TodLib/TodFoley.h"
+#include "framework/SexyApp.h"
+#include "todlib/TodFoley.h"
 #include <chrono>
 
 class Board;

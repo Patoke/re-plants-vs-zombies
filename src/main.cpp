@@ -1,6 +1,6 @@
 #include "LawnApp.h"
 #include "Resources.h"
-#include "Sexy.TodLib/TodStringFile.h"
+#include "todlib/TodStringFile.h"
 using namespace Sexy;
 
 bool (*gAppCloseRequest)();				//[0x69E6A0]

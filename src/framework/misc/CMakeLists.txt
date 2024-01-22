@@ -1,0 +1,15 @@
+target_sources(${PROJECT_NAME} PRIVATE
+    "Buffer.cpp"
+    "Debug.cpp"
+    "DescParser.cpp"
+    "Flags.cpp"
+    "KeyCodes.cpp"
+    "MTRand.cpp"
+    "PropertiesParser.cpp"
+    "Ratio.cpp"
+    "ResourceManager.cpp"
+    "SexyMatrix.cpp"
+    "XMLParser.cpp"
+    "RegistryEmulator.cpp"
+    "fcaseopen.cpp"
+)
