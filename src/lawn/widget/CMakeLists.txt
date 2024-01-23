@@ -1,0 +1,19 @@
+target_sources(${PROJECT_NAME} PRIVATE
+	NewUserDialog.cpp
+	AlmanacDialog.cpp
+	SeedChooserScreen.cpp
+	ImitaterDialog.cpp
+	ContinueDialog.cpp
+	AwardScreen.cpp
+	GameButton.cpp
+	LawnDialog.cpp
+	GameSelector.cpp
+	StoreScreen.cpp
+	CreditScreen.cpp
+	AchievementsScreen.cpp
+	UserDialog.cpp
+	ChallengeScreen.cpp
+	NewOptionsDialog.cpp
+	CheatDialog.cpp
+	TitleScreen.cpp
+)

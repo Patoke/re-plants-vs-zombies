@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
+################################################################################
+# Target
+################################################################################
+set(CMAKE_CXX_STANDARD 23)
 project(PlantsVsZombies C CXX)
 
 ################################################################################
@@ -11,8 +15,6 @@ set(CMAKE_CONFIGURATION_TYPES
     CACHE STRING "List of supported configurations." FORCE
 )
 
-set(CMAKE_CXX_STANDARD 23)
-
 # @Patoke todo: probably add MSVC counterparts?
 if(MSVC)
     set(universal_compiler_flags "")
@@ -20,11 +22,10 @@ else()
     set(universal_compiler_flags "-fuse-ld=lld -Wno-unused-command-line-argument -march=native -fno-omit-frame-pointer -fstack-protector-all -fdiagnostics-color=always -g -pipe")
 
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        set(universal_compiler_flags "${universal_compiler_flags} -O3 -flto")
+        set(universal_compiler_flags "${universal_compiler_flags} -O3")
     else()
-        set(universal_compiler_flags "${universal_compiler_flags} -O0  -fsanitize=address,undefined")
+        set(universal_compiler_flags "${universal_compiler_flags} -O0 -fsanitize=address,undefined")
     endif()
-    #set(universal_compiler_flags "-fuse-ld=lld -fms-extensions -march=native -fdiagnostics-color=always -O3")
 endif()
 set(universal_cxxflags "${CMAKE_CXX_FLAGS} ${universal_compiler_flags}")
 set(universal_cflags   "${CMAKE_C_FLAGS} ${universal_compiler_flags}")
@@ -42,31 +43,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_RC_COMPILER_INIT windres)
 ENABLE_LANGUAGE(RC)
 
-################################################################################
-# Nuget packages function stub.
-################################################################################
-function(use_package TARGET PACKAGE VERSION)
-    message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
-endfunction()
-
-################################################################################
-# Common utils
-################################################################################
-include(CMake/Utils.cmake)
-
-################################################################################
-# Additional Global Settings(add specific info there)
-################################################################################
-include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
-
-################################################################################
-# Use solution folders feature
-################################################################################
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+add_executable(${PROJECT_NAME})
 
 ################################################################################
 # Sub-projects
 ################################################################################
-add_subdirectory(SexyAppFramework)
+add_subdirectory(src)
