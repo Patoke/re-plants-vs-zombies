@@ -14,7 +14,7 @@
 #include "Definition.h"
 #include <SDL2/SDL.h>
 #include "misc/fcaseopen.h"
-#include "zlib/zlib.h"
+#include "zlib.h"
 #include "paklib/PakInterface.h"
 //#include "misc/PerfTimer.h"
 #include "misc/XMLParser.h"

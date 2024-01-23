@@ -258,8 +258,8 @@ void transitionImageLayouts(VkCommandBuffer commandBuffer, std::vector<std::pair
         barrier.subresourceRange.baseArrayLayer = 0;
         barrier.subresourceRange.layerCount = 1;
 
-        auto srcAccess = accessMaskMap.find(image.first->layout)->second;
-        auto dstAccess = accessMaskMap.find(image.second)->second;
+        auto srcAccess = accessMaskMap[image.first->layout];
+        auto dstAccess = accessMaskMap[image.second];
 
         barrier.srcAccessMask = srcAccess.first;
         barrier.dstAccessMask = dstAccess.first;

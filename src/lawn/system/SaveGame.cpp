@@ -9,7 +9,7 @@
 #include "ConstEnums.h"
 #include "lawn/MessageWidget.h"
 #include "todlib/Trail.h"
-#include "zlib/zlib.h"
+#include "zlib.h"
 #include "todlib/Attachment.h"
 #include "todlib/Reanimator.h"
 #include "todlib/TodParticle.h"

@@ -21,7 +21,7 @@ BassMusicInfo::BassMusicInfo()
 bool BassMusicInterface::gBassLoaded = false;
 void BassMusicInterface::InitBass(void *theHWnd) {
 	if (!gBassLoaded) {
-		BASS_Init(1, 44100, 0, theHWnd, NULL);
+		BASS_Init(1, 44100, 0, (HWND)theHWnd, NULL);
 		BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
 
 		BASS_Start();

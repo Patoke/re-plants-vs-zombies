@@ -59,15 +59,15 @@ enum MusicDrumsState
 class MusicFileData
 {
 public:
-	unsigned int*				mFileData;
+	unsigned int* mFileData;
 };
 extern MusicFileData gMusicFileData[MusicFile::NUM_MUSIC_FILES];  //0x6A9ED0
 
 class Music
 {
 public:
-	LawnApp*					mApp;								//+0x0
-	Sexy::MusicInterface*		mMusicInterface;					//+0x4
+	LawnApp* mApp;								//+0x0
+	Sexy::MusicInterface* mMusicInterface;					//+0x4
 	MusicTune					mCurMusicTune;						//+0x8
 	MusicFile					mCurMusicFileMain;					//+0xC
 	MusicFile					mCurMusicFileDrums;					//+0x10
@@ -104,7 +104,7 @@ public:
 	void						GameMusicPause(bool thePause);
 	void						PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolume);
 	void						MusicResyncChannel(MusicFile theMusicFileToMatch, MusicFile theMusicFileToSync);
-	bool						TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName) const;
+	bool						TodLoadMusic(MusicFile theMusicFile, const std::string& theFileName);
 	void						MusicTitleScreenInit();
 	/*inline*/ void				MakeSureMusicIsPlaying(MusicTune theMusicTune);
 	/*inline*/ void				FadeOut(int theFadeOutDuration);
@@ -115,4 +115,3 @@ public:
 };
 
 #endif
-

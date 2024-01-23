@@ -80,7 +80,8 @@ FetchContent_MakeAvailable(glfw3)
 
 FetchContent_Declare(
     SDL2
-    URL                     https://www.libsdl.org/release/SDL2-2.28.5.tar.gz
+    GIT_REPOSITORY                     https://github.com/libsdl-org/SDL.git
+    GIT_TAG                            release-2.30.x
     OVERRIDE_FIND_PACKAGE
 )
 
@@ -130,5 +131,6 @@ target_include_directories(
     ${SDL2_image_SOURCE_DIR}/include
     ${SDL2_mixer_SOURCE_DIR}/include
     ${zlib_SOURCE_DIR}
+    ${zlib_BINARY_DIR}
     ${glfw_SOURCE_DIR}/include
 )
