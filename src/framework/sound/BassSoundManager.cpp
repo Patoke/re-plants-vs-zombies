@@ -1,13 +1,18 @@
 #include "BassSoundManager.h"
 #include "paklib/PakInterface.h"
 #include "sound/bass.h"
-#include "sound/BassLoader.h"
+#include <chrono>
 #include <cstring>
 #include <fcntl.h>
+#include <memory>
 #include <mutex>
 #include <optional>
 
-using namespace Sexy;
+namespace Sexy {
+
+BassSoundManager::BassSoundManager(void* theHWnd) {
+    BassMusicInterface::InitBass(theHWnd);
+}
 
 bool BassSoundManager::LoadCompatibleSound(unsigned int theSfxID, const std::string& theFilename)
 {
@@ -22,7 +27,7 @@ bool BassSoundManager::LoadCompatibleSound(unsigned int theSfxID, const std::str
     p_fread(aBuf, aLength, 1, aFile);
     p_fclose(aFile);
 
-    mSourceSounds[theSfxID] = std::make_optional(gBass->BASS_SampleLoad(true, aBuf, 0, aLength, 32, 0));
+    mSourceSounds[theSfxID] = std::make_optional(BASS_SampleLoad(true, aBuf, 0, aLength, MAX_CHANNELS, 0));
 
     free(aBuf);
     return true;
@@ -161,7 +166,7 @@ bool BassSoundManager::LoadAUSound(unsigned int theSfxID, const std::string& the
         if (aReadSize != aDataSize) return false;
     }
 
-    mSourceSounds[theSfxID] = std::make_optional(gBass->BASS_SampleLoad(true, aDestHeader, 0, aDestSize + 44, 32, 0));
+    mSourceSounds[theSfxID] = std::make_optional(BASS_SampleLoad(true, aDestHeader, 0, aDestSize + 44, MAX_CHANNELS, 0));
 
     return true;
 }
@@ -231,13 +236,68 @@ int BassSoundManager::LoadSound(const std::string& theFilename)
 
 void BassSoundManager::ReleaseSound(unsigned int theSfxID)
 {
-    if (mSourceSounds[theSfxID].has_value())
+    if (Exists(theSfxID))
     {
         gBass->BASS_SampleFree(mSourceSounds[theSfxID].value());
         mSourceSounds[theSfxID].reset();
         mSourceFileNames[theSfxID] = "";
     }
 }
+
+void BassSoundManager::ReleaseSounds() {
+    for (unsigned int i = 0; i < MAX_SOURCE_SOUNDS; ++i) {
+        ReleaseSound(i);
+    }
+}
+
+inline bool BassSoundManager::Exists(unsigned int theSfxID) {
+    return (theSfxID < MAX_SOURCE_SOUNDS) && (mSourceSounds[theSfxID].has_value());
+}
+
+void BassSoundManager::SetVolume(double theVolume) {
+    BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, (int) (theVolume * 10000));
+}
+
+double BassSoundManager::PanDBToNorm(int dbpan) {
+    auto sign = [] (int val) {
+        return (0 < val) - (val < 0);
+    };
+    return sign(dbpan)*pow(10.0, -abs(dbpan) / 2000.0);
+};
+
+void BassSoundManager::SetBaseVolumeAndPan(HSAMPLE theSample, std::optional<double> theBaseVolume, std::optional<int> theBasePan) {
+    BASS_SAMPLE info;
+    BASS_SampleGetInfo(theSample, &info);
+
+    if (theBasePan.has_value()) {
+        auto sign = [] (int val) {
+            return (0 < val) - (val < 0);
+        };
+        info.pan = sign(theBasePan.value())*pow(10.0, -abs(theBasePan.value()) / 2000.0);
+    }
+
+    if (theBaseVolume.has_value()) {
+        info.volume = theBaseVolume.value();
+    }
+
+    BASS_SampleSetInfo(theSample, &info);
+}
+
+bool BassSoundManager::SetBaseVolume(unsigned int theSfxID, double theBaseVolume) {
+    if (!Exists(theSfxID)) return false;
+
+    SetBaseVolumeAndPan(mSourceSounds[theSfxID].value(), theBaseVolume, {});
+
+    return true;
+}
+
+bool BassSoundManager::SetBasePan(unsigned int theSfxID, int theBasePan) {
+    if (!Exists(theSfxID)) return false;
+
+    SetBaseVolumeAndPan(mSourceSounds[theSfxID].value(), {}, theBasePan);
+
+    return true;
+} 
 
 int BassSoundManager::GetFreeSoundId()
 {
@@ -261,3 +321,52 @@ int BassSoundManager::GetNumSounds()
 
     return aCount;
 }
+
+void BassSoundManager::ReleaseFreeChannels()
+{
+    for (int i = 0; i < MAX_CHANNELS; i++)
+        if (mPlayingSounds[i].has_value() && mPlayingSounds[i].value()->IsReleased())
+        {
+            mPlayingSounds[i].reset();
+        }
+}
+
+int BassSoundManager::FindFreeChannel()
+{
+    static auto timer = std::chrono::high_resolution_clock::now();
+    auto now = std::chrono::high_resolution_clock::now();
+    if (now - timer > std::chrono::duration<double>(1))
+    {
+        ReleaseFreeChannels();
+        timer = now;
+    }
+
+    for (int i = 0; i < MAX_CHANNELS; i++)
+    {
+        if (!mPlayingSounds[i].has_value())
+            return i;
+
+        if (mPlayingSounds[i].value()->IsReleased())
+        {
+            mPlayingSounds[i].reset();
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
+SoundInstance* BassSoundManager::GetSoundInstance(unsigned int theSfxID)
+{
+    if (!Exists(theSfxID)) return nullptr;
+
+    int aFreeChannel = FindFreeChannel();
+    if (aFreeChannel < 0)
+        return nullptr;
+    
+    mPlayingSounds[aFreeChannel] = std::make_unique<BassSoundInstance>(mSourceSounds[theSfxID].value());
+
+    return mPlayingSounds[aFreeChannel].value().get();
+}
+
+} // Namespace Sexy

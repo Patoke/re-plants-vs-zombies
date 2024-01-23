@@ -40,6 +40,7 @@ public:
 	LPDIRECTSOUND			mDirectSound;
 	bool					mHaveFMod;
 
+	static bool gBassLoaded;
 	DSoundManager(HWND theHWnd, bool haveFMod);
 	virtual ~DSoundManager();
 
@@ -47,7 +48,7 @@ public:
 	
 	virtual bool			LoadSound(unsigned int theSfxID, const std::string& theFilename);
 	virtual int				LoadSound(const std::string& theFilename);
-	virtual void			ReleaseSound(unsigned int theSfxID);	
+	virtual void			ReleaseSound(unsigned int theSfxID);
 
 	virtual void			SetVolume(double theVolume);
 	virtual bool			SetBaseVolume(unsigned int theSfxID, double theBaseVolume);

@@ -540,6 +540,13 @@ void LawnApp::KillGameSelector()
 // GOTY @Patoke: 0x452CB0
 void LawnApp::ShowAwardScreen(AwardType theAwardType, bool theShowAchievements)
 {
+	{ // @ minerscale fix achievements screen showing up despite nothing to show.
+		if (ReportAchievement::mAchievementToShow && theShowAchievements) {
+			ReportAchievement::mAchievementToShow = false; // Shown achievement, don't show them again.
+		} else {
+			theShowAchievements = false; // Don't display achievements screen if there are no achievements to show
+		}
+	}
 	mGameScene = GameScenes::SCENE_AWARD;
 	mAwardScreen = new AwardScreen(this, theAwardType, theShowAchievements);
 	mAwardScreen->Resize(0, 0, mWidth, mHeight);

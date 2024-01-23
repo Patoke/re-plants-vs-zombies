@@ -115,7 +115,6 @@ void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 void createCommandBuffers();
 
 void copyBufferToImage(VkBuffer buffer, ::VkImage image, uint32_t width, uint32_t height);
-void transitionImageLayout(VkCommandBuffer commandBuffer, ::VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
 void createTextureImage(int width, int height, uint32_t const *imdata);
 
 QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
@@ -227,7 +226,7 @@ VkSampler textureSampler;
 std::array<VkSemaphore, MAX_FRAMES_IN_FLIGHT> imageAvailableSemaphores;
 std::array<VkSemaphore, MAX_FRAMES_IN_FLIGHT> renderFinishedSemaphores;
 std::array<VkFence, MAX_FRAMES_IN_FLIGHT> inFlightFences;
-VkFence imageFence;
+std::array<VkFence, NUM_IMAGE_SWAPS> imageFences;
 
 std::mutex renderMutex;
 
@@ -342,8 +341,10 @@ void createSyncObjects() {
         }
     }
 
-    if (vkCreateFence(device, &fenceInfo, nullptr, &imageFence) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create imageFence");
+    for (size_t i = 0; i < NUM_IMAGE_SWAPS; i++) {
+        if (vkCreateFence(device, &fenceInfo, nullptr, &imageFences[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create imageFence");
+        }
     }
 }
 
@@ -1160,13 +1161,14 @@ VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>
     return availableFormats[0];
 }
 
-VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
+VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& /*availablePresentModes*/) {
+    /*
     for (const auto& availablePresentMode : availablePresentModes) {
         if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
         //if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
             return availablePresentMode;
         }
-    }
+    }*/
 
     return VK_PRESENT_MODE_FIFO_KHR;
 }
@@ -1575,7 +1577,9 @@ VkInterface::~VkInterface() {
         vkDestroyFence(device, inFlightFences[i], nullptr);
     }
 
-    vkDestroyFence(device, imageFence, nullptr);
+    for (size_t i = 0; i < NUM_IMAGE_SWAPS; i++) {
+        vkDestroyFence(device, imageFences[i], nullptr);
+    }
 
     vkDestroyCommandPool(device, commandPool, nullptr);
 
