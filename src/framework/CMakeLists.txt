@@ -1,30 +1,4 @@
 ################################################################################
-# Utility functions
-################################################################################
-
-# https://stackoverflow.com/a/27206982
-# Creates C resources file from files in given directory
-function(create_resources dir output)
-    # Create empty output file
-    file(WRITE ${output} "")
-    # Collect input files
-    file(GLOB bins ${dir}/*)
-    # Iterate through input files
-    foreach(bin ${bins})
-        # Get short filename
-        string(REGEX MATCH "([^/]+)$" filename ${bin})
-        # Replace filename spaces & extension separator for C compatibility
-        string(REGEX REPLACE "\\.| |-" "_" filename ${filename})
-        # Read hex data from file
-        file(READ ${bin} filedata HEX)
-        # Convert hex data for C compatibility
-        string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
-        # Append data to output file
-        file(APPEND ${output} "extern const char _binary_${filename}[] = {${filedata}};\nextern const size_t _binary_${filename}_size = sizeof(_binary_${filename});\n\n")
-    endforeach()
-endfunction()
-
-################################################################################
 # Project definition
 ################################################################################
 
