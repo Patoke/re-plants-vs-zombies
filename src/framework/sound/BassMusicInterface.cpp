@@ -2,14 +2,14 @@
 #include "BassMusicInterface.h"
 #include "paklib/PakInterface.h"
 
-using namespace Sexy;
+namespace Sexy {
 
 #define BASS2_MUSIC_RAMP			BASS_MUSIC_RAMP	// normal ramping
 
 #define BASS_CONFIG_BUFFER			0
 
 BassMusicInfo::BassMusicInfo()
-{	
+{
 	mVolume = 0.0;
 	mVolumeAdd = 0.0;
 	mVolumeCap = 1.0;
@@ -18,14 +18,21 @@ BassMusicInfo::BassMusicInfo()
 	mHStream = 0;
 }
 
+bool BassMusicInterface::gBassLoaded = false;
+void BassMusicInterface::InitBass(void *theHWnd) {
+	if (!gBassLoaded) {
+		BASS_Init(1, 44100, 0, theHWnd, NULL);
+		BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
+
+		BASS_Start();
+
+		gBassLoaded = true;
+	}
+}
+
 BassMusicInterface::BassMusicInterface(void *theHWnd)
 {
-	BOOL success;(void)success;
-	
-	success = BASS_Init(1, 44100, 0, theHWnd, NULL);
-	BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
-
-	BASS_Start();
+	InitBass(theHWnd);
 
 	mMaxMusicVolume = 40;
 
@@ -300,7 +307,7 @@ void BassMusicInterface::SetVolume(double theVolume)
 {
 	// int aVolume = (int) (theVolume * mMaxMusicVolume); // unused
 	BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, (int) (theVolume * 10000));
-	BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int) (theVolume * 10000));
+	//BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, (int) (theVolume * 10000));
 }
 
 void BassMusicInterface::SetSongVolume(int theSongId, double theVolume)
@@ -397,3 +404,5 @@ int BassMusicInterface::GetMusicOrder(int theSongId)
 	}
 	return -1;
 }
+
+} // namespace Sexy

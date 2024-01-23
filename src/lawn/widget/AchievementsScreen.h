@@ -66,6 +66,8 @@ class ReportAchievement {
 public:
 	static void GiveAchievement(LawnApp* theApp, int theAchievement, bool theForceGive);
 	static void AchievementInitForPlayer(LawnApp* theApp);
+
+	static bool mAchievementToShow;
 };
 
 #endif

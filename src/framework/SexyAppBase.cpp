@@ -5065,21 +5065,17 @@ bool SexyAppBase::UpdateAppStep(bool* updated)
 			// update as many frames as needed before the next frame is to come
 			double delta_ticks = (std::chrono::high_resolution_clock::now() - timer)/frame_length;
 
-			bool skip_frame = false;
-			if (delta_ticks > 3) skip_frame = true;
-			do {
-				timer = timer + frame_length;
-				DoUpdateFrames();
-				delta_ticks -= 1;
-			} while (delta_ticks > 0);
-
-			if (!skip_frame) DrawDirtyStuff();
+			DoUpdateFrames();
+			timer += frame_length;
+			// Are we ahead of drawing?
+			if (delta_ticks < 1) DrawDirtyStuff();
 		}
 	} else if (mUpdateAppState == UPDATESTATE_PROCESS_2) {
 		mUpdateAppState = UPDATESTATE_PROCESS_DONE;
 		ProcessSafeDeleteList();
 
 		constexpr auto time_offset = std::chrono::duration<double>(0);
+		// Are we ahead of where the processing frames should be?
     	if (std::chrono::high_resolution_clock::now() - timer < time_offset) {
     		mSleepCount += 1;
     		std::this_thread::sleep_until(timer - time_offset);
@@ -5807,8 +5803,10 @@ void SexyAppBase::Init()
 		mSyncRefreshRate = mDemoBuffer.ReadByte();
 	}
 
-	if (mSoundManager == NULL)
-		mSoundManager = new BassSoundManager();
+	if (mSoundManager == NULL) {
+		// TODO add HWnd information to bass
+		mSoundManager = new BassSoundManager(NULL);
+	}
 
 	SetSfxVolume(mSfxVolume);
 	

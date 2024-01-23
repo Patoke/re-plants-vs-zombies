@@ -4,41 +4,55 @@
 #include "SoundManager.h"
 #include "BassSoundInstance.h"
 #include "sound/bass.h"
-#include <mutex>
+#include "BassMusicInterface.h"
+#include <array>
+#include <memory>
+
+namespace Sexy
+{
 
 class BassSoundManager : public Sexy::SoundManager
 {
 public:
-	virtual bool			Initialized() { return true; }
+    BassSoundManager(void *theHWnd);
+    static double           PanDBToNorm(int dbpan);
 
-	virtual bool			LoadSound(unsigned int, const std::string&);
-	virtual int				LoadSound(const std::string&);
-	virtual void			ReleaseSound(unsigned int);
+    virtual bool            Initialized() { return Sexy::BassMusicInterface::gBassLoaded; }
 
-	virtual void			SetVolume(double) {}
-	virtual bool			SetBaseVolume(unsigned int, double) { return 0; }
-	virtual bool			SetBasePan(unsigned int, int) { return 0; }	
+    virtual bool            LoadSound(unsigned int theSfxID, const std::string& theFilename);
+    virtual int             LoadSound(const std::string& theFilename);
+    virtual void            ReleaseSound(unsigned int theSfxID);
 
-	virtual Sexy::SoundInstance*	GetSoundInstance(unsigned int) { return &mSoundInstance; }
+    virtual void            SetVolume(double theVolume);
+    virtual bool            SetBaseVolume(unsigned int theSfxID, double theBaseVolume);
+    virtual bool            SetBasePan(unsigned int theSfxID, int theBasePan);
 
-	virtual void			ReleaseSounds() {}
-	virtual void			ReleaseChannels() {}
+    virtual Sexy::SoundInstance*    GetSoundInstance(unsigned int theSfxID);
 
-	virtual double			GetMasterVolume() { return 0; }
-	virtual void			SetMasterVolume(double) {}
+    virtual void            ReleaseSounds();
+    virtual void            ReleaseChannels() {}
 
-	virtual void			Flush() {}
-//	virtual void			SetCooperativeWindow(HWND theHWnd) {}
-	virtual void			StopAllSounds() {}
-	virtual int				GetFreeSoundId();
-	virtual int				GetNumSounds();
+    virtual double          GetMasterVolume() { return 1.0; }
+    virtual void            SetMasterVolume(double) {}
+
+    virtual void            Flush() {}
+//  virtual void            SetCooperativeWindow(HWND theHWnd) {}
+    virtual void            StopAllSounds() {}
+    virtual int             GetFreeSoundId();
+    virtual int             GetNumSounds();
 private:
-	BassSoundInstance 		mSoundInstance;
-	std::string             mSourceFileNames[MAX_SOURCE_SOUNDS];
-	std::optional<HSAMPLE> 	mSourceSounds[MAX_SOURCE_SOUNDS];
+    std::array<std::optional<std::unique_ptr<BassSoundInstance>>, MAX_CHANNELS> mPlayingSounds;
+    std::array<std::string, MAX_SOURCE_SOUNDS>                                  mSourceFileNames;
+    std::array<std::optional<HSAMPLE>, MAX_SOURCE_SOUNDS>                       mSourceSounds;
 
-	bool LoadCompatibleSound(unsigned int theSfxID, const std::string& theFilename);
-	bool LoadAUSound(unsigned int theSfxID, const std::string& theFilename);
+    bool LoadCompatibleSound(unsigned int theSfxID, const std::string& theFilename);
+    bool LoadAUSound(unsigned int theSfxID, const std::string& theFilename);
+    inline bool Exists(unsigned int theSfxID);
+    void SetBaseVolumeAndPan(HSAMPLE theSample, std::optional<double> theBaseVolume, std::optional<int> theBasePan);
+    int FindFreeChannel();
+    void ReleaseFreeChannels();
 };
+
+}
 
 #endif // __BASS_SOUND_MANAGER_H__

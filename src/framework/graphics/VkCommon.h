@@ -23,7 +23,7 @@ extern VkPipeline computePipeline;
 extern VkPipeline graphicsPipelineAdditive;
 extern std::array<VkCommandBuffer, NUM_IMAGE_SWAPS> imageCommandBuffers;
 extern VkRenderPass imagePass;
-extern VkFence imageFence;
+extern std::array<VkFence, NUM_IMAGE_SWAPS> imageFences;
 
 extern VkDescriptorPool descriptorPool;
 extern VkDescriptorSetLayout descriptorSetLayout;
