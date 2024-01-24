@@ -120,10 +120,9 @@ vec4 textureBilinear(sampler2D samp, vec2 uv) {
 void main() {
     vec4 tex;
 
-    /*
     if (PushConstants.toFilter)
         tex = textureBilinear(texSampler, fragTexCoord);
-    else*/
+    else
         tex = texture(texSampler, fragTexCoord);
 
     outColor = fragColor * tex;
