@@ -1,3 +1,9 @@
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	set(GLSLC_FLAGS -g -O0)
+else()
+    set(GLSLC_FLAGS -O)
+endif()
+
 set(SHADER_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(SHADER_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/shaders)
 file(GLOB SHADERS
@@ -21,7 +27,7 @@ foreach(SHADER ${SHADERS})
     get_filename_component(FILENAME ${SHADER} NAME)
     add_custom_command(
         OUTPUT ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
-        COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${SHADER} -o ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
+        COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${SHADER} -o ${SHADER_OUTPUT_DIR}/${FILENAME}.spv ${GLSLC_FLAGS}
         COMMENT "Compiling ${FILENAME}"
         DEPENDS ${SHADER})
     add_custom_command(
