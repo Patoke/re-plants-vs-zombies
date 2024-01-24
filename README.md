@@ -17,22 +17,22 @@ To play the game using this project you need to have access to the original game
 
 ## Roadmap
 
-#### Currently focused on
-- [x] Add x64 support for the base game **(Partial)**
-- [ ] Replace the old renderer backend for GLFW **(WIP)**
-- [ ] Replace all Windows only code for cross-platform GLFW counterparts **(WIP)**
+#### ~~Currently focused on~~ Done!
+- [x] Add x64 support for the base game **(game.pak Support left to implement)**
+- [x] Replace the old renderer backend for GLFW **Only a couple bugs left**
+- [x] Replace all Windows only code for cross-platform GLFW counterparts
 
 #### Left for when we have a working x64 build using GLFW
 - [ ] Add all functionality from the GOTY version of the game
-  - [x] Achievements **(Partial)**
-  - [ ] Zombatar
+- [x] Achievements **(Partial)**
+- [ ] Zombatar
 
 #### Possible future features
 - [ ] Create an easy to use modding API for the game
-  - [ ] Parse zombies from files
-  - [ ] Parse plants from files
-  - [ ] Parse maps from files
-  - [ ] Add scripting for custom sequences
+- [ ] Parse zombies from files
+- [ ] Parse plants from files
+- [ ] Parse maps from files
+- [ ] Add scripting for custom sequences
 
 ## Installation
 
