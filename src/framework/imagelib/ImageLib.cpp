@@ -1,3 +1,4 @@
+#include "misc/fcaseopen.h"
 #include <limits>
 #include <memory>
 #define XMD_H
@@ -8,30 +9,25 @@
 #include <SDL_image.h>
 
 #include <math.h>
-#include "paklib/PakInterface.h"
-#include "Common.h"
-
 
 using namespace ImageLib;
 
-
 std::unique_ptr<Image> GetImageWithSDL(const std::string& theFileName)
 {
-	auto fp = fopen(theFileName.c_str(), "rb");
-	if (fp == NULL)
-		return NULL;
+	std::string corrected_path = casepath(theFileName.c_str());
+	if (corrected_path == "")
+		return nullptr;
 
-	SDL_Surface* aSurface = IMG_Load(theFileName.c_str());
-	fclose(fp);
+	SDL_Surface* aSurface = IMG_Load(corrected_path.c_str());
 	
-	if (aSurface == NULL)
-		return NULL;
+	if (!aSurface)
+		return nullptr;
 
 	auto aSurface32 = SDL_ConvertSurfaceFormat(aSurface, SDL_PIXELFORMAT_ARGB8888, 0);
 	SDL_FreeSurface(aSurface);
 
-	if (aSurface32 == NULL)
-		return NULL;
+	if (!aSurface32)
+		return nullptr;
 
 	auto anImage = std::make_unique<Image>(aSurface32->w, aSurface32->h);
 
@@ -42,10 +38,8 @@ std::unique_ptr<Image> GetImageWithSDL(const std::string& theFileName)
 
 	SDL_FreeSurface(aSurface32);
 
-	return std::move(anImage);
+	return anImage;
 }
-
-
 
 bool ImageLib::WriteJPEGImage(const std::string& theFileName, Image* theImage)
 {
@@ -286,23 +280,22 @@ std::unique_ptr<Image> ImageLib::GetImage(const std::string& theFilename, bool l
 
 	std::unique_ptr<Image> anImage = nullptr;
 
-	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".tga") == 0) || (anExt.length() == 0)))
+	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".tga") == 0) || (anExt.length() == 0)))
 		anImage = GetImageWithSDL(aFilename + ".tga");
 
-	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".jpg") == 0) || (anExt.length() == 0)))
+	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".jpg") == 0) || (anExt.length() == 0)))
 		anImage = GetImageWithSDL(aFilename + ".jpg");
 
-	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".png") == 0) || (anExt.length() == 0)))
+	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".png") == 0) || (anExt.length() == 0)))
 		anImage = GetImageWithSDL(aFilename + ".png");
 
-	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".gif") == 0) || (anExt.length() == 0)))
+	if ((anImage == NULL) && ((strcasecmp(anExt.c_str(), ".gif") == 0) || (anExt.length() == 0)))
 		anImage = GetImageWithSDL(aFilename + ".gif");
 
-	if ((anImage == NULL) && (stricmp(anExt.c_str(), ".j2k") == 0))
+	if ((anImage == NULL) && (strcasecmp(anExt.c_str(), ".j2k") == 0))
 		anImage = GetImageWithSDL(aFilename + ".j2k");
-	if ((anImage == NULL) && (stricmp(anExt.c_str(), ".jp2") == 0))
+	if ((anImage == NULL) && (strcasecmp(anExt.c_str(), ".jp2") == 0))
 		anImage = GetImageWithSDL(aFilename + ".jp2");
-
 
 	// Check for alpha images
 	std::unique_ptr<Image> anAlphaImage = NULL;

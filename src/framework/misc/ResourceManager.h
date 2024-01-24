@@ -69,7 +69,7 @@ public: // @Patoke todo: revert to protected
 		bool mMinimizeSubdivisions;
 		int mRows;
 		int mCols;
-		unsigned long mAlphaColor;
+		uint32_t mAlphaColor;
 		AnimInfo mAnimInfo;
 
 		ImageRes() { mType = ResType_Image; }

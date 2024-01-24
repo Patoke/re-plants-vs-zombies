@@ -535,7 +535,7 @@ uint DefinitionCalcHash(DefMap* theDefMap)
 {
     // Uninitialised!!
     TodList<DefMap*> aProgressMaps = TodList<DefMap*>();
-    uint aResult = DefinitionCalcHashDefMap(crc32(0L, (Bytef*)Z_NULL, NULL) + 1, theDefMap, aProgressMaps);
+    uint aResult = DefinitionCalcHashDefMap(crc32(0L, (Bytef*)Z_NULL, 0) + 1, theDefMap, aProgressMaps);
 
     // TodList destructor is called upon it going out of scope.
     return aResult;
@@ -580,7 +580,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
 
     p_fseek(pFile, 0, SEEK_END);  // 将读取位置的指针移动至文件末尾
     size_t aCompressedSize = p_ftell(pFile);  // 此时获取到的偏移量即为整个文件的大小
-    p_fseek(pFile, 0, SEEK_SET);  // 再把读取位置的指针移回文件开头
+    p_fseek(pFile, 0, SEEK_SET);  // 再把读取位置的指针移回文件开头but hwen  Igo
     
     void* aCompressedBuffer = calloc(aCompressedSize, 1);
     // 读取文件，并判断实际读取的大小是否为完整的文件大小，若不等则判断为读取失败
@@ -1445,6 +1445,7 @@ void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
         {
         case DefFieldType::DT_STRING:
             // @Patoke todo: removed this, caused a heap problem when closing the game, add back properly (causes memory leak)
+            // @Minerscale done: The memory issues were caused becasuse the code was actually broken lol. Works great now.
             if (**(char**)aVar != '\0')
                 free(*(char**)aVar);  // 释放字符数组
             *(char**)aVar = nullptr;

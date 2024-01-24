@@ -2,7 +2,7 @@
 #define __BASS_SOUND_INSTANCE_H__
 
 #include "SoundInstance.h"
-#include "bass.h"
+#include <bass.h>
 
 namespace Sexy {
 

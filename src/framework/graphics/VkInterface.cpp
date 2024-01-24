@@ -33,7 +33,7 @@ extern "C"
 const char* __asan_default_options() { return "detect_leaks=0"; }
 
 #define DECLARE_SHADER(NAME)\
-    extern const char NAME [];\
+    extern const uint8_t NAME [];\
     extern const size_t NAME ## _size;
 
 #define CREATE_SHADER_MODULE(NAME) createShaderModule(NAME, NAME ## _size)
@@ -44,7 +44,7 @@ DECLARE_SHADER(_binary_shader_vert_spv)
 
 namespace Vk {
 
-const int MAX_FRAMES_IN_FLIGHT = 2;
+const int MAX_FRAMES_IN_FLIGHT = 3;
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -122,7 +122,7 @@ QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 void createCommandPool();
 void createRenderPass();
 
-VkShaderModule createShaderModule(const char *code, const size_t length);
+VkShaderModule createShaderModule(const uint8_t *code, const size_t length);
 
 void createComputePipeline();
 void createGraphicsPipelines();
@@ -894,7 +894,7 @@ void createRenderPass() {
     }
 }
 
-VkShaderModule createShaderModule(const char *code, const size_t length) {
+VkShaderModule createShaderModule(const uint8_t *code, const size_t length) {
     VkShaderModuleCreateInfo createInfo{};
 
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

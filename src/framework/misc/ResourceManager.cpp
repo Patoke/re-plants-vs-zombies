@@ -719,6 +719,7 @@ bool ResourceManager::DoLoadImage(ImageRes *theRes)
 	static bool has_shown = false;
 	if (!has_shown) {
 		printf("warning:  ResourceManager::DoLoadImage is probably full of bugs\n");
+		printf("          Actually, DoLoadImage has no support for AlphaImage and AlphaGridImage\n");
 		has_shown = true;
 	}
 

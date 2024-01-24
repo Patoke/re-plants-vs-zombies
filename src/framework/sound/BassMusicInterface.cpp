@@ -19,7 +19,7 @@ BassMusicInfo::BassMusicInfo()
 }
 
 bool BassMusicInterface::gBassLoaded = false;
-void BassMusicInterface::InitBass(void *theHWnd) {
+void BassMusicInterface::InitBass(HWND theHWnd) {
 	if (!gBassLoaded) {
 		BASS_Init(1, 44100, 0, (HWND)theHWnd, NULL);
 		BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);	
@@ -30,7 +30,7 @@ void BassMusicInterface::InitBass(void *theHWnd) {
 	}
 }
 
-BassMusicInterface::BassMusicInterface(void *theHWnd)
+BassMusicInterface::BassMusicInterface(HWND theHWnd)
 {
 	InitBass(theHWnd);
 

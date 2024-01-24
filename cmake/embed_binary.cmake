@@ -18,4 +18,4 @@ if(filedata STREQUAL "")
 endif()
 # Convert hex data for C compatibility
 string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
-file(WRITE ${output} "extern const char _binary_${filename}[] = {${filedata}};\nextern const size_t _binary_${filename}_size = sizeof(_binary_${filename});\n\n")
+file(WRITE ${output} "#include<cstdint>\n#include <stddef.h>\nextern const uint8_t _binary_${filename}[] = {${filedata}};\nextern const size_t _binary_${filename}_size = sizeof(_binary_${filename});\n\n")

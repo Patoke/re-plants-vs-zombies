@@ -6,6 +6,8 @@
 #include "TriVertex.h"
 #include "misc/SexyMatrix.h"
 
+// TODO: remove this argument when 0.9.9.9 drops
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_transform_2d.hpp>
 
 #include <chrono>
@@ -471,20 +473,20 @@ void VkImage::BeginDraw(Image* theImage, int theDrawMode) {
     static VkImage* thisCachedImage = nullptr;
 
     bool otherCacheMiss = false;
-    bool otherLayoutSuboptimal = false;
+    //bool otherLayoutSuboptimal = false;
     VkImage *otherImage = nullptr;
 
     otherImage = dynamic_cast<VkImage*>(theImage);
     otherCacheMiss = (otherImage != otherCachedImage);
     otherCachedImage = otherImage;
-    otherLayoutSuboptimal = (otherImage->layout != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    //otherLayoutSuboptimal = (otherImage->layout != VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     bool thisCacheMiss = (this != thisCachedImage);
     bool drawModeMiss = (theDrawMode != cachedDrawMode);
     cachedDrawMode = theDrawMode;
     thisCachedImage = this;
 
-    bool thisLayoutSuboptimal =  (layout != VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    //bool thisLayoutSuboptimal =  (layout != VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
     beginCommandBuffer();
 
@@ -508,6 +510,7 @@ void VkImage::BeginDraw(Image* theImage, int theDrawMode) {
     if (thisCacheMiss || otherCacheMiss)
         endRenderPass();
 
+    /*
     if (thisLayoutSuboptimal || otherLayoutSuboptimal) {
         std::vector<std::pair<VkImage*, VkImageLayout>> transitions;
 
@@ -515,9 +518,16 @@ void VkImage::BeginDraw(Image* theImage, int theDrawMode) {
         if (otherLayoutSuboptimal) transitions.push_back({otherImage, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
 
         transitionImageLayouts(imageCommandBuffers[imageBufferIdx], transitions);
-    }
+    }*/
 
     if (!inRenderpass) {
+        // Memory barriers prevent out of order frames, we always need them.
+        std::vector<std::pair<VkImage*, VkImageLayout>> transitions;
+        transitions.push_back({this, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL});
+        transitions.push_back({otherImage, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
+
+        transitionImageLayouts(imageCommandBuffers[imageBufferIdx], transitions);
+
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = imagePass;

@@ -2002,11 +2002,7 @@ void Board::FadeOutLevel()
 
 void Board::DisplayAdvice(const SexyString& theAdvice, MessageStyle theMessageStyle, AdviceType theHelpIndex)
 {
-	if (this == nullptr)
-		return;
-
-	if (theHelpIndex != AdviceType::ADVICE_NONE)
-	{
+	if (theHelpIndex != AdviceType::ADVICE_NONE) {
 		if (mHelpDisplayed[theHelpIndex])
 			return;
 

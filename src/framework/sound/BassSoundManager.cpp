@@ -1,6 +1,6 @@
 #include "BassSoundManager.h"
 #include "paklib/PakInterface.h"
-#include "sound/bass.h"
+#include <bass.h>
 #include <chrono>
 #include <cstring>
 #include <fcntl.h>
