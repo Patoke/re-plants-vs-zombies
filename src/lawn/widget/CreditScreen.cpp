@@ -13,7 +13,6 @@
 #include "widget/Dialog.h"
 #include "todlib/EffectSystem.h"
 #include "todlib/TodStringFile.h"
-#include <bits/chrono.h>
 #include <chrono>
 
 static CreditsTiming gCreditsTiming[] = {  //0x6A1AD8

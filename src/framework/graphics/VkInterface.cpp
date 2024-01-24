@@ -33,11 +33,10 @@ extern "C"
 const char* __asan_default_options() { return "detect_leaks=0"; }
 
 #define DECLARE_SHADER(NAME)\
-    extern const char NAME ## _start[];\
-    extern const char NAME ## _end[];
+    extern const uint8_t NAME [];\
+    extern const size_t NAME ## _size;
 
-#define BLOB_LENGTH(NAME) (NAME ## _end - NAME ## _start)
-#define CREATE_SHADER_MODULE(NAME) createShaderModule(NAME ## _start, BLOB_LENGTH(NAME))
+#define CREATE_SHADER_MODULE(NAME) createShaderModule(NAME, NAME ## _size)
 
 DECLARE_SHADER(_binary_sanding_comp_spv)
 DECLARE_SHADER(_binary_shader_frag_spv)
@@ -45,7 +44,7 @@ DECLARE_SHADER(_binary_shader_vert_spv)
 
 namespace Vk {
 
-const int MAX_FRAMES_IN_FLIGHT = 2;
+const int MAX_FRAMES_IN_FLIGHT = 3;
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -123,7 +122,7 @@ QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 void createCommandPool();
 void createRenderPass();
 
-VkShaderModule createShaderModule(const char *code, const size_t length);
+VkShaderModule createShaderModule(const uint8_t *code, const size_t length);
 
 void createComputePipeline();
 void createGraphicsPipelines();
@@ -895,7 +894,7 @@ void createRenderPass() {
     }
 }
 
-VkShaderModule createShaderModule(const char *code, const size_t length) {
+VkShaderModule createShaderModule(const uint8_t *code, const size_t length) {
     VkShaderModuleCreateInfo createInfo{};
 
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -1728,6 +1727,9 @@ static void mouseButtonCallback(GLFWwindow*, int button, int action, int /*mods*
 }
 
 void keyCallback(GLFWwindow*, int key, int /*scancode*/, int action, int /*mods*/) {
+    if (key == GLFW_KEY_UNKNOWN)
+		return;
+
     auto code = keymap[key];
 
     if (action == GLFW_PRESS) {
@@ -1756,7 +1758,7 @@ void initGLFW(int width, int height, VkInterface* userPtr) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(width, height, "Plandts Game", /*glfwGetPrimaryMonitor()*/nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Plants Vs Zombies", /*glfwGetPrimaryMonitor()*/nullptr, nullptr);
     glfwSetWindowUserPointer(window, userPtr);
     //glfwSetWindowAspectRatio(window, 4, 3);
 

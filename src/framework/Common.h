@@ -9,13 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cstdint>
-#undef _WIN32_WINNT
-#undef WIN32_LEAN_AND_MEAN
-
-#define WIN32_LEAN_AND_MEAN
-#define _WIN32_WINNT 0x0500
-#undef _UNICODE
-#undef UNICODE
 
 #include <mutex>
 #include <optional>
@@ -31,8 +24,10 @@
 #include <cstdlib>
 
 // Define unreachable()
-#ifdef MSVC
+#ifdef _MSC_VER
 #define unreachable std::unreachable
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
 #else
 #define unreachable __builtin_unreachable
 #endif
@@ -71,11 +66,18 @@ typedef uint16_t       ushort;
 typedef uint32_t       uint;
 typedef unsigned long  ulong;
 
+#ifndef _MSC_VER
 typedef unsigned char  BYTE;
 typedef uint16_t 	   WORD;
 typedef unsigned int   DWORD;
 typedef int            LONG;
 typedef unsigned int   UINT;
+#else
+#define NOMINMAX 1
+#include <intsafe.h>
+#endif
+
+
 
 typedef std::map<std::string, std::string>		DefinesMap;
 typedef std::map<std::wstring, std::wstring>	WStringWStringMap;

@@ -2,7 +2,7 @@
 #define __MUSIC_H__
 
 #include <string>
-#include "framework/sound/bass.h"
+#include <bass.h>
 
 class LawnApp;
 namespace Sexy
@@ -59,15 +59,15 @@ enum MusicDrumsState
 class MusicFileData
 {
 public:
-	unsigned int*				mFileData;
+	unsigned int* mFileData;
 };
 extern MusicFileData gMusicFileData[MusicFile::NUM_MUSIC_FILES];  //0x6A9ED0
 
 class Music
 {
 public:
-	LawnApp*					mApp;								//+0x0
-	Sexy::MusicInterface*		mMusicInterface;					//+0x4
+	LawnApp* mApp;								//+0x0
+	Sexy::MusicInterface* mMusicInterface;					//+0x4
 	MusicTune					mCurMusicTune;						//+0x8
 	MusicFile					mCurMusicFileMain;					//+0xC
 	MusicFile					mCurMusicFileDrums;					//+0x10
@@ -115,4 +115,3 @@ public:
 };
 
 #endif
-

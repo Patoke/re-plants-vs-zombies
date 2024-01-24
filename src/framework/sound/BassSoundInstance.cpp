@@ -1,6 +1,6 @@
 #include "BassSoundInstance.h"
 #include "BassSoundManager.h"
-#include "sound/bass.h"
+#include <bass.h>
 
 namespace Sexy {
 

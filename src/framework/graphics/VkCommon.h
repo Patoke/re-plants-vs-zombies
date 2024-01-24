@@ -11,7 +11,7 @@ extern VkDevice device;
 
 class VkImage;
 
-constexpr int NUM_IMAGE_SWAPS = 2;
+constexpr int NUM_IMAGE_SWAPS = 3;
 
 constexpr VkFormat pixelFormat = VK_FORMAT_B8G8R8A8_UNORM;
 

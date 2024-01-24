@@ -3,8 +3,5 @@
 cmake --build build -j6
 if [ $? -eq 0 ]; then
 	cp build/PlantsVsZombies tools/run/PlantsVsZombies
+	cp build/libbass.so tools/run/libbass.so
 fi
-
-compdb -p build/ list > compile_commands.json
-
-#cp ./build/SexyAppFramework.exe /home/aaron/.steam/steam/steamapps/common/Plants\ Vs\ Zombies/PlantsVsZombies.exe

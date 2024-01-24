@@ -16,23 +16,23 @@ file(GLOB SHADERS
 
 set(SHADER_DEPENDS "")
 
-foreach(SHADER IN LISTS SHADERS)
+make_directory(${SHADER_OUTPUT_DIR})
+foreach(SHADER ${SHADERS})
     get_filename_component(FILENAME ${SHADER} NAME)
-    add_custom_command(OUTPUT ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
-        COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${SHADER} -o ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
-        DEPENDS ${SHADER}
-        COMMENT "Compiling ${FILENAME}")
-    file(RELATIVE_PATH rel ${SHADER_OUTPUT_DIR} ${SHADER_OUTPUT_DIR}/${FILENAME}.spv)
-    string( MAKE_C_IDENTIFIER ${rel} input_identifier )
     add_custom_command(
-        OUTPUT ${SHADER_OUTPUT_DIR}/${input_identifier}.o
-        COMMAND ${CMAKE_LINKER} -r --format=binary -m elf_amd64 -o ${input_identifier}.o -z noexecstack ${FILENAME}.spv
-        DEPENDS ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
-        WORKING_DIRECTORY ${SHADER_OUTPUT_DIR}
-    )
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SHADER_OUTPUT_DIR}/${input_identifier}.o)
+        OUTPUT ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
+        COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${SHADER} -o ${SHADER_OUTPUT_DIR}/${FILENAME}.spv
+        COMMENT "Compiling ${FILENAME}"
+        DEPENDS ${SHADER})
+    add_custom_command(
+        OUTPUT ${SHADER_OUTPUT_DIR}/${FILENAME}.spv.cpp
+        COMMAND ${CMAKE_COMMAND} -Dbin="${SHADER_OUTPUT_DIR}/${FILENAME}.spv" -Doutput="${SHADER_OUTPUT_DIR}/${FILENAME}.spv.cpp" -P "${CMAKE_SOURCE_DIR}/cmake/embed_binary.cmake"
+        COMMENT "Converting ${FILENAME} to C++"
+        DEPENDS ${SHADER_OUTPUT_DIR}/${FILENAME}.spv)
+    list(APPEND SHADER_DEPENDS ${SHADER_OUTPUT_DIR}/${FILENAME}.spv.cpp)
+endforeach()
 
-list(APPEND SHADER_DEPENDS ${SHADER_OUTPUT_DIR}/${input_identifier}.o)
-endForeach()
+add_custom_target(shaders DEPENDS ${SHADER_DEPENDS})
+add_library(shaders_lib STATIC ${SHADER_DEPENDS})
 
-add_custom_target( shader ALL DEPENDS ${SHADER_DEPENDS} )
+target_link_libraries(${PROJECT_NAME} PRIVATE shaders_lib)

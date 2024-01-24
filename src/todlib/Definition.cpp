@@ -3,7 +3,7 @@
 #include "TodParticle.h"
 #include "Trail.h"
 #include <assert.h>
-#include <bits/chrono.h>
+#include <chrono>
 #include <chrono>
 #include <cstring>
 #include <filesystem>
@@ -12,8 +12,9 @@
 #include <stdexcept>
 #include "TodDebug.h"
 #include "Definition.h"
+#include <SDL2/SDL.h>
 #include "misc/fcaseopen.h"
-#include "zlib/zlib.h"
+#include "zlib.h"
 #include "paklib/PakInterface.h"
 //#include "misc/PerfTimer.h"
 #include "misc/XMLParser.h"
@@ -427,12 +428,14 @@ inline bool DefReadFromCacheImage(void*& theReadPtr, Image** theImage)
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取贴图标签字符数组的长度
     //char* aImageName = (char*)alloca(aLen + 1);  // 在栈上分配贴图标签字符数组的内存空间
-    char aImageName[aLen + 1];
+    auto aImageName = new char[aLen + 1];
     SMemR(theReadPtr, aImageName, aLen);  // 读取贴图标签字符数组
     aImageName[aLen] = '\0';
 
     *theImage = nullptr;
-    return aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
+    auto result = aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
+    delete[] aImageName;
+    return result;
 }
 
 //0x444220
@@ -441,12 +444,14 @@ inline bool DefReadFromCacheFont(void*& theReadPtr, _Font** theFont)
     int aLen;
     SMemR(theReadPtr, &aLen, sizeof(int));  // 读取字体标签字符数组的长度
     //char* aFontName = (char*)alloca(aLen + 1);  // 在栈上分配字体标签字符数组的内存空间
-    char aFontName[aLen + 1];
+    auto aFontName = new char[aLen + 1];
     SMemR(theReadPtr, aFontName, aLen);  // 读取字体标签字符数组
     aFontName[aLen] = '\0';
     
     *theFont = nullptr;
-    return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
+    auto result = aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
+    delete[] aFontName;
+    return result;
 }
 
 //0x4442C0
@@ -489,8 +494,8 @@ uint DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol* theSymbolMap)
 {
     while (theSymbolMap->mSymbolName != nullptr)
     {
-        aSchemaHash = crc32(aSchemaHash, (const Bytef*)theSymbolMap->mSymbolName, strlen(theSymbolMap->mSymbolName));
-        aSchemaHash = crc32(aSchemaHash, (const Bytef*)&theSymbolMap->mSymbolValue, sizeof(int));
+        aSchemaHash = SDL_crc32(aSchemaHash, (const void*)theSymbolMap->mSymbolName, strlen(theSymbolMap->mSymbolName));
+        aSchemaHash = SDL_crc32(aSchemaHash, (const void*)&theSymbolMap->mSymbolValue, sizeof(int));
         theSymbolMap++;
     }
     return aSchemaHash;
@@ -504,11 +509,11 @@ uint DefinitionCalcHashDefMap(int aSchemaHash, DefMap* theDefMap, TodList<DefMap
             return aSchemaHash;
     theProgressMaps.AddTail(theDefMap);
 
-    aSchemaHash = crc32(aSchemaHash, (Bytef*)&theDefMap->mDefSize, sizeof(int));
+    aSchemaHash = SDL_crc32(aSchemaHash, (const void*)&theDefMap->mDefSize, sizeof(int));
     for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
     {
-        aSchemaHash = crc32(aSchemaHash, (Bytef*)&aField->mFieldType, sizeof(DefFieldType));
-        aSchemaHash = crc32(aSchemaHash, (Bytef*)&aField->mFieldOffset, sizeof(int));
+        aSchemaHash = SDL_crc32(aSchemaHash, (const void*)&aField->mFieldType, sizeof(DefFieldType));
+        aSchemaHash = SDL_crc32(aSchemaHash, (const void*)&aField->mFieldOffset, sizeof(int));
         switch (aField->mFieldType)
         {
         case DefFieldType::DT_ENUM:
@@ -575,7 +580,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
 
     p_fseek(pFile, 0, SEEK_END);  // 将读取位置的指针移动至文件末尾
     size_t aCompressedSize = p_ftell(pFile);  // 此时获取到的偏移量即为整个文件的大小
-    p_fseek(pFile, 0, SEEK_SET);  // 再把读取位置的指针移回文件开头
+    p_fseek(pFile, 0, SEEK_SET);  // 再把读取位置的指针移回文件开头but hwen  Igo
     
     void* aCompressedBuffer = calloc(aCompressedSize, 1);
     // 读取文件，并判断实际读取的大小是否为完整的文件大小，若不等则判断为读取失败
@@ -1274,7 +1279,7 @@ void DefMapWriteToCache(void*& theWritePtr, DefMap* theDefMap, void* theDefiniti
 }
 
 void* DefinitionCompressCompiledBuffer(void* theBuffer, unsigned int theBufferSize, unsigned int* theResultSize) {
-    size_t aCompressedSize = compressBound(theBufferSize);
+    uLongf aCompressedSize = compressBound(theBufferSize);
     auto aCompressedBuffer = (CompressedDefinitionHeader*)calloc(sizeof(CompressedDefinitionHeader) + aCompressedSize, 1);
     compress((Bytef*)((uintptr_t)aCompressedBuffer + sizeof(CompressedDefinitionHeader)), &aCompressedSize, (Bytef*)theBuffer, theBufferSize);
     aCompressedBuffer->mCookie = 0xDEADFED4;
@@ -1440,6 +1445,7 @@ void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
         {
         case DefFieldType::DT_STRING:
             // @Patoke todo: removed this, caused a heap problem when closing the game, add back properly (causes memory leak)
+            // @Minerscale done: The memory issues were caused becasuse the code was actually broken lol. Works great now.
             if (**(char**)aVar != '\0')
                 free(*(char**)aVar);  // 释放字符数组
             *(char**)aVar = nullptr;

@@ -3,7 +3,7 @@
 
 #include "SoundManager.h"
 #include "BassSoundInstance.h"
-#include "sound/bass.h"
+#include <bass.h>
 #include "BassMusicInterface.h"
 #include <array>
 #include <memory>

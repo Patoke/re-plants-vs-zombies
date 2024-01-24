@@ -6,10 +6,11 @@
 #include <string>
 #include "framework/Common.h"
 
-typedef struct _FILETIME {
-  DWORD dwLowDateTime;
-  DWORD dwHighDateTime;
-} FILETIME;
+struct FileTime
+{
+	unsigned long dwLowDateTime;
+	unsigned long dwHighDateTime;
+};
 
 class PakCollection;
 
@@ -22,9 +23,9 @@ class PakCollection;
 class PakRecord
 {
 public:
-	PakCollection*			mCollection;			//+0x0：指向该资源文件所在的资源包的 PakCollection
+	PakCollection* mCollection;			//+0x0：指向该资源文件所在的资源包的 PakCollection
 	std::string				mFileName;				//+0x4：资源文件的名称及路径（路径从 .pak 开始），例如 sounds\zombie_falling_1.ogg
-	FILETIME				mFileTime;				//+0x20：八字节型的资源文件的时间戳
+	FileTime				mFileTime;				//+0x20：八字节型的资源文件的时间戳
 	int						mStartPos;				//+0x28：该资源文件在资源包中的位置（即在 mCollection->mDataPtr 中的偏移量）
 	int						mSize;					//+0x2C：资源文件的大小，单位为 Byte（字节数）
 };
@@ -37,9 +38,9 @@ typedef std::map<std::string, PakRecord> PakRecordMap;
 class PakCollection
 {
 public:
-//HANDLE					mFileHandle;
-//HANDLE					mMappingHandle;
-	void*					mDataPtr;				//+0x8：资源包中的所有数据
+	//HANDLE					mFileHandle;
+	//HANDLE					mMappingHandle;
+	void* mDataPtr;				//+0x8：资源包中的所有数据
 
 	PakCollection(size_t size) {
 		mDataPtr = malloc(size);
@@ -54,9 +55,9 @@ typedef std::list<PakCollection> PakCollectionList;
 
 struct PFILE
 {
-	PakRecord*		mRecord;
+	PakRecord* mRecord;
 	int						mPos;
-	FILE*					mFP;
+	FILE* mFP;
 };
 /*
 struct PFindData
@@ -70,22 +71,22 @@ struct PFindData
 class PakInterfaceBase
 {
 public:
-	virtual PFILE*		FOpen(const char* theFileName, const char* theAccess) = 0;
-//	virtual PFILE*			FOpen(const wchar_t* theFileName, const wchar_t* theAccess) { return NULL; }
+	virtual PFILE* FOpen(const char* theFileName, const char* theAccess) = 0;
+	//	virtual PFILE*			FOpen(const wchar_t* theFileName, const wchar_t* theAccess) { return NULL; }
 	virtual int				FClose(PFILE* theFile) = 0;
 	virtual int				FSeek(PFILE* theFile, long theOffset, int theOrigin) = 0;
 	virtual int				FTell(PFILE* theFile) = 0;
 	virtual size_t		FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile) = 0;
 	virtual int				FGetC(PFILE* theFile) = 0;
 	virtual int				UnGetC(int theChar, PFILE* theFile) = 0;
-	virtual char*			FGetS(char* thePtr, int theSize, PFILE* theFile) = 0;
-//	virtual wchar_t*		FGetS(wchar_t* thePtr, int theSize, PFILE* theFile) { return thePtr; }
+	virtual char* FGetS(char* thePtr, int theSize, PFILE* theFile) = 0;
+	//	virtual wchar_t*		FGetS(wchar_t* thePtr, int theSize, PFILE* theFile) { return thePtr; }
 	virtual int				FEof(PFILE* theFile) = 0;
-/*
-	virtual HANDLE		FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) = 0;	
-	virtual BOOL			FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) = 0;
-	virtual BOOL			FindClose(HANDLE hFindFile) = 0;
-*/
+	/*
+		virtual HANDLE		FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData) = 0;
+		virtual BOOL			FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData) = 0;
+		virtual BOOL			FindClose(HANDLE hFindFile) = 0;
+	*/
 };
 
 class PakInterface : public PakInterfaceBase
@@ -95,7 +96,7 @@ public:
 	PakRecordMap			  mPakRecordMap;			//+0x10：所有已添加的资源包中的所有资源文件的、从文件名到文件数据的映射容器
 
 public:
-//bool					PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFileData);
+	//bool					PFindNext(PFindData* theFindData, LPWIN32_FIND_DATA lpFindFileData);
 
 
 public:
@@ -103,20 +104,20 @@ public:
 	~PakInterface();
 
 	bool					AddPakFile(const std::string& theFileName);
-	PFILE*				FOpen(const char* theFileName, const char* theAccess);
+	PFILE* FOpen(const char* theFileName, const char* theAccess);
 	int						FClose(PFILE* theFile);
 	int						FSeek(PFILE* theFile, long theOffset, int theOrigin);
 	int						FTell(PFILE* theFile);
 	size_t				FRead(void* thePtr, int theElemSize, int theCount, PFILE* theFile);
 	int						FGetC(PFILE* theFile);
 	int						UnGetC(int theChar, PFILE* theFile);
-	char*					FGetS(char* thePtr, int theSize, PFILE* theFile);
+	char* FGetS(char* thePtr, int theSize, PFILE* theFile);
 	int						FEof(PFILE* theFile);
-/*
-	HANDLE					FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData);
-	BOOL					FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData);
-	BOOL					FindClose(HANDLE hFindFile);
-*/
+	/*
+		HANDLE					FindFirstFile(LPCTSTR lpFileName, LPWIN32_FIND_DATA lpFindFileData);
+		BOOL					FindNextFile(HANDLE hFindFile, LPWIN32_FIND_DATA lpFindFileData);
+		BOOL					FindClose(HANDLE hFindFile);
+	*/
 };
 
 extern PakInterface* gPakInterface;
@@ -152,7 +153,7 @@ static size_t p_fread(void* thePtr, int theSize, int theCount, PFILE* theFile)
 
 [[maybe_unused]]
 static size_t p_fwrite(const void* thePtr, int theSize, int theCount, PFILE* theFile)
-{	
+{
 	if (theFile->mFP == NULL)
 		return 0;
 	return fwrite(thePtr, theSize, theCount, theFile->mFP);
@@ -194,16 +195,16 @@ static PakInterfaceBase* GetPakPtr()
 		char aName[256];
 		sprintf(aName, "gPakInterfaceP_%d", GetCurrentProcessId());
 		gPakFileMapping = ::CreateFileMappingA((HANDLE)INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(PakInterface*), aName);
-		gPakInterfaceP = (PakInterfaceBase**) MapViewOfFile(gPakFileMapping, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(PakInterface*));		
+		gPakInterfaceP = (PakInterfaceBase**) MapViewOfFile(gPakFileMapping, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(PakInterface*));
 	}
 	return *gPakInterfaceP;
 }
 
 [[maybe_unused]]
-static PFILE* p_fopen(const char* theFileName, const char* theAccess) 
+static PFILE* p_fopen(const char* theFileName, const char* theAccess)
 {
 	if (GetPakPtr() != NULL)
-		return (*gPakInterfaceP)->FOpen(theFileName, theAccess);	
+		return (*gPakInterfaceP)->FOpen(theFileName, theAccess);
 	FILE* aFP = fopen(theFileName, theAccess);
 	if (aFP == NULL)
 		return NULL;
@@ -215,10 +216,10 @@ static PFILE* p_fopen(const char* theFileName, const char* theAccess)
 }
 
 [[maybe_unused]]
-static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess) 
+static PFILE* p_fopen(const wchar_t* theFileName, const wchar_t* theAccess)
 {
 	if (GetPakPtr() != NULL)
-		return (*gPakInterfaceP)->FOpen(theFileName, theAccess);	
+		return (*gPakInterfaceP)->FOpen(theFileName, theAccess);
 	FILE* aFP = _wfopen(theFileName, theAccess);
 	if (aFP == NULL)
 		return NULL;
@@ -266,7 +267,7 @@ static size_t p_fread(void* thePtr, int theSize, int theCount, PFILE* theFile)
 
 [[maybe_unused]]
 static size_t p_fwrite(const void* thePtr, int theSize, int theCount, PFILE* theFile)
-{	
+{
 	if (theFile->mFP == NULL)
 		return 0;
 	return fwrite(thePtr, theSize, theCount, theFile->mFP);

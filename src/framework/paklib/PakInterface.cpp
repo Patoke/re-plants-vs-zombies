@@ -2,7 +2,7 @@
 #include "misc/fcaseopen.h"
 #include <cstdio>
 #include <fstream>
-#include <unistd.h>
+#include <filesystem>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -121,8 +121,8 @@ bool PakInterface::AddPakFile(const std::string& theFileName)
 		aName[aNameWidth] = 0;
 		int aSrcSize = 0;
 		FRead(&aSrcSize, sizeof(int), 1, aFP);
-		FILETIME aFileTime;
-		FRead(&aFileTime, sizeof(FILETIME), 1, aFP);
+		FileTime aFileTime;
+		FRead(&aFileTime, sizeof(FileTime), 1, aFP);
 
 		PakRecordMap::iterator aRecordItr = mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(aName), PakRecord())).first;
 		PakRecord* aPakRecord = &(aRecordItr->second);
@@ -158,15 +158,12 @@ static void FixFileName(const char* theFileName, char* theUpperName)
 	// 检测路径是否为从盘符开始的绝对路径
 	if ((theFileName[0] != 0) && (theFileName[1] == ':'))
 	{
-		char aDir[256];
-		getcwd(aDir, 256);  // 取得当前工作路径
-		int aLen = strlen(aDir);
-		aDir[aLen++] = '\\';
-		aDir[aLen] = 0;
+		auto aPath = std::filesystem::current_path();
+		auto aDir = aPath.string();
 
 		// 判断 theFileName 文件是否位于当前目录下
-		if (strncasecmp(aDir, theFileName, aLen) == 0)
-			theFileName += aLen;  // 若是，则跳过从盘符到当前目录的部分，转化为相对路径
+		if (strncasecmp(aDir.c_str(), theFileName, aDir.length()) == 0)
+			theFileName += aDir.length(); // 若是，则跳过从盘符到当前目录的部分，转化为相对路径
 	}
 
 	bool lastSlash = false;

@@ -11,9 +11,7 @@
 #include "todlib/Reanimator.h"
 #include "GameConstants.h"
 #include "lawn/system/Music.h"
-#include <bits/chrono.h>
 #include <chrono>
-#include <ctime>
 
 //0x48D4B0
 // GOTY @Patoke: 0x498220
@@ -47,7 +45,7 @@ TitleScreen::TitleScreen(LawnApp* theApp)
 	mStartButton->mVisible = false;
 }
 
-//0x48D6B0¡¢0x48D6D0
+//0x48D6B0ï¿½ï¿½0x48D6D0
 TitleScreen::~TitleScreen()
 {
 	if (mStartButton)

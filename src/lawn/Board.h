@@ -205,8 +205,8 @@ public:
 	std::chrono::high_resolution_clock::duration	mPlayTimeActiveLevel;					//+0x5770
 	std::chrono::high_resolution_clock::duration	mPlayTimeInactiveLevel;					//+0x5774
 	int								mMaxSunPlants;											//+0x5778
-	DWORD							mStartDrawTime;											//+0x577C
-	DWORD							mIntervalDrawTime;										//+0x5780
+	unsigned long					mStartDrawTime;											//+0x577C
+	unsigned long					mIntervalDrawTime;										//+0x5780
 	int								mIntervalDrawCountStart;								//+0x5784
 	float							mMinFPS;												//+0x5788
 	std::chrono::high_resolution_clock::duration	mPreloadTime;							//+0x578C
