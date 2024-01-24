@@ -21,7 +21,11 @@ set(CMAKE_INSTALL_RPATH "\${ORIGIN}")
 
 # @Patoke todo: probably add MSVC counterparts?
 if(MSVC)
-    set(universal_compiler_flags "")
+   if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(universal_compiler_flags "${universal_compiler_flags} /Ob2 /GL /Ox")
+    else()
+        set(universal_compiler_flags "")
+    endif()
 else()
     set(universal_compiler_flags
         "-fuse-ld=lld"

@@ -14,7 +14,7 @@ namespace Sexy
 class BassSoundManager : public Sexy::SoundManager
 {
 public:
-    BassSoundManager(void *theHWnd);
+    BassSoundManager(HWND theHWnd);
     static double           PanDBToNorm(int dbpan);
 
     virtual bool            Initialized() { return Sexy::BassMusicInterface::gBassLoaded; }

@@ -10,7 +10,7 @@
 
 namespace Sexy {
 
-    BassSoundManager::BassSoundManager(void* theHWnd) {
+    BassSoundManager::BassSoundManager(HWND theHWnd) {
         BassMusicInterface::InitBass(theHWnd);
     }
 
