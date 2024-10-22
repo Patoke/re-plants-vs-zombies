@@ -22,7 +22,7 @@ namespace Sexy
 
 #endif
 
-#ifdef MSVC
+#ifdef _MSC_VER
 // @Patoke todo: remove this
 /*==========================================================================;
  *
