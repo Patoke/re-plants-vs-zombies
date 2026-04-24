@@ -23,6 +23,7 @@ ExternalProject_Add(libjpeg-src
     BINARY_DIR          "${libjpeg_dir}"
     CMAKE_ARGS          "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
                         "-DCMAKE_INSTALL_PREFIX=${libjpeg_dir}/install" # unused, have to specify
+                        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
                         "-DCMAKE_C_FLAGS=${universal_cflags}"
                         "-DENABLE_SHARED=FALSE"
                         "-DWITH_TURBOJPEG=FALSE"
@@ -90,6 +91,7 @@ ExternalProject_Add(libpng-src
     CMAKE_ARGS              "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}"
                             "-DCMAKE_INSTALL_PREFIX=${libpng_dir}"
                             "-DCMAKE_C_FLAGS=${universal_cflags}"
+                            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
                             "-DPNG_HARDWARE_OPTIMIZATIONS=yes"
                             "-DPNG_INTEL_SSE=on"
                             "-DPNG_SHARED=OFF"

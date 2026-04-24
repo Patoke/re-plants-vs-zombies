@@ -284,7 +284,7 @@ void TodFoley::PlayFoleyPitch(FoleyType theFoleyType, float thePitch)
 }
 
 //0x515240
-// GOTY @Patoke: 0x51F6F0
+// GOTY @Patoke: 0x51F900
 void TodFoley::PlayFoley(FoleyType theFoleyType)
 {
 	FoleyParams* aFoleyParams = LookupFoley(theFoleyType);

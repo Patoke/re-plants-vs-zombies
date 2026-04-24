@@ -1399,33 +1399,32 @@ float FloatTrackEvaluateFromLastTime(FloatParameterTrack& theTrack, float theTim
 void DefinitionFreeArrayField(DefinitionArrayDef* theArray, DefMap* theDefMap)
 {
     for (int i = 0; i < theArray->mArrayCount; i++)
-        DefinitionFreeMap(theDefMap, (void*)((intptr_t)theArray->mArrayData + theDefMap->mDefSize * i));  // 最后一个参数表示 pData[i]
+        DefinitionFreeMap(theDefMap, (char*)theArray->mArrayData + theDefMap->mDefSize * i);  // 最后一个参数表示 pData[i]
     delete[] (char *)theArray->mArrayData;
     theArray->mArrayData = nullptr;
 }
 
 //0x444A90
-void DefinitionFreeMap(DefMap* theDefMap, void* theDefinition)
+void DefinitionFreeMap(DefMap* theDefMap, char* theDefinition)
 {
     // 根据 theDefMap 遍历 theDefinition 的每个成员变量
     for (DefField* aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
     {
-        void* aVar = (void*)((intptr_t)theDefinition + aField->mFieldOffset);  // 指向该成员变量的指针
+        DefinitionArrayDef* theArray = (DefinitionArrayDef*)&theDefinition[aField->mFieldOffset];  // 指向该成员变量的指针
         switch (aField->mFieldType)
         {
         case DefFieldType::DT_STRING:
-            // @Patoke todo: removed this, caused a heap problem when closing the game, add back properly (causes memory leak)
-            //if (**(char**)aVar != '\0')
-            //    delete[] *(char**)aVar;  // 释放字符数组
-            *(char**)aVar = nullptr;
+            if (*(char*)theArray->mArrayData == '\0')
+                delete[] (char*)theArray->mArrayData;  // 释放字符数组
+            theArray->mArrayData = nullptr;
             break;
         case DefFieldType::DT_ARRAY:
-            DefinitionFreeArrayField((DefinitionArrayDef*)aVar, (DefMap*)aField->mExtraData);
+            DefinitionFreeArrayField(theArray, (DefMap*)aField->mExtraData);
             break;
         case DefFieldType::DT_TRACK_FLOAT:
-            if (((FloatParameterTrack*)aVar)->mCountNodes != 0)
-                delete[]((FloatParameterTrack*)aVar)->mNodes;  // 释放浮点参数轨道的节点
-            ((FloatParameterTrack*)aVar)->mNodes = nullptr;
+            if (((FloatParameterTrack*)theArray)->mCountNodes != 0)
+                delete[]((FloatParameterTrack*)theArray)->mNodes;  // 释放浮点参数轨道的节点
+            ((FloatParameterTrack*)theArray)->mNodes = nullptr;
             break;
         default:
             break;

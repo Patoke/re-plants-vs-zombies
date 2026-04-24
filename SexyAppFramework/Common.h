@@ -34,7 +34,7 @@
 #ifdef MSVC
 #define unreachable std::unreachable
 #else
-#define unreachable __builtin_unreachable
+#define unreachable std::unreachable
 #endif
 
 // Removed wide string support

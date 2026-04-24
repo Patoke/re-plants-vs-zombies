@@ -197,7 +197,7 @@ bool                    DefinitionLoadImage(Image** theImage, const SexyString& 
 bool                    DefinitionLoadFont(_Font** theFont, const SexyString& theName);
 bool                    DefinitionLoadXML(const SexyString& theFilename, DefMap* theDefMap, void* theDefinition);
 void                    DefinitionFreeArrayField(DefinitionArrayDef* theArray, DefMap* theDefMap);
-void                    DefinitionFreeMap(DefMap* theDefMap, void* theDefinition);
+void                    DefinitionFreeMap(DefMap* theDefMap, char* theDefinition);
 
 /*inline*/ bool         FloatTrackIsSet(const FloatParameterTrack& theTrack);
 /*inline*/ void         FloatTrackSetDefault(FloatParameterTrack& theTrack, float theValue);

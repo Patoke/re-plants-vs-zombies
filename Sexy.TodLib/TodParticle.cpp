@@ -210,7 +210,7 @@ void TodParticleLoadDefinitions(ParticleParams* theParticleParamArray, int thePa
 void TodParticleFreeDefinitions()
 {
 	for (int i = 0; i < gParticleDefCount; i++)
-		DefinitionFreeMap(&gParticleDefMap, &gParticleDefArray[i]);
+		DefinitionFreeMap(&gParticleDefMap, (char*)&gParticleDefArray[i]);
 	delete[] gParticleDefArray;
 	gParticleDefArray = nullptr;
 	gParticleDefCount = 0;

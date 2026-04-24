@@ -124,12 +124,16 @@ Image* GetPNGImage(const std::string& theFileName)
 	png_set_bgr(png_ptr);
 
 //	int aNumBytes = png_get_rowbytes(png_ptr, info_ptr) * height / 4;
-    png_bytep row_pointers[height];
-	unsigned long* aBits = new unsigned long[width*height];
-    for (uint i = 0; i < height; i++) {
-        row_pointers[i] = (png_bytep)(aBits + i*width);
-    }
-    png_read_image(png_ptr, row_pointers);
+	png_bytep* row_pointers = new png_bytep[height]; // @Patoke fix: allocate dynamically, we cannot do inline dynamic C-style stack allocations in modern C++
+	unsigned long* aBits = new unsigned long[width * height];
+
+	for (uint i = 0; i < height; i++) {
+		row_pointers[i] = (png_bytep)(aBits + i * width);
+	}
+
+	png_read_image(png_ptr, row_pointers);
+
+	delete[] row_pointers;
     /*
 	unsigned long* anAddr = aBits;
 	for (unsigned int i = 0; i < height; i++)

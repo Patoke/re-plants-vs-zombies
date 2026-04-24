@@ -1,6 +1,7 @@
 #ifndef __PLAYERINFO_H__
 #define __PLAYERINFO_H__
 
+#define MAX_NUM_ZOMBATARS 100
 #define MAX_POTTED_PLANTS 200
 #define PURCHASE_COUNT_OFFSET 1000
 
@@ -40,42 +41,71 @@ public:
     void                InitializePottedPlant(SeedType theSeedType);
 };
 
+class Zombatar
+{
+public:
+
+    int mSkin;
+    int mSkinColor;
+    int mClothes;
+    int mClothesColor;
+    int mTidbits;
+    int mTidbitsColor;
+    int mAccessories;
+    int mAccessoriesColor;
+    int mFacialHair;
+    int mFacialHairColor;
+    int mHair;
+    int mHairColor;
+    int mEyewear;
+    int mEyewearColor;
+    int mHat;
+    int mHatColor;
+    int mBackdrop;
+    int mBackdropColor;
+};
+
 class DataSync;
 class PlayerInfo
 {
 public:
-    SexyString          mName;                              //+0x0
-    ulong               mUseSeq;                            //+0x1C
-    ulong               mId;                                //+0x20
-    int                 mLevel;                             //+0x24
-    int                 mCoins;                             //+0x28
-    int                 mFinishedAdventure;                 //+0x2C
-    int                 mChallengeRecords[100];             //+0x30
-    long                mPurchases[80];                     //+0x1C0
-    int                 mPlayTimeActivePlayer;              //+0x300
-    int                 mPlayTimeInactivePlayer;            //+0x304
-    int                 mHasUsedCheatKeys;                  //+0x308
-    int                 mHasWokenStinky;                    //+0x30C
-    int                 mDidntPurchasePacketUpgrade;        //+0x310
-    long                mLastStinkyChocolateTime;           //+0x314
-    int                 mStinkyPosX;                        //+0x318
-    int                 mStinkyPosY;                        //+0x31C
-    int                 mHasUnlockedMinigames;              //+0x320
-    int                 mHasUnlockedPuzzleMode;             //+0x324
-    int                 mHasNewMiniGame;                    //+0x328
-    int                 mHasNewScaryPotter;                 //+0x32C
-    int                 mHasNewIZombie;                     //+0x330
-    int                 mHasNewSurvival;                    //+0x334
-    int                 mHasUnlockedSurvivalMode;           //+0x338
-    int                 mNeedsMessageOnGameSelector;        //+0x33C
-    int                 mNeedsMagicTacoReward;              //+0x340
-    int                 mHasSeenStinky;                     //+0x344
-    int                 mHasSeenUpsell;                     //+0x348
-    int                 mPlaceHolderPlayerStats;            //+0x??????
-    int                 mNumPottedPlants;                   //+0x350
-    PottedPlant         mPottedPlant[MAX_POTTED_PLANTS];    //+0x358
-    bool                mEarnedAchievements[20];            //+GOTY @Patoke: 0x24
-    bool                mShownAchievements[20];             //+GOTY @Patoke: 0x38
+    SexyString          mName;                              //+GOTY @Patoke: 0x0
+    ulong               mUseSeq;                            //+GOTY @Patoke: 0x1C
+    ulong               mId;                                //+GOTY @Patoke: 0x20
+	bool                mEarnedAchievements[20];            //+GOTY @Patoke: 0x24
+	bool                mShownAchievements[20];             //+GOTY @Patoke: 0x38
+	int                 mLevel;                             //+GOTY @Patoke: 0x4C
+	int                 mCoins;                             //+GOTY @Patoke: 0x50
+	int                 mFinishedAdventure;                 //+GOTY @Patoke: 0x54
+	int                 mChallengeRecords[100];             //+GOTY @Patoke: 0x58
+	long                mPurchases[80];                     //+GOTY @Patoke: 0x1E8
+	int                 mPlayTimeActivePlayer;              //+GOTY @Patoke: 0x328
+	int                 mPlayTimeInactivePlayer;            //+GOTY @Patoke: 0x32C
+	int                 mHasUsedCheatKeys;                  //+GOTY @Patoke: 0x330
+	int                 mHasWokenStinky;                    //+GOTY @Patoke: 0x334
+	int                 mDidntPurchasePacketUpgrade;        //+GOTY @Patoke: 0x338
+	long                mLastStinkyChocolateTime;           //+GOTY @Patoke: 0x33C
+	int                 mStinkyPosX;                        //+GOTY @Patoke: 0x340
+	int                 mStinkyPosY;                        //+GOTY @Patoke: 0x344
+	int                 mHasUnlockedMinigames;              //+GOTY @Patoke: 0x348
+	int                 mHasUnlockedPuzzleMode;             //+GOTY @Patoke: 0x34C
+	int                 mHasNewMiniGame;                    //+GOTY @Patoke: 0x350
+	int                 mHasNewScaryPotter;                 //+GOTY @Patoke: 0x354
+	int                 mHasNewIZombie;                     //+GOTY @Patoke: 0x358
+	int                 mHasNewSurvival;                    //+GOTY @Patoke: 0x35C
+	int                 mHasUnlockedSurvivalMode;           //+GOTY @Patoke: 0x360
+	int                 mNeedsMessageOnGameSelector;        //+GOTY @Patoke: 0x364
+	int                 mNeedsMagicTacoReward;              //+GOTY @Patoke: 0x368
+	int                 mHasSeenStinky;                     //+GOTY @Patoke: 0x36C
+	int                 mHasSeenUpsell;                     //+GOTY @Patoke: 0x370
+	int                 mPlaceHolderPlayerStats;            //+GOTY @Patoke: 0x374
+	int                 mNumPottedPlants;                   //+GOTY @Patoke: 0x378
+	bool                mShownZombatarDesktopMessage;       //+GOTY @Patoke: 0x37C
+	bool                mAcceptedZombatarULA;               //+GOTY @Patoke: 0x37D
+    PottedPlant         mPottedPlant[MAX_POTTED_PLANTS];    //+GOTY @Patoke: 0x380
+    int                 mNumZombatars;                      //+GOTY @Patoke: 0x4840
+    Zombatar            mZombatars[MAX_NUM_ZOMBATARS];      //+GOTY @Patoke: 0x4844
+    bool                mMiniGamesCompleted[20];            //+GOTY @Patoke: 0x6464
 
 public:
     PlayerInfo();

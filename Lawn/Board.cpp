@@ -127,15 +127,16 @@ Board::Board(LawnApp* theApp)
 	mGravesCleared = 0;
 	mPlantsEaten = 0;
 	mPlantsShoveled = 0;
-	mPeaShooterUsed = false; // @Patoke: added construct
-	mCatapultPlantsUsed = false; // @Patoke: added construct
-	mMushroomAndCoffeeBeansOnly = true; // @Patoke: added construct
-	mMushroomsUsed = false; // @Patoke: added construct
-	mLevelCoinsCollected = 0;
 	mCoinsCollected = 0;
 	mDiamondsCollected = 0;
 	mPottedPlantsCollected = 0;
 	mChocolateCollected = 0;
+	mPeaShooterUsed = false; // @Patoke: added construct
+	mCatapultPlantsUsed = false; // @Patoke: added construct
+	mLevelCoinsCollected = 0;
+	mGargantuarsKillsByCornCob = 0;
+	mMushroomAndCoffeeBeansOnly = true; // @Patoke: added construct
+	mMushroomsUsed = false; // @Patoke: added construct
 	for (int y = 0; y < MAX_GRID_SIZE_Y; y++)
 	{
 		for (int x = 0; x < 12; x++)
@@ -143,9 +144,9 @@ Board::Board(LawnApp* theApp)
 			mFwooshID[y][x] = ReanimationID::REANIMATIONID_NULL;
 		}
 	}
+	mFinalBossKilled = false;
 	mPrevMouseX = -1;
 	mPrevMouseY = -1;
-	mFinalBossKilled = false;
 	mMustacheMode = mApp->mMustacheMode;
 	mSuperMowerMode = mApp->mSuperMowerMode;
 	mFutureMode = mApp->mFutureMode;
@@ -1716,12 +1717,17 @@ void Board::StartLevel()
 	mApp->mLastLevelStats->Reset();
 	mChallenge->StartLevel();
 
-	// @Patoke: implemented, i think it's intentional to cause an underflow here?
-	unsigned int aSurvivalStage = mApp->mGameMode - GAMEMODE_SURVIVAL_ENDLESS_STAGE_1;
-	if (aSurvivalStage <= 4) {
+	if (mApp->mGameMode == GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1 ||
+		mApp->mGameMode == GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2 ||
+		mApp->mGameMode == GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3 ||
+		mApp->mGameMode == GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4 ||
+		mApp->mGameMode == GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5) 
+	{
 		if (GetSurvivalFlagsCompleted() >= 20) {
-			// if ( !*(mApp->mPlayerInfo + 53) ) todo @Patoke: add this?
-			ReportAchievement::GiveAchievement(mApp, Immortal, true);
+			if (mApp->mPlayerInfo && !mApp->mPlayerInfo->mEarnedAchievements[Immortal])
+			{
+				ReportAchievement::GiveAchievement(mApp, Immortal, true);
+			}
 		}
 	}
 
@@ -8752,8 +8758,12 @@ void Board::AddSunMoney(int theAmount)
 		mSunMoney = 9990;
 	}
 	if (mSunMoney >= 8000)
-		// if ( !*(mApp->mPlayerInfo + 48) ) todo @Patoke: figure this out
-		ReportAchievement::GiveAchievement(mApp, SunnyDays, true);
+	{
+		if (mApp->mPlayerInfo && !mApp->mPlayerInfo->mEarnedAchievements[SunnyDays])
+		{
+			ReportAchievement::GiveAchievement(mApp, SunnyDays, true);
+		}
+	}
 }
 
 //0x41B980
@@ -10051,14 +10061,83 @@ bool Board::IsZombieTypeSpawnedOnly(ZombieType theZombieType)
 	return (theZombieType == ZombieType::ZOMBIE_BACKUP_DANCER || theZombieType == ZombieType::ZOMBIE_BOBSLED || theZombieType == ZombieType::ZOMBIE_IMP);
 }
 
+bool Board::CheckForPostGameAchievements()
+{
+	bool aUnlockedNewChallenge = false;
 
+	// @Patoke: implemented
+	if (!mApp->IsAdventureMode() && !mApp->IsSurvivalMode() && !mApp->IsPuzzleMode())
+	{
+		int aMinigameIndex = mApp->mGameMode - GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS;
+		if (!mApp->mPlayerInfo->mMiniGamesCompleted[aMinigameIndex])
+		{
+			mApp->mPlayerInfo->mMiniGamesCompleted[aMinigameIndex] = true;
+		}
 
+		bool aHasCompletedAllMinigames = true;
+		for (int i = 0; i < 20; i++)
+		{
+			if (!mApp->mPlayerInfo->mMiniGamesCompleted[i])
+			{
+				aHasCompletedAllMinigames = false;
+				break;
+			}
+		}
 
+		if (aHasCompletedAllMinigames)
+		{
+			if (ReportAchievement::GiveAchievement(mApp, BeyondTheGrave, false))
+			{
+				aUnlockedNewChallenge = true;
+			}
+		}
+	}
 
+	if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsWallnutBowlingLevel())
+	{
+		return aUnlockedNewChallenge;
+	}
 
+	if (!mApp->IsAdventureMode() && !mApp->IsSurvivalMode() && !mApp->IsPuzzleMode())
+	{
+		return aUnlockedNewChallenge;
+	}
+	else if (mLevel == FINAL_LEVEL)
+	{
+		if (ReportAchievement::GiveAchievement(mApp, HomeSecurity, false))
+		{
+			aUnlockedNewChallenge = true;
+		}
+	}
 
+	if (StageIsDayWithPool() && !mPeaShooterUsed)
+	{
+		if (ReportAchievement::GiveAchievement(mApp, DontPea, false))
+		{
+			aUnlockedNewChallenge = true;
+		}
+	}
+	if (StageHasRoof() && !HasConveyorBeltSeedBank() && !mCatapultPlantsUsed)
+	{
+		if (ReportAchievement::GiveAchievement(mApp, Grounded, false))
+		{
+			aUnlockedNewChallenge = true;
+		}
+	}
+	if (StageIsNight() && !mMushroomsUsed)
+	{
+		if (ReportAchievement::GiveAchievement(mApp, NoFungusAmongUs, false))
+		{
+			aUnlockedNewChallenge = true;
+		}
+	}
+	if (StageIsDayWithoutPool() && mMushroomAndCoffeeBeansOnly)
+	{
+		if (ReportAchievement::GiveAchievement(mApp, GoodMorning, false))
+		{
+			aUnlockedNewChallenge = true;
+		}
+	}
 
-
-
-
-
+	return aUnlockedNewChallenge;
+}

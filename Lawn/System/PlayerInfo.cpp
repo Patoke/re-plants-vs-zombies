@@ -23,6 +23,7 @@ void PlayerInfo::SyncSummary(DataSync& theSync)
 }
 
 //0x468390
+// GOTY @Patoke: 0x46BE80
 void PlayerInfo::SyncDetails(DataSync& theSync)
 {
 	if (theSync.GetReader())
@@ -87,6 +88,20 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
 	{
 		theSync.SyncBool(mShownAchievements[i]);
 	}
+
+	theSync.SyncBool(mAcceptedZombatarULA);
+	theSync.SyncLong(mNumZombatars);
+	for (int i = 0; i < mNumZombatars; i++)
+	{
+		theSync.SyncBytes(&mZombatars[i], sizeof(Zombatar));
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		theSync.SyncBool(mMiniGamesCompleted[i]);
+	}
+
+	theSync.SyncBool(mShownZombatarDesktopMessage);
 }
 
 //0x469400
@@ -141,6 +156,7 @@ void PlayerInfo::DeleteUserFiles()
 }
 
 //0x469940
+// GOTY @Patoke: 0x46DBF0
 void PlayerInfo::Reset()
 {
 	mLevel = 1;
@@ -167,11 +183,21 @@ void PlayerInfo::Reset()
 	mNeedsMagicTacoReward = 0;
 	mHasSeenStinky = 0;
 	mHasSeenUpsell = 0;
+	mAcceptedZombatarULA = false;
 	mPlaceHolderPlayerStats = 0;
+
+	for (int i = 0; i < 20; i++)
+	{
+		mEarnedAchievements[i] = false;
+		mShownAchievements[i] = false;
+	}
+
+	mNumZombatars = 0;
+
 	memset(mPottedPlant, 0, sizeof(mPottedPlant));
 	mNumPottedPlants = 0;
-	memset(mEarnedAchievements, 0, sizeof(mEarnedAchievements));
-	memset(mShownAchievements, 0, sizeof(mShownAchievements));
+	memset(mMiniGamesCompleted, 0, sizeof(mMiniGamesCompleted));
+	mShownZombatarDesktopMessage = false;
 }
 
 void PlayerInfo::AddCoins(int theAmount)

@@ -70,6 +70,7 @@ bool LawnHasUsedCheatKeys()
 }
 
 //0x44EAA0
+// GOTY @Patoke: 0x451D70
 LawnApp::LawnApp()
 {
 	mBoard = nullptr;
@@ -1409,7 +1410,6 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 			{
 				mPlayerInfo->mNeedsMessageOnGameSelector = 1;
 			}
-			ReportAchievement::GiveAchievement(this, HomeSecurity, false); // @Patoke: add achievement
 		}
 		else
 		{
@@ -1419,20 +1419,6 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 		if (!HasFinishedAdventure() && mBoard->mLevel == 34)
 		{
 			mPlayerInfo->mNeedsMagicTacoReward = 1;
-		}
-		
-		// @Patoke: implemented
-		if (mBoard->StageIsDayWithPool() && !mBoard->mPeaShooterUsed) {
-			ReportAchievement::GiveAchievement(this, DontPea, false);
-		}
-		if (mBoard->StageHasRoof() && !mBoard->HasConveyorBeltSeedBank() && !mBoard->mCatapultPlantsUsed) {
-			ReportAchievement::GiveAchievement(this, Grounded, false);
-		}
-		if (mBoard->StageIsNight() && !mBoard->mMushroomsUsed) {
-			ReportAchievement::GiveAchievement(this, NoFungusAmongUs, false);
-		}
-		if (mBoard->StageIsDayWithoutPool() && mBoard->mMushroomAndCoffeeBeansOnly) {
-			ReportAchievement::GiveAchievement(this, GoodMorning, false);
 		}
 	}
 	else if (IsSurvivalMode())
@@ -1487,11 +1473,6 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 				mPlayerInfo->mHasNewMiniGame = 1;
 			}
 		}
-
-		// @Patoke: implemented
-		int aNumTrophies = GetNumTrophies(ChallengePage::CHALLENGE_PAGE_CHALLENGE);
-		if (aNumTrophies == 20)
-			ReportAchievement::GiveAchievement(this, BeyondTheGrave, false);
 	}
 
 	WriteCurrentUserConfig();
@@ -1506,6 +1487,7 @@ void LawnApp::CheckForGameEnd()
 	if (mBoard == nullptr || !mBoard->mLevelComplete)
 		return;
 
+	bool aGotPostGameAchievements = mBoard->CheckForPostGameAchievements();
 	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
 
 	if (IsAdventureMode())

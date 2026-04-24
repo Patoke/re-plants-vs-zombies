@@ -201,6 +201,12 @@ public:
 	bool							mDaisyMode;												//+0x5766
 	bool							mSukhbirMode;											//+0x5767
 	BoardResult						mPrevBoardResult;										//+0x5768
+	bool							mPeaShooterUsed;										//+GOTY @Patoke: 0x5784
+	bool							mCatapultPlantsUsed;									//+GOTY @Patoke: 0x5785
+	int								mLevelCoinsCollected;									//+GOTY @Patoke: 0x5788
+	int								mGargantuarsKillsByCornCob;								//+GOTY @Patoke: 0x578C
+	bool							mMushroomAndCoffeeBeansOnly;							//+GOTY @Patoke: 0x5790
+	bool							mMushroomsUsed;											//+GOTY @Patoke: 0x5791
 	int								mTriggeredLawnMowers;									//+0x576C
 	int								mPlayTimeActiveLevel;									//+0x5770
 	int								mPlayTimeInactiveLevel;									//+0x5774
@@ -214,12 +220,6 @@ public:
 	int								mGravesCleared;											//+0x5794
 	int								mPlantsEaten;											//+0x5798
 	int								mPlantsShoveled;										//+0x579C
-	bool							mPeaShooterUsed;										//+GOTY @Patoke: 0x5784
-	bool							mCatapultPlantsUsed;									//+GOTY @Patoke: 0x5785
-	bool							mMushroomAndCoffeeBeansOnly;							//+GOTY @Patoke: 0x5790
-	bool							mMushroomsUsed;											//+GOTY @Patoke: 0x5791
-	int								mLevelCoinsCollected;									//+GOTY @Patoke: 0x5788
-	int								mGargantuarsKillsByCornCob;								//+GOTY @Patoke: 0x578C
 	int								mCoinsCollected;										//+0x57A0 GOTY @Patoke: 0x57C8
 	int								mDiamondsCollected;										//+0x57A4 GOTY @Patoke: 0x57CC
 	int								mPottedPlantsCollected;									//+0x57A8
@@ -485,6 +485,7 @@ public:
 	/*inline*/ bool					IsLastStandStageWithRepick();
 	void							DoTypingCheck(KeyCode theKey);
 	int								CountZombieByType(ZombieType theZombieType);
+	bool							CheckForPostGameAchievements();
 	static /*inline*/ bool			IsZombieTypeSpawnedOnly(ZombieType theZombieType);
 };
 extern bool gShownMoreSunTutorial;
