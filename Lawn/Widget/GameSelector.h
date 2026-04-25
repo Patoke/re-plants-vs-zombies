@@ -4,7 +4,7 @@
 #include "../../ConstEnums.h"
 #include "widget/Widget.h"
 #include "widget/ButtonListener.h"
-#include "AchievementsScreen.h"
+#include "AchievementsWidget.h"
 #include "GameButton.h"
 
 class LawnApp;
@@ -120,7 +120,7 @@ public:
     void                        AddPreviewProfiles();
     // @Patoke: implement functions
     /*inline*/ void             SlideTo(int theX, int theY);
-    void                        ShowAchievementsScreen(); // @Patoke: unofficial name
+    void                        ShowAchievementsWidget(); // @Patoke: unofficial name
 };
 
 class GameSelectorOverlay : public Widget

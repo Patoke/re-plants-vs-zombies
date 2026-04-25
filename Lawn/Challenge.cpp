@@ -29,7 +29,7 @@
 #include "../Sexy.TodLib/TodParticle.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 #include "widget/WidgetManager.h"
-#include "Widget/AchievementsScreen.h"
+#include "Widget/AchievementsWidget.h"
 
 int gZombieWaves[NUM_LEVELS] = {  //0x6A34E8
 	4,  6,  8,  10, 8,  10, 20, 10, 20, 20,

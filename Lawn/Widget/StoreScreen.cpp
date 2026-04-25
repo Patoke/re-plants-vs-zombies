@@ -20,7 +20,7 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "graphics/ImageFont.h"
 #include "widget/WidgetManager.h"
-#include "AchievementsScreen.h"
+#include "AchievementsWidget.h"
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] =
 {

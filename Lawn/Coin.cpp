@@ -14,7 +14,7 @@
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/Attachment.h"
-#include "Widget/AchievementsScreen.h"
+#include "Widget/AchievementsWidget.h"
 
 Coin::Coin()
 {

@@ -33,7 +33,7 @@
 #include "Sexy.TodLib/FilterEffect.h"
 #include "graphics/Graphics.h"
 #include "Sexy.TodLib/TodStringFile.h"
-#include "Lawn/Widget/AlmanacDialog.h"
+#include "Lawn/Widget/Almanac.h"
 #include "Lawn/Widget/NewUserDialog.h"
 #include "Lawn/Widget/ContinueDialog.h"
 #include "Lawn/System/ReanimationLawn.h"

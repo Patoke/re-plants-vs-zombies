@@ -73,6 +73,7 @@ public:
 };
 
 class Plant;
+class Zombatar;
 class Reanimation;
 class TodParticleSystem;
 class Zombie : public GameObject

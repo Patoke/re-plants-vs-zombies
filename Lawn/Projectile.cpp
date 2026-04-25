@@ -10,7 +10,7 @@
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/Attachment.h"
-#include "Widget/AchievementsScreen.h"
+#include "Widget/AchievementsWidget.h"
 
 ProjectileDefinition gProjectileDefinition[] = {  //0x69F1C0
 	{ ProjectileType::PROJECTILE_PEA,           0,  20  },

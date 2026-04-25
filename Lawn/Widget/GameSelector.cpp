@@ -4,7 +4,7 @@
 #include "../ZenGarden.h"
 #include "GameSelector.h"
 #include "../../LawnApp.h"
-#include "AlmanacDialog.h"
+#include "Almanac.h"
 #include "../../Resources.h"
 #include "../System/Music.h"
 #include "../ToolTipWidget.h"
@@ -1373,7 +1373,7 @@ void GameSelector::ButtonDepress(int theId)
 		//SlideTo(0, 0);
 		break;
 	case GameSelector::GameSelector_Achievements:
-		ShowAchievementsScreen();
+		ShowAchievementsWidget();
 		break;
 	case GameSelector::GameSelector_QuickPlay:
 		// GameSelector::ShowQuickPlayScreen();
@@ -1496,7 +1496,7 @@ void GameSelector::SlideTo(int theX, int theY) {
 }
 
 // GOTY @Patoke: 0x450200
-void GameSelector::ShowAchievementsScreen() {
+void GameSelector::ShowAchievementsWidget() {
 	SlideTo(0, -mApp->mHeight);
 	mWidgetManager->SetFocus(mAchievementsWidget);
 }

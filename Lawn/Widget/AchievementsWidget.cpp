@@ -1,10 +1,10 @@
 // @Patoke: implement file
-#include "AchievementsScreen.h"
+#include "AchievementsWidget.h"
 #include "../Board.h"
 #include "GameButton.h"
 #include "GameSelector.h"
 #include "../../LawnApp.h"
-#include "AlmanacDialog.h"
+#include "Almanac.h"
 #include "../../Resources.h"
 #include "../System/Music.h"
 #include "../../GameConstants.h"

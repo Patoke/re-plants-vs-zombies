@@ -5,7 +5,7 @@
 #include "../Cutscene.h"
 #include "../SeedPacket.h"
 #include "../../LawnApp.h"
-#include "AlmanacDialog.h"
+#include "Almanac.h"
 #include "ImitaterDialog.h"
 #include "../System/Music.h"
 #include "../../Resources.h"

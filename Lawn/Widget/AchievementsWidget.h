@@ -1,5 +1,5 @@
-#ifndef __ACHIEVEMENTSSCREEN_H__
-#define __ACHIEVEMENTSSCREEN_H__
+#ifndef __ACHIEVEMENTSWIDGET_H__
+#define __ACHIEVEMENTSWIDGET_H__
 // @Patoke: implement file
 
 #include "../../ConstEnums.h"

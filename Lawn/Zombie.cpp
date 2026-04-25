@@ -9,7 +9,7 @@
 #include "../LawnApp.h"
 #include "../Resources.h"
 #include "System/Music.h"
-#include "Widget/AlmanacDialog.h"
+#include "Widget/Almanac.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/TodCommon.h"

@@ -32,7 +32,7 @@
 
 //#define SEXY_PERF_ENABLED
 #include "misc/PerfTimer.h"
-#include "Widget/AchievementsScreen.h"
+#include "Widget/AchievementsWidget.h"
 
 //#define SEXY_MEMTRACE
 //#include "../SexyAppFramework/memmgr.h"

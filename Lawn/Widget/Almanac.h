@@ -1,5 +1,5 @@
-#ifndef __ALMANACDIALOG_H__
-#define __ALMANACDIALOG_H__
+#ifndef __ALMANAC_H__
+#define __ALMANAC_H__
 
 #include "LawnDialog.h"
 

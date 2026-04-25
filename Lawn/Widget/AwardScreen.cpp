@@ -6,7 +6,7 @@
 #include "../ZenGarden.h"
 #include "../SeedPacket.h"
 #include "../../LawnApp.h"
-#include "AlmanacDialog.h"
+#include "Almanac.h"
 #include "../System/Music.h"
 #include "../../Resources.h"
 #include "../../GameConstants.h"
@@ -14,7 +14,7 @@
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#include "AchievementsScreen.h"
+#include "AchievementsWidget.h"
 
 //0x405780
 // GOTY @Patoke: 0x4063E0

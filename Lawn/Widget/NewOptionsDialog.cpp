@@ -1,7 +1,7 @@
 #include "../Board.h"
 #include "GameButton.h"
 #include "../Cutscene.h"
-#include "AlmanacDialog.h"
+#include "Almanac.h"
 #include "../LawnCommon.h"
 #include "../../LawnApp.h"
 #include "../System/Music.h"
