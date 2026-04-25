@@ -158,10 +158,13 @@ public:
     int                             mBossHeadCounter;                           //+0x13C
     ReanimationID                   mBossFireBallReanimID;                      //+0x140
     ReanimationID                   mSpecialHeadReanimID;                       //+0x144
+    ReanimationID                   mZombatarHeadReanimID;                      //+GOTY @Patoke: 0x148
     int                             mFireballRow;                               //+0x148
     bool                            mIsFireBall;                                //+0x14C
     ReanimationID                   mMoweredReanimID;                           //+0x150
     int                             mLastPortalX;                               //+0x154
+    bool                            mHasZombatar;                               //+GOTY @Patoke: 0x15C
+    int                             mZombatarIndex;                             //+GOTY @Patoke: 0x160
 
 public:
     Zombie();
@@ -393,6 +396,8 @@ public:
     void                            SetupReanimForLostArm(unsigned int theDamageFlags);
     bool                            IsSquashTarget(Plant* theExcept);
     static /*inline*/ bool			IsZombotany(ZombieType theZombieType);
+    void                            ResetZombatarHead(LawnApp* theApp);
+    void                            ApplyZombatarHead(LawnApp* theApp, Zombatar* theZombatar);
 };
 
 class ZombieDefinition

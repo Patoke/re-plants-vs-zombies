@@ -51,6 +51,7 @@ ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {  //0x69DA80
     { ZOMBIE_SQUASH_HEAD,       REANIM_ZOMBIE,              3,      99,     10,     2000,   _S("ZOMBIE") },
     { ZOMBIE_TALLNUT_HEAD,      REANIM_ZOMBIE,              4,      99,     10,     2000,   _S("ZOMBIE") },
     { ZOMBIE_REDEYE_GARGANTUAR, REANIM_GARGANTUAR,          10,     48,     15,     6000,   _S("REDEYED_GARGANTUAR") },
+    { ZOMBIE_ZOMBATAR,          REANIM_ZOMBIE,              1,      1,      1,      0,      _S("ZOMBATAR_FLAG_ZOMBIE")},
 };
 
 static ZombieType gBossZombieList[] = {  //0x69DE1C
@@ -87,8 +88,20 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 {
     TOD_ASSERT(theType >= 0 && theType <= ZombieType::NUM_ZOMBIE_TYPES);
 
-    mFromWave = theFromWave;
+    mHasZombatar = false;
+	if (theType == ZombieType::ZOMBIE_FLAG && mApp->mPlayerInfo && mApp->mPlayerInfo->mNumZombatars > 0)
+	{
+		mZombieType = ZombieType::ZOMBIE_ZOMBATAR;
+		mHasZombatar = true;
+        mZombatarIndex = Rand(mApp->mPlayerInfo->mNumZombatars);
+		if (mZombatarIndex >= mApp->mPlayerInfo->mNumZombatars)
+		{
+			mZombatarIndex = mApp->mPlayerInfo->mNumZombatars - 1;
+		}
+	}
+
     mRow = theRow;
+    mFromWave = theFromWave;
     mPosX = 780 + Rand(ZOMBIE_START_RANDOM_OFFSET);
     mPosY = GetPosYBasedOnRow(theRow);
     mVelX = 0.0f;
@@ -178,9 +191,6 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
     switch (theType)
     {
     case ZombieType::ZOMBIE_NORMAL:  //0x5227E9
-        LoadPlainZombieReanim();
-        break;
-
     case ZombieType::ZOMBIE_DUCKY_TUBE:  //0x5227F8
         LoadPlainZombieReanim();
         break;
@@ -525,6 +535,55 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         break;
     }
 
+    case ZombieType::ZOMBIE_ZOMBATAR:
+    {
+        mHasObject = true;
+        LoadPlainZombieReanim();
+
+        Reanimation* aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
+        Reanimation* aFlagReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_FLAG);
+        aFlagReanim->PlayReanim("Zombie_flag", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+        mSpecialHeadReanimID = mApp->ReanimationGetID(aFlagReanim);
+        ReanimatorTrackInstance* aTrackInstance = aBodyReanim->GetTrackInstanceByName("Zombie_flaghand");
+        AttachReanim(aTrackInstance->mAttachmentID, aFlagReanim, 0.0f, 0.0f);
+        aBodyReanim->mFrameBasePose = 0;
+
+        mPosX = WIDE_BOARD_WIDTH;
+
+        ReanimShowPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+        ReanimShowPrefix("anim_head2", RENDER_GROUP_HIDDEN);
+
+        if (IsOnBoard())
+        {
+            aBodyReanim->SetFramesForLayer("anim_walk2");
+        }
+
+        ReanimatorTrackInstance* aHeadTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
+        aHeadTrackInstance->mImageOverride = IMAGE_BLANK;
+
+        Reanimation* aHeadReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_ZOMBATAR_HEAD);
+        aHeadReanim->PlayReanim("anim_head_idle", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+        aHeadReanim->AssignRenderGroupToTrack("anim_hair", RENDER_GROUP_HIDDEN);
+
+        mZombatarHeadReanimID = mApp->ReanimationGetID(aHeadReanim);
+        AttachEffect* aAttachEffect = AttachReanim(aHeadTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
+		aBodyReanim->mFrameBasePose = 0; // @Patoke: should this be aBodyReanim? this could be a bug in the original code
+
+        TodScaleRotateTransformMatrix(aAttachEffect->mOffset, -20.0f, -1.0f, 0.2f, 1.0f, 1.0f);
+
+        ResetZombatarHead(mApp);
+
+        mPhaseCounter = 150;
+        mVariant = false;
+
+        if (mHasZombatar)
+        {
+			ApplyZombatarHead(mApp, &mApp->mPlayerInfo->mZombatars[mZombatarIndex]);
+        }
+
+        break;
+    }
+
     case ZombieType::ZOMBIE_POGO:  //0x5232A6
         mVariant = false;
         mZombiePhase = ZombiePhase::PHASE_POGO_BOUNCING;
@@ -815,8 +874,8 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         ReanimShowPrefix("anim_tongue", RENDER_GROUP_NORMAL);
     }
 
-    mBodyMaxHealth = mBodyHealth;
     mHelmMaxHealth = mHelmHealth;
+    mBodyMaxHealth = mBodyHealth;
     mShieldMaxHealth = mShieldHealth;
     mFlyingMaxHealth = mFlyingHealth;
     mDead = false;
@@ -10782,4 +10841,18 @@ void Zombie::SetupWaterTrack(const char* theTrackName)
     aTrackInstance->mIgnoreExtraAdditiveColor = true;
     aTrackInstance->mIgnoreColorOverride = true;
     aTrackInstance->mIgnoreClipRect = true;
+}
+
+// GOTY @Patoke: 0x530C90
+void Zombie::ResetZombatarHead(LawnApp* theApp)
+{
+
+}
+
+// GOTY @Patoke: 0x531250
+void Zombie::ApplyZombatarHead(LawnApp* theApp, Zombatar* theZombatar)
+{
+    ResetZombatarHead(theApp);
+
+
 }
