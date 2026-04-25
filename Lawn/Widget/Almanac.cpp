@@ -387,6 +387,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 				aZombieGraphics.Translate(aPosX + 1, aPosY - 6);
 				aZombieGraphics.mScaleX = 0.5f;
 				aZombieGraphics.mScaleY = 0.5f;
+				// @Patoke todo: add new functionality
 				switch (aZombieType)
 				{
 				case ZombieType::ZOMBIE_POLEVAULTER:
@@ -439,6 +440,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
 		Graphics aZombieGraphics = Graphics(*g);
 		mZombie->BeginDraw(&aZombieGraphics);
 		aZombieGraphics.SetClipRect(-42, -51, 197, 187);
+		// @Patoke todo: add new functionality
 		switch (mZombie->mZombieType)
 		{
 		case ZombieType::ZOMBIE_ZAMBONI:		aZombieGraphics.TranslateF(-30, 5);		break;

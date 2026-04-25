@@ -569,7 +569,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
         AttachEffect* aAttachEffect = AttachReanim(aHeadTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
 		aBodyReanim->mFrameBasePose = 0; // @Patoke: should this be aBodyReanim? this could be a bug in the original code
 
-        TodScaleRotateTransformMatrix(aAttachEffect->mOffset, -20.0f, -1.0f, 0.2f, 1.0f, 1.0f);
+        TodScaleRotateTransformMatrix(aAttachEffect->mOffset, M(-20.0f), M(-1.0f), M(0.2f), 1.0f, 1.0f);
 
         ResetZombatarHead(mApp);
 

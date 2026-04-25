@@ -246,7 +246,7 @@ void ReportAchievement::AchievementInitForPlayer(GameSelector* theSelector) {
 		GiveAchievement(theSelector->mApp, AchievementId::Zombologist, true);
 	}
 
-	int aTreeSize = theSelector->mApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];
+	int aTreeSize = theSelector->mApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - 1];
 	if (aTreeSize >= 100) {
 		GiveAchievement(theSelector->mApp, AchievementId::ToweringWisdom, true);
 	}

@@ -152,19 +152,8 @@ GameSelector::GameSelector(LawnApp* theApp)
 	);
 	mAchievementsButton->Resize(20, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
 	mAchievementsButton->mClip = false;
-	mAchievementsButton->mBtnNoDraw = mHasTrophy;
+	mAchievementsButton->mBtnNoDraw = false;
 	mAchievementsButton->mMouseVisible = false;
-
-	mQuickPlayButton = MakeNewButton(
-		GameSelector::GameSelector_QuickPlay,
-		this,
-		"",
-		nullptr,
-		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON,
-		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT,
-		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT
-	);
-	mQuickPlayButton->Resize(mApp->mWidth - 150, 455, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mWidth, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mHeight);
 
 	mZenGardenButton = MakeNewButton(
 		GameSelector::GameSelector_ZenGarden, 
@@ -266,6 +255,17 @@ GameSelector::GameSelector(LawnApp* theApp)
 	mAlmanacButton->Resize(327, 428, Sexy::IMAGE_SELECTORSCREEN_ALMANAC->mWidth, Sexy::IMAGE_SELECTORSCREEN_ALMANAC->mHeight);
 	mAlmanacButton->mClip = false; // @Patoke: not in original but fixes stuff
 	mAlmanacButton->mMouseVisible = false;
+
+	mQuickPlayButton = MakeNewButton(
+		GameSelector::GameSelector_QuickPlay,
+		this,
+		"",
+		nullptr,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT,
+		Sexy::IMAGE_QUICKPLAY_BACK_BUTTON_HIGHLIGHT
+	);
+	mQuickPlayButton->Resize(mApp->mWidth - 150, 455, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mWidth, Sexy::IMAGE_QUICKPLAY_BACK_BUTTON->mHeight);
 
 	mApp->mMusic->MakeSureMusicIsPlaying(MusicTune::MUSIC_TUNE_TITLE_CRAZY_DAVE_MAIN_THEME);
 
@@ -558,19 +558,24 @@ void GameSelector::SyncProfile(bool theShowLoading)
 }
 
 //0x44A650
-// GOTY @Patoke: seems to be inlined? 0x44DCC6
+// GOTY @Patoke: 0x44D700
 void GameSelector::Draw(Graphics* g)
 {
 	if (mApp->GetDialog(Dialogs::DIALOG_STORE) || mApp->GetDialog(Dialogs::DIALOG_ALMANAC))
 		return;
 
+	// @Patoke: decided to manually inline these methods as i cannot be arsed to figure out what the name of the 2 functions called in here are
+	// GOTY @Patoke: 0x44FD20
 	g->SetLinearBlend(true);
+	g->Translate(800, 0);
+
 	Reanimation* aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
 	aSelectorReanim->DrawRenderGroup(g, 1);  // "SelectorScreen_BG"
 	for (int i = 0; i < 6; i++)
 		mApp->ReanimationGet(mCloudReanimID[i])->Draw(g);
 	aSelectorReanim->DrawRenderGroup(g, RENDER_GROUP_NORMAL);
 
+	g->Translate(-800, 0);
 	if (mSelectorState == SelectorAnimState::SELECTOR_OPEN)
 	{
 		int aBGIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Right");
@@ -610,6 +615,12 @@ void GameSelector::Draw(Graphics* g)
 		TodDrawStringMatrix(g, Sexy::FONT_BRIANNETOD16, aOverlayMatrix * aOffsetMatrix, aWelcomeStr, Color(255, 245, 200));
 
 	}
+	 
+	// GOTY @Patoke: 0x4500E0
+	g->DrawImage(IMAGE_SELECTORSCREEN_MOREWAYSTOPLAY_BG, M(0), M(0));
+	g->DrawImage(IMAGE_QUICKPLAY_MINIGAMES_CLOUD, M(20), M(40));
+	g->DrawImage(IMAGE_QUICKPLAY_PUZZLES_CLOUD, M(350), M(285));
+	g->DrawImage(IMAGE_QUICKPLAY_SURVIVAL_CLOUD, M(130), M(135));
 }
 
 //0x44AB50
@@ -695,7 +706,11 @@ void GameSelector::DrawOverlay(Graphics* g)
 		aHandReanim->Draw(g);
 		g->ClearClipRect();
 	}
+
+	g->Translate(-(mX + 800), 0);
 	mApp->ReanimationGet(mLeafReanimID)->Draw(g);
+	g->Translate(mX + 800, 0);
+
 	for (int i = 0; i < 3; i++)
 		mApp->ReanimationGet(mFlowerReanimID[i])->Draw(g);
 
@@ -1370,7 +1385,7 @@ void GameSelector::ButtonDepress(int theId)
 		//	LawnApp::ShowZombatarTOS();
 		break;
 	case GameSelector::GameSelector_AchievementsBack: // @Patoke: seems to be unused
-		//SlideTo(0, 0);
+		SlideTo(0, 0);
 		break;
 	case GameSelector::GameSelector_Achievements:
 		ShowAchievementsWidget();

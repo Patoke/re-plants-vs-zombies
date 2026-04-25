@@ -88,7 +88,7 @@ public:
     int                         mStartY;                    //+GOTY @Patoke: 0x15C
     int                         mDestX;                     //+GOTY @Patoke: 0x160
     int                         mDestY;                     //+GOTY @Patoke: 0x164
-    //ZombatarWidget*           mZombatarWidget;            //+GOTY @Patoke: 0x168
+    //ZombatarScreen*           mZombatarScreen;            //+GOTY @Patoke: 0x168
     AchievementsWidget*       mAchievementsWidget;        //+GOTY @Patoke: 0x16C
 
 public:

@@ -345,6 +345,9 @@ CreditScreen::CreditScreen(LawnApp* theApp)
 	{
 		mApp->SetMusicVolume(0.85);
 	}
+
+    // GOTY @Patoke: 0x436BE0
+    // @Patoke todo: add new functionality
 }
 
 //0x433E20、0x433E40
