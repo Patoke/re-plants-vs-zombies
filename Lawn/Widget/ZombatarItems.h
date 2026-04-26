@@ -1,5 +1,8 @@
 #ifndef __ZOMBATARITEMS_H__
 #define __ZOMBATARITEMS_H__
+// @Patoke: implement file
+
+#include "GameButton.h"
 
 class ZombatarItem
 {
@@ -15,5 +18,16 @@ public:
 	const char* mTrackName;
 	int mRenderGroup;
 };
+
+class ZombatarItems : public Widget {
+public:
+	LawnApp* mApp;
+
+
+	ZombatarItems(LawnApp* theApp);
+	virtual ~ZombatarItems();
+
+};
+
 
 #endif

@@ -67,8 +67,6 @@ set(Lawn__System__System_Include
     "../Lawn/System/ReanimationLawn.h"
     "../Lawn/System/SaveGame.h"
     "../Lawn/System/TypingCheck.h"
-    "../Lawn/System/ZombatarColors.h"
-    "../Lawn/System/ZombatarItems.h"
 )
 source_group("Lawn\\System\\System Include" FILES ${Lawn__System__System_Include})
 
@@ -82,8 +80,6 @@ set(Lawn__System__System_Source
     "../Lawn/System/ReanimationLawn.cpp"
     "../Lawn/System/SaveGame.cpp"
     "../Lawn/System/TypingCheck.cpp"
-    "../Lawn/System/ZombatarColors.cpp"
-    "../Lawn/System/ZombatarItems.cpp"
 )
 source_group("Lawn\\System\\System Source" FILES ${Lawn__System__System_Source})
 
@@ -105,6 +101,8 @@ set(Lawn__Widget__Widget_Include
     "../Lawn/Widget/StoreScreen.h"
     "../Lawn/Widget/TitleScreen.h"
     "../Lawn/Widget/UserDialog.h"
+    "../Lawn/Widget/ZombatarColors.h"
+    "../Lawn/Widget/ZombatarItems.h"
     "../Lawn/Widget/ZombatarScreen.h"
     "../Lawn/Widget/ZombatarTOSDialog.h"
 )
@@ -128,6 +126,8 @@ set(Lawn__Widget__Widget_Source
     "../Lawn/Widget/StoreScreen.cpp"
     "../Lawn/Widget/TitleScreen.cpp"
     "../Lawn/Widget/UserDialog.cpp"
+    "../Lawn/Widget/ZombatarColors.cpp"
+    "../Lawn/Widget/ZombatarItems.cpp"
     "../Lawn/Widget/ZombatarScreen.cpp"
     "../Lawn/Widget/ZombatarTOSDialog.cpp"
 )

@@ -32,15 +32,16 @@ LawnDialog::LawnDialog(LawnApp* theApp, int theId, bool isModal, const SexyStrin
     mContentInsets = Insets(36, 35, 46, 36);
 
     // @Patoke: these dialogs had the wrong local name
+    // @Patoke: these also don't use localized names anymore
     if (theButtonMode == 1)
     {
-        mLawnYesButton = MakeButton(1000, this, _S("[DIALOG_BUTTON_YES]"));
-        mLawnNoButton = MakeButton(1001, this, _S("[DIALOG_BUTTON_NO]"));
+        mLawnYesButton = MakeButton(1000, this, _S("Yes"));
+        mLawnNoButton = MakeButton(1001, this, _S("No"));
     }
     else if (theButtonMode == 2)
     {
-        mLawnYesButton = MakeButton(1000, this, _S("[DIALOG_BUTTON_OK]"));
-        mLawnNoButton = MakeButton(1001, this, _S("[DIALOG_BUTTON_CANCEL]"));
+        mLawnYesButton = MakeButton(1000, this, _S("Ok"));
+        mLawnNoButton = MakeButton(1001, this, _S("Cancel"));
     }
     else if (theButtonMode == 3)
     {
